@@ -16,7 +16,7 @@
                         brand: {
                             bg: '#F4F8FA',
                             card: '#FFFFFF',
-                            primary: '#0052CC',  // CARATテーマの鮮やかな深みのあるブルー
+                            primary: '#0052CC',  // CARATテーマの鮮やかなブルー
                             primaryHover: '#0043a4',
                             secondary: '#85B7E2',
                             accent: '#E6F0FA',
@@ -32,21 +32,21 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-brand-bg text-brand-text font-sans min-h-screen">
+<body class="bg-brand-bg text-brand-text font-sans min-h-screen notranslate">
 
     <div class="max-w-md mx-auto bg-brand-bg min-h-screen shadow-xl flex flex-col relative pb-24 border-x border-brand-border">
         
         <!-- ヘッダー -->
         <header class="bg-brand-card border-b border-brand-border px-5 py-4 sticky top-0 z-50 flex items-center justify-between">
             <div class="flex items-center">
-                <div>
+                <div class="text-left">
                     <h1 class="text-xl font-black tracking-widest text-brand-primary leading-none">CARAT</h1>
                     <p class="text-[8px] text-brand-muted tracking-widest font-mono font-bold mt-1">AI MEAL PLANNER</p>
                 </div>
             </div>
             <div class="flex items-center space-x-2">
                 <span id="sync-status" class="text-[9px] px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-100 flex items-center gap-1 font-bold">
-                    <span class="w-1 h-1 rounded-full bg-amber-500 animate-pulse"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                     未連携
                 </span>
                 <button onclick="toggleModal('modal-settings')" class="p-1.5 hover:bg-brand-accent rounded-full transition text-brand-muted hover:text-brand-primary">
@@ -96,7 +96,7 @@
 
             <!-- クライアント識別子表示 -->
             <div class="bg-brand-accent/40 rounded-xl px-4 py-2.5 border border-brand-border text-xs flex justify-between items-center">
-                <span class="text-brand-muted font-bold">クライアントID (トレーナーへ共有)</span>
+                <span class="text-brand-muted font-bold">クライアントID</span>
                 <button onclick="copyUserId()" class="font-mono font-bold text-brand-primary hover:underline flex items-center gap-1">
                     <span id="user-id-display">未接続</span>
                     <i data-lucide="copy" class="w-3.5 h-3.5"></i>
@@ -232,7 +232,7 @@
             </section>
 
             <!-- クイックAI解析入力 -->
-            <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 relative space-y-4">
+            <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 relative space-y-4 font-sans">
                 <div class="absolute -top-3 left-6 bg-brand-primary text-white text-[9px] font-bold px-3 py-1 rounded-full tracking-wider uppercase shadow-sm font-mono">
                     AI Instant Input
                 </div>
@@ -268,7 +268,7 @@
                         </h4>
                     </div>
                     <div id="quick-history-list" class="flex gap-2 overflow-x-auto pb-1.5 scrollbar-thin">
-                        <!-- 定番チップ -->
+                        <!-- 定番チップが入ります -->
                     </div>
                 </div>
 
@@ -290,7 +290,7 @@
                 <div id="meal-timeline" class="space-y-2.5">
                     <div id="empty-state" class="text-center py-9 bg-brand-card rounded-2xl border border-brand-border/40 text-brand-muted text-xs">
                         <i data-lucide="plus-circle" class="w-7 h-7 mx-auto mb-2 text-brand-secondary"></i>
-                        食事情報が登録されていません。<br>AI解析や履歴から手軽に記録しましょう。
+                        食事情報が登録されていません。<br>AI解析や定番から手軽に記録しましょう。
                     </div>
                 </div>
             </section>
@@ -380,11 +380,11 @@
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-[11px] text-teal-600 mb-1">脂質 (F/g)</label>
+                        <label class="block text-[11px] text-teal-600 mb-1">F (g)</label>
                         <input type="number" id="manual-f" step="0.1" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text" placeholder="5">
                     </div>
                     <div>
-                        <label class="block text-[11px] text-sky-500 mb-1">炭水化物 (C/g)</label>
+                        <label class="block text-[11px] text-sky-500 mb-1">C (g)</label>
                         <input type="number" id="manual-c" step="0.1" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text" placeholder="10">
                     </div>
                 </div>
@@ -424,7 +424,7 @@
     </div>
 
     <!-- MODAL: 目標設定（目標値の閲覧用） -->
-    <div id="modal-settings" class="fixed inset-0 bg-brand-text/30 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+    <div id="modal-settings" class="fixed inset-0 bg-brand-text/30 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 notranslate">
         <div class="bg-brand-card w-full max-w-md rounded-2xl border border-brand-border p-6 space-y-4 shadow-xl">
             <div class="flex justify-between items-center border-b border-brand-border pb-3">
                 <h3 class="font-bold text-sm text-brand-primary flex items-center gap-2">
@@ -469,7 +469,7 @@
                             <p class="text-[9px] text-brand-muted leading-relaxed">
                                 ※ 独自のGemini APIをご利用の場合は以下に入力してください（未設定時は店舗の共有キーが自動適用されます）。
                             </p>
-                            <input type="password" id="user-api-key" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2 text-[10px] text-brand-text" placeholder="Gemini API Key">
+                            <input type="password" id="user-api-key" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs text-brand-text font-mono focus:outline-none" placeholder="Gemini API Key">
                         </div>
                     </details>
                 </div>
@@ -488,8 +488,8 @@
     <!-- Firebase SDK (v11) & Module Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase 接続設定
         const firebaseConfig = {
@@ -530,7 +530,7 @@
             mealHistory: [
                 { name: "サラダチキン", kcal: 115, p: 24.1, f: 1.2, c: 0 },
                 { name: "おにぎり(鮭)", kcal: 175, p: 4.2, f: 0.8, c: 38.0 },
-                { name: "ギリシャヨーグルト", kcal: 92, p: 10.0, f: 0, c: 4.8 }
+                { name: "ギリシャヨーグヨーグルト", kcal: 92, p: 10.0, f: 0, c: 4.8 }
             ],
             weeklyLogs: {
                 Mon: { kcal: 0, p: 0, f: 0, c: 0 },
@@ -549,7 +549,21 @@
         const dayKeysMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
         // ==========================================
-        // ID紐付けベースの同期・認証ロジック
+        // 履歴データベースへの記憶処理（未定義エラーを完全解消）
+        // ==========================================
+        function saveToHistoryDatabase(name, kcal, p, f, c) {
+            if (!appState.mealHistory) appState.mealHistory = [];
+            // 重複排除
+            appState.mealHistory = appState.mealHistory.filter(h => h.name.toLowerCase() !== name.toLowerCase());
+            appState.mealHistory.unshift({ name, kcal, p, f, c });
+            if (appState.mealHistory.length > 15) {
+                appState.mealHistory.pop();
+            }
+        }
+        window.saveToHistoryDatabase = saveToHistoryDatabase;
+
+        // ==========================================
+        // IDベース同期・認証ロジック
         // ==========================================
         async function startSyncSystem() {
             const savedClientId = localStorage.getItem(`carat_active_client_id_${appId}`);
@@ -565,9 +579,9 @@
             document.getElementById('settings-client-id').innerText = savedClientId;
 
             try {
+                // 非同期匿名認証を実行（承認ドメイン・匿名認証設定により、即時Connectedになります）
                 await signInAnonymously(auth);
 
-                // RULE 1: Strict Paths (Public Space)
                 const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', savedClientId);
                 
                 if (unsubscribeSync) unsubscribeSync();
@@ -588,12 +602,11 @@
 
                         loadMealsForActiveDate();
                     } else {
-                        // データ未存在時の自動生成
                         setDoc(userDocRef, appState);
                     }
                 }, (error) => {
                     console.error("Firestore Subscribe Error:", error);
-                    showToast("同期データの読み込みに失敗しました。");
+                    showToast("同期データの読み込みに失敗しました。認証設定をご確認ください。");
                 });
 
             } catch (err) {
@@ -601,6 +614,7 @@
                 showToast("データベースへの接続に失敗しました。");
             }
         }
+        window.startSyncSystem = startSyncSystem;
 
         window.connectWithClientId = async function() {
             const idInput = document.getElementById('initial-id-input').value.trim().toUpperCase();
@@ -632,7 +646,7 @@
         };
 
         window.disconnectClientId = function() {
-            if (confirm("ID連携を解除しますか？ (再度IDを入力するまで食事記録ができなくなります)")) {
+            if (confirm("ID連携を解除しますか？")) {
                 if (unsubscribeSync) unsubscribeSync();
                 localStorage.removeItem(`carat_active_client_id_${appId}`);
                 document.getElementById('welcome-overlay').classList.remove('hidden');
@@ -654,6 +668,7 @@
                 console.error("Auto Sync Fail:", err);
             }
         }
+        window.syncStateToCloud = syncStateToCloud;
 
         function loadMealsForActiveDate() {
             if (!appState.mealsByDate) appState.mealsByDate = {};
@@ -666,6 +681,7 @@
             updateDateUI();
             updateUI();
         }
+        window.loadMealsForActiveDate = loadMealsForActiveDate;
 
         function updateWeeklyLogsForActiveDate() {
             const activeDate = new Date(window.currentDateString);
@@ -704,7 +720,11 @@
             }
         }
 
+        // ==========================================
+        // 安全なマルチデイ日付切り替えロジック
+        // ==========================================
         window.changeDay = function(direction) {
+            // 1. 変更前の日付のデータをMealsByDateへ同期退避
             if (!appState.mealsByDate) appState.mealsByDate = {};
             appState.mealsByDate[window.currentDateString] = [...appState.meals];
 
@@ -923,6 +943,40 @@
                 listEl.appendChild(button);
             });
         }
+
+        window.quickAddFromHistory = function(hist) {
+            const now = new Date();
+            const hour = now.getHours();
+            let category = "間食";
+            if (hour >= 5 && hour < 10) category = "朝食";
+            else if (hour >= 10 && hour < 15) category = "昼食";
+            else if (hour >= 15 && hour < 21) category = "夕食";
+
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+            const newMeal = {
+                id: Date.now().toString(),
+                category: category,
+                name: hist.name,
+                kcal: Math.round(hist.kcal),
+                p: hist.p,
+                f: hist.f,
+                c: hist.c,
+                time: timeStr
+            };
+
+            if (!appState.mealsByDate) appState.mealsByDate = {};
+            if (!appState.mealsByDate[window.currentDateString]) {
+                appState.mealsByDate[window.currentDateString] = [];
+            }
+            appState.mealsByDate[window.currentDateString].push(newMeal);
+            appState.meals = appState.mealsByDate[window.currentDateString];
+
+            syncCurrentDayWithTimeline();
+            syncStateToCloud();
+            updateUI();
+            showToast(`「${newMeal.name}」を追加登録しました！`);
+        };
 
         window.toggleModal = function(id) {
             const modal = document.getElementById(id);
@@ -1400,6 +1454,25 @@
             lucide.createIcons();
             return id;
         }
+
+        function syncCurrentDayWithTimeline() {
+            const activeDate = new Date(window.currentDateString);
+            const activeDayKey = dayKeysMap[activeDate.getDay()];
+
+            calculateTotals();
+
+            if (!appState.mealsByDate) appState.mealsByDate = {};
+            appState.mealsByDate[window.currentDateString] = [...appState.meals];
+
+            if (!appState.weeklyLogs) appState.weeklyLogs = {};
+            appState.weeklyLogs[activeDayKey] = {
+                kcal: appState.currentCalories,
+                p: appState.currentP,
+                f: appState.currentF,
+                c: appState.currentC
+            };
+        }
+        window.syncCurrentDayWithTimeline = syncCurrentDayWithTimeline;
 
         // --- 強制起動 ---
         startSyncSystem();
