@@ -1,10 +1,10 @@
-
 ```html
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" class="notranslate">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="google" content="notranslate">
     <title>CARAT Meal Planner - クラウド同期版</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -31,53 +31,6 @@
     </script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Firebase SDK (v11) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // =================================================================
-        //// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
-  authDomain: "carat-d3b01.firebaseapp.com",
-  projectId: "carat-d3b01",
-  storageBucket: "carat-d3b01.firebasestorage.app",
-  messagingSenderId: "273330568464",
-  appId: "1:273330568464:web:5b4ea4ae2a5429914cf995",
-  measurementId: "G-27VPZ9TQDW"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-        // =================================================================
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        // Firebaseの初期化
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // グローバル変数
-        window.db = db;
-        window.auth = auth;
-    </script>
 </head>
 <body class="bg-brand-bg text-brand-text font-sans min-h-screen">
 
@@ -200,12 +153,12 @@ const analytics = getAnalytics(app);
                     <div class="border-l border-brand-border h-8"></div>
                     <div>
                         <div class="text-brand-muted text-[10px] mb-0.5">今週の累計摂取</div>
-                        <div class="font-bold text-brand-text"><span id="weekly-current-calories">5,400</span> kcal</div>
+                        <div class="font-bold text-brand-text"><span id="weekly-current-calories">0</span> kcal</div>
                     </div>
                     <div class="border-l border-brand-border h-8"></div>
                     <div>
                         <div class="text-brand-muted text-[10px] mb-0.5">残カロリー調整枠</div>
-                        <div class="font-bold text-emerald-600" id="weekly-remaining-calories">+7,200 kcal</div>
+                        <div class="font-bold text-emerald-600" id="weekly-remaining-calories">+12,600 kcal</div>
                     </div>
                 </div>
 
@@ -627,7 +580,26 @@ const analytics = getAnalytics(app);
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const apiKey = "AIzaSyD5tl4NJq53SzQwTCsfhlnhKqQ94SAGsMs"; // 実行環境にて自動適用
+        // Firebase構成の自動適用（重複のないクリーンな定義）
+        const firebaseConfig = {
+            apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
+            authDomain: "carat-d3b01.firebaseapp.com",
+            projectId: "carat-d3b01",
+            storageBucket: "carat-d3b01.firebasestorage.app",
+            messagingSenderId: "273330568464",
+            appId: "1:273330568464:web:5b4ea4ae2a5429914cf995",
+            measurementId: "G-27VPZ9TQDW"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // 各種処理で利用できるようにグローバル（window）へ露出
+        window.auth = auth;
+        window.db = db;
+
+        const apiKey = "AIzaSyD5tl4NJq53SzQwTCsfhlnhKqQ94SAGsMs"; // デフォルトAPIキー
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'carat-meal-v3';
 
         let appState = {
@@ -668,7 +640,6 @@ const analytics = getAnalytics(app);
         // ==========================================
         async function initializeSyncSystem() {
             try {
-                // RULE 3 - Auth Before Queries
                 const initAuth = async () => {
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                         await signInWithCustomToken(window.auth, __initial_auth_token);
@@ -688,19 +659,15 @@ const analytics = getAnalytics(app);
                         `;
                         document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold";
 
-                        // RULE 1: Strict Paths (Public & User Data Separation)
-                        // コレクション・ドキュメントの購読開始
                         const userDocRef = doc(window.db, 'artifacts', appId, 'users', userId, 'profile', 'state');
                         
                         onSnapshot(userDocRef, (docSnap) => {
                             if (docSnap.exists()) {
                                 const cloudData = docSnap.data();
-                                // ローカルのステートをクラウド側とマージして更新
                                 appState = { ...appState, ...cloudData };
                                 calculateTotals();
                                 updateUI();
                             } else {
-                                // 新規ユーザーの場合は初期ステートをクラウドに作成
                                 syncStateToCloud();
                             }
                         }, (error) => {
@@ -712,15 +679,12 @@ const analytics = getAnalytics(app);
                 console.error("Firebase Authentication / Initialization Failed:", err);
                 document.getElementById('sync-status').innerText = "Offline Mode";
                 document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold";
-                // フォールバックとしてLocalStorageから復旧
                 loadLocalBackupState();
             }
         }
 
-        // クラウドへデータを保存
         async function syncStateToCloud() {
             if (!userId) {
-                // 認証前はLocalStorageにバックアップ保存
                 localStorage.setItem(`carat_cloud_backup_${appId}`, JSON.stringify(appState));
                 return;
             }
@@ -741,10 +705,8 @@ const analytics = getAnalytics(app);
             }
         }
 
-        // クライアントIDをクリップボードにコピー
         window.copyUserId = function() {
             if (!userId) return;
-            // iframeのセキュアコンテキスト対策
             const dummy = document.createElement("textarea");
             document.body.appendChild(dummy);
             dummy.value = userId;
@@ -754,9 +716,6 @@ const analytics = getAnalytics(app);
             showToast("クライアントIDをコピーしました。トレーナーへお送りください。");
         };
 
-        // ==========================================
-        // 各種状態コントロール & コアロジックのバインド
-        // ==========================================
         window.onload = function() {
             lucide.createIcons();
             initializeSyncSystem();
@@ -807,7 +766,6 @@ const analytics = getAnalytics(app);
             document.getElementById('display-weight').innerText = appState.weight.toFixed(1);
             document.getElementById('display-fat').innerText = appState.fatRate.toFixed(1);
 
-            // 週単位サマリー
             const weeklyTarget = appState.targetCalories * 7;
             let weeklySum = 0;
             const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
