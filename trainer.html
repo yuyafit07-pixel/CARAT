@@ -36,7 +36,7 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase初期設定（クライアントアプリと同じ設定値を画面上でペースト可能にするため、共通変数としてマウントします）
+        // Firebaseのグローバル初期化
         window.initTrainerFirebase = function(config) {
             try {
                 const app = initializeApp(config);
@@ -54,7 +54,7 @@
                     document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold";
                 });
             } catch (e) {
-                alert("Firebaseの初期化に失敗しました。貼り付けた設定コードを確認してください。");
+                alert("Firebaseの初期化に失敗しました。接続設定を確認してください。");
             }
         }
     </script>
@@ -93,7 +93,7 @@
                 <p class="text-[11px] text-brand-muted leading-relaxed">
                     初回のみ、クライアントアプリ設定時に使用したFirebaseの「接続設定（firebaseConfig）」をそのまま以下に貼り付けてください。
                 </p>
-                <textarea id="firebase-config-input" rows="4" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-[10px] font-mono text-brand-text focus:outline-none focus:border-brand-primary resize-none" placeholder="const firebaseConfig = { ... };"></textarea>
+                <textarea id="firebase-config-input" rows="5" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-[10px] font-mono text-brand-text focus:outline-none focus:border-brand-primary resize-none" placeholder="const firebaseConfig = {&#10;  apiKey: &quot;...&quot;,&#10;  ...&#10;};"></textarea>
                 <button onclick="applyFirebaseConfig()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm">
                     接続設定を登録する
                 </button>
@@ -223,31 +223,36 @@
             }
         }
 
-        // データベース接続設定のセットアップ処理
+        // コピペされたJavaScriptコードから正確にFirebase接続情報を抽出する「超強力クリーナー」
         window.applyFirebaseConfig = function() {
             const rawText = document.getElementById('firebase-config-input').value.trim();
             if (!rawText) return;
 
-            // 簡易的にJSON部分を抽出・解析する、または直接Configオブジェクトとしてマッピング
             try {
-                let cleanJson = rawText;
-                if (rawText.includes('{')) {
-                    cleanJson = rawText.substring(rawText.indexOf('{'), rawText.lastIndexOf('}') + 1);
+                const config = {};
+                const keys = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId', 'measurementId'];
+                
+                // 各設定項目を正規表現で1つずつ安全に抽出（余計な文字やコメントアウトは無視されます）
+                keys.forEach(key => {
+                    const regex = new RegExp(`['"]?${key}['"]?\\s*:\\s*['"\\\`]([^'"\\\`]+)['"\\\`]`);
+                    const match = rawText.match(regex);
+                    if (match) {
+                        config[key] = match[1];
+                    }
+                });
+
+                if (config.apiKey && config.projectId) {
+                    localStorage.setItem(`carat_trainer_config_${appId}`, JSON.stringify(config));
+                    window.initTrainerFirebase(config);
+
+                    document.getElementById('config-setup-panel').classList.add('hidden');
+                    document.getElementById('client-search-panel').classList.remove('hidden');
+                    showToast("データベースの設定を適用しました！");
+                } else {
+                    throw new Error("設定キーの抽出に失敗しました。");
                 }
-                // オブジェクトのキーをダブルクォーテーションで補正してパース
-                const corrected = cleanJson
-                    .replace(/([a-zA-Z0-9]+)\s*:/g, '"$1":')
-                    .replace(/'/g, '"');
-                const parsedConfig = JSON.parse(corrected);
-
-                localStorage.setItem(`carat_trainer_config_${appId}`, JSON.stringify(parsedConfig));
-                window.initTrainerFirebase(parsedConfig);
-
-                document.getElementById('config-setup-panel').classList.add('hidden');
-                document.getElementById('client-search-panel').classList.remove('hidden');
-                showToast("データベースの設定を適用しました！");
             } catch (e) {
-                alert("接続設定のコピー内容が正しくありません。中身を再確認してください。");
+                alert("接続設定のコピー内容が解析できませんでした。Firebaseからコピーしたコード（{ から } の中身、またはconfig全体）をそのまま貼り付けてください。");
             }
         };
 
@@ -260,37 +265,33 @@
             }
 
             if (unsubscribeClientListener) {
-                unsubscribeClientListener(); // 過去の監視を解除
+                unsubscribeClientListener(); 
             }
 
             currentTargetClientId = targetId;
-            const clientDocRef = doc(window.db, 'artifacts', appId, 'users', targetId, 'profile', 'state');
+            const clientDocRef = window.doc(window.db, 'artifacts', appId, 'users', targetId, 'profile', 'state');
 
-            // リアルタイムリスナーのセットアップ
-            unsubscribeClientListener = onSnapshot(clientDocRef, (docSnap) => {
+            // リアルタイム同期
+            unsubscribeClientListener = window.onSnapshot(clientDocRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     renderClientDashboard(data);
                     document.getElementById('client-data-container').classList.remove('hidden');
                 } else {
-                    alert("指定されたクライアントIDのデータが存在しません。入力ミスがないかご確認ください。");
+                    alert("指定されたクライアントIDのデータが存在しません。");
                 }
             }, (error) => {
-                alert("データベースからの読込に失敗しました。接続エラーです。");
+                alert("データベースからの読込に失敗しました。");
             });
         };
 
-        // トレーナーダッシュボードにクライアントデータを描画
         function renderClientDashboard(data) {
-            // カロリー関連
             document.getElementById('client-cur-cal').innerText = (data.currentCalories || 0).toLocaleString();
             document.getElementById('client-tar-cal').innerText = (data.targetCalories || 0).toLocaleString();
 
-            // 身体データ
             document.getElementById('client-weight').innerText = data.weight ? data.weight.toFixed(1) : '--';
             document.getElementById('client-fat').innerText = data.fatRate ? data.fatRate.toFixed(1) : '--';
 
-            // PFCバランス
             document.getElementById('client-cur-p').innerText = data.currentP ? data.currentP.toFixed(1) : '0';
             document.getElementById('client-tar-p').innerText = data.targetP || '0';
             document.getElementById('client-cur-f').innerText = data.currentF ? data.currentF.toFixed(1) : '0';
@@ -298,18 +299,15 @@
             document.getElementById('client-cur-c').innerText = data.currentC ? data.currentC.toFixed(1) : '0';
             document.getElementById('client-tar-c').innerText = data.targetC || '0';
 
-            // 更新日時
             const now = new Date();
             document.getElementById('last-update-time').innerText = `最終同期: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
 
-            // 今週のカロリー推移
             const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
             days.forEach(day => {
                 const dayLog = data.weeklyLogs ? data.weeklyLogs[day] : null;
                 document.getElementById(`weekly-cal-${day}`).innerText = dayLog && dayLog.kcal > 0 ? dayLog.kcal.toLocaleString() : '-';
             });
 
-            // タイムラインの構築
             const timelineEl = document.getElementById('client-meal-timeline');
             timelineEl.innerHTML = '';
             if (data.meals && data.meals.length > 0) {
@@ -328,41 +326,31 @@
             } else {
                 timelineEl.innerHTML = `<span class="text-[10px] text-brand-muted text-center block py-4">本日の食事は未登録です</span>`;
             }
-
-            // 過去のフィードバック履歴がある場合はテキストエリアに反映
-            if (appState.trainerFeedbackText && document.getElementById('trainer-feedback-box')) {
-                // 必要に応じてここを表示
-            }
         }
 
-        // トレーナーアドバイスの保存・送信
         window.submitTrainerFeedback = async function() {
             if (!currentTargetClientId) {
-                alert("クライアントデータが読み込まれていません。");
+                alert("クライアントが選択されていません。");
                 return;
             }
 
             const feedbackText = document.getElementById('trainer-feedback-input').value.trim();
             if (!feedbackText) {
-                alert("アドバイスコメントを入力してください。");
+                alert("コメントを入力してください。");
                 return;
             }
 
             try {
-                // クライアントのFirestoreへ指導内容をマウント
-                const clientDocRef = doc(window.db, 'artifacts', appId, 'users', currentTargetClientId, 'profile', 'state');
-                
-                // コメント送信時、AIメッセージにマウントして画面上に反映
-                await updateDoc(clientDocRef, {
+                const clientDocRef = window.doc(window.db, 'artifacts', appId, 'users', currentTargetClientId, 'profile', 'state');
+                await window.updateDoc(clientDocRef, {
                     trainerFeedback: feedbackText,
                     trainerFeedbackAt: new Date().toISOString()
                 });
 
-                showToast("食事評価アドバイスをクライアントアプリに送信しました！");
+                showToast("食事評価アドバイスを送信しました！");
                 document.getElementById('trainer-feedback-input').value = '';
             } catch (err) {
-                console.error("指導送信失敗:", err);
-                alert("指導データの送信に失敗しました。再試行してください。");
+                alert("データの送信に失敗しました。");
             }
         };
 
