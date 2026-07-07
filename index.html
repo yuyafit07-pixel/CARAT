@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="google" content="notranslate">
-    <title>CARAT Meal Planner - クラウド同期版</title>
+    <title>CARAT Meal Planner - クラウド同期・マルチデイ対応版</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -48,16 +48,26 @@
                     <p class="text-[9px] text-brand-muted tracking-wider -mt-1">PERSONAL GYM SYSTEM</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-2">
-                <span id="sync-status" class="text-[10px] px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-100 flex items-center gap-1.5 font-bold">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                    Connecting...
-                </span>
+            <div class="flex items-center space-x-1.5">
                 <button onclick="toggleModal('modal-settings')" class="p-1.5 hover:bg-brand-accent rounded-full transition text-brand-muted hover:text-brand-primary">
                     <i data-lucide="sliders" class="w-5 h-5"></i>
                 </button>
             </div>
         </header>
+
+        <!-- 日付切り替えコントロールヘッダー -->
+        <div class="bg-brand-card border-b border-brand-border px-4 py-2 flex items-center justify-between shadow-sm">
+            <button onclick="changeDay('prev')" class="p-2 text-brand-muted hover:text-brand-primary transition">
+                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+            </button>
+            <div class="flex flex-col items-center">
+                <span id="display-date-string" class="text-sm font-black tracking-tight text-brand-text">取得中...</span>
+                <span id="display-date-badge" class="text-[9px] text-brand-primary font-bold bg-brand-accent px-2 py-0.5 rounded-full mt-0.5">今日</span>
+            </div>
+            <button onclick="changeDay('next')" class="p-2 text-brand-muted hover:text-brand-primary transition">
+                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+            </button>
+        </div>
 
         <!-- Main Content -->
         <main class="flex-1 px-4.5 py-4 space-y-5 overflow-y-auto">
@@ -66,7 +76,7 @@
             <div class="bg-brand-accent/40 rounded-xl px-4 py-2.5 border border-brand-border text-xs flex justify-between items-center">
                 <span class="text-brand-muted font-bold">クライアントID (トレーナーへ共有用)</span>
                 <button onclick="copyUserId()" class="font-mono font-bold text-brand-primary hover:underline flex items-center gap-1">
-                    <span id="user-id-display">Loading...</span>
+                    <span id="user-id-display">接続中...</span>
                     <i data-lucide="copy" class="w-3.5 h-3.5"></i>
                 </button>
             </div>
@@ -76,7 +86,7 @@
                 <div class="absolute top-0 right-0 w-28 h-28 bg-brand-accent/30 rounded-full blur-2xl -mr-8 -mt-8"></div>
                 
                 <h2 class="text-xs font-bold tracking-wider text-brand-muted mb-4 flex items-center gap-2">
-                    <i data-lucide="calendar" class="w-4 h-4 text-brand-primary"></i> 本日の栄養摂取状況
+                    <i data-lucide="calendar" class="w-4 h-4 text-brand-primary"></i> 選択日の栄養摂取状況
                 </h2>
 
                 <div class="grid grid-cols-12 gap-2 items-center">
@@ -164,51 +174,45 @@
 
                 <!-- 曜日別進捗グリッド -->
                 <div class="grid grid-cols-7 gap-1.5 mb-3">
-                    <!-- 月 -->
-                    <button onclick="editDayData('Mon')" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
+                    <!-- 各曜日のボタン -->
+                    <button onclick="selectDayFromWeeklyGrid('Mon')" id="btn-Mon" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
                         <span class="text-[9px] text-brand-muted font-bold">月</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Mon"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Mon">0</span>
                     </button>
-                    <!-- 火 -->
-                    <button onclick="editDayData('Tue')" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
+                    <button onclick="selectDayFromWeeklyGrid('Tue')" id="btn-Tue" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
                         <span class="text-[9px] text-brand-muted font-bold">火</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Tue"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Tue">0</span>
                     </button>
-                    <!-- 水 -->
-                    <button onclick="editDayData('Wed')" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
+                    <button onclick="selectDayFromWeeklyGrid('Wed')" id="btn-Wed" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
                         <span class="text-[9px] text-brand-muted font-bold">水</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Wed"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Wed">0</span>
                     </button>
-                    <!-- 木 -->
-                    <button onclick="editDayData('Thu')" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
+                    <button onclick="selectDayFromWeeklyGrid('Thu')" id="btn-Thu" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
                         <span class="text-[9px] text-brand-muted font-bold">木</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Thu"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Thu">0</span>
                     </button>
-                    <!-- 金 -->
-                    <button onclick="editDayData('Fri')" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
+                    <button onclick="selectDayFromWeeklyGrid('Fri')" id="btn-Fri" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
                         <span class="text-[9px] text-brand-muted font-bold">金</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Fri"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Fri">0</span>
                     </button>
-                    <!-- 土 -->
-                    <button onclick="editDayData('Sat')" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
+                    <button onclick="selectDayFromWeeklyGrid('Sat')" id="btn-Sat" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
                         <span class="text-[9px] text-brand-muted font-bold">土</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Sat"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Sat">0</span>
                     </button>
-                    <!-- 日 -->
-                    <button onclick="editDayData('Sun')" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
+                    <button onclick="selectDayFromWeeklyGrid('Sun')" id="btn-Sun" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
                         <span class="text-[9px] text-brand-muted font-bold">日</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Sun"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Sun">0</span>
                     </button>
                 </div>
                 <p class="text-[10px] text-brand-muted leading-tight text-center">
-                    ※曜日をタップすると、その日の実績数値を手動調整（帳尻合わせ用）できます。
+                    ※曜日をタップすると、その曜日の食事記録画面へ直接ジャンプして記録・確認できます。
                 </p>
             </section>
 
@@ -248,12 +252,11 @@
                 <div class="border-t border-brand-border/60 pt-3">
                     <div class="flex justify-between items-center mb-2">
                         <h4 class="text-[11px] font-bold text-brand-text flex items-center gap-1.5">
-                            <i data-lucide="history" class="w-3.5 h-3.5 text-brand-secondary"></i> 食事の履歴・定番から1タップ追加
+                            <i data-lucide="history" class="w-3.5 h-3.5 text-brand-secondary"></i> 定番から1タップ追加
                         </h4>
-                        <span class="text-[9px] text-brand-muted">よく食べるメニュー</span>
                     </div>
                     <div id="quick-history-list" class="flex gap-2 overflow-x-auto pb-1.5 scrollbar-thin">
-                        <!-- 動的に履歴チップが挿入 -->
+                        <!-- 定番チップが入ります -->
                     </div>
                 </div>
 
@@ -268,7 +271,7 @@
             <section class="space-y-3">
                 <div class="flex items-center justify-between px-1">
                     <h2 class="text-xs font-bold tracking-wider text-brand-muted flex items-center gap-2">
-                        <i data-lucide="utensils" class="w-4 h-4 text-brand-primary"></i> 今日の食事ログ
+                        <i data-lucide="utensils" class="w-4 h-4 text-brand-primary"></i> 選択日の食事ログ
                     </h2>
                     <span class="text-[10px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-full font-bold" id="meal-count">0 件登録</span>
                 </div>
@@ -276,7 +279,7 @@
                 <div id="meal-timeline" class="space-y-2.5">
                     <div id="empty-state" class="text-center py-9 bg-brand-card rounded-2xl border border-brand-border/40 text-brand-muted text-xs">
                         <i data-lucide="plus-circle" class="w-7 h-7 mx-auto mb-2 text-brand-secondary"></i>
-                        今日の食事情報が登録されていません。<br>AI解析や履歴一覧から手軽に記録しましょう。
+                        この日の食事情報が登録されていません。<br>AI解析や定番一覧から手軽に記録しましょう。
                     </div>
                 </div>
             </section>
@@ -329,9 +332,9 @@
 
         <!-- Bottom Navigation Tab Bar -->
         <nav class="absolute bottom-0 left-0 right-0 bg-brand-card border-t border-brand-border py-2.5 px-6 flex justify-between items-center z-50 shadow-lg">
-            <button onclick="switchTab('dashboard')" class="flex flex-col items-center space-y-1 text-brand-primary">
+            <button onclick="resetToToday()" class="flex flex-col items-center space-y-1 text-brand-primary">
                 <i data-lucide="home" class="w-5 h-5"></i>
-                <span class="text-[9px] font-bold">ダッシュボード</span>
+                <span class="text-[9px] font-bold">今日に戻る</span>
             </button>
             <button onclick="toggleModal('modal-ai-helper')" class="flex flex-col items-center space-y-1 text-brand-muted hover:text-brand-primary transition">
                 <i data-lucide="sparkles" class="w-5 h-5 text-brand-primary animate-pulse"></i>
@@ -426,46 +429,6 @@
         </div>
     </div>
 
-    <!-- MODAL: 曜日別の実績個別調整 (帳尻合わせ機能) -->
-    <div id="modal-day-adjust" class="fixed inset-0 bg-brand-text/30 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
-        <div class="bg-brand-card w-full max-w-sm rounded-2xl border border-brand-border p-6 space-y-4 shadow-xl">
-            <div class="flex justify-between items-center border-b border-brand-border pb-3">
-                <h3 class="font-bold text-sm text-brand-primary flex items-center gap-2">
-                    <i data-lucide="calendar-days" class="w-4.5 h-4.5"></i> <span id="adjust-day-name">月曜日</span> の実績値調整
-                </h3>
-                <button onclick="toggleModal('modal-day-adjust')" class="text-brand-muted hover:text-brand-text">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <div class="space-y-3.5 text-xs">
-                <p class="text-brand-muted leading-tight">
-                    ※ 過去の実績や、今後の予定（会食など）に応じた仮置きの数値を調整して「週単位」の進捗をシミュレーションできます。
-                </p>
-                <div>
-                    <label class="block text-[11px] text-brand-muted mb-1">1日の総摂取カロリー (kcal)</label>
-                    <input type="number" id="adjust-calories" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text">
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <div>
-                        <label class="block text-[11px] text-brand-primary mb-1">P (g)</label>
-                        <input type="number" id="adjust-p" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] text-teal-600 mb-1">F (g)</label>
-                        <input type="number" id="adjust-f" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] text-sky-500 mb-1">C (g)</label>
-                        <input type="number" id="adjust-c" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text">
-                    </div>
-                </div>
-                <button onclick="saveDayAdjustment()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl font-bold transition mt-4 shadow-sm">
-                    調整値を適用する
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL: 目標設定 -->
     <div id="modal-settings" class="fixed inset-0 bg-brand-text/30 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
         <div class="bg-brand-card w-full max-w-md rounded-2xl border border-brand-border p-6 space-y-4 overflow-y-auto max-h-[90vh] shadow-xl">
@@ -522,7 +485,7 @@
                         </summary>
                         <div class="mt-2 space-y-2">
                             <p class="text-[9px] text-brand-muted leading-relaxed">
-                                ※ セキュリティ保護のため、取得したGemini APIキーを以下に貼り付けて保存してください。コード内に書き込むと自動停止します。
+                                ※ セキュリティ保護のため、取得したGemini APIキーを以下に貼り付けて保存してください。
                             </p>
                             <input type="password" id="user-api-key" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-mono text-brand-text" placeholder="AIzaSy...（Gemini API Key）">
                         </div>
@@ -567,7 +530,7 @@
             <!-- チャット入力 -->
             <div class="flex gap-2">
                 <input type="text" id="chat-input" onkeydown="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary" placeholder="例: 明日の夜に会食が入ったのですが、日中のPFC調整はどうすべきですか？">
-                <button onclick="sendChatMessage()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-4 rounded-xl font-bold transition flex items-center justify-center shadow-sm">
+                <button onclick="sendChatMessage()" class="bg-brand-primary hover:bg-brand-primaryHover text-white font-bold transition flex items-center justify-center shadow-sm">
                     <i data-lucide="send" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -580,7 +543,7 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase 接続設定（重複なし）
+        // Firebase 接続設定
         const firebaseConfig = {
             apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
             authDomain: "carat-d3b01.firebaseapp.com",
@@ -595,12 +558,13 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // 各種グローバルにマウント
+        // 各種処理で利用できるようにグローバル（window）へ露出
         window.auth = auth;
         window.db = db;
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'carat-meal-v3';
 
+        // 状態定義
         let appState = {
             targetCalories: 1800,
             targetP: 120,
@@ -610,7 +574,8 @@
             currentP: 0,
             currentF: 0,
             currentC: 0,
-            meals: [],
+            meals: [],            
+            mealsByDate: {},      // 日付（YYYY-MM-DD）ごとの食事配列
             weight: 65.0,
             fatRate: 15.0,
             mealHistory: [
@@ -631,8 +596,9 @@
             }
         };
 
-        let activeAdjustDay = 'Mon';
         let userId = null;
+        window.currentDateString = getTodayDateString();
+        const dayKeysMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
         // ==========================================
         // Firebase 認証 & リアルタイム同期
@@ -664,8 +630,17 @@
                             if (docSnap.exists()) {
                                 const cloudData = docSnap.data();
                                 appState = { ...appState, ...cloudData };
-                                calculateTotals();
-                                updateUI();
+                                
+                                if (!appState.mealsByDate) {
+                                    appState.mealsByDate = {};
+                                }
+                                
+                                const todayStr = getTodayDateString();
+                                if (appState.meals && appState.meals.length > 0 && !appState.mealsByDate[todayStr]) {
+                                    appState.mealsByDate[todayStr] = [...appState.meals];
+                                }
+
+                                loadMealsForActiveDate();
                             } else {
                                 syncStateToCloud();
                             }
@@ -675,7 +650,7 @@
                     }
                 });
             } catch (err) {
-                console.error("Firebase Authentication / Initialization Failed:", err);
+                console.error("Firebase Authentication Failed:", err);
                 document.getElementById('sync-status').innerText = "Offline Mode";
                 document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold";
                 loadLocalBackupState();
@@ -688,6 +663,8 @@
                 return;
             }
             try {
+                // クラウドとトレーナー画面用の表示連動
+                appState.meals = appState.mealsByDate[window.currentDateString] || [];
                 const userDocRef = doc(window.db, 'artifacts', appId, 'users', userId, 'profile', 'state');
                 await setDoc(userDocRef, appState, { merge: true });
             } catch (err) {
@@ -699,8 +676,8 @@
             const stored = localStorage.getItem(`carat_cloud_backup_${appId}`);
             if (stored) {
                 appState = JSON.parse(stored);
-                calculateTotals();
-                updateUI();
+                if (!appState.mealsByDate) appState.mealsByDate = {};
+                loadMealsForActiveDate();
             }
         }
 
@@ -715,27 +692,35 @@
             showToast("クライアントIDをコピーしました。トレーナーへお送りください。");
         };
 
-        window.onload = function() {
-            lucide.createIcons();
-            initializeSyncSystem();
-            
-            // 保存済みの自己APIキーをロード
-            const savedKey = localStorage.getItem(`carat_user_gemini_key_${appId}`);
-            if (savedKey) {
-                document.getElementById('user-api-key').value = savedKey;
-            }
-        };
-
-        function getTodayKey() {
-            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const todayIndex = new Date().getDay();
-            return days[todayIndex];
+        function getTodayDateString() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         }
 
-        function syncCurrentDayWithTimeline() {
-            const todayKey = getTodayKey();
+        // ==========================================
+        // 日付・スケジュールハンドリング（安全設計）
+        // ==========================================
+        function loadMealsForActiveDate() {
+            if (!appState.mealsByDate) appState.mealsByDate = {};
+            
+            // 選択された日付の食事データを抽出してマウント
+            const activeMeals = appState.mealsByDate[window.currentDateString] || [];
+            appState.meals = activeMeals;
+            
             calculateTotals();
-            appState.weeklyLogs[todayKey] = {
+            updateWeeklyLogsForActiveDate();
+            updateDateUI();
+            updateUI();
+        }
+
+        function updateWeeklyLogsForActiveDate() {
+            const activeDate = new Date(window.currentDateString);
+            const activeDayOfWeek = activeDate.getDay(); 
+            const activeDayKey = dayKeysMap[activeDayOfWeek];
+
+            if (!appState.weeklyLogs) appState.weeklyLogs = {};
+            
+            appState.weeklyLogs[activeDayKey] = {
                 kcal: appState.currentCalories,
                 p: appState.currentP,
                 f: appState.currentF,
@@ -743,6 +728,91 @@
             };
         }
 
+        function updateDateUI() {
+            document.getElementById('display-date-string').innerText = window.currentDateString;
+            const badgeEl = document.getElementById('display-date-badge');
+            const todayStr = getTodayDateString();
+            
+            if (window.currentDateString === todayStr) {
+                badgeEl.innerText = "今日";
+                badgeEl.className = "text-[9px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-full mt-0.5 font-bold";
+            } else {
+                const diffTime = new Date(window.currentDateString) - new Date(todayStr);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays === -1) {
+                    badgeEl.innerText = "昨日";
+                    badgeEl.className = "text-[9px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full mt-0.5 font-bold border border-amber-100";
+                } else if (diffDays === 1) {
+                    badgeEl.innerText = "明日";
+                    badgeEl.className = "text-[9px] text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full mt-0.5 font-bold border border-teal-100";
+                } else {
+                    badgeEl.innerText = diffDays < 0 ? `${Math.abs(diffDays)}日前` : `${diffDays}日後`;
+                    badgeEl.className = "text-[9px] text-brand-muted bg-brand-bg px-2 py-0.5 rounded-full mt-0.5 font-bold border border-brand-border";
+                }
+            }
+        }
+
+        // 矢印ボタンによる日付変更アクション
+        window.changeDay = function(direction) {
+            // 1. 変更前の日付のデータを確定保存
+            if (!appState.mealsByDate) appState.mealsByDate = {};
+            appState.mealsByDate[window.currentDateString] = [...appState.meals];
+
+            // 2. 日付を増減
+            const current = new Date(window.currentDateString);
+            if (direction === 'prev') {
+                current.setDate(current.getDate() - 1);
+            } else if (direction === 'next') {
+                current.setDate(current.getDate() + 1);
+            }
+            window.currentDateString = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}-${String(current.getDate()).padStart(2, '0')}`;
+            
+            // 3. 変更後のデータをロードして同期
+            loadMealsForActiveDate();
+            syncStateToCloud();
+        };
+
+        window.resetToToday = function() {
+            // 1. 現表示日のデータをバックアップ
+            if (!appState.mealsByDate) appState.mealsByDate = {};
+            appState.mealsByDate[window.currentDateString] = [...appState.meals];
+
+            // 2. 本日に戻す
+            window.currentDateString = getTodayDateString();
+            
+            // 3. ロードと同期
+            loadMealsForActiveDate();
+            syncStateToCloud();
+            showToast("今日の食事管理画面に戻りました。");
+        };
+
+        window.selectDayFromWeeklyGrid = function(dayKey) {
+            // 1. 現表示日のデータをバックアップ
+            if (!appState.mealsByDate) appState.mealsByDate = {};
+            appState.mealsByDate[window.currentDateString] = [...appState.meals];
+
+            // 2. タップされた曜日の日付を算出
+            const today = new Date();
+            const currentDayOfWeek = today.getDay();
+            const targetIndex = dayKeysMap.indexOf(dayKey);
+            
+            const mondayOffset = currentDayOfWeek === 0 ? -6 : 1 - currentDayOfWeek;
+            const targetOffset = mondayOffset + (targetIndex === 0 ? 6 : targetIndex - 1);
+            
+            const targetDate = new Date(today);
+            targetDate.setDate(today.getDate() + targetOffset);
+            
+            window.currentDateString = `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;
+            
+            // 3. ロードと同期
+            loadMealsForActiveDate();
+            syncStateToCloud();
+            showToast(`${dayKey}曜日の記録に切り替えました`);
+        };
+
+        // ==========================================
+        // UI更新・集計
+        // ==========================================
         window.updateUI = function() {
             document.getElementById('target-calories').innerText = appState.targetCalories.toLocaleString();
             document.getElementById('current-calories').innerText = appState.currentCalories.toLocaleString();
@@ -771,17 +841,20 @@
             document.getElementById('display-weight').innerText = appState.weight.toFixed(1);
             document.getElementById('display-fat').innerText = appState.fatRate.toFixed(1);
 
+            // 週累計サマリー
             const weeklyTarget = appState.targetCalories * 7;
             let weeklySum = 0;
             const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            const todayKey = getTodayKey();
+
+            const currentViewDate = new Date(window.currentDateString);
+            const currentViewDayKey = dayKeysMap[currentViewDate.getDay()];
 
             days.forEach(day => {
                 const log = appState.weeklyLogs[day] || { kcal: 0, p: 0, f: 0, c: 0 };
                 document.getElementById(`cal-${day}`).innerText = log.kcal.toLocaleString();
                 
                 const dot = document.getElementById(`dot-${day}`);
-                const btn = dot.parentElement;
+                const btn = document.getElementById(`btn-${day}`);
                 
                 if (log.kcal > 0) {
                     dot.className = "w-1.5 h-1.5 rounded-full bg-brand-primary my-1";
@@ -789,8 +862,8 @@
                     dot.className = "w-1.5 h-1.5 rounded-full bg-transparent my-1";
                 }
 
-                if (day === todayKey) {
-                    btn.className = "day-btn bg-brand-accent border-2 border-brand-primary rounded-xl p-2 text-center transition flex flex-col items-center shadow-sm";
+                if (day === currentViewDayKey) {
+                    btn.className = "day-btn bg-brand-accent border-2 border-brand-primary rounded-xl p-2 text-center transition flex flex-col items-center shadow-sm scale-105";
                 } else {
                     btn.className = "day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center";
                 }
@@ -882,7 +955,7 @@
             listEl.innerHTML = '';
 
             if (!appState.mealHistory || appState.mealHistory.length === 0) {
-                listEl.innerHTML = `<span class="text-[10px] text-brand-muted">履歴がありません。食事を追加すると蓄積されます。</span>`;
+                listEl.innerHTML = `<span class="text-[10px] text-brand-muted">定番メニューがありません。</span>`;
                 return;
             }
 
@@ -919,12 +992,17 @@
                 time: timeStr
             };
 
-            if (!appState.meals) appState.meals = [];
-            appState.meals.push(newMeal);
+            if (!appState.mealsByDate) appState.mealsByDate = {};
+            if (!appState.mealsByDate[window.currentDateString]) {
+                appState.mealsByDate[window.currentDateString] = [];
+            }
+            appState.mealsByDate[window.currentDateString].push(newMeal);
+            appState.meals = appState.mealsByDate[window.currentDateString];
+
             syncCurrentDayWithTimeline();
             syncStateToCloud();
             updateUI();
-            showToast(`「${hist.name}」をクイック登録しました！`);
+            showToast(`「${newMeal.name}」を追加登録しました！`);
         };
 
         function saveToHistoryDatabase(name, kcal, p, f, c) {
@@ -983,8 +1061,14 @@
                 time: timeStr
             };
 
-            if (!appState.meals) appState.meals = [];
-            appState.meals.push(newMeal);
+            if (!appState.mealsByDate) appState.mealsByDate = {};
+            if (!appState.mealsByDate[window.currentDateString]) {
+                appState.mealsByDate[window.currentDateString] = [];
+            }
+            
+            appState.mealsByDate[window.currentDateString].push(newMeal);
+            appState.meals = appState.mealsByDate[window.currentDateString];
+            
             saveToHistoryDatabase(name, kcal, p, f, c);
             
             syncCurrentDayWithTimeline();
@@ -994,7 +1078,12 @@
         };
 
         window.deleteMeal = function(id) {
+            if (!appState.meals) return;
             appState.meals = appState.meals.filter(m => m.id !== id);
+            
+            if (!appState.mealsByDate) appState.mealsByDate = {};
+            appState.mealsByDate[window.currentDateString] = appState.meals;
+
             syncCurrentDayWithTimeline();
             syncStateToCloud();
             updateUI();
@@ -1008,43 +1097,6 @@
             syncStateToCloud();
             updateUI();
             toggleModal('modal-weight');
-        };
-
-        window.editDayData = function(day) {
-            activeAdjustDay = day;
-            const log = appState.weeklyLogs[day] || { kcal: 0, p: 0, f: 0, c: 0 };
-            const dayNames = { Mon: '月曜日', Tue: '火曜日', Wed: '水曜日', Thu: '木曜日', Fri: '金曜日', Sat: '土曜日', Sun: '日曜日' };
-            
-            document.getElementById('adjust-day-name').innerText = dayNames[day];
-            document.getElementById('adjust-calories').value = log.kcal;
-            document.getElementById('adjust-p').value = log.p;
-            document.getElementById('adjust-f').value = log.f;
-            document.getElementById('adjust-c').value = log.c;
-
-            toggleModal('modal-day-adjust');
-        };
-
-        window.saveDayAdjustment = function() {
-            const kcal = parseInt(document.getElementById('adjust-calories').value) || 0;
-            const p = parseFloat(document.getElementById('adjust-p').value) || 0;
-            const f = parseFloat(document.getElementById('adjust-f').value) || 0;
-            const c = parseFloat(document.getElementById('adjust-c').value) || 0;
-
-            if (!appState.weeklyLogs) appState.weeklyLogs = {};
-            appState.weeklyLogs[activeAdjustDay] = { kcal, p, f, c };
-
-            const todayKey = getTodayKey();
-            if (activeAdjustDay === todayKey) {
-                appState.currentCalories = kcal;
-                appState.currentP = p;
-                appState.currentF = f;
-                appState.currentC = c;
-            }
-
-            syncStateToCloud();
-            updateUI();
-            toggleModal('modal-day-adjust');
-            showToast(`${activeAdjustDay}曜日の実績数値を更新しました`);
         };
 
         window.applyGoalPreset = function() {
@@ -1085,20 +1137,28 @@
             appState.targetF = parseFloat(document.getElementById('target-f-input').value);
             appState.targetC = parseFloat(document.getElementById('target-c-input').value);
             
+            const userKey = document.getElementById('user-api-key').value.trim();
+            if (userKey) {
+                localStorage.setItem(`carat_user_gemini_key_${appId}`, userKey);
+            } else {
+                localStorage.removeItem(`carat_user_gemini_key_${appId}`);
+            }
+
             syncStateToCloud();
             updateUI();
             toggleModal('modal-settings');
+            showToast("目標設定を更新保存しました。");
         };
 
         // ==========================================
-        // Gemini API 接続 (Canvas圧縮コンバート＆自動切り替え機能)
+        // Gemini API 接続 (自動切り替えフォールバック)
         // ==========================================
         function getEffectiveApiKey() {
-            const userKey = document.getElementById('user-api-key').value.trim();
-            return userKey || apiKey;
+            const inputVal = document.getElementById('user-api-key').value.trim();
+            if (inputVal) return inputVal;
+            return localStorage.getItem(`carat_user_gemini_key_${appId}`) || "";
         }
 
-        // HEICバイナリや大容量データを安全にJPEG 1024pxに超高速圧縮する仮想レンダラー
         function resizeAndConvertToJpegBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1110,7 +1170,7 @@
                         const canvas = document.createElement('canvas');
                         let width = img.width;
                         let height = img.height;
-                        const max_size = 1024; // 1024pxに縮小して送信を劇的軽量化
+                        const max_size = 1024;
 
                         if (width > height) {
                             if (width > max_size) {
@@ -1142,14 +1202,12 @@
             });
         }
 
-        // APIのエンドポイント・モデルの組み合わせを自動切替して突破する救済フェッチャー
         async function fetchGeminiWithFallback(payload) {
             const key = getEffectiveApiKey();
             if (!key) {
                 throw new Error("Gemini API Keyが設定されていません。右上の『目標・設定』から入力してください。");
             }
 
-            // 試行するエンドポイントとモデル名のペアパターン（安全な順に自動切り替え）
             const trialPatterns = [
                 { version: "v1beta", model: "gemini-2.5-flash" },
                 { version: "v1",     model: "gemini-1.5-flash" },
@@ -1170,8 +1228,7 @@
 
                     const status = response.status;
                     if (response.ok) {
-                        const resJson = await response.json();
-                        return resJson; // 成功した場合は即離脱して返却
+                        return await response.json();
                     } else {
                         const errText = await response.text();
                         console.warn(`Pattern failed: ${pattern.version} / ${pattern.model}. Status: ${status}`, errText);
@@ -1189,7 +1246,7 @@
                 } catch (e) {
                     console.warn(`Exception on pattern ${pattern.version}/${pattern.model}:`, e);
                     if (e.message && e.message.includes("APIキー無効")) {
-                        throw e; // 403キー停止は即座に大外へスロー
+                        throw e;
                     }
                     lastError = e.message || e;
                 }
@@ -1256,7 +1313,6 @@
             loaderText.innerText = "写真を解析用に自動圧縮・変換中...";
 
             try {
-                // 超高速軽量化 & HEIC強制JPEGリサイズ化
                 const base64Data = await resizeAndConvertToJpegBase64(file);
 
                 loaderText.innerText = "画像からPFCバランスを割り出し中...";
@@ -1300,7 +1356,7 @@
                 showToast(error.message || "写真解析に失敗しました。");
             } finally {
                 loader.classList.add('hidden');
-                inputElement.value = ""; // アップロードスロットをリセット
+                inputElement.value = ""; 
             }
         };
 
@@ -1325,8 +1381,13 @@
                 time: timeStr
             };
 
-            if (!appState.meals) appState.meals = [];
-            appState.meals.push(newMeal);
+            if (!appState.mealsByDate) appState.mealsByDate = {};
+            if (!appState.mealsByDate[window.currentDateString]) {
+                appState.mealsByDate[window.currentDateString] = [];
+            }
+            appState.mealsByDate[window.currentDateString].push(newMeal);
+            appState.meals = appState.mealsByDate[window.currentDateString];
+
             saveToHistoryDatabase(newMeal.name, newMeal.kcal, newMeal.p, newMeal.f, newMeal.c);
             
             syncCurrentDayWithTimeline();
@@ -1336,6 +1397,13 @@
         }
 
         window.generateAIFeedback = async function() {
+            const key = getEffectiveApiKey();
+            if (!key) {
+                showToast("【エラー】Gemini API Keyが未設定です。『目標・設定』から入力してください。");
+                toggleModal('modal-settings');
+                return;
+            }
+
             const feedbackBox = document.getElementById('trainer-feedback-box');
             feedbackBox.innerHTML = `
                 <div class="flex items-center gap-2 text-brand-primary">
@@ -1386,6 +1454,13 @@
             const inputEl = document.getElementById('chat-input');
             const messageText = inputEl.value.trim();
             if (!messageText) return;
+
+            const key = getEffectiveApiKey();
+            if (!key) {
+                showToast("【エラー】Gemini API Keyが未設定です。『目標・設定』から入力してください。");
+                toggleModal('modal-settings');
+                return;
+            }
 
             appendChatMessage("user", messageText);
             inputEl.value = "";
@@ -1447,6 +1522,10 @@
             lucide.createIcons();
             return id;
         }
+
+        // --- ダイレクト起動システム ---
+        initializeSyncSystem();
+        updateDateUI();
 
         window.showToast = function(message) {
             const toast = document.createElement('div');
