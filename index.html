@@ -275,7 +275,7 @@
                 <div id="meal-timeline" class="space-y-2.5">
                     <div id="empty-state" class="text-center py-9 bg-brand-card rounded-2xl border border-brand-border/40 text-brand-muted text-xs">
                         <i data-lucide="plus-circle" class="w-7 h-7 mx-auto mb-2 text-brand-secondary"></i>
-                        今日の食気がまだ登録されていません。<br>AI解析や履歴一覧から手軽に記録しましょう。
+                        今日の食事情報が登録されていません。<br>AI解析や履歴一覧から手軽に記録しましょう。
                     </div>
                 </div>
             </section>
@@ -514,16 +514,16 @@
 
                 <!-- API設定 -->
                 <div class="border-t border-brand-border pt-3">
-                    <details class="group">
-                        <summary class="text-[11px] text-brand-muted cursor-pointer flex justify-between items-center font-bold">
-                            <span>システム連携設定 (任意)</span>
+                    <details class="group" open>
+                        <summary class="text-[11px] text-brand-primary cursor-pointer flex justify-between items-center font-bold">
+                            <span>システム連携設定 (必須)</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180 text-brand-muted"></i>
                         </summary>
                         <div class="mt-2 space-y-2">
                             <p class="text-[9px] text-brand-muted leading-relaxed">
-                                ※ デフォルトのAPIキーが適用されています。独自のGemini APIをご利用の場合は以下に入力してください。
+                                ※ セキュリティ保護のため、取得したGemini APIキーを以下に貼り付けて保存してください。コード内に書き込むと自動停止します。
                             </p>
-                            <input type="password" id="user-api-key" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2 text-[10px] text-brand-text" placeholder="Gemini API Key">
+                            <input type="password" id="user-api-key" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-mono text-brand-text" placeholder="AIzaSy...（Gemini API Key）">
                         </div>
                     </details>
                 </div>
@@ -579,7 +579,7 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase構成の自動適用（重複のないクリーンな定義）
+        // Firebase 接続設定（重複なし）
         const firebaseConfig = {
             apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
             authDomain: "carat-d3b01.firebaseapp.com",
@@ -594,11 +594,10 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // 各種処理で利用できるようにグローバル（window）へ露出
+        // 各種グローバルにマウント
         window.auth = auth;
         window.db = db;
 
-        const apiKey = "AIzaSyD5tl4NJq53SzQwTCsfhlnhKqQ94SAGsMs"; // デフォルトAPIキー
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'carat-meal-v3';
 
         let appState = {
@@ -651,7 +650,7 @@
                 onAuthStateChanged(window.auth, (user) => {
                     if (user) {
                         userId = user.uid;
-                        document.getElementById('user-id-display').innerText = userId;
+                        document.getElementById('user-id-display').innerText = user.uid;
                         document.getElementById('sync-status').innerHTML = `
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                             Cloud Synced
@@ -718,6 +717,12 @@
         window.onload = function() {
             lucide.createIcons();
             initializeSyncSystem();
+            
+            // 保存済みの自己APIキーをロード
+            const savedKey = localStorage.getItem(`carat_user_gemini_key_${appId}`);
+            if (savedKey) {
+                document.getElementById('user-api-key').value = savedKey;
+            }
         };
 
         function getTodayKey() {
@@ -918,7 +923,7 @@
             syncCurrentDayWithTimeline();
             syncStateToCloud();
             updateUI();
-            showToast(`「${hist.name}」をクイック登録しました！`);
+            showToast(`「${newMeal.name}」をクイック登録しました！`);
         };
 
         function saveToHistoryDatabase(name, kcal, p, f, c) {
@@ -1079,20 +1084,29 @@
             appState.targetF = parseFloat(document.getElementById('target-f-input').value);
             appState.targetC = parseFloat(document.getElementById('target-c-input').value);
             
+            const userKey = document.getElementById('user-api-key').value.trim();
+            if (userKey) {
+                localStorage.setItem(`carat_user_gemini_key_${appId}`, userKey);
+            } else {
+                localStorage.removeItem(`carat_user_gemini_key_${appId}`);
+            }
+
             syncStateToCloud();
             updateUI();
             toggleModal('modal-settings');
+            showToast("目標・システム連携設定を保存しました。");
         };
 
         // ==========================================
-        // Gemini API 接続 (Canvas圧縮コンバート＆安定版モデル指定)
+        // Gemini API 接続（自己診断付きに大幅強化）
         // ==========================================
         function getEffectiveApiKey() {
-            const userKey = document.getElementById('user-api-key').value.trim();
-            return userKey || apiKey;
+            const inputVal = document.getElementById('user-api-key').value.trim();
+            if (inputVal) return inputVal;
+            // 端末に記憶したバックアップを取得
+            return localStorage.getItem(`carat_user_gemini_key_${appId}`) || "";
         }
 
-        // HEICバイナリや大容量データを安全にJPEG 1024pxに超高速圧縮する仮想レンダラー
         function resizeAndConvertToJpegBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1104,19 +1118,17 @@
                         const canvas = document.createElement('canvas');
                         let width = img.width;
                         let height = img.height;
-
-                        const MAX_WIDTH = 1024;
-                        const MAX_HEIGHT = 1024;
+                        const max_size = 1024; // 1024pxに縮小して送信を劇的軽量化
 
                         if (width > height) {
-                            if (width > MAX_WIDTH) {
-                                height *= MAX_WIDTH / width;
-                                width = MAX_WIDTH;
+                            if (width > max_size) {
+                                height *= max_size / width;
+                                width = max_size;
                             }
                         } else {
-                            if (height > MAX_HEIGHT) {
-                                width *= MAX_HEIGHT / height;
-                                height = MAX_HEIGHT;
+                            if (height > max_size) {
+                                width *= max_size / height;
+                                height = max_size;
                             }
                         }
 
@@ -1125,22 +1137,23 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
 
-                        // 圧縮率0.7で仮想JPEG出力（HEICバイナリ、大容量写真をここで完全解決）
                         const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
                         resolve(compressedBase64);
                     };
                     img.onerror = function(err) {
-                        reject(new Error("アップロードされた画像の読み込みに失敗しました。"));
+                        reject(new Error("画像のレンダリングに失敗しました。"));
                     };
                 };
                 reader.onerror = function(err) {
-                    reject(new Error("ファイルの読み取りエラーが発生しました。"));
+                    reject(new Error("写真データの読み取りに失敗しました。"));
                 };
             });
         }
 
         async function fetchGeminiWithBackoff(url, payload) {
             let delay = 1000;
+            let lastError = "通信エラーが発生しました。";
+            
             for (let i = 0; i < 5; i++) {
                 try {
                     const response = await fetch(url, {
@@ -1148,24 +1161,53 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
+                    
+                    const status = response.status;
                     if (response.ok) {
                         return await response.json();
                     } else {
                         const errText = await response.text();
-                        console.warn(`Attempt ${i+1} fail:`, errText);
+                        console.warn(`Attempt ${i+1} fail: Status ${status}`, errText);
+                        
+                        let parsedErr;
+                        try { parsedErr = JSON.parse(errText); } catch(e) {}
+                        const errMsg = parsedErr?.error?.message || errText;
+
+                        // 403 Forbidden（APIキー無効化・強制停止）は即座にエラー出力して終了（リトライしない）
+                        if (status === 403) {
+                            throw new Error(`【APIキー無効化エラー】Googleによってこのキーは無効化(廃止)されています。右上『目標・設定』＞『システム連携設定』から新しいキーを登録し直してください。`);
+                        } else if (status === 400) {
+                            throw new Error(`【リクエストエラー(400)】リクエスト形式が不正です。画像サイズやAPI設定を確認してください。`);
+                        } else if (status === 429) {
+                            lastError = `【リクエスト過多(429)】短時間でのリクエスト制限に達しました。1分ほど置いてから再度お試しください。`;
+                        } else {
+                            lastError = `エラー(${status}): ${errMsg}`;
+                        }
                     }
                 } catch (e) {
                     console.warn(`Attempt ${i+1} Exception:`, e);
+                    if (e.message && (e.message.includes("無効化") || e.message.includes("400"))) {
+                        throw e; // 致命的エラーはループを中断して最外周へスロー
+                    }
+                    lastError = e.message || e;
                 }
+                
                 await new Promise(resolve => setTimeout(resolve, delay));
                 delay *= 2;
             }
-            throw new Error("Gemini API接続がタイムアウトしました。インターネット環境またはAPIキーの状態を確認してください。");
+            throw new Error(`【接続失敗】${lastError}`);
         }
 
         window.analyzeMealText = async function() {
             const input = document.getElementById('ai-text-input').value.trim();
             if (!input) return;
+
+            const key = getEffectiveApiKey();
+            if (!key) {
+                showToast("【エラー】Gemini API Keyが設定されていません。右上の『目標・設定』から入力してください。");
+                toggleModal('modal-settings');
+                return;
+            }
 
             const loader = document.getElementById('ai-loading');
             const loaderText = document.getElementById('ai-loading-text');
@@ -1173,13 +1215,8 @@
             loaderText.innerText = "栄養素バランスを特定・計算中...";
 
             try {
-                const key = getEffectiveApiKey();
-                // 安定版の「gemini-1.5-flash」にモデルを統一
                 const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
-
-                const systemPrompt = `
-                    ユーザーが入力したテキストに基づき、カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)の数値を推定し、JSONフォーマットのみで出力してください。
-                `;
+                const systemPrompt = `ユーザーが入力したテキストに基づき、カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)の数値を推定し、JSONフォーマットのみで出力してください。`;
 
                 const payload = {
                     contents: [{ parts: [{ text: `以下の食事内容を分解解析してください: "${input}"` }] }],
@@ -1207,11 +1244,11 @@
                     addParsedMealToState(parsed);
                     document.getElementById('ai-text-input').value = "";
                 } else {
-                    throw new Error("応答データがありません。");
+                    throw new Error("解析応答データが空でした。");
                 }
             } catch (error) {
                 console.error("Gemini text analysis failure:", error);
-                showToast(`解析失敗: ${error.message || "手動入力をご活用ください。"}`);
+                showToast(error.message || "テキスト解析に失敗しました。");
             } finally {
                 loader.classList.add('hidden');
             }
@@ -1221,22 +1258,26 @@
             const file = inputElement.files[0];
             if (!file) return;
 
+            const key = getEffectiveApiKey();
+            if (!key) {
+                showToast("【エラー】Gemini API Keyが設定されていません。右上の『目標・設定』から入力してください。");
+                toggleModal('modal-settings');
+                inputElement.value = "";
+                return;
+            }
+
             const loader = document.getElementById('ai-loading');
             const loaderText = document.getElementById('ai-loading-text');
             loader.classList.remove('hidden');
             loaderText.innerText = "写真を解析用に自動圧縮・変換中...";
 
             try {
-                // ブラウザ側で画像を最大1024pxに超高速軽量化（HEIC問題および容量制限の完全解消）
+                // 超高速軽量化 & HEIC強制JPEGリサイズ化
                 const base64Data = await resizeAndConvertToJpegBase64(file);
 
                 loaderText.innerText = "画像からPFCバランスを割り出し中...";
-                const key = getEffectiveApiKey();
                 const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
-
-                const systemPrompt = `
-                    送付された画像に含まれる食品・料理から、カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)の数値を推定し、JSONフォーマットのみで返却してください。
-                `;
+                const systemPrompt = `送付された画像に含まれる食品・料理から、カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)の数値を推定し、JSONフォーマットのみで返却してください。`;
 
                 const payload = {
                     contents: [{
@@ -1269,14 +1310,14 @@
                     const parsed = JSON.parse(text);
                     addParsedMealToState(parsed);
                 } else {
-                    throw new Error("画像判定のレスポンスが空です。");
+                    throw new Error("画像判定応答データが空でした。");
                 }
             } catch (error) {
                 console.error("Gemini image analysis failure:", error);
-                showToast(`写真解析失敗: ${error.message || "ファイル破損や容量制限の可能性があります。"}`);
+                showToast(error.message || "写真解析に失敗しました。");
             } finally {
                 loader.classList.add('hidden');
-                inputElement.value = ""; // アップロードスロットをクリア
+                inputElement.value = ""; // アップロードスロットをリセット
             }
         };
 
@@ -1312,6 +1353,13 @@
         }
 
         window.generateAIFeedback = async function() {
+            const key = getEffectiveApiKey();
+            if (!key) {
+                showToast("【エラー】Gemini API Keyが未設定です。『目標・設定』から入力してください。");
+                toggleModal('modal-settings');
+                return;
+            }
+
             const feedbackBox = document.getElementById('trainer-feedback-box');
             feedbackBox.innerHTML = `
                 <div class="flex items-center gap-2 text-brand-primary">
@@ -1321,9 +1369,7 @@
             `;
 
             try {
-                const key = getEffectiveApiKey();
                 const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
-
                 const systemPrompt = `
                     あなたはパーソナルトレーニングジム「CARAT」のチーフトレーナーです。
                     ユーザーの本日の食事実績PFCおよび、週累計の過不足状況を考慮したアドバイスを、簡潔・論理的かつモチベーションが向上するよう150字程度で出力してください。
@@ -1357,7 +1403,7 @@
                     feedbackBox.innerHTML = `<span class="text-brand-muted">データの取得に失敗しました。</span>`;
                 }
             } catch (e) {
-                feedbackBox.innerHTML = `<span class="text-rose-400">指導の取得に失敗しました: ${e.message}</span>`;
+                feedbackBox.innerHTML = `<span class="text-rose-500">${e.message || "指導の取得に失敗しました。"}</span>`;
             }
         };
 
@@ -1366,15 +1412,20 @@
             const messageText = inputEl.value.trim();
             if (!messageText) return;
 
+            const key = getEffectiveApiKey();
+            if (!key) {
+                showToast("【エラー】Gemini API Keyが未設定です。『目標・設定』から入力してください。");
+                toggleModal('modal-settings');
+                return;
+            }
+
             appendChatMessage("user", messageText);
             inputEl.value = "";
 
             const aiTempId = appendChatMessage("ai", "最適な調整アプローチを検討中...", true);
 
             try {
-                const key = getEffectiveApiKey();
                 const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
-
                 const systemPrompt = `
                     あなたはパーソナルジム「CARAT」のチーフトレーナー、または栄養顧問です。
                     ジムクライアントから寄せられる質問（PFC調整、トレーニング頻度、会食・旅行に伴う週単位での食事の調整戦略、リカバリーなど）に対して、プロの知見に基づき、簡潔・論理的・実践的な回答を提示してください。
@@ -1395,7 +1446,7 @@
             } catch (e) {
                 const tempDiv = document.getElementById(aiTempId);
                 if (tempDiv) {
-                    tempDiv.querySelector('.chat-body').innerText = `エラーが発生しました: ${e.message}`;
+                    tempDiv.querySelector('.chat-body').innerHTML = `<span class="text-rose-500">${e.message || "エラーが発生しました。"}</span>`;
                 }
             }
         };
