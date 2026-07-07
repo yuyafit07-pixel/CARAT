@@ -1,0 +1,385 @@
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CARAT Trainer Portal - トレーナー専用管理画面</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#F4F8FA',
+                            card: '#FFFFFF',
+                            primary: '#4A90E2',
+                            primaryHover: '#357ABD',
+                            secondary: '#85B7E2',
+                            accent: '#E6F0FA',
+                            text: '#2C3E50',
+                            muted: '#7F8C8D',
+                            border: '#DCE6EE'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Firebase SDK (v11) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase初期設定（クライアントアプリと同じ設定値を画面上でペースト可能にするため、共通変数としてマウントします）
+        window.initTrainerFirebase = function(config) {
+            try {
+                const app = initializeApp(config);
+                const auth = getAuth(app);
+                const db = getFirestore(app);
+                
+                window.db = db;
+                window.auth = auth;
+
+                signInAnonymously(auth).then((user) => {
+                    document.getElementById('sync-status').innerHTML = `
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        DB Connected
+                    `;
+                    document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold";
+                });
+            } catch (e) {
+                alert("Firebaseの初期化に失敗しました。貼り付けた設定コードを確認してください。");
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-bg text-brand-text font-sans min-h-screen">
+
+    <div class="max-w-md mx-auto bg-brand-bg min-h-screen shadow-xl flex flex-col relative pb-12 border-x border-brand-border">
+        
+        <!-- Header -->
+        <header class="bg-brand-card border-b border-brand-border px-5 py-4 sticky top-0 z-50 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-primary to-brand-accent flex items-center justify-center shadow-sm">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-extrabold tracking-widest text-brand-primary">CARAT Portal</h1>
+                    <p class="text-[9px] text-brand-muted tracking-wider -mt-1">TRAINER MANAGEMENT SYSTEM</p>
+                </div>
+            </div>
+            <div>
+                <span id="sync-status" class="text-[10px] px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                    Offline
+                </span>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="flex-1 px-4.5 py-4 space-y-5 overflow-y-auto">
+
+            <!-- 設定未完了時のFirebase Config入力パネル -->
+            <section id="config-setup-panel" class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3">
+                <h3 class="text-xs font-bold text-brand-primary flex items-center gap-1.5">
+                    <i data-lucide="key" class="w-4 h-4"></i> 初期設定：データベース連携
+                </h3>
+                <p class="text-[11px] text-brand-muted leading-relaxed">
+                    初回のみ、クライアントアプリ設定時に使用したFirebaseの「接続設定（firebaseConfig）」をそのまま以下に貼り付けてください。
+                </p>
+                <textarea id="firebase-config-input" rows="4" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-[10px] font-mono text-brand-text focus:outline-none focus:border-brand-primary resize-none" placeholder="const firebaseConfig = { ... };"></textarea>
+                <button onclick="applyFirebaseConfig()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm">
+                    接続設定を登録する
+                </button>
+            </section>
+
+            <!-- クライアント検索エリア -->
+            <section id="client-search-panel" class="hidden bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3">
+                <h3 class="text-xs font-bold text-brand-text flex items-center gap-1.5">
+                    <i data-lucide="users" class="w-4 h-4 text-brand-primary"></i> 担当クライアントの選択
+                </h3>
+                <div class="flex gap-2">
+                    <input type="text" id="client-id-input" class="flex-1 bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary font-mono" placeholder="クライアントIDを入力">
+                    <button onclick="loadClientData()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-4 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1">
+                        <i data-lucide="search" class="w-3.5 h-3.5"></i> 読込
+                    </button>
+                </div>
+            </section>
+
+            <!-- クライアントデータ表示（検索成功時に開く） -->
+            <div id="client-data-container" class="hidden space-y-5">
+                
+                <!-- 本日のステータスカード -->
+                <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-4">
+                    <div class="flex justify-between items-center border-b border-brand-border pb-3">
+                        <h4 class="text-xs font-extrabold text-brand-text">本日の栄養摂取 & 身体計測</h4>
+                        <span id="last-update-time" class="text-[9px] text-brand-muted">更新: 未ロード</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="bg-brand-bg rounded-xl p-3 border border-brand-border">
+                            <span class="text-[9px] text-brand-muted block font-bold">総摂取エネルギー</span>
+                            <span class="text-lg font-black text-brand-primary"><span id="client-cur-cal">0</span> / <span id="client-tar-cal">0</span> <span class="text-[10px] font-normal">kcal</span></span>
+                        </div>
+                        <div class="bg-brand-bg rounded-xl p-3 border border-brand-border flex flex-col justify-center">
+                            <span class="text-[9px] text-brand-muted block font-bold">現在の身体データ</span>
+                            <span class="text-xs font-bold mt-1 text-brand-text">
+                                体重: <span id="client-weight" class="font-extrabold">--</span> kg / 
+                                脂肪: <span id="client-fat" class="font-extrabold">--</span> %
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <span class="text-[10px] text-brand-muted font-bold block">PFC実績 (目標値)</span>
+                        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                            <div class="bg-sky-50 rounded-lg p-2 border border-sky-100">
+                                <span class="text-[8px] text-sky-600 block font-bold">P (タンパク質)</span>
+                                <span class="font-extrabold text-sky-700"><span id="client-cur-p">0</span>g (<span id="client-tar-p">0</span>g)</span>
+                            </div>
+                            <div class="bg-emerald-50 rounded-lg p-2 border border-emerald-100">
+                                <span class="text-[8px] text-emerald-600 block font-bold">F (脂質)</span>
+                                <span class="font-extrabold text-emerald-700"><span id="client-cur-f">0</span>g (<span id="client-tar-f">0</span>g)</span>
+                            </div>
+                            <div class="bg-amber-50 rounded-lg p-2 border border-amber-100">
+                                <span class="text-[8px] text-amber-600 block font-bold">C (炭水化物)</span>
+                                <span class="font-extrabold text-amber-700"><span id="client-cur-c">0</span>g (<span id="client-tar-c">0</span>g)</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 週全体のカロリー帳尻合わせ推移 -->
+                <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60">
+                    <h4 class="text-xs font-bold tracking-wider text-brand-muted mb-3 flex items-center gap-1.5">
+                        <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-primary"></i> 1週間のカロリー調整進捗
+                    </h4>
+                    <div class="grid grid-cols-7 gap-1 text-center mb-1">
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">月</span><span id="weekly-cal-Mon" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">火</span><span id="weekly-cal-Tue" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">水</span><span id="weekly-cal-Wed" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">木</span><span id="weekly-cal-Thu" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">金</span><span id="weekly-cal-Fri" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">土</span><span id="weekly-cal-Sat" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">日</span><span id="weekly-cal-Sun" class="text-[10px] font-bold">--</span></div>
+                    </div>
+                </section>
+
+                <!-- 今日のタイムライン詳細 -->
+                <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60">
+                    <h4 class="text-xs font-bold text-brand-text mb-3">今日の食事ログ明細</h4>
+                    <div id="client-meal-timeline" class="space-y-2 max-h-[160px] overflow-y-auto">
+                        <!-- 動的に明細が並びます -->
+                    </div>
+                </section>
+
+                <!-- トレーナーフィードバック送信パネル -->
+                <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3">
+                    <h4 class="text-xs font-bold text-brand-primary flex items-center gap-1.5">
+                        <i data-lucide="message-square-plus" class="w-4 h-4"></i> トレーナーのコメント・食事評価
+                    </h4>
+                    <p class="text-[11px] text-brand-muted">
+                        クライアントアプリ側の「AIトレーナー指導」にリアルタイムで届くフィードバックを入力・保存します。
+                    </p>
+                    <textarea id="trainer-feedback-input" rows="4" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary resize-none" placeholder="例: 今日のPFCは完璧です！脂質が少し低めなので、明日は良質なアボカド等を補給していきましょう！"></textarea>
+                    <button onclick="submitTrainerFeedback()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
+                        <i data-lucide="send" class="w-4 h-4"></i> 指導アドバイスを送信する
+                    </button>
+                </section>
+
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'carat-meal-v3';
+        let currentTargetClientId = null;
+        let unsubscribeClientListener = null;
+
+        window.onload = function() {
+            lucide.createIcons();
+            loadSavedConfig();
+        };
+
+        // Firebase ConfigをLocalStorageから安全に取得・展開
+        function loadSavedConfig() {
+            const saved = localStorage.getItem(`carat_trainer_config_${appId}`);
+            if (saved) {
+                try {
+                    const config = JSON.parse(saved);
+                    window.initTrainerFirebase(config);
+                    document.getElementById('config-setup-panel').classList.add('hidden');
+                    document.getElementById('client-search-panel').classList.remove('hidden');
+                } catch (e) {
+                    localStorage.removeItem(`carat_trainer_config_${appId}`);
+                }
+            }
+        }
+
+        // データベース接続設定のセットアップ処理
+        window.applyFirebaseConfig = function() {
+            const rawText = document.getElementById('firebase-config-input').value.trim();
+            if (!rawText) return;
+
+            // 簡易的にJSON部分を抽出・解析する、または直接Configオブジェクトとしてマッピング
+            try {
+                let cleanJson = rawText;
+                if (rawText.includes('{')) {
+                    cleanJson = rawText.substring(rawText.indexOf('{'), rawText.lastIndexOf('}') + 1);
+                }
+                // オブジェクトのキーをダブルクォーテーションで補正してパース
+                const corrected = cleanJson
+                    .replace(/([a-zA-Z0-9]+)\s*:/g, '"$1":')
+                    .replace(/'/g, '"');
+                const parsedConfig = JSON.parse(corrected);
+
+                localStorage.setItem(`carat_trainer_config_${appId}`, JSON.stringify(parsedConfig));
+                window.initTrainerFirebase(parsedConfig);
+
+                document.getElementById('config-setup-panel').classList.add('hidden');
+                document.getElementById('client-search-panel').classList.remove('hidden');
+                showToast("データベースの設定を適用しました！");
+            } catch (e) {
+                alert("接続設定のコピー内容が正しくありません。中身を再確認してください。");
+            }
+        };
+
+        // クライアントデータの読み込みとリアルタイム監視
+        window.loadClientData = function() {
+            const targetId = document.getElementById('client-id-input').value.trim();
+            if (!targetId) {
+                alert("クライアントIDを入力してください。");
+                return;
+            }
+
+            if (unsubscribeClientListener) {
+                unsubscribeClientListener(); // 過去の監視を解除
+            }
+
+            currentTargetClientId = targetId;
+            const clientDocRef = doc(window.db, 'artifacts', appId, 'users', targetId, 'profile', 'state');
+
+            // リアルタイムリスナーのセットアップ
+            unsubscribeClientListener = onSnapshot(clientDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    renderClientDashboard(data);
+                    document.getElementById('client-data-container').classList.remove('hidden');
+                } else {
+                    alert("指定されたクライアントIDのデータが存在しません。入力ミスがないかご確認ください。");
+                }
+            }, (error) => {
+                alert("データベースからの読込に失敗しました。接続エラーです。");
+            });
+        };
+
+        // トレーナーダッシュボードにクライアントデータを描画
+        function renderClientDashboard(data) {
+            // カロリー関連
+            document.getElementById('client-cur-cal').innerText = (data.currentCalories || 0).toLocaleString();
+            document.getElementById('client-tar-cal').innerText = (data.targetCalories || 0).toLocaleString();
+
+            // 身体データ
+            document.getElementById('client-weight').innerText = data.weight ? data.weight.toFixed(1) : '--';
+            document.getElementById('client-fat').innerText = data.fatRate ? data.fatRate.toFixed(1) : '--';
+
+            // PFCバランス
+            document.getElementById('client-cur-p').innerText = data.currentP ? data.currentP.toFixed(1) : '0';
+            document.getElementById('client-tar-p').innerText = data.targetP || '0';
+            document.getElementById('client-cur-f').innerText = data.currentF ? data.currentF.toFixed(1) : '0';
+            document.getElementById('client-tar-f').innerText = data.targetF || '0';
+            document.getElementById('client-cur-c').innerText = data.currentC ? data.currentC.toFixed(1) : '0';
+            document.getElementById('client-tar-c').innerText = data.targetC || '0';
+
+            // 更新日時
+            const now = new Date();
+            document.getElementById('last-update-time').innerText = `最終同期: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+            // 今週のカロリー推移
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            days.forEach(day => {
+                const dayLog = data.weeklyLogs ? data.weeklyLogs[day] : null;
+                document.getElementById(`weekly-cal-${day}`).innerText = dayLog && dayLog.kcal > 0 ? dayLog.kcal.toLocaleString() : '-';
+            });
+
+            // タイムラインの構築
+            const timelineEl = document.getElementById('client-meal-timeline');
+            timelineEl.innerHTML = '';
+            if (data.meals && data.meals.length > 0) {
+                data.meals.forEach(m => {
+                    const row = document.createElement('div');
+                    row.className = "flex justify-between items-center bg-brand-bg rounded-lg p-2.5 text-[11px] border border-brand-border";
+                    row.innerHTML = `
+                        <div>
+                            <span class="bg-brand-accent text-brand-primary px-1.5 py-0.5 rounded mr-1.5 font-bold">${m.category}</span>
+                            <span class="font-bold text-brand-text">${m.name}</span>
+                        </div>
+                        <span class="font-black text-brand-muted">${m.kcal} kcal</span>
+                    `;
+                    timelineEl.appendChild(row);
+                });
+            } else {
+                timelineEl.innerHTML = `<span class="text-[10px] text-brand-muted text-center block py-4">本日の食事は未登録です</span>`;
+            }
+
+            // 過去のフィードバック履歴がある場合はテキストエリアに反映
+            if (appState.trainerFeedbackText && document.getElementById('trainer-feedback-box')) {
+                // 必要に応じてここを表示
+            }
+        }
+
+        // トレーナーアドバイスの保存・送信
+        window.submitTrainerFeedback = async function() {
+            if (!currentTargetClientId) {
+                alert("クライアントデータが読み込まれていません。");
+                return;
+            }
+
+            const feedbackText = document.getElementById('trainer-feedback-input').value.trim();
+            if (!feedbackText) {
+                alert("アドバイスコメントを入力してください。");
+                return;
+            }
+
+            try {
+                // クライアントのFirestoreへ指導内容をマウント
+                const clientDocRef = doc(window.db, 'artifacts', appId, 'users', currentTargetClientId, 'profile', 'state');
+                
+                // コメント送信時、AIメッセージにマウントして画面上に反映
+                await updateDoc(clientDocRef, {
+                    trainerFeedback: feedbackText,
+                    trainerFeedbackAt: new Date().toISOString()
+                });
+
+                showToast("食事評価アドバイスをクライアントアプリに送信しました！");
+                document.getElementById('trainer-feedback-input').value = '';
+            } catch (err) {
+                console.error("指導送信失敗:", err);
+                alert("指導データの送信に失敗しました。再試行してください。");
+            }
+        };
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
+            toast.innerHTML = `<i data-lucide="info" class="w-4 h-4"></i> <span>${message}</span>`;
+            document.body.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
+
+```
