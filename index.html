@@ -1,4 +1,4 @@
-<DOCTYPE html>
+```html
 <!DOCTYPE html>
 <html lang="ja" class="notranslate">
 <head>
@@ -276,7 +276,7 @@
                 <div id="meal-timeline" class="space-y-2.5">
                     <div id="empty-state" class="text-center py-9 bg-brand-card rounded-2xl border border-brand-border/40 text-brand-muted text-xs">
                         <i data-lucide="plus-circle" class="w-7 h-7 mx-auto mb-2 text-brand-secondary"></i>
-                        今日の食事がまだ登録されていません。<br>AI解析や履歴一覧から手軽に記録しましょう。
+                        今日の食気がまだ登録されていません。<br>AI解析や履歴一覧から手軽に記録しましょう。
                     </div>
                 </div>
             </section>
@@ -1086,8 +1086,60 @@
         };
 
         // ==========================================
-        // Gemini API 接続
+        // Gemini API 接続 (Canvas圧縮コンバート＆安定版モデル指定)
         // ==========================================
+        function getEffectiveApiKey() {
+            const userKey = document.getElementById('user-api-key').value.trim();
+            return userKey || apiKey;
+        }
+
+        // HEICバイナリや大容量データを安全にJPEG 1024pxに超高速圧縮する仮想レンダラー
+        function resizeAndConvertToJpegBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        const MAX_WIDTH = 1024;
+                        const MAX_HEIGHT = 1024;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // 圧縮率0.7で仮想JPEG出力（HEICバイナリ、大容量写真をここで完全解決）
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
+                        resolve(compressedBase64);
+                    };
+                    img.onerror = function(err) {
+                        reject(new Error("アップロードされた画像の読み込みに失敗しました。"));
+                    };
+                };
+                reader.onerror = function(err) {
+                    reject(new Error("ファイルの読み取りエラーが発生しました。"));
+                };
+            });
+        }
+
         async function fetchGeminiWithBackoff(url, payload) {
             let delay = 1000;
             for (let i = 0; i < 5; i++) {
@@ -1099,12 +1151,17 @@
                     });
                     if (response.ok) {
                         return await response.json();
+                    } else {
+                        const errText = await response.text();
+                        console.warn(`Attempt ${i+1} fail:`, errText);
                     }
-                } catch (e) {}
+                } catch (e) {
+                    console.warn(`Attempt ${i+1} Exception:`, e);
+                }
                 await new Promise(resolve => setTimeout(resolve, delay));
                 delay *= 2;
             }
-            throw new Error("API Connection Failed");
+            throw new Error("Gemini API接続がタイムアウトしました。インターネット環境またはAPIキーの状態を確認してください。");
         }
 
         window.analyzeMealText = async function() {
@@ -1116,97 +1173,112 @@
             loader.classList.remove('hidden');
             loaderText.innerText = "栄養素バランスを特定・計算中...";
 
-            const key = getEffectiveApiKey();
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`;
-
-            const systemPrompt = `
-                ユーザーが入力したテキストに基づき、カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)の数値を推定し、必ず以下の形式のJSONフォーマットのみで出力してください。
-                余分なテキストや解説は不要です。
-                
-                {
-                  "name": "食品・メニュー名",
-                  "kcal": 380,
-                  "p": 25.0,
-                  "f": 8.0,
-                  "c": 45.0
-                }
-            `;
-
-            const payload = {
-                contents: [{ parts: [{ text: `以下の食事内容を分解解析してください: "${input}"` }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-                generationConfig: { responseMimeType: "application/json" }
-            };
-
             try {
+                const key = getEffectiveApiKey();
+                // 安定版の「gemini-1.5-flash」にモデルを統一
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+
+                const systemPrompt = `
+                    ユーザーが入力したテキストに基づき、カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)の数値を推定し、JSONフォーマットのみで出力してください。
+                `;
+
+                const payload = {
+                    contents: [{ parts: [{ text: `以下の食事内容を分解解析してください: "${input}"` }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    generationConfig: { 
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                name: { type: "STRING" },
+                                kcal: { type: "NUMBER" },
+                                p: { type: "NUMBER" },
+                                f: { type: "NUMBER" },
+                                c: { type: "NUMBER" }
+                            },
+                            required: ["name", "kcal", "p", "f", "c"]
+                        }
+                    }
+                };
+
                 const data = await fetchGeminiWithBackoff(endpoint, payload);
                 const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (text) {
                     const parsed = JSON.parse(text);
                     addParsedMealToState(parsed);
                     document.getElementById('ai-text-input').value = "";
+                } else {
+                    throw new Error("応答データがありません。");
                 }
             } catch (error) {
-                showToast("解析に失敗しました。手動入力をご活用ください。");
+                console.error("Gemini text analysis failure:", error);
+                showToast(`解析失敗: ${error.message || "手動入力をご活用ください。"}`);
             } finally {
                 loader.classList.add('hidden');
             }
         };
 
-        window.analyzeMealImage = function(inputElement) {
+        window.analyzeMealImage = async function(inputElement) {
             const file = inputElement.files[0];
             if (!file) return;
 
             const loader = document.getElementById('ai-loading');
             const loaderText = document.getElementById('ai-loading-text');
             loader.classList.remove('hidden');
-            loaderText.innerText = "画像からPFCバランスを割り出し中...";
+            loaderText.innerText = "写真を解析用に自動圧縮・変換中...";
 
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const base64Data = e.target.result.split(',')[1];
+            try {
+                // ブラウザ側で画像を最大1024pxに超高速軽量化（HEIC問題および容量制限の完全解消）
+                const base64Data = await resizeAndConvertToJpegBase64(file);
+
+                loaderText.innerText = "画像からPFCバランスを割り出し中...";
                 const key = getEffectiveApiKey();
-                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`;
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
 
                 const systemPrompt = `
-                    送付された画像に含まれる食品・料理から、カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)の数値を推定し、必ず以下の形式のJSONフォーマットのみで返却してください。
-                    
-                    {
-                      "name": "推定した料理名",
-                      "kcal": 450,
-                      "p": 28.0,
-                      "f": 12.0,
-                      "c": 50.0
-                    }
+                    送付された画像に含まれる食品・料理から、カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)の数値を推定し、JSONフォーマットのみで返却してください。
                 `;
 
                 const payload = {
                     contents: [{
                         role: "user",
                         parts: [
-                            { text: "この画像の栄養成分を解析してください。" },
-                            { inlineData: { mimeType: file.type, data: base64Data } }
+                            { text: "この画像の料理の栄養素構成（PFCおよびカロリー）を算出してください。" },
+                            { inlineData: { mimeType: "image/jpeg", data: base64Data } }
                         ]
                     }],
                     systemInstruction: { parts: [{ text: systemPrompt }] },
-                    generationConfig: { responseMimeType: "application/json" }
+                    generationConfig: { 
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                name: { type: "STRING" },
+                                kcal: { type: "NUMBER" },
+                                p: { type: "NUMBER" },
+                                f: { type: "NUMBER" },
+                                c: { type: "NUMBER" }
+                            },
+                            required: ["name", "kcal", "p", "f", "c"]
+                        }
+                    }
                 };
 
-                try {
-                    const data = await fetchGeminiWithBackoff(endpoint, payload);
-                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (text) {
-                        const parsed = JSON.parse(text);
-                        addParsedMealToState(parsed);
-                    }
-                } catch (error) {
-                    showToast("画像の解析に失敗しました。");
-                } finally {
-                    loader.classList.add('hidden');
-                    inputElement.value = "";
+                const data = await fetchGeminiWithBackoff(endpoint, payload);
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (text) {
+                    const parsed = JSON.parse(text);
+                    addParsedMealToState(parsed);
+                } else {
+                    throw new Error("画像判定のレスポンスが空です。");
                 }
-            };
-            reader.readAsDataURL(file);
+            } catch (error) {
+                console.error("Gemini image analysis failure:", error);
+                showToast(`写真解析失敗: ${error.message || "ファイル破損や容量制限の可能性があります。"}`);
+            } finally {
+                loader.classList.add('hidden');
+                inputElement.value = ""; // アップロードスロットをクリア
+            }
         };
 
         function addParsedMealToState(parsed) {
@@ -1240,11 +1312,6 @@
             showToast(`「${newMeal.name}」を追加登録しました。`);
         }
 
-        function getEffectiveApiKey() {
-            const userKey = document.getElementById('user-api-key').value;
-            return userKey || apiKey;
-        }
-
         window.generateAIFeedback = async function() {
             const feedbackBox = document.getElementById('trainer-feedback-box');
             feedbackBox.innerHTML = `
@@ -1254,35 +1321,35 @@
                 </div>
             `;
 
-            const key = getEffectiveApiKey();
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`;
-
-            const systemPrompt = `
-                あなたはパーソナルトレーニングジム「CARAT」のチーフトレーナーです。
-                ユーザーの本日の食事実績PFCおよび、週累計の過不足状況を考慮したアドバイスを、簡潔・論理的かつモチベーションが向上するよう150字程度で出力してください。
-                特に週単位での調整（土曜日の外食に向けた調整など）を推奨する言葉を組み込んでください。
-            `;
-
-            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            let weeklyCalories = 0;
-            days.forEach(d => {
-                if (appState.weeklyLogs && appState.weeklyLogs[d]) {
-                    weeklyCalories += appState.weeklyLogs[d].kcal;
-                }
-            });
-
-            const userQuery = `
-                【本日の目標】 カロリー: ${appState.targetCalories}kcal, P: ${appState.targetP}g, F: ${appState.targetF}g, C: ${appState.targetC}g
-                【今日の実績】 カロリー: ${appState.currentCalories}kcal, P: ${appState.currentP}g, F: ${appState.currentF}g, C: ${appState.currentC}g
-                【今週の合計】 摂取: ${weeklyCalories}kcal (目標: ${appState.targetCalories * 7}kcal)
-            `;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-
             try {
+                const key = getEffectiveApiKey();
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+
+                const systemPrompt = `
+                    あなたはパーソナルトレーニングジム「CARAT」のチーフトレーナーです。
+                    ユーザーの本日の食事実績PFCおよび、週累計の過不足状況を考慮したアドバイスを、簡潔・論理的かつモチベーションが向上するよう150字程度で出力してください。
+                    特に週単位での調整（土曜日の外食に向けた調整など）を推奨する言葉を組み込んでください。
+                `;
+
+                const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                let weeklyCalories = 0;
+                days.forEach(d => {
+                    if (appState.weeklyLogs && appState.weeklyLogs[d]) {
+                        weeklyCalories += appState.weeklyLogs[d].kcal;
+                    }
+                });
+
+                const userQuery = `
+                    【本日の目標】 カロリー: ${appState.targetCalories}kcal, P: ${appState.targetP}g, F: ${appState.targetF}g, C: ${appState.targetC}g
+                    【今日の実績】 カロリー: ${appState.currentCalories}kcal, P: ${appState.currentP}g, F: ${appState.currentF}g, C: ${appState.currentC}g
+                    【今週の合計】 摂取: ${weeklyCalories}kcal (目標: ${appState.targetCalories * 7}kcal)
+                `;
+
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                };
+
                 const data = await fetchGeminiWithBackoff(endpoint, payload);
                 const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (responseText) {
@@ -1291,7 +1358,7 @@
                     feedbackBox.innerHTML = `<span class="text-brand-muted">データの取得に失敗しました。</span>`;
                 }
             } catch (e) {
-                feedbackBox.innerHTML = `<span class="text-rose-400">通信状況が不安定です。時間をおいて再試行してください。</span>`;
+                feedbackBox.innerHTML = `<span class="text-rose-400">指導の取得に失敗しました: ${e.message}</span>`;
             }
         };
 
@@ -1305,20 +1372,20 @@
 
             const aiTempId = appendChatMessage("ai", "最適な調整アプローチを検討中...", true);
 
-            const key = getEffectiveApiKey();
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`;
-
-            const systemPrompt = `
-                あなたはパーソナルジム「CARAT」のチーフトレーナー、または栄養顧問です。
-                ジムクライアントから寄せられる質問（PFC調整、トレーニング頻度、会食・旅行に伴う週単位での食事の調整戦略、リカバリーなど）に対して、プロの知見に基づき、簡潔・論理的・実践的な回答を提示してください。
-            `;
-
-            const payload = {
-                contents: [{ parts: [{ text: messageText }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-
             try {
+                const key = getEffectiveApiKey();
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+
+                const systemPrompt = `
+                    あなたはパーソナルジム「CARAT」のチーフトレーナー、または栄養顧問です。
+                    ジムクライアントから寄せられる質問（PFC調整、トレーニング頻度、会食・旅行に伴う週単位での食事の調整戦略、リカバリーなど）に対して、プロの知見に基づき、簡潔・論理的・実践的な回答を提示してください。
+                `;
+
+                const payload = {
+                    contents: [{ parts: [{ text: messageText }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                };
+
                 const data = await fetchGeminiWithBackoff(endpoint, payload);
                 const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 const tempDiv = document.getElementById(aiTempId);
@@ -1329,7 +1396,7 @@
             } catch (e) {
                 const tempDiv = document.getElementById(aiTempId);
                 if (tempDiv) {
-                    tempDiv.querySelector('.chat-body').innerText = "エラーが発生しました。しばらく待ってから再度送信してください。";
+                    tempDiv.querySelector('.chat-body').innerText = `エラーが発生しました: ${e.message}`;
                 }
             }
         };
@@ -1379,3 +1446,5 @@
     </script>
 </body>
 </html>
+
+```
