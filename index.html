@@ -32,7 +32,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- Firebase Compat SDK (フリーズと即死エラーを100%防止する安定版) -->
+    <!-- Firebase Compat SDK (フリーズと即死エラーを100%防止する安定互換版) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -52,7 +52,7 @@
             </div>
             <div class="flex items-center space-x-2">
                 <span id="sync-status" class="text-[9px] px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-100 flex items-center gap-1 font-bold">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                    <span class="w-1 h-1 rounded-full bg-amber-500 animate-pulse"></span>
                     未連携
                 </span>
                 <button onclick="window.toggleModal('modal-settings')" class="p-1.5 hover:bg-brand-accent rounded-full transition text-brand-muted hover:text-brand-primary">
@@ -76,7 +76,7 @@
             </div>
 
             <div class="w-full max-w-xs space-y-3 pt-2">
-                <input type="text" id="initial-id-input" class="w-full bg-white border-2 border-brand-border rounded-xl px-4 py-3.5 text-center text-sm font-mono font-bold text-brand-text focus:outline-none focus:border-brand-primary placeholder-brand-muted/40 shadow-inner" placeholder="CRT-XXXXXX">
+                <input type="text" id="initial-id-input" class="w-full bg-white border-2 border-brand-border rounded-xl px-4 py-3.5 text-center text-sm font-mono font-bold text-brand-text focus:outline-none focus:border-brand-primary placeholder-brand-muted/40 shadow-inner animate-pulse" placeholder="CRT-XXXXXX">
                 <button onclick="window.connectWithClientId()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3.5 rounded-xl text-xs font-black tracking-widest transition shadow-md">
                     目標設定を同期して開始する
                 </button>
@@ -109,7 +109,7 @@
                 </button>
             </div>
 
-            <!-- 今日の摂取カロリー・PFC状況 -->
+            <!-- 今日の摂取状況 -->
             <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-28 h-28 bg-brand-accent/30 rounded-full blur-2xl -mr-8 -mt-8"></div>
                 
@@ -196,8 +196,8 @@
                 </div>
 
                 <div class="grid grid-cols-7 gap-1.5 mb-2">
-                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
-                        <span class="text-[9px] text-brand-muted font-bold font-sans">月</span>
+                    <div id="btn-Mon" class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                        <span class="text-[9px] text-brand-muted font-bold">月</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Mon"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Mon">0</span>
                     </div>
@@ -255,7 +255,6 @@
                         <label class="flex items-center justify-center gap-2 bg-brand-accent hover:bg-brand-accent/80 text-brand-primary py-3 px-3 rounded-xl cursor-pointer text-xs font-semibold transition border border-brand-primary/20 border-dashed">
                             <i data-lucide="camera" class="w-4 h-4"></i>
                             <span>食事写真を解析</span>
-                            <!-- 直接JSでコントロールするため、インラインイベントを完全廃止 -->
                             <input type="file" id="ai-image-input" accept="image/*" class="hidden">
                         </label>
                         <button onclick="window.openManualInputModal()" class="flex items-center justify-center gap-2 bg-brand-bg hover:bg-brand-accent/50 text-brand-muted py-3 px-3 rounded-xl text-xs font-semibold transition border border-brand-border">
@@ -475,15 +474,15 @@
                     <div class="grid grid-cols-3 gap-2">
                         <div>
                             <label class="block text-[10px] text-sky-600 mb-1">目標 P (g)</label>
-                            <input type="number" id="target-p-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text text-center focus:outline-none" value="120">
+                            <input type="number" id="target-p-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2 text-brand-text text-center focus:outline-none" value="120">
                         </div>
                         <div>
                             <label class="block text-[10px] text-teal-600 mb-1">目標 F (g)</label>
-                            <input type="number" id="target-f-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text text-center focus:outline-none" value="45">
+                            <input type="number" id="target-f-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2 text-brand-text text-center focus:outline-none" value="45">
                         </div>
                         <div>
                             <label class="block text-[10px] text-amber-600 mb-1">目標 C (g)</label>
-                            <input type="number" id="target-c-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text text-center focus:outline-none" value="230">
+                            <input type="number" id="target-c-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2 text-brand-text text-center focus:outline-none" value="230">
                         </div>
                     </div>
                 </div>
@@ -551,7 +550,7 @@
     </div>
 
     <!-- MODAL: 画像＆テキスト共通・材料調整モーダル -->
-    <div id="modal-camera-edit" class="fixed inset-0 bg-brand-text/40 backdrop-blur-sm z-[110] hidden items-center justify-center p-4">
+    <div id="modal-camera-edit" class="fixed inset-0 bg-brand-text/30 backdrop-blur-sm z-[110] hidden items-center justify-center p-4">
         <div class="bg-brand-card w-full max-w-sm rounded-3xl border border-brand-border p-5 space-y-4 shadow-2xl flex flex-col max-h-[90vh] notranslate">
             <div class="flex justify-between items-center border-b border-brand-border pb-3">
                 <div class="flex items-center gap-2">
@@ -592,9 +591,8 @@
         </div>
     </div>
 
-    <!-- 内部同期ロジック (Compat CDN 方式により、読み込み失敗による全JS即死を完全に回避) -->
+    <!-- 内部同期ロジック (全JS即死を完全に回避する一元バインド設計) -->
     <script>
-        // グローバルステート定義
         const appId = 'carat-meal-v3';
         
         let appState = {
@@ -613,7 +611,7 @@
             fatRate: 15.0,
             mealHistory: [
                 { name: "サラダチキン", kcal: 115, p: 24.1, f: 1.2, c: 0 },
-                { name: "おにぎり(鮭)", kcal: 175, p: 4.2, f: 0.8, c: 38.0 },
+                { name: "おおにぎり(鮭)", kcal: 175, p: 4.2, f: 0.8, c: 38.0 },
                 { name: "ギリシャヨーグルト", kcal: 92, p: 10.0, f: 0, c: 4.8 }
             ],
             weeklyLogs: {
@@ -632,8 +630,10 @@
         let unsubscribeSync = null;
         const dayKeysMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-        // --- トースト通知 ---
-        function showToast(message) {
+        // ==========================================
+        // 100%エラーを防止するための全関数のグローバルバインド
+        // ==========================================
+        window.showToast = function(message) {
             const toast = document.createElement('div');
             toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
             toast.innerHTML = `<i data-lucide="info" class="w-4 h-4"></i> <span>${message}</span>`;
@@ -644,20 +644,30 @@
                 toast.classList.add('opacity-0');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
-        }
+        };
 
-        // --- 定番履歴の更新 ---
-        function saveToHistoryDatabase(name, kcal, p, f, c) {
+        window.saveToHistoryDatabase = function(name, kcal, p, f, c) {
             if (!appState.mealHistory) appState.mealHistory = [];
             appState.mealHistory = appState.mealHistory.filter(h => h.name.toLowerCase() !== name.toLowerCase());
             appState.mealHistory.unshift({ name, kcal, p, f, c });
             if (appState.mealHistory.length > 15) {
                 appState.mealHistory.pop();
             }
-        }
+        };
 
-        // --- Firebase 初期化・同期 ---
-        async function startSyncSystem() {
+        window.getEffectiveApiKey = function() {
+            const userKey = document.getElementById('user-api-key').value.trim();
+            if (userKey) return userKey;
+
+            const localSaved = localStorage.getItem(`carat_user_gemini_key_${appId}`);
+            if (localSaved) return localSaved;
+
+            if (appState.sharedGeminiKey) return appState.sharedGeminiKey;
+
+            return "";
+        };
+
+        window.startSyncSystem = async function() {
             const savedClientId = localStorage.getItem(`carat_active_client_id_${appId}`);
             
             if (!savedClientId) {
@@ -671,13 +681,11 @@
             document.getElementById('settings-client-id').innerText = savedClientId;
 
             try {
-                // Firebase SDK存在確認
                 if (typeof firebase === 'undefined') {
-                    showToast("通信エラー：データベースの読み込みに失敗しました。時間をおいてリロードしてください。");
+                    window.showToast("通信エラー：データベースの読み込みに失敗しました。再読み込みしてください。");
                     return;
                 }
 
-                // 安定版 Compat によるインスタンス化
                 if (!firebase.apps.length) {
                     const firebaseConfig = {
                         apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
@@ -694,7 +702,6 @@
                 auth = firebase.auth();
                 db = firebase.firestore();
 
-                // 匿名ログインの実行
                 await auth.signInAnonymously();
 
                 const userDocRef = db.doc(`artifacts/${appId}/public/data/clientStates/${savedClientId}`);
@@ -702,10 +709,10 @@
                 if (unsubscribeSync) unsubscribeSync();
                 
                 unsubscribeSync = userDocRef.onSnapshot((docSnap) => {
-                    if (docSnap.exists) {
+                    if (docSnap.exists()) {
                         const cloudData = docSnap.data();
                         
-                        // ディープコピーを適用したマージによりメモリデータ汚染を防ぐ
+                        // ディープコピーで状態上書き
                         appState = { ...appState, ...JSON.parse(JSON.stringify(cloudData)) };
                         window.appState = appState;
 
@@ -715,29 +722,29 @@
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                             Cloud Synced
                         `;
-                        document.getElementById('sync-status').className = "text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold font-sans";
+                        document.getElementById('sync-status').className = "text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold";
 
                         document.getElementById('target-calories-input').value = appState.targetCalories || 1800;
                         document.getElementById('target-p-input').value = appState.targetP || 120;
                         document.getElementById('target-f-input').value = appState.targetF || 45;
                         document.getElementById('target-c-input').value = appState.targetC || 230;
 
-                        loadMealsForActiveDate();
+                        window.loadMealsForActiveDate();
                     } else {
                         userDocRef.set(appState);
                     }
                 }, (error) => {
                     console.error("Firestore Subscribe Error:", error);
-                    showToast("同期データの読み込みに失敗しました。認証設定をご確認ください。");
+                    window.showToast("データの受信に失敗しました。認証設定をご確認ください。");
                 });
 
             } catch (err) {
                 console.error("Auth / Sync Error:", err);
-                showToast("データベースへの接続に失敗しました。");
+                window.showToast("データベースへの接続に失敗しました。");
             }
-        }
+        };
 
-        async function connectWithClientId() {
+        window.connectWithClientId = async function() {
             const idInput = document.getElementById('initial-id-input').value.trim().toUpperCase();
             if (!idInput) {
                 alert("クライアントIDを入力してください。");
@@ -748,7 +755,7 @@
 
             try {
                 if (typeof firebase === 'undefined') {
-                    alert("通信環境が不安定です。時間を置いてリロードしてください。");
+                    alert("通信環境が不安定です。時間を置いて再度お試しください。");
                     return;
                 }
                 if (!firebase.apps.length) {
@@ -765,33 +772,33 @@
                 const userDocRef = db.doc(`artifacts/${appId}/public/data/clientStates/${idInput}`);
                 const docSnap = await userDocRef.get();
 
-                if (docSnap.exists) {
+                if (docSnap.exists()) {
                     localStorage.setItem(`carat_active_client_id_${appId}`, idInput);
-                    showToast("CARAT専用目標の同期に成功しました！");
-                    startSyncSystem();
+                    window.showToast("CARAT専用目標の同期に成功しました！");
+                    window.startSyncSystem();
                 } else {
                     alert("指定されたクライアントIDが存在しません。トレーナーへ正しいIDを確認してください。");
                     document.getElementById('sync-status').innerText = "未連携";
                 }
             } catch (err) {
                 console.error("Connection Error:", err);
-                alert("連携時にエラーが発生しました。接続状況を確認してください。");
+                alert("連携時にエラーが発生しました。ドメインの承認設定や通信環境をご確認ください。");
                 document.getElementById('sync-status').innerText = "未連携";
             }
-        }
+        };
 
-        async function disconnectClientId() {
-            if (confirm("ID連携を解除しますか？")) {
+        window.disconnectClientId = function() {
+            if (confirm("ID連携を解除してログアウトしますか？")) {
                 if (unsubscribeSync) unsubscribeSync();
                 localStorage.removeItem(`carat_active_client_id_${appId}`);
                 document.getElementById('welcome-overlay').classList.remove('hidden');
                 document.getElementById('user-id-display').innerText = "未接続";
                 window.toggleModal('modal-settings');
-                showToast("連携を解除しました。");
+                window.showToast("連携を解除しました。");
             }
-        }
+        };
 
-        async function syncStateToCloud() {
+        window.syncStateToCloud = async function() {
             const activeId = localStorage.getItem(`carat_active_client_id_${appId}`);
             if (!activeId) return;
 
@@ -804,9 +811,9 @@
             } catch (err) {
                 console.error("Auto Sync Fail:", err);
             }
-        }
+        };
 
-        function loadMealsForActiveDate() {
+        window.loadMealsForActiveDate = function() {
             if (!appState.mealsByDate) appState.mealsByDate = {};
             const activeMeals = appState.mealsByDate[window.currentDateString] ? JSON.parse(JSON.stringify(appState.mealsByDate[window.currentDateString])) : [];
             appState.meals = activeMeals;
@@ -814,8 +821,8 @@
             calculateTotals();
             updateWeeklyLogsForActiveDate();
             updateDateUI();
-            updateUI();
-        }
+            window.updateUI();
+        };
 
         function updateWeeklyLogsForActiveDate() {
             const activeDate = new Date(window.currentDateString);
@@ -860,8 +867,7 @@
         }
         window.currentDateString = getTodayDateString();
 
-        // 決定版：日付変更（破損ガード）
-        async function changeDay(direction) {
+        window.changeDay = async function(direction) {
             if (!appState.mealsByDate) appState.mealsByDate = {};
             appState.mealsByDate[window.currentDateString] = JSON.parse(JSON.stringify(appState.meals || []));
 
@@ -874,26 +880,26 @@
             const newDateStr = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}-${String(current.getDate()).padStart(2, '0')}`;
             window.currentDateString = newDateStr;
             
-            loadMealsForActiveDate();
-            await syncStateToCloud();
-        }
+            window.loadMealsForActiveDate();
+            await window.syncStateToCloud();
+        };
 
-        async function resetToToday() {
+        window.resetToToday = async function() {
             if (!appState.mealsByDate) appState.mealsByDate = {};
             appState.mealsByDate[window.currentDateString] = JSON.parse(JSON.stringify(appState.meals || []));
 
             window.currentDateString = getTodayDateString();
             
-            loadMealsForActiveDate();
-            await syncStateToCloud();
-            showToast("今日の画面に戻りました。");
-        }
+            window.loadMealsForActiveDate();
+            await window.syncStateToCloud();
+            window.showToast("今日の画面に戻りました。");
+        };
 
-        function selectDayFromWeeklyGrid(dayKey) {
-            showToast(`${dayKey}曜日のカロリー実績です。日付調整は上部矢印をご利用ください。`);
-        }
+        window.selectDayFromWeeklyGrid = function(dayKey) {
+            window.showToast(`${dayKey}曜日のカロリー実績です。日付切り替えは上部矢印をご利用ください。`);
+        };
 
-        function updateUI() {
+        window.updateUI = function() {
             document.getElementById('target-calories').innerText = appState.targetCalories.toLocaleString();
             document.getElementById('current-calories').innerText = appState.currentCalories.toLocaleString();
 
@@ -965,7 +971,7 @@
             renderTimeline();
             renderHistoryQuickList();
             if (window.lucide) window.lucide.createIcons();
-        }
+        };
 
         function calculateTotals() {
             let cal = 0, p = 0, f = 0, c = 0;
@@ -1049,7 +1055,41 @@
             });
         }
 
-        function toggleModal(id) {
+        window.quickAddFromHistory = function(hist) {
+            const now = new Date();
+            const hour = now.getHours();
+            let category = "間食";
+            if (hour >= 5 && hour < 10) category = "朝食";
+            else if (hour >= 10 && hour < 15) category = "昼食";
+            else if (hour >= 15 && hour < 21) category = "夕食";
+
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+            const newMeal = {
+                id: Date.now().toString(),
+                category: category,
+                name: hist.name,
+                kcal: Math.round(hist.kcal),
+                p: hist.p,
+                f: hist.f,
+                c: hist.c,
+                time: timeStr
+            };
+
+            if (!appState.mealsByDate) appState.mealsByDate = {};
+            if (!appState.mealsByDate[window.currentDateString]) {
+                appState.mealsByDate[window.currentDateString] = [];
+            }
+            appState.mealsByDate[window.currentDateString].push(newMeal);
+            appState.meals = appState.mealsByDate[window.currentDateString];
+
+            window.syncCurrentDayWithTimeline();
+            window.syncStateToCloud();
+            window.updateUI();
+            window.showToast(`「${newMeal.name}」を追加登録しました！`);
+        };
+
+        window.toggleModal = function(id) {
             const modal = document.getElementById(id);
             if (!modal) return;
             if (modal.classList.contains('hidden')) {
@@ -1059,22 +1099,22 @@
                 modal.classList.remove('flex');
                 modal.classList.add('hidden');
             }
-        }
+        };
 
-        function openManualInputModal() {
+        window.openManualInputModal = function() {
             document.getElementById('manual-meal-name').value = '';
             document.getElementById('manual-calories').value = '';
             document.getElementById('manual-p').value = '';
             document.getElementById('manual-f').value = '';
             document.getElementById('manual-c').value = '';
-            toggleModal('modal-meal');
-        }
+            window.toggleModal('modal-meal');
+        };
 
-        function closeMealModal() {
-            toggleModal('modal-meal');
-        }
+        window.closeMealModal = function() {
+            window.toggleModal('modal-meal');
+        };
 
-        function handleManualMealSubmit(e) {
+        window.handleManualMealSubmit = function(e) {
             e.preventDefault();
             const category = document.getElementById('meal-time-category').value;
             const name = document.getElementById('manual-meal-name').value;
@@ -1105,37 +1145,37 @@
             appState.mealsByDate[window.currentDateString].push(newMeal);
             appState.meals = appState.mealsByDate[window.currentDateString];
             
-            saveToHistoryDatabase(name, kcal, p, f, c);
+            window.saveToHistoryDatabase(name, kcal, p, f, c);
             
-            syncCurrentDayWithTimeline();
-            syncStateToCloud();
-            updateUI();
-            closeMealModal();
-        }
+            window.syncCurrentDayWithTimeline();
+            window.syncStateToCloud();
+            window.updateUI();
+            window.closeMealModal();
+        };
 
-        function deleteMeal(id) {
+        window.deleteMeal = function(id) {
             if (!appState.meals) return;
             appState.meals = appState.meals.filter(m => m.id !== id);
             
             if (!appState.mealsByDate) appState.mealsByDate = {};
             appState.mealsByDate[window.currentDateString] = appState.meals;
 
-            syncCurrentDayWithTimeline();
-            syncStateToCloud();
-            updateUI();
-        }
+            window.syncCurrentDayWithTimeline();
+            window.syncStateToCloud();
+            window.updateUI();
+        };
 
-        function saveBodyData() {
+        window.saveBodyData = function() {
             const w = parseFloat(document.getElementById('input-weight').value);
             const f = parseFloat(document.getElementById('input-fat-rate').value);
             if (!isNaN(w)) appState.weight = w;
             if (!isNaN(f)) appState.fatRate = f;
-            syncStateToCloud();
-            updateUI();
-            toggleModal('modal-weight');
-        }
+            window.syncStateToCloud();
+            window.updateUI();
+            window.toggleModal('modal-weight');
+        };
 
-        function saveTargetSettings() {
+        window.saveTargetSettings = function() {
             appState.targetCalories = parseInt(document.getElementById('target-calories-input').value) || 1800;
             appState.targetP = parseInt(document.getElementById('target-p-input').value) || 120;
             appState.targetF = parseInt(document.getElementById('target-f-input').value) || 45;
@@ -1147,16 +1187,16 @@
             } else {
                 localStorage.removeItem(`carat_user_gemini_key_${appId}`);
             }
-            syncStateToCloud();
-            updateUI();
-            toggleModal('modal-settings');
-            showToast("目標設定を更新保存しました。");
-        }
+            window.syncStateToCloud();
+            window.updateUI();
+            window.toggleModal('modal-settings');
+            window.showToast("目標設定を更新保存しました。");
+        };
 
         // ==========================================
-        // Gemini API 接続 & 安全パース (400エラーの完全解決)
+        // Gemini API 解析 & パース (安定版)
         // ==========================================
-        function parseGeminiJSON(text) {
+        window.parseGeminiJSON = function(text) {
             try {
                 const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
                 const start = cleaned.indexOf('{');
@@ -1169,9 +1209,9 @@
                 console.error("JSON Parse Error. Text was:", text);
                 throw new Error("AIの出力形式の読み取りに失敗しました。もう一度お試しください。");
             }
-        }
+        };
 
-        function resizeAndConvertToJpegBase64(file) {
+        window.resizeAndConvertToJpegBase64 = function(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = (event) => {
@@ -1180,7 +1220,7 @@
                         const canvas = document.createElement('canvas');
                         let width = img.width;
                         let height = img.height;
-                        const max_size = 800; // iOS Safariのクラッシュ防止用サイズ
+                        const max_size = 800; 
 
                         if (width > height) {
                             if (width > max_size) {
@@ -1212,15 +1252,14 @@
                 reader.onerror = () => reject(new Error("ファイル読込エラー"));
                 reader.readAsDataURL(file);
             });
-        }
+        };
 
-        async function fetchGeminiWithFallback(payload) {
-            const key = getEffectiveApiKey();
+        window.fetchGeminiWithFallback = async function(payload) {
+            const key = window.getEffectiveApiKey();
             if (!key) {
                 throw new Error("Gemini API Keyがありません。トレーナーに管理画面から『店舗用Gemini Key』を設定してもらうか、目標設定から独自のキーを入力してください。");
             }
 
-            // 確実に対応している 1.5-flash を第一選択肢として固定指定
             const trialPatterns = [
                 { version: "v1beta", model: "gemini-1.5-flash" },
                 { version: "v1",     model: "gemini-1.5-flash" }
@@ -1259,12 +1298,12 @@
             }
 
             throw new Error(`【解析失敗】${lastError}`);
-        }
+        };
 
         // ==========================================
-        // 【新開発】材料調整モーダル展開
+        // 【新開発】材料調整モーダルの展開・操作
         // ==========================================
-        function openCameraEditModal(parsedData) {
+        window.openCameraEditModal = function(parsedData) {
             document.getElementById('parsed-meal-name').value = parsedData.name || "料理名不明";
             
             const container = document.getElementById('ingredients-list-container');
@@ -1277,13 +1316,13 @@
             }
 
             ingredients.forEach((ing) => {
-                createIngredientRow(ing.material, ing.amount);
+                window.createIngredientRow(ing.material, ing.amount);
             });
 
-            toggleModal('modal-camera-edit');
-        }
+            window.toggleModal('modal-camera-edit');
+        };
 
-        function createIngredientRow(material = "", amount = 100) {
+        window.createIngredientRow = function(material = "", amount = 100) {
             const container = document.getElementById('ingredients-list-container');
             const rowId = `ing-row-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
             
@@ -1302,19 +1341,19 @@
             `;
             container.appendChild(row);
             if (window.lucide) window.lucide.createIcons();
-        }
+        };
 
-        function addIngredientRow() {
-            createIngredientRow("", 100);
-        }
+        window.addIngredientRow = function() {
+            window.createIngredientRow("", 100);
+        };
 
-        function removeIngredientRow(rowId) {
+        window.removeIngredientRow = function(rowId) {
             const row = document.getElementById(rowId);
             if (row) row.remove();
-        }
+        };
 
-        // テキスト解析 ➔ 材料調整モーダルへ流し込む
-        async function analyzeMealText() {
+        // テキスト解析
+        window.analyzeMealText = async function() {
             const input = document.getElementById('ai-text-input').value.trim();
             if (!input) return;
 
@@ -1324,7 +1363,6 @@
             loaderText.innerText = "料理・食品から材料構成を特定中...";
 
             try {
-                // 完全なフラットペイロードでの命令
                 const combinedPrompt = `あなたは優秀な栄養士です。ユーザーが入力した食事内容テキストを分析し、想定される料理名と、含まれている原材料およびその分量(g)のリストを割り出し、必ず以下のJSONフォーマットのみで出力してください。Markdownの装飾(バッククォートやjsonの文字列など)は絶対に含めず、純粋なJSONテキストだけを返してください。
 
 {
@@ -1340,25 +1378,25 @@
                     contents: [{ parts: [{ text: combinedPrompt }] }]
                 };
 
-                const data = await fetchGeminiWithFallback(payload);
+                const data = await window.fetchGeminiWithFallback(payload);
                 const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (text) {
-                    const parsed = parseGeminiJSON(text);
+                    const parsed = window.parseGeminiJSON(text);
+                    window.openCameraEditModal(parsed);
                     document.getElementById('ai-text-input').value = "";
-                    openCameraEditModal(parsed);
                 } else {
-                    throw new Error("応答データが空でした。");
+                    throw new Error("解析応答データが空でした。");
                 }
             } catch (error) {
                 console.error("Gemini text fail:", error);
-                showToast(error.message || "テキスト解析に失敗しました。");
+                window.showToast(error.message || "テキスト解析に失敗しました。");
             } finally {
                 loader.classList.add('hidden');
             }
-        }
+        };
 
-        // 画像解析 ➔ 材料調整モーダルへ流し込む
-        async function analyzeMealImage(file) {
+        // 写真解析
+        window.analyzeMealImage = async function(file) {
             if (!file) return;
 
             const loader = document.getElementById('ai-loading');
@@ -1367,34 +1405,27 @@
             loaderText.innerText = "写真を自動的に最適化・圧縮中...";
 
             try {
-                const base64Data = await resizeAndConvertToJpegBase64(file);
+                const base64Data = await window.resizeAndConvertToJpegBase64(file);
 
-                loaderText.innerText = "画像から使われている食材と分量を特定中...";
-
-                const combinedPrompt = `あなたは優秀な栄養士です。提供された料理写真から、主となるメニュー名、およびその料理に含まれている主な原材料を判定し、分量(g)の推定値のリストを、必ず以下のJSONフォーマットのみで出力してください。Markdownの装飾(バッククォートやjsonの文字列など)は絶対に含めず、純粋なJSONテキストだけを返してください。
-
-{
-    "name": "料理名",
-    "ingredients": [
-        { "material": "材料名", "amount": 100 }
-    ]
-}`;
+                loaderText.innerText = "画像から使われている食材と分量を割り出し中...";
+                
+                const systemPrompt = `提供された料理写真から、主となるメニュー名、およびその料理に含まれている主な原材料(お肉、米、野菜、調味料など)を判定し、分量(g)の推定値の配列をJSONフォーマットで出力してください。`;
 
                 const payload = {
                     contents: [{
                         role: "user",
                         parts: [
-                            { text: combinedPrompt },
+                            { text: "この料理写真から、料理名と材料のリスト(g表記)を構造化JSONで抽出してください。Markdown装飾や余計な解説は省き、純粋なJSONのみを返却してください。形式：\n{\n  \"name\": \"料理名\",\n  \"ingredients\": [\n    { \"material\": \"材料名\", \"amount\": 100 }\n  ]\n}" },
                             { inlineData: { mimeType: "image/jpeg", data: base64Data } }
                         ]
                     }]
                 };
 
-                const data = await fetchGeminiWithFallback(payload);
+                const data = await window.fetchGeminiWithFallback(payload);
                 const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (text) {
-                    const parsed = parseGeminiJSON(text);
-                    openCameraEditModal(parsed);
+                    const parsed = window.parseGeminiJSON(text);
+                    window.openCameraEditModal(parsed);
                 } else {
                     throw new Error("画像解析結果が空でした。");
                 }
@@ -1404,10 +1435,10 @@
             } finally {
                 loader.classList.add('hidden');
             }
-        }
+        };
 
-        // 材料調整モーダルからAI再計算 ➔ 食事として確定登録
-        async function reAnalyzeAndRegister() {
+        // 材料調整モーダルからAI再計算して最終登録する
+        window.reAnalyzeAndRegister = async function() {
             const mealName = document.getElementById('parsed-meal-name').value.trim();
             const materialInputs = document.querySelectorAll('.ing-material-input');
             const amountInputs = document.querySelectorAll('.ing-amount-input');
@@ -1431,14 +1462,14 @@
                 return;
             }
 
-            toggleModal('modal-camera-edit');
+            window.toggleModal('modal-camera-edit');
             const loader = document.getElementById('ai-loading');
             const loaderText = document.getElementById('ai-loading-text');
             loader.classList.remove('hidden');
             loaderText.innerText = "変更内容からPFCバランスをAIが再計算中...";
 
             try {
-                const combinedPrompt = `あなたは優秀な栄養士です。ユーザーが調整した以下の料理名と材料構成(g表記)から、正確な総カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)を緻密に算出し、必ず以下のJSONフォーマットのみで出力してください。Markdownの装飾(バッククォートなど)は絶対に含めないでください。
+                const combinedPrompt = `ユーザーが調整した以下の料理名と材料構成(g表記)から、正確な総カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)を正確に計算し、必ず以下のJSONフォーマットのみで出力してください。Markdownの装飾(バッククォートなど)は絶対に含めず、純粋なJSONテキストだけを返してください。
 
 {
     "name": "料理名",
@@ -1456,10 +1487,10 @@ ${materialsArray.join('\n')}`;
                     contents: [{ parts: [{ text: combinedPrompt }] }]
                 };
 
-                const data = await fetchGeminiWithFallback(payload);
+                const data = await window.fetchGeminiWithFallback(payload);
                 const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (text) {
-                    const parsed = parseGeminiJSON(text);
+                    const parsed = window.parseGeminiJSON(text);
                     addParsedMealToState(parsed);
                 } else {
                     throw new Error("再計算データの受信に失敗しました。");
@@ -1470,7 +1501,7 @@ ${materialsArray.join('\n')}`;
             } finally {
                 loader.classList.add('hidden');
             }
-        }
+        };
 
         function addParsedMealToState(parsed) {
             const now = new Date();
@@ -1500,15 +1531,15 @@ ${materialsArray.join('\n')}`;
             appState.mealsByDate[window.currentDateString].push(newMeal);
             appState.meals = appState.mealsByDate[window.currentDateString];
 
-            saveToHistoryDatabase(newMeal.name, newMeal.kcal, newMeal.p, newMeal.f, newMeal.c);
+            window.saveToHistoryDatabase(newMeal.name, newMeal.kcal, newMeal.p, newMeal.f, newMeal.c);
             
-            syncCurrentDayWithTimeline();
-            syncStateToCloud();
-            updateUI();
-            showToast(`「${newMeal.name}」を登録しました！`);
+            window.syncCurrentDayWithTimeline();
+            window.syncStateToCloud();
+            window.updateUI();
+            window.showToast(`「${newMeal.name}」を登録しました！`);
         }
 
-        function syncCurrentDayWithTimeline() {
+        window.syncCurrentDayWithTimeline = function() {
             const activeDate = new Date(window.currentDateString);
             const activeDayKey = dayKeysMap[activeDate.getDay()];
 
@@ -1524,9 +1555,9 @@ ${materialsArray.join('\n')}`;
                 f: appState.currentF,
                 c: appState.currentC
             };
-        }
+        };
 
-        function applyGoalPreset() {
+        window.applyGoalPreset = function() {
             const goal = document.getElementById('preset-goal').value;
             let cal = 1800, p = 120, f = 45, c = 230;
 
@@ -1549,28 +1580,80 @@ ${materialsArray.join('\n')}`;
             document.getElementById('target-p-input').value = p;
             document.getElementById('target-f-input').value = f;
             document.getElementById('target-c-input').value = c;
-        }
+        };
 
-        // ==========================================
-        // window空間への確実なグローバルエクスポート
-        // ==========================================
-        window.toggleModal = toggleModal;
-        window.openManualInputModal = openManualInputModal;
-        window.closeMealModal = closeMealModal;
-        window.handleManualMealSubmit = handleManualMealSubmit;
-        window.deleteMeal = deleteMeal;
-        window.saveBodyData = saveBodyData;
-        window.saveTargetSettings = saveTargetSettings;
-        window.connectWithClientId = connectWithClientId;
-        window.disconnectClientId = disconnectClientId;
-        window.changeDay = changeDay;
-        window.resetToToday = resetToToday;
-        window.selectDayFromWeeklyGrid = selectDayFromWeeklyGrid;
-        window.analyzeMealText = analyzeMealText;
-        window.analyzeMealImage = analyzeMealImage;
-        window.addIngredientRow = addIngredientRow;
-        window.removeIngredientRow = removeIngredientRow;
-        window.reAnalyzeAndRegister = reAnalyzeAndRegister;
+        window.sendChatMessage = async function() {
+            const inputEl = document.getElementById('chat-input');
+            const messageText = inputEl.value.trim();
+            if (!messageText) return;
+
+            const key = window.getEffectiveApiKey();
+            if (!key) {
+                window.showToast("【エラー】Gemini API Keyがありません。右上の『目標・設定』から入力してください。");
+                window.toggleModal('modal-settings');
+                return;
+            }
+
+            appendChatMessage("user", messageText);
+            inputEl.value = "";
+
+            const aiTempId = appendChatMessage("ai", "最適な調整アプローチを検討中...", true);
+
+            try {
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+                const systemPrompt = `
+                    あなたはパーソナルジム「CARAT」のチーフトレーナー、または栄養顧問です。
+                    ジムクライアントから寄せられる質問に対して、プロの知見に基づき、簡潔・論理的・実践的な回答を提示してください。
+                `;
+
+                const payload = {
+                    contents: [{ parts: [{ text: systemPrompt + "\n質問: " + messageText }] }]
+                };
+
+                const data = await window.fetchGeminiWithFallback(payload);
+                const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                const tempDiv = document.getElementById(aiTempId);
+                if (tempDiv && responseText) {
+                    tempDiv.querySelector('.chat-body').innerText = responseText;
+                    tempDiv.removeAttribute('id');
+                }
+            } catch (e) {
+                const tempDiv = document.getElementById(aiTempId);
+                if (tempDiv) {
+                    tempDiv.querySelector('.chat-body').innerHTML = `<span class="text-rose-500">${e.message || "エラーが発生しました。"}</span>`;
+                }
+            }
+        };
+
+        function appendChatMessage(sender, text, isPending = false) {
+            const container = document.getElementById('chat-messages');
+            const id = `msg-${Date.now()}`;
+            const div = document.createElement('div');
+            div.className = "flex gap-2.5 mb-2";
+            if (isPending) div.id = id;
+
+            if (sender === "user") {
+                div.innerHTML = `
+                    <div class="flex-1"></div>
+                    <div class="bg-brand-primary text-white rounded-2xl px-3.5 py-2.5 max-w-[85%] font-semibold shadow-sm text-left">
+                        ${text}
+                    </div>
+                `;
+            } else {
+                div.innerHTML = `
+                    <div class="w-7 h-7 rounded-full bg-brand-accent flex items-center justify-center border border-brand-border shrink-0">
+                        <span class="text-[9px] font-black text-brand-primary">C</span>
+                    </div>
+                    <div class="chat-body bg-brand-card rounded-2xl px-3.5 py-2.5 max-w-[85%] text-brand-text leading-relaxed shadow-sm border border-brand-border/60 text-left">
+                        ${text}
+                    </div>
+                `;
+            }
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            if (window.lucide) window.lucide.createIcons();
+            return id;
+        }
 
         window.copyUserId = function() {
             const savedClientId = localStorage.getItem(`carat_active_client_id_${appId}`);
@@ -1581,11 +1664,14 @@ ${materialsArray.join('\n')}`;
             dummy.select();
             document.execCommand("copy");
             document.body.removeChild(dummy);
-            showToast("クライアントIDをコピーしました！");
+            window.showToast("クライアントIDをコピーしました！");
         };
 
-        // DOMの準備が完了した段階で安全に直接バインド
+        // ==========================================
+        // イベントリスナーの直接安全バインド
+        // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
+            // 画像選択時のリスナー登録
             const inputImg = document.getElementById('ai-image-input');
             if (inputImg) {
                 inputImg.addEventListener('change', function() {
@@ -1595,6 +1681,7 @@ ${materialsArray.join('\n')}`;
                 });
             }
 
+            // テキスト解析ボタンのリスナー登録
             const btnText = document.getElementById('btn-analyze-text');
             if (btnText) {
                 btnText.addEventListener('click', () => {
@@ -1602,6 +1689,7 @@ ${materialsArray.join('\n')}`;
                 });
             }
 
+            // 手動登録の送信イベント登録
             const formManual = document.getElementById('manual-meal-form');
             if (formManual) {
                 formManual.addEventListener('submit', (e) => {
@@ -1609,8 +1697,8 @@ ${materialsArray.join('\n')}`;
                 });
             }
 
-            // --- 起動 ---
-            startSyncSystem();
+            // システム起動
+            window.startSyncSystem();
             updateDateUI();
         });
 
