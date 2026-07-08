@@ -32,7 +32,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-brand-bg text-brand-text font-sans min-h-screen">
+<body class="bg-brand-bg text-brand-text font-sans min-h-screen notranslate">
 
     <div class="max-w-md mx-auto bg-brand-bg min-h-screen shadow-xl flex flex-col relative pb-12 border-x border-brand-border">
         
@@ -89,11 +89,11 @@
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="text-[10px] text-brand-muted font-bold block mb-1">目標カロリー (kcal)</label>
-                            <input type="number" id="new-client-kcal" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3 py-2.5 text-xs font-mono text-brand-text text-center focus:outline-none" value="1800">
+                            <input type="number" id="new-client-kcal" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs font-mono text-brand-text text-center focus:outline-none" value="1800">
                         </div>
                         <div>
                             <label class="text-[10px] text-brand-muted font-bold block mb-1">初期体重 (kg)</label>
-                            <input type="number" step="0.1" id="new-client-weight" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3 py-2.5 text-xs font-mono text-brand-text text-center focus:outline-none" value="65.0">
+                            <input type="number" step="0.1" id="new-client-weight" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs font-mono text-brand-text text-center focus:outline-none" value="65.0">
                         </div>
                     </div>
 
@@ -270,6 +270,8 @@
                     DB Connected
                 `;
                 document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold";
+            }).catch((err) => {
+                console.error("Auth Fail:", err);
             });
         } catch (e) {
             console.error("Firebase Initialization Failed:", e);
@@ -296,7 +298,7 @@
         }
 
         window.deleteBookmark = function(id) {
-            if (confirm("リストから削除しますか？ (データは消えません)")) {
+            if (confirm("リストから削除しますか？")) {
                 let list = getBookmarkList();
                 list = list.filter(b => b.id !== id);
                 saveBookmarkList(list);
@@ -383,6 +385,7 @@
             };
 
             try {
+                // Public共有フォルダにデータを書き込むことでパーミッションエラーを完全回避
                 const docRef = window.doc(window.db, 'artifacts', appId, 'public', 'data', 'clientStates', newId);
                 await window.setDoc(docRef, initialClientState);
 
@@ -403,7 +406,7 @@
 
             } catch (err) {
                 console.error("Failed to create client:", err);
-                alert("クライアント作成に失敗しました。接続状況を確認してください。");
+                alert("クライアント作成に失敗しました。認証ドメインおよびFirestoreルールの初期設定（ firebase_console_setup.md ）が完了しているかご確認ください。");
             }
         };
 
@@ -437,11 +440,11 @@
                         addBookmark(targetId, data.nickname);
                     }
                 } else {
-                    alert("指定されたクライアントIDのデータが存在しません。");
-                    document.getElementById('client-data-container').classList.add('hidden');
+                    alert("指定されたクライアントIDのデータが存在しません。IDに間違いがないかご確認ください。");
                 }
             }, (error) => {
-                alert("データベースからの読込に失敗しました。");
+                console.error("Load Client Fail:", error);
+                alert("データベースからの読込に失敗しました。Firestoreルールが正しく「公開」されているかご確認ください。");
             });
         };
 
