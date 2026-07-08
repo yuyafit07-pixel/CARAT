@@ -34,6 +34,7 @@
 </head>
 <body class="bg-brand-bg text-brand-text font-sans min-h-screen notranslate">
 
+    <!-- App Shell Container -->
     <div class="max-w-md mx-auto bg-brand-bg min-h-screen shadow-xl flex flex-col relative pb-24 border-x border-brand-border">
         
         <!-- ヘッダー -->
@@ -94,7 +95,7 @@
         <!-- Main Content -->
         <main class="flex-1 px-4.5 py-4 space-y-5 overflow-y-auto">
 
-            <!-- クライアント識別子表示 -->
+            <!-- クライアント識別表示 -->
             <div class="bg-brand-accent/40 rounded-xl px-4 py-2.5 border border-brand-border text-xs flex justify-between items-center">
                 <span class="text-brand-muted font-bold">クライアントID</span>
                 <button onclick="copyUserId()" class="font-mono font-bold text-brand-primary hover:underline flex items-center gap-1">
@@ -103,9 +104,10 @@
                 </button>
             </div>
 
-            <!-- PFC実績表示 -->
+            <!-- 今日の摂取カロリー・PFC状況 -->
             <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-28 h-28 bg-brand-accent/30 rounded-full blur-2xl -mr-8 -mt-8"></div>
+                
                 <h2 class="text-xs font-bold tracking-wider text-brand-muted mb-4 flex items-center gap-2">
                     <i data-lucide="calendar" class="w-4 h-4 text-brand-primary"></i> 選択日の栄養摂取状況
                 </h2>
@@ -262,7 +264,7 @@
                         </h4>
                     </div>
                     <div id="quick-history-list" class="flex gap-2 overflow-x-auto pb-1.5 scrollbar-thin font-sans">
-                        <!-- 定番フード -->
+                        <!-- 定番フード（動的挿入） -->
                     </div>
                 </div>
 
@@ -326,11 +328,19 @@
 
         </main>
 
-        <!-- ボトムナビゲーション -->
+        <!-- 完全復活した下部ナビゲーションタブバー（3大メニュー） -->
         <nav class="absolute bottom-0 left-0 right-0 bg-brand-card border-t border-brand-border py-2.5 px-6 flex justify-between items-center z-50 shadow-lg">
-            <button onclick="resetToToday()" class="flex flex-col items-center space-y-1 text-brand-primary mx-auto">
+            <button onclick="resetToToday()" class="flex flex-col items-center space-y-1 text-brand-primary">
                 <i data-lucide="home" class="w-5 h-5"></i>
-                <span class="text-[9px] font-bold">今日に戻る</span>
+                <span class="text-[9px] font-bold">ダッシュボード</span>
+            </button>
+            <button onclick="toggleModal('modal-ai-helper')" class="flex flex-col items-center space-y-1 text-brand-muted hover:text-brand-primary transition">
+                <i data-lucide="sparkles" class="w-5 h-5 text-brand-primary animate-pulse"></i>
+                <span class="text-[9px] font-bold">AI相談窓口</span>
+            </button>
+            <button onclick="toggleModal('modal-settings')" class="flex flex-col items-center space-y-1 text-brand-muted hover:text-brand-primary transition">
+                <i data-lucide="user" class="w-5 h-5"></i>
+                <span class="text-[9px] font-bold">目標・設定</span>
             </button>
         </nav>
 
@@ -417,12 +427,12 @@
         </div>
     </div>
 
-    <!-- MODAL: 目標設定（目標値の閲覧用） -->
+    <!-- MODAL: アカウント・目標設定（入力可能に復活！） -->
     <div id="modal-settings" class="fixed inset-0 bg-brand-text/30 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 notranslate">
-        <div class="bg-brand-card w-full max-w-md rounded-2xl border border-brand-border p-6 space-y-4 shadow-xl">
+        <div class="bg-brand-card w-full max-w-md rounded-2xl border border-brand-border p-6 space-y-4 max-h-[85vh] overflow-y-auto shadow-xl">
             <div class="flex justify-between items-center border-b border-brand-border pb-3">
                 <h3 class="font-bold text-sm text-brand-primary flex items-center gap-2">
-                    <i data-lucide="settings" class="w-4.5 h-4.5"></i> 設定詳細情報
+                    <i data-lucide="settings" class="w-4.5 h-4.5"></i> アカウント＆目標設定
                 </h3>
                 <button onclick="toggleModal('modal-settings')" class="text-brand-muted hover:text-brand-text">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -431,24 +441,40 @@
             
             <div class="space-y-4 text-xs text-left">
                 <div class="bg-brand-bg rounded-xl p-3 border border-brand-border space-y-1.5">
-                    <span class="text-[10px] text-brand-muted block font-bold">同期中のクライアントID</span>
+                    <span class="text-[10px] text-brand-muted block font-bold">ログイン中のクライアントID</span>
                     <span id="settings-client-id" class="font-mono font-bold text-brand-text block text-sm">----</span>
                 </div>
 
+                <!-- 目標プリセット -->
+                <div>
+                    <label class="block text-[11px] text-brand-muted mb-1 font-bold">目的別目標設定</label>
+                    <select id="preset-goal" onchange="applyGoalPreset()" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text">
+                        <option value="custom">カスタム（トレーナー推奨値）</option>
+                        <option value="diet">ダイエット（P120 F38 C182）</option>
+                        <option value="bodymake">ボディメイク（P125 F42 C205）</option>
+                        <option value="wellness">健康美容（P120 F45 C230）</option>
+                        <option value="muscle">筋力アップ（P135 F49 C247）</option>
+                    </select>
+                </div>
+
                 <div class="space-y-2.5">
-                    <h4 class="text-[11px] font-bold text-brand-primary">設定されている目標PFC</h4>
+                    <h4 class="text-[11px] font-bold text-brand-primary">カロリー＆PFC目標の調整</h4>
+                    <div>
+                        <label class="block text-[10px] text-brand-muted mb-1">目標総摂取カロリー (kcal)</label>
+                        <input type="number" id="target-calories-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2 text-brand-text focus:outline-none" value="1800">
+                    </div>
                     <div class="grid grid-cols-3 gap-2">
-                        <div class="bg-sky-50 p-2.5 rounded-lg border border-sky-100 text-center">
-                            <span class="text-[9px] text-sky-600 block font-bold">P (タンパク質)</span>
-                            <span id="settings-target-p" class="text-sm font-black text-sky-800">-- g</span>
+                        <div>
+                            <label class="block text-[10px] text-sky-600 mb-1">目標 P (g)</label>
+                            <input type="number" id="target-p-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2 text-brand-text text-center focus:outline-none" value="120">
                         </div>
-                        <div class="bg-emerald-50 p-2.5 rounded-lg border border-emerald-100 text-center">
-                            <span class="text-[9px] text-emerald-600 block font-bold">F (脂質)</span>
-                            <span id="settings-target-f" class="text-sm font-black text-emerald-800">-- g</span>
+                        <div>
+                            <label class="block text-[10px] text-teal-600 mb-1">目標 F (g)</label>
+                            <input type="number" id="target-f-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2 text-brand-text text-center focus:outline-none" value="45">
                         </div>
-                        <div class="bg-amber-50 p-2.5 rounded-lg border border-amber-100 text-center">
-                            <span class="text-[9px] text-amber-600 block font-bold">C (炭水化物)</span>
-                            <span id="settings-target-c" class="text-sm font-black text-amber-800">-- g</span>
+                        <div>
+                            <label class="block text-[10px] text-amber-600 mb-1">目標 C (g)</label>
+                            <input type="number" id="target-c-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2 text-brand-text text-center focus:outline-none" value="230">
                         </div>
                     </div>
                 </div>
@@ -468,12 +494,50 @@
                     </details>
                 </div>
 
-                <div class="bg-brand-accent/40 rounded-xl p-3 text-[10px] text-brand-muted leading-relaxed">
-                    ※ 目標値はトレーナーが管理画面から設計・変更します。目標の変更を希望する場合は、トレーナーへご連絡ください。
-                </div>
+                <button onclick="saveTargetSettings()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl font-bold transition mt-2 shadow-md">
+                    設定を保存して同期する
+                </button>
 
-                <button onclick="disconnectClientId()" class="w-full bg-rose-50 border border-rose-100 hover:bg-rose-100 text-rose-600 py-3 rounded-xl font-bold transition mt-2 flex items-center justify-center gap-1.5">
+                <button onclick="disconnectClientId()" class="w-full bg-rose-50 border border-rose-100 hover:bg-rose-100 text-rose-600 py-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5">
                     <i data-lucide="unlink" class="w-4 h-4"></i> ID連携を解除してログアウト
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: AI 相談窓口 / チャット（完全復活！） -->
+    <div id="modal-ai-helper" class="fixed inset-0 bg-brand-text/30 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-brand-card w-full max-w-md rounded-2xl border border-brand-border p-5 flex flex-col h-[80vh] space-y-4 shadow-xl">
+            <div class="flex justify-between items-center border-b border-brand-border pb-3">
+                <div class="flex items-center gap-2.5">
+                    <i data-lucide="sparkles" class="text-brand-primary w-5 h-5 animate-pulse"></i>
+                    <div class="text-left">
+                        <h3 class="font-bold text-sm text-brand-text">CARAT コンシェルジュAI</h3>
+                        <p class="text-[9px] text-brand-muted">食事管理・トレーニング 24時間個別サポート</p>
+                    </div>
+                </div>
+                <button onclick="toggleModal('modal-ai-helper')" class="text-brand-muted hover:text-brand-text">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- チャットメッセージエリア -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto space-y-3.5 p-3.5 bg-brand-bg rounded-2xl border border-brand-border text-xs scrollbar-thin">
+                <div class="flex gap-2.5">
+                    <div class="w-7 h-7 rounded-full bg-brand-accent flex items-center justify-center border border-brand-border shrink-0">
+                        <span class="text-[9px] font-black text-brand-primary">C</span>
+                    </div>
+                    <div class="bg-brand-card rounded-2xl px-3.5 py-2.5 max-w-[85%] text-brand-text leading-relaxed shadow-sm border border-brand-border/60 text-left">
+                        CARATコンシェルジュAIです。食事、筋力トレーニング、サプリメントの選び方、外食時におけるPFCバランスの調整方法など、どのような疑問にもお答えいたします。
+                    </div>
+                </div>
+            </div>
+
+            <!-- チャット入力 -->
+            <div class="flex gap-2">
+                <input type="text" id="chat-input" onkeydown="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary" placeholder="例: 明日の夜に会食が入ったのですが調整方法は？">
+                <button onclick="sendChatMessage()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-4 rounded-xl font-bold transition flex items-center justify-center shadow-sm">
+                    <i data-lucide="send" class="w-4 h-4"></i>
                 </button>
             </div>
         </div>
@@ -524,7 +588,7 @@
             mealHistory: [
                 { name: "サラダチキン", kcal: 115, p: 24.1, f: 1.2, c: 0 },
                 { name: "おにぎり(鮭)", kcal: 175, p: 4.2, f: 0.8, c: 38.0 },
-                { name: "ギリシャヨーグると", kcal: 92, p: 10.0, f: 0, c: 4.8 }
+                { name: "ギリシャヨーグルト", kcal: 92, p: 10.0, f: 0, c: 4.8 }
             ],
             weeklyLogs: {
                 Mon: { kcal: 0, p: 0, f: 0, c: 0 },
@@ -543,7 +607,7 @@
         const dayKeysMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
         // ==========================================
-        // グローバル・ローカル関数のセーフマッピング
+        // グローバル・ローカル関数のセーフマッピング（Can't find variable エラーの根絶）
         // ==========================================
         function showToast(message) {
             const toast = document.createElement('div');
@@ -557,7 +621,7 @@
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
-        window.showToast = showToast; // HTML onclickなど外部からの実行に備えて100%バインド
+        window.showToast = showToast; // onclickから安全に呼べるよう完全にwindowへバインド
 
         function saveToHistoryDatabase(name, kcal, p, f, c) {
             if (!appState.mealHistory) appState.mealHistory = [];
@@ -586,7 +650,6 @@
             document.getElementById('settings-client-id').innerText = savedClientId;
 
             try {
-                // 匿名認証実行
                 await signInAnonymously(auth);
 
                 const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', savedClientId);
@@ -606,6 +669,12 @@
                             Cloud Synced
                         `;
                         document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold";
+
+                        // 入力初期値のマウント
+                        document.getElementById('target-calories-input').value = appState.targetCalories || 1800;
+                        document.getElementById('target-p-input').value = appState.targetP || 120;
+                        document.getElementById('target-f-input').value = appState.targetF || 45;
+                        document.getElementById('target-c-input').value = appState.targetC || 230;
 
                         loadMealsForActiveDate();
                     } else {
@@ -759,10 +828,11 @@
 
             const today = new Date();
             const currentDayOfWeek = today.getDay();
-            const targetIndex = dayKeysMap.indexOf(dayKey);
+            const targetIndex = dayKeysMap[dayKey] !== undefined ? dayKeysMap.indexOf(dayKey) : 1;
             
+            const targetIndexTrue = dayKeysMap.indexOf(dayKey);
             const mondayOffset = currentDayOfWeek === 0 ? -6 : 1 - currentDayOfWeek;
-            const targetOffset = mondayOffset + (targetIndex === 0 ? 6 : targetIndex - 1);
+            const targetOffset = mondayOffset + (targetIndexTrue === 0 ? 6 : targetIndexTrue - 1);
             
             const targetDate = new Date(today);
             targetDate.setDate(today.getDate() + targetOffset);
@@ -806,6 +876,7 @@
             document.getElementById('display-weight').innerText = appState.weight.toFixed(1);
             document.getElementById('display-fat').innerText = appState.fatRate.toFixed(1);
 
+            // 週累計
             const weeklyTarget = appState.targetCalories * 7;
             let weeklySum = 0;
             const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -1066,14 +1137,21 @@
         };
 
         window.saveTargetSettings = function() {
+            appState.targetCalories = parseInt(document.getElementById('target-calories-input').value) || 1800;
+            appState.targetP = parseInt(document.getElementById('target-p-input').value) || 120;
+            appState.targetF = parseInt(document.getElementById('target-f-input').value) || 45;
+            appState.targetC = parseInt(document.getElementById('target-c-input').value) || 230;
+
             const userKey = document.getElementById('user-api-key').value.trim();
             if (userKey) {
                 localStorage.setItem(`carat_user_gemini_key_${appId}`, userKey);
             } else {
                 localStorage.removeItem(`carat_user_gemini_key_${appId}`);
             }
+            syncStateToCloud();
+            updateUI();
             toggleModal('modal-settings');
-            showToast("個人API設定を保存しました。");
+            showToast("目標設定を更新保存しました。");
         };
 
         // ==========================================
@@ -1285,7 +1363,7 @@
                 }
             } catch (error) {
                 console.error("Gemini image fail:", error);
-                showToast(error.message || "写真の解析に失敗しました。");
+                alert(error.message || "写真の解析に失敗しました。");
             } finally {
                 loader.classList.add('hidden');
                 inputElement.value = ""; 
@@ -1349,7 +1427,7 @@
                 const systemPrompt = `
                     あなたはパーソナルトレーニングジム「CARAT」のチーフトレーナーです。
                     ユーザーの本日の食事実績PFCおよび、週累計の過不足状況を考慮したアドバイスを、簡潔・論理的かつモチベーションが向上するよう150字程度で出力してください。
-                    特に週単位での調整（土曜日の外食に向けた調整など）を推奨する言葉を組み込んでください。
+                    特に週単位での調整を推奨する言葉を組み込んでください。
                 `;
 
                 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -1383,6 +1461,9 @@
             }
         };
 
+        // ==========================================
+        // AI相談窓口コンシェルジュチャット（完全復活）
+        // ==========================================
         window.sendChatMessage = async function() {
             const inputEl = document.getElementById('chat-input');
             const messageText = inputEl.value.trim();
@@ -1404,7 +1485,7 @@
                 const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
                 const systemPrompt = `
                     あなたはパーソナルジム「CARAT」のチーフトレーナー、または栄養顧問です。
-                    ジムクライアントから寄せられる質問（PFC調整、トレーニング頻度、会食・旅行に伴う週単位での食事の調整戦略、リカバリーなど）に対して、プロの知見に基づき、簡潔・論理停・実践的な回答を提示してください。
+                    ジムクライアントから寄せられる質問（PFC調整、トレーニング頻度、会食・旅行に伴う週単位での食事の調整戦略、リカバリーなど）に対して、プロの知見に基づき、簡潔・論理的・実践的な回答を提示してください。
                 `;
 
                 const payload = {
@@ -1437,7 +1518,7 @@
             if (sender === "user") {
                 div.innerHTML = `
                     <div class="flex-1"></div>
-                    <div class="bg-brand-primary text-white rounded-2xl px-3.5 py-2.5 max-w-[85%] font-semibold shadow-sm">
+                    <div class="bg-brand-primary text-white rounded-2xl px-3.5 py-2.5 max-w-[85%] font-semibold shadow-sm text-left">
                         ${text}
                     </div>
                 `;
@@ -1446,7 +1527,7 @@
                     <div class="w-7 h-7 rounded-full bg-brand-accent flex items-center justify-center border border-brand-border shrink-0">
                         <span class="text-[9px] font-black text-brand-primary">C</span>
                     </div>
-                    <div class="chat-body bg-brand-card rounded-2xl px-3.5 py-2.5 max-w-[85%] text-brand-text leading-relaxed shadow-sm border border-brand-border/60">
+                    <div class="chat-body bg-brand-card rounded-2xl px-3.5 py-2.5 max-w-[85%] text-brand-text leading-relaxed shadow-sm border border-brand-border/60 text-left">
                         ${text}
                     </div>
                 `;
@@ -1475,6 +1556,51 @@
             };
         }
         window.syncCurrentDayWithTimeline = syncCurrentDayWithTimeline;
+
+        // 目的別PFCプリセット適用処理
+        window.applyGoalPreset = function() {
+            const goal = document.getElementById('preset-goal').value;
+            let cal = 1800, p = 120, f = 45, c = 230;
+
+            if (goal === 'diet') {
+                cal = 1550; p = 120; f = 38; c = 182;
+            } else if (goal === 'bodymake') {
+                cal = 1700; p = 125; f = 42; c = 205;
+            } else if (goal === 'wellness') {
+                cal = 1800; p = 120; f = 45; c = 230;
+            } else if (goal === 'muscle') {
+                cal = 1970; p = 135; f = 49; c = 247;
+            } else if (goal === 'custom') {
+                // クラウド側の数値を再取得
+                cal = appState.targetCalories || 1800;
+                p = appState.targetP || 120;
+                f = appState.targetF || 45;
+                c = appState.targetC || 230;
+            }
+
+            document.getElementById('target-calories-input').value = cal;
+            document.getElementById('target-p-input').value = p;
+            document.getElementById('target-f-input').value = f;
+            document.getElementById('target-c-input').value = c;
+        };
+
+        // windowオブジェクトにグローバル操作関数を明示的マウント
+        window.toggleModal = toggleModal;
+        window.openManualInputModal = openManualInputModal;
+        window.closeMealModal = closeMealModal;
+        window.handleManualMealSubmit = handleManualMealSubmit;
+        window.deleteMeal = deleteMeal;
+        window.saveBodyData = saveBodyData;
+        window.saveTargetSettings = saveTargetSettings;
+        window.connectWithClientId = connectWithClientId;
+        window.disconnectClientId = disconnectClientId;
+        window.changeDay = changeDay;
+        window.resetToToday = resetToToday;
+        window.selectDayFromWeeklyGrid = selectDayFromWeeklyGrid;
+        window.analyzeMealText = analyzeMealText;
+        window.analyzeMealImage = analyzeMealImage;
+        window.generateAIFeedback = generateAIFeedback;
+        window.sendChatMessage = sendChatMessage;
 
         // --- 強制起動 ---
         startSyncSystem();
