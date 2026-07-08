@@ -31,6 +31,11 @@
     </script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Firebase Compat SDK (管理者画面の完全なオンライン復帰用の安定CDN) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-brand-bg text-brand-text font-sans min-h-screen notranslate">
 
@@ -55,6 +60,7 @@
         <!-- Main Workspace -->
         <main class="flex-1 px-4.5 py-4 space-y-5 overflow-y-auto">
 
+            <!-- 店舗・セキュリティ設定 -->
             <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3">
                 <details class="group" open>
                     <summary class="text-xs font-bold text-brand-primary cursor-pointer flex justify-between items-center">
@@ -63,7 +69,7 @@
                     </summary>
                     <div class="mt-3 space-y-2 text-left">
                         <p class="text-[10px] text-brand-muted leading-relaxed">
-                            ここにGeminiキーを設定すると、**全お客様のアプリへ自動適用**されます。
+                            ここにGeminiキーを設定すると、**全お客様のアプリへ自動適用**されます（お客様側でのAPI設定が一切不要になります）。
                         </p>
                         <input type="password" id="trainer-gemini-key" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-mono text-brand-text focus:outline-none" placeholder="AIzaSy...">
                         <button onclick="window.saveTrainerGeminiKey()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm">
@@ -73,6 +79,7 @@
                 </details>
             </section>
 
+            <!-- クライアントの新規作成・目標ID発行 -->
             <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3 text-left">
                 <h3 class="text-xs font-bold text-brand-text flex items-center gap-1.5 border-b border-brand-border pb-2.5">
                     <i data-lucide="user-plus" class="w-4 h-4 text-brand-primary"></i> ① 新規クライアント登録・専用ID発行
@@ -116,13 +123,14 @@
                 </div>
             </section>
 
+            <!-- 担当クライアントの選択・ロード -->
             <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3 text-left">
                 <h3 class="text-xs font-bold text-brand-text flex items-center gap-1.5 pb-2 border-b border-brand-border">
                     <i data-lucide="users" class="w-4 h-4 text-brand-primary"></i> ② 担当クライアントの選択
                 </h3>
                 
                 <div class="space-y-2">
-                    <span class="text-[9px] text-brand-muted font-bold block">登録済み一覧（デバイス記憶）</span>
+                    <span class="text-[9px] text-brand-muted font-bold block">登録済みクライアント一覧（ブラウザ記憶）</span>
                     <div id="trainer-bookmarks-container" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-1">
                         <span class="text-[10px] text-brand-muted text-center block py-4 bg-brand-bg rounded-xl border border-dashed border-brand-border">登録済みのクライアントはありません</span>
                     </div>
@@ -139,9 +147,10 @@
                 </div>
             </section>
 
-            <!-- クライアントデータ表示 -->
+            <!-- クライアントデータ表示（検索成功時に開く） -->
             <div id="client-data-container" class="hidden space-y-5 text-left">
                 
+                <!-- 本日のステータスカード -->
                 <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-4">
                     <div class="flex justify-between items-center border-b border-brand-border pb-3">
                         <div class="flex items-center gap-1.5">
@@ -170,47 +179,51 @@
                         <div class="grid grid-cols-3 gap-2 text-center text-xs">
                             <div class="bg-sky-50 rounded-lg p-2 border border-sky-100">
                                 <span class="text-[8px] text-sky-600 block font-bold">P (タンパク質)</span>
-                                <span class="font-extrabold text-sky-700"><span id="client-cur-p">0</span>g (<span id="client-tar-p">0</span>g)</span>
+                                <span class="font-extrabold text-sky-700"><span id="client-cur-p">0</span>g / <span id="client-tar-p">0</span>g</span>
                             </div>
                             <div class="bg-emerald-50 rounded-lg p-2 border border-emerald-100">
                                 <span class="text-[8px] text-emerald-600 block font-bold">F (脂質)</span>
-                                <span class="font-extrabold text-emerald-700"><span id="client-cur-f">0</span>g (<span id="client-tar-f">0</span>g)</span>
+                                <span class="font-extrabold text-emerald-700"><span id="client-cur-f">0</span>g / <span id="client-tar-f">0</span>g</span>
                             </div>
                             <div class="bg-amber-50 rounded-lg p-2 border border-amber-100">
                                 <span class="text-[8px] text-amber-600 block font-bold">C (炭水化物)</span>
-                                <span class="font-extrabold text-amber-700"><span id="client-cur-c">0</span>g (<span id="client-tar-c">0</span>g)</span>
+                                <span class="font-extrabold text-amber-700"><span id="client-cur-c">0</span>g / <span id="client-tar-c">0</span>g</span>
                             </div>
                         </div>
                     </div>
                 </section>
 
+                <!-- 週全体の推移 -->
                 <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60">
                     <h4 class="text-xs font-bold tracking-wider text-brand-muted mb-3 flex items-center gap-1.5">
                         <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-primary"></i> 1週間のカロリー調整状況
                     </h4>
                     <div class="grid grid-cols-7 gap-1 text-center">
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">月</span><span id="weekly-cal-Mon" class="text-[10px] font-bold">--</span></div>
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">火</span><span id="weekly-cal-Tue" class="text-[10px] font-bold">--</span></div>
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">水</span><span id="weekly-cal-Wed" class="text-[10px] font-bold">--</span></div>
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">木</span><span id="weekly-cal-Thu" class="text-[10px] font-bold">--</span></div>
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">金</span><span id="weekly-cal-Fri" class="text-[10px] font-bold">--</span></div>
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">土</span><span id="weekly-cal-Sat" class="text-[10px] font-bold">--</span></div>
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">日</span><span id="weekly-cal-Sun" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">月</span><span id="weekly-cal-Mon" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">火</span><span id="weekly-cal-Tue" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">水</span><span id="weekly-cal-Wed" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">木</span><span id="weekly-cal-Thu" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">金</span><span id="weekly-cal-Fri" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">土</span><span id="weekly-cal-Sat" class="text-[10px] font-bold">--</span></div>
+                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">日</span><span id="weekly-cal-Sun" class="text-[10px] font-bold">--</span></div>
                     </div>
                 </section>
 
+                <!-- 食事内容 -->
                 <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60">
                     <h4 class="text-xs font-bold text-brand-text mb-3">選択された日付の食事内容</h4>
-                    <div id="client-meal-timeline" class="space-y-2 max-h-[160px] overflow-y-auto">
-                        <!-- 動的に明細が並びます -->
-                    </div>
+                    <div id="client-meal-timeline" class="space-y-2 max-h-[160px] overflow-y-auto"></div>
                 </section>
 
+                <!-- フィードバック送信 -->
                 <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3">
                     <h4 class="text-xs font-bold text-brand-primary flex items-center gap-1.5">
-                        <i data-lucide="message-square-plus" class="w-4 h-4"></i> トレーナー食事指導コメント送信
+                        <i data-lucide="message-square-plus" class="w-4 h-4"></i> トレーナー食事指導コメント・アドバイス
                     </h4>
-                    <textarea id="trainer-feedback-input" rows="4" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary resize-none" placeholder="アドバイスを入力..."></textarea>
+                    <p class="text-[11px] text-brand-muted">
+                        お客様のアプリ画面にリアルタイムで届くフィードバック指導メッセージを入力します。
+                    </p>
+                    <textarea id="trainer-feedback-input" rows="4" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary resize-none" placeholder="例: 今日のPFCは完璧です！その調子で頑張りましょう！"></textarea>
                     <button onclick="window.submitTrainerFeedback()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
                         <i data-lucide="send" class="w-4 h-4"></i> 食事アドバイスコメントを送信する
                     </button>
@@ -221,63 +234,71 @@
         </main>
     </div>
 
-    <!-- Firebase SDK (v11) & Module Logic -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Firebase 接続構成
-        const firebaseConfig = {
-            apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
-            authDomain: "carat-d3b01.firebaseapp.com",
-            projectId: "carat-d3b01",
-            storageBucket: "carat-d3b01.firebasestorage.app",
-            messagingSenderId: "273330568464",
-            appId: "1:273330568464:web:5b4ea4ae2a5429914cf995",
-            measurementId: "G-27VPZ9TQDW"
-        };
-
+    <!-- 内部ロジック -->
+    <script>
         const appId = 'carat-meal-v3';
+        let db, auth;
+        let currentTargetClientId = null;
+        let unsubscribeClientListener = null;
 
-        try {
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            const db = getFirestore(app);
-            
-            window.db = db;
-            window.auth = auth;
-
-            signInAnonymously(auth).then((user) => {
-                document.getElementById('sync-status').innerHTML = `
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    DB Connected
-                `;
-                document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold";
-            }).catch((err) => {
-                console.error("Auth Fail:", err);
-            });
-        } catch (e) {
-            console.error("Firebase Initialization Failed:", e);
-        }
-
-        // ==========================================
-        // グローバル関数定義
-        // ==========================================
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
             toast.innerHTML = `<i data-lucide="info" class="w-4 h-4"></i> <span>${message}</span>`;
             document.body.appendChild(toast);
-            lucide.createIcons();
+            if (window.lucide) window.lucide.createIcons();
 
             setTimeout(() => {
                 toast.classList.add('opacity-0');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
-        window.showToast = showToast;
 
+        // ==========================================
+        // オンライン接続と初期化の完全保証
+        // ==========================================
+        async function initializeTrainerSystem() {
+            try {
+                if (typeof firebase === 'undefined') {
+                    showToast("通信エラー：SDKの読み込みに失敗しました。再読み込みしてください。");
+                    return;
+                }
+
+                if (!firebase.apps.length) {
+                    firebase.initializeApp({
+                        apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
+                        authDomain: "carat-d3b01.firebaseapp.com",
+                        projectId: "carat-d3b01",
+                        storageBucket: "carat-d3b01.firebasestorage.app",
+                        messagingSenderId: "273330568464",
+                        appId: "1:273330568464:web:5b4ea4ae2a5429914cf995",
+                        measurementId: "G-27VPZ9TQDW"
+                    });
+                }
+
+                auth = firebase.auth();
+                db = firebase.firestore();
+
+                // 認証制限エラーを回避する強固な非同期ログイン
+                await auth.signInAnonymously();
+
+                document.getElementById('sync-status').innerHTML = `
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    DB Online
+                `;
+                document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold";
+
+            } catch (e) {
+                console.error("Initialize Fail:", e);
+                document.getElementById('sync-status').innerHTML = `
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                    Connection Error
+                `;
+                document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold";
+            }
+        }
+
+        // --- ブックマーク一覧管理 ---
         function getBookmarkList() {
             const stored = localStorage.getItem(`carat_trainer_bookmarks_${appId}`);
             return stored ? JSON.parse(stored) : [];
@@ -285,7 +306,7 @@
 
         function saveBookmarkList(list) {
             localStorage.setItem(`carat_trainer_bookmarks_${appId}`, JSON.stringify(list));
-            renderBookmarks();
+            window.renderBookmarks();
         }
 
         function addBookmark(id, nickname) {
@@ -303,7 +324,7 @@
             }
         };
 
-        function renderBookmarks() {
+        window.renderBookmarks = function() {
             const container = document.getElementById('trainer-bookmarks-container');
             const list = getBookmarkList();
 
@@ -327,14 +348,15 @@
                 `;
                 container.appendChild(item);
             });
-            lucide.createIcons();
-        }
+            if (window.lucide) window.lucide.createIcons();
+        };
 
         window.selectBookmarkClient = function(id) {
             document.getElementById('client-id-input').value = id;
             window.loadClientData();
         };
 
+        // --- 新規作成・Firestore即時格納（オンライン復帰完了） ---
         window.createNewClientAndId = async function() {
             const nickname = document.getElementById('new-client-name').value.trim();
             const cal = parseInt(document.getElementById('new-client-kcal').value) || 1800;
@@ -350,7 +372,6 @@
 
             const randomSuffix = Math.floor(100000 + Math.random() * 900000);
             const newId = `CRT-${randomSuffix}`;
-
             const geminiKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
 
             const initialClientState = {
@@ -380,11 +401,18 @@
             };
 
             try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', newId);
-                await setDoc(docRef, initialClientState);
+                if (!db) {
+                    alert("データベースに接続されていません。数秒後に再度お試しください。");
+                    return;
+                }
+
+                // Public共有フォルダへの即時強制書き込み
+                const docRef = db.doc(`artifacts/${appId}/public/data/clientStates/${newId}`);
+                await docRef.set(initialClientState);
 
                 addBookmark(newId, nickname);
 
+                // ID自動コピー
                 const dummy = document.createElement("textarea");
                 document.body.appendChild(dummy);
                 dummy.value = newId;
@@ -392,7 +420,7 @@
                 document.execCommand("copy");
                 document.body.removeChild(dummy);
 
-                alert(`クライアント【${nickname}】様を作成しました！\n\n【専用クライアントID】\n${newId}\n\n※IDはすでにコピーされています。LINEに貼り付けてお客様へお送りください。`);
+                alert(`クライアント【${nickname}】様を作成し、オンライン同期しました！\n\n【専用クライアントID】\n${newId}\n\n※IDはすでにコピーされています。LINEに貼り付けてお客様へお送りください。`);
                 
                 document.getElementById('new-client-name').value = '';
                 document.getElementById('client-id-input').value = newId;
@@ -400,29 +428,30 @@
 
             } catch (err) {
                 console.error("Failed to create client:", err);
-                alert("クライアント作成に失敗しました。認証ドメインおよびFirestoreルールの初期設定が完了しているかご確認ください。");
+                alert("クライアント作成に失敗しました。接続環境をご確認ください。");
             }
         };
 
-        let currentTargetClientId = null;
-        let unsubscribeClientListener = null;
-
+        // --- クライアントデータの監視ロード ---
         window.loadClientData = function() {
             const targetId = document.getElementById('client-id-input').value.trim().toUpperCase();
             if (!targetId) {
-                alert("クライアントIDを入力、またはリストから選択してください。");
+                alert("クライアントIDを入力してください。");
                 return;
             }
 
-            if (unsubscribeClientListener) {
-                unsubscribeClientListener(); 
+            if (!db) {
+                alert("通信エラー：データベースがオフラインです。");
+                return;
             }
 
-            currentTargetClientId = targetId;
-            const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', targetId);
+            if (unsubscribeClientListener) unsubscribeClientListener();
 
-            unsubscribeClientListener = onSnapshot(clientDocRef, (docSnap) => {
-                if (docSnap.exists()) {
+            currentTargetClientId = targetId;
+            const clientDocRef = db.doc(`artifacts/${appId}/public/data/clientStates/${targetId}`);
+
+            unsubscribeClientListener = clientDocRef.onSnapshot((docSnap) => {
+                if (docSnap.exists) {
                     const data = docSnap.data();
                     renderClientDashboard(data);
                     document.getElementById('client-data-container').classList.remove('hidden');
@@ -431,11 +460,11 @@
                         addBookmark(targetId, data.nickname);
                     }
                 } else {
-                    alert("指定されたクライアントIDのデータが存在しません。IDに間違いがないかご確認ください。");
+                    alert("指定されたクライアントIDのデータが存在しません。IDの打ち間違いがないか、またはトレーナー画面がOnline（緑色）の状態で正しくID作成が行われているかご確認ください。");
                 }
             }, (error) => {
                 console.error("Load Client Fail:", error);
-                alert("データベースからの読込に失敗しました。Firestoreルールが正しく「公開」されているかご確認ください。");
+                alert("データベースからの読込に失敗しました。");
             });
         };
 
@@ -484,6 +513,7 @@
             }
         }
 
+        // --- フィードバック指導送信 ---
         window.submitTrainerFeedback = async function() {
             if (!currentTargetClientId) {
                 alert("クライアントが選択されていません。");
@@ -492,24 +522,26 @@
 
             const feedbackText = document.getElementById('trainer-feedback-input').value.trim();
             if (!feedbackText) {
-                alert("メッセージを入力してください。");
+                alert("コメントを入力してください。");
                 return;
             }
 
             try {
-                const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
-                await updateDoc(clientDocRef, {
+                const clientDocRef = db.doc(`artifacts/${appId}/public/data/clientStates/${currentTargetClientId}`);
+                await clientDocRef.update({
                     trainerFeedback: feedbackText,
                     trainerFeedbackAt: new Date().toISOString()
                 });
 
-                showToast("指導アドバイスをリアルタイム送信しました！");
+                showToast("食事指導アドバイスをリアルタイム送信しました！");
                 document.getElementById('trainer-feedback-input').value = '';
             } catch (err) {
+                console.error(err);
                 alert("送信に失敗しました。");
             }
         };
 
+        // --- 店舗用APIキー自動配信 ---
         window.saveTrainerGeminiKey = function() {
             const key = document.getElementById('trainer-gemini-key').value.trim();
             if (!key) {
@@ -521,16 +553,18 @@
             showToast("店舗Gemini APIキーを登録しました。新規クライアント作成時に自動登録同期されます。");
         };
 
-        const savedTrainerKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`);
-        if (savedTrainerKey) {
-            document.getElementById('trainer-gemini-key').value = savedTrainerKey;
-        }
-
-        renderBookmarks();
-
+        // 起動処理
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTrainerSystem();
+            
+            const savedTrainerKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`);
+            if (savedTrainerKey) {
+                document.getElementById('trainer-gemini-key').value = savedTrainerKey;
+            }
+            window.renderBookmarks();
+        });
     </script>
 </body>
 </html>
-
 
 ```
