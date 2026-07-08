@@ -55,7 +55,6 @@
         <!-- Main Workspace -->
         <main class="flex-1 px-4.5 py-4 space-y-5 overflow-y-auto">
 
-            <!-- 店舗・セキュリティ設定（店舗Geminiキーのマウント） -->
             <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3">
                 <details class="group" open>
                     <summary class="text-xs font-bold text-brand-primary cursor-pointer flex justify-between items-center">
@@ -64,17 +63,16 @@
                     </summary>
                     <div class="mt-3 space-y-2 text-left">
                         <p class="text-[10px] text-brand-muted leading-relaxed">
-                            ここにGeminiキーを設定すると、**全お客様のアプリへ自動適用**されます（お客様側でのAPI設定が一切不要になります）。
+                            ここにGeminiキーを設定すると、**全お客様のアプリへ自動適用**されます。
                         </p>
                         <input type="password" id="trainer-gemini-key" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-mono text-brand-text focus:outline-none" placeholder="AIzaSy...">
-                        <button onclick="saveTrainerGeminiKey()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm">
+                        <button onclick="window.saveTrainerGeminiKey()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm">
                             店舗Geminiキーを登録・保存
                         </button>
                     </div>
                 </details>
             </section>
 
-            <!-- クライアントの新規作成・目標ID発行 -->
             <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3 text-left">
                 <h3 class="text-xs font-bold text-brand-text flex items-center gap-1.5 border-b border-brand-border pb-2.5">
                     <i data-lucide="user-plus" class="w-4 h-4 text-brand-primary"></i> ① 新規クライアント登録・専用ID発行
@@ -112,20 +110,19 @@
                         </div>
                     </div>
 
-                    <button onclick="createNewClientAndId()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-black tracking-widest transition shadow-sm mt-2 flex items-center justify-center gap-1.5">
+                    <button onclick="window.createNewClientAndId()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-black tracking-widest transition shadow-sm mt-2 flex items-center justify-center gap-1.5">
                         <i data-lucide="sparkles" class="w-4 h-4"></i> 専用クライアントIDを発行する
                     </button>
                 </div>
             </section>
 
-            <!-- 担当クライアントの選択・ロード -->
             <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3 text-left">
                 <h3 class="text-xs font-bold text-brand-text flex items-center gap-1.5 pb-2 border-b border-brand-border">
                     <i data-lucide="users" class="w-4 h-4 text-brand-primary"></i> ② 担当クライアントの選択
                 </h3>
                 
                 <div class="space-y-2">
-                    <span class="text-[9px] text-brand-muted font-bold block">登録済みクライアント一覧（ブラウザ記憶）</span>
+                    <span class="text-[9px] text-brand-muted font-bold block">登録済み一覧（デバイス記憶）</span>
                     <div id="trainer-bookmarks-container" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-1">
                         <span class="text-[10px] text-brand-muted text-center block py-4 bg-brand-bg rounded-xl border border-dashed border-brand-border">登録済みのクライアントはありません</span>
                     </div>
@@ -135,17 +132,16 @@
                     <label class="text-[9px] text-brand-muted font-bold block mb-1">ID手動検索</label>
                     <div class="flex gap-2">
                         <input type="text" id="client-id-input" class="flex-1 bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary font-mono uppercase" placeholder="CRT-XXXXXX">
-                        <button onclick="loadClientData()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-4 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1">
+                        <button onclick="window.loadClientData()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-4 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1">
                             <i data-lucide="search" class="w-3.5 h-3.5"></i> 読込
                         </button>
                     </div>
                 </div>
             </section>
 
-            <!-- クライアントデータ表示（検索成功時に開く） -->
+            <!-- クライアントデータ表示 -->
             <div id="client-data-container" class="hidden space-y-5 text-left">
                 
-                <!-- 本日のステータスカード -->
                 <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-4">
                     <div class="flex justify-between items-center border-b border-brand-border pb-3">
                         <div class="flex items-center gap-1.5">
@@ -174,24 +170,23 @@
                         <div class="grid grid-cols-3 gap-2 text-center text-xs">
                             <div class="bg-sky-50 rounded-lg p-2 border border-sky-100">
                                 <span class="text-[8px] text-sky-600 block font-bold">P (タンパク質)</span>
-                                <span class="font-extrabold text-sky-700"><span id="client-cur-p">0</span>g / <span id="client-tar-p">0</span>g</span>
+                                <span class="font-extrabold text-sky-700"><span id="client-cur-p">0</span>g (<span id="client-tar-p">0</span>g)</span>
                             </div>
                             <div class="bg-emerald-50 rounded-lg p-2 border border-emerald-100">
                                 <span class="text-[8px] text-emerald-600 block font-bold">F (脂質)</span>
-                                <span class="font-extrabold text-emerald-700"><span id="client-cur-f">0</span>g / <span id="client-tar-f">0</span>g</span>
+                                <span class="font-extrabold text-emerald-700"><span id="client-cur-f">0</span>g (<span id="client-tar-f">0</span>g)</span>
                             </div>
                             <div class="bg-amber-50 rounded-lg p-2 border border-amber-100">
                                 <span class="text-[8px] text-amber-600 block font-bold">C (炭水化物)</span>
-                                <span class="font-extrabold text-amber-700"><span id="client-cur-c">0</span>g / <span id="client-tar-c">0</span>g</span>
+                                <span class="font-extrabold text-amber-700"><span id="client-cur-c">0</span>g (<span id="client-tar-c">0</span>g)</span>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- 週全体のカロリー帳尻合わせ推移 -->
                 <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60">
                     <h4 class="text-xs font-bold tracking-wider text-brand-muted mb-3 flex items-center gap-1.5">
-                        <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-primary"></i> 1週間のカロリー調整状況（週の帳尻合わせ）
+                        <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-primary"></i> 1週間のカロリー調整状況
                     </h4>
                     <div class="grid grid-cols-7 gap-1 text-center">
                         <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block">月</span><span id="weekly-cal-Mon" class="text-[10px] font-bold">--</span></div>
@@ -204,7 +199,6 @@
                     </div>
                 </section>
 
-                <!-- 今日のタイムライン詳細 -->
                 <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60">
                     <h4 class="text-xs font-bold text-brand-text mb-3">選択された日付の食事内容</h4>
                     <div id="client-meal-timeline" class="space-y-2 max-h-[160px] overflow-y-auto">
@@ -212,16 +206,12 @@
                     </div>
                 </section>
 
-                <!-- トレーナーフィードバック送信パネル -->
                 <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3">
                     <h4 class="text-xs font-bold text-brand-primary flex items-center gap-1.5">
-                        <i data-lucide="message-square-plus" class="w-4 h-4"></i> トレーナー食事指導コメント・アドバイス
+                        <i data-lucide="message-square-plus" class="w-4 h-4"></i> トレーナー食事指導コメント送信
                     </h4>
-                    <p class="text-[11px] text-brand-muted">
-                        お客様のアプリ画面にリアルタイムで届くフィードバック指導メッセージを入力します。
-                    </p>
-                    <textarea id="trainer-feedback-input" rows="4" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary resize-none" placeholder="例: 鈴木様、今日はお昼にプロテインを上手く活用して、素晴らしいタンパク質(P)の補給ができていますね！その調子です！"></textarea>
-                    <button onclick="submitTrainerFeedback()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
+                    <textarea id="trainer-feedback-input" rows="4" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary resize-none" placeholder="アドバイスを入力..."></textarea>
+                    <button onclick="window.submitTrainerFeedback()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
                         <i data-lucide="send" class="w-4 h-4"></i> 食事アドバイスコメントを送信する
                     </button>
                 </section>
@@ -250,7 +240,6 @@
 
         const appId = 'carat-meal-v3';
 
-        // 初期化実行
         try {
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
@@ -258,11 +247,6 @@
             
             window.db = db;
             window.auth = auth;
-            window.doc = doc;
-            window.setDoc = setDoc;
-            window.getDoc = getDoc;
-            window.updateDoc = updateDoc;
-            window.onSnapshot = onSnapshot;
 
             signInAnonymously(auth).then((user) => {
                 document.getElementById('sync-status').innerHTML = `
@@ -278,8 +262,22 @@
         }
 
         // ==========================================
-        // ブックマーク一覧管理
+        // グローバル関数定義
         // ==========================================
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
+            toast.innerHTML = `<i data-lucide="info" class="w-4 h-4"></i> <span>${message}</span>`;
+            document.body.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        window.showToast = showToast;
+
         function getBookmarkList() {
             const stored = localStorage.getItem(`carat_trainer_bookmarks_${appId}`);
             return stored ? JSON.parse(stored) : [];
@@ -319,7 +317,7 @@
                 const item = document.createElement('div');
                 item.className = "flex justify-between items-center bg-brand-bg hover:bg-brand-accent p-2.5 rounded-xl border border-brand-border transition-all mb-1";
                 item.innerHTML = `
-                    <button onclick="selectBookmarkClient('${b.id}')" class="flex-1 text-left flex flex-col">
+                    <button onclick="window.selectBookmarkClient('${b.id}')" class="flex-1 text-left flex flex-col">
                         <span class="text-xs font-bold text-brand-text">${b.nickname}</span>
                         <span class="text-[9px] font-mono text-brand-muted">${b.id}</span>
                     </button>
@@ -334,12 +332,9 @@
 
         window.selectBookmarkClient = function(id) {
             document.getElementById('client-id-input').value = id;
-            loadClientData();
+            window.loadClientData();
         };
 
-        // ==========================================
-        // クライアントの作成・専用ID発行
-        // ==========================================
         window.createNewClientAndId = async function() {
             const nickname = document.getElementById('new-client-name').value.trim();
             const cal = parseInt(document.getElementById('new-client-kcal').value) || 1800;
@@ -385,9 +380,8 @@
             };
 
             try {
-                // Public共有フォルダにデータを書き込むことでパーミッションエラーを完全回避
-                const docRef = window.doc(window.db, 'artifacts', appId, 'public', 'data', 'clientStates', newId);
-                await window.setDoc(docRef, initialClientState);
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', newId);
+                await setDoc(docRef, initialClientState);
 
                 addBookmark(newId, nickname);
 
@@ -402,17 +396,14 @@
                 
                 document.getElementById('new-client-name').value = '';
                 document.getElementById('client-id-input').value = newId;
-                loadClientData();
+                window.loadClientData();
 
             } catch (err) {
                 console.error("Failed to create client:", err);
-                alert("クライアント作成に失敗しました。認証ドメインおよびFirestoreルールの初期設定（ firebase_console_setup.md ）が完了しているかご確認ください。");
+                alert("クライアント作成に失敗しました。認証ドメインおよびFirestoreルールの初期設定が完了しているかご確認ください。");
             }
         };
 
-        // ==========================================
-        // クライアントデータの監視・ロード
-        // ==========================================
         let currentTargetClientId = null;
         let unsubscribeClientListener = null;
 
@@ -428,9 +419,9 @@
             }
 
             currentTargetClientId = targetId;
-            const clientDocRef = window.doc(window.db, 'artifacts', appId, 'public', 'data', 'clientStates', targetId);
+            const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', targetId);
 
-            unsubscribeClientListener = window.onSnapshot(clientDocRef, (docSnap) => {
+            unsubscribeClientListener = onSnapshot(clientDocRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     renderClientDashboard(data);
@@ -493,9 +484,6 @@
             }
         }
 
-        // ==========================================
-        // フィードバック送信
-        // ==========================================
         window.submitTrainerFeedback = async function() {
             if (!currentTargetClientId) {
                 alert("クライアントが選択されていません。");
@@ -504,27 +492,24 @@
 
             const feedbackText = document.getElementById('trainer-feedback-input').value.trim();
             if (!feedbackText) {
-                alert("コメントを入力してください。");
+                alert("メッセージを入力してください。");
                 return;
             }
 
             try {
-                const clientDocRef = window.doc(window.db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
-                await window.updateDoc(clientDocRef, {
+                const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
+                await updateDoc(clientDocRef, {
                     trainerFeedback: feedbackText,
                     trainerFeedbackAt: new Date().toISOString()
                 });
 
-                showToast("アドバイス指導コメントをリアルタイム送信しました！");
+                showToast("指導アドバイスをリアルタイム送信しました！");
                 document.getElementById('trainer-feedback-input').value = '';
             } catch (err) {
                 alert("送信に失敗しました。");
             }
         };
 
-        // ==========================================
-        // 店舗用Geminiキー自動配信システム
-        // ==========================================
         window.saveTrainerGeminiKey = function() {
             const key = document.getElementById('trainer-gemini-key').value.trim();
             if (!key) {
@@ -543,20 +528,9 @@
 
         renderBookmarks();
 
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
-            toast.innerHTML = `<i data-lucide="info" class="w-4 h-4"></i> <span>${message}</span>`;
-            document.body.appendChild(toast);
-            lucide.createIcons();
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
     </script>
 </body>
 </html>
+
 
 ```
