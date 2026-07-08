@@ -31,11 +31,6 @@
     </script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- Firebase Compat SDK (フリーズと即死エラーを100%防止する安定互換版) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-brand-bg text-brand-text font-sans min-h-screen notranslate">
 
@@ -52,7 +47,7 @@
             </div>
             <div class="flex items-center space-x-2">
                 <span id="sync-status" class="text-[9px] px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-100 flex items-center gap-1 font-bold">
-                    <span class="w-1 h-1 rounded-full bg-amber-500 animate-pulse"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                     未連携
                 </span>
                 <button onclick="window.toggleModal('modal-settings')" class="p-1.5 hover:bg-brand-accent rounded-full transition text-brand-muted hover:text-brand-primary">
@@ -100,7 +95,7 @@
         <!-- Main Content -->
         <main class="flex-1 px-4.5 py-4 space-y-5 overflow-y-auto">
 
-            <!-- クライアント識別子表示 -->
+            <!-- クライアント識別表示 -->
             <div class="bg-brand-accent/40 rounded-xl px-4 py-2.5 border border-brand-border text-xs flex justify-between items-center">
                 <span class="text-brand-muted font-bold">クライアントID</span>
                 <button onclick="window.copyUserId()" class="font-mono font-bold text-brand-primary hover:underline flex items-center gap-1">
@@ -196,37 +191,37 @@
                 </div>
 
                 <div class="grid grid-cols-7 gap-1.5 mb-2">
-                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center pointer-events-none">
                         <span class="text-[9px] text-brand-muted font-bold font-sans">月</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Mon"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Mon">0</span>
                     </div>
-                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center pointer-events-none">
                         <span class="text-[9px] text-brand-muted font-bold font-sans">火</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Tue"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Tue">0</span>
                     </div>
-                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center pointer-events-none">
                         <span class="text-[9px] text-brand-muted font-bold font-sans">水</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Wed"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Wed">0</span>
                     </div>
-                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center pointer-events-none">
                         <span class="text-[9px] text-brand-muted font-bold font-sans">木</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Thu"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Thu">0</span>
                     </div>
-                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center pointer-events-none">
                         <span class="text-[9px] text-brand-muted font-bold font-sans">金</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Fri"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Fri">0</span>
                     </div>
-                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center pointer-events-none">
                         <span class="text-[9px] text-brand-muted font-bold font-sans">土</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Sat"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Sat">0</span>
                     </div>
-                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center pointer-events-none">
                         <span class="text-[9px] text-brand-muted font-bold font-sans">日</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Sun"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Sun">0</span>
@@ -270,7 +265,7 @@
                             <i data-lucide="history" class="w-3.5 h-3.5 text-brand-secondary"></i> 定番から1タップ追加
                         </h4>
                     </div>
-                    <div id="quick-history-list" class="flex gap-2 overflow-x-auto pb-1.5 scrollbar-thin">
+                    <div id="quick-history-list" class="flex gap-2 overflow-x-auto pb-1.5 scrollbar-thin font-sans">
                         <!-- 定番チップが入ります -->
                     </div>
                 </div>
@@ -591,8 +586,12 @@
         </div>
     </div>
 
-    <!-- 内部同期ロジック (全JS即死を完全に回避する一元バインド設計) -->
-    <script>
+    <!-- Firebase v11.6.1 Web SDK (ES Modules / RULE 3 Guard / Absolute Realtime Sync) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
         const appId = 'carat-meal-v3';
         
         let appState = {
@@ -626,36 +625,56 @@
             sharedGeminiKey: "" 
         };
 
-        let db, auth;
+        const firebaseConfig = {
+            apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
+            authDomain: "carat-d3b01.firebaseapp.com",
+            projectId: "carat-d3b01",
+            storageBucket: "carat-d3b01.firebasestorage.app",
+            messagingSenderId: "273330568464",
+            appId: "1:273330568464:web:5b4ea4ae2a5429914cf995",
+            measurementId: "G-27VPZ9TQDW"
+        };
+
+        // Firebaseサービスの初期化
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // windowオブジェクトにサービスバインド
+        window.db = db;
+        window.auth = auth;
+
         let unsubscribeSync = null;
         const dayKeysMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
         // ==========================================
-        // 100%エラーを防止するための全関数のグローバルバインド
+        // 開発規約 & エラー根絶用の関数登録
         // ==========================================
-        window.showToast = function(message) {
+        function showToast(message) {
             const toast = document.createElement('div');
             toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
             toast.innerHTML = `<i data-lucide="info" class="w-4 h-4"></i> <span>${message}</span>`;
             document.body.appendChild(toast);
-            if (window.lucide) window.lucide.createIcons();
+            lucide.createIcons();
 
             setTimeout(() => {
                 toast.classList.add('opacity-0');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
-        };
+        }
+        window.showToast = showToast; 
 
-        window.saveToHistoryDatabase = function(name, kcal, p, f, c) {
+        function saveToHistoryDatabase(name, kcal, p, f, c) {
             if (!appState.mealHistory) appState.mealHistory = [];
             appState.mealHistory = appState.mealHistory.filter(h => h.name.toLowerCase() !== name.toLowerCase());
             appState.mealHistory.unshift({ name, kcal, p, f, c });
             if (appState.mealHistory.length > 15) {
                 appState.mealHistory.pop();
             }
-        };
+        }
+        window.saveToHistoryDatabase = saveToHistoryDatabase;
 
-        window.getEffectiveApiKey = function() {
+        function getEffectiveApiKey() {
             const userKey = document.getElementById('user-api-key').value.trim();
             if (userKey) return userKey;
 
@@ -665,9 +684,13 @@
             if (appState.sharedGeminiKey) return appState.sharedGeminiKey;
 
             return "";
-        };
+        }
+        window.getEffectiveApiKey = getEffectiveApiKey;
 
-        window.startSyncSystem = async function() {
+        // ==========================================
+        // RULE 3 - 匿名認証の事前実行と監視
+        // ==========================================
+        async function startSyncSystem() {
             const savedClientId = localStorage.getItem(`carat_active_client_id_${appId}`);
             
             if (!savedClientId) {
@@ -681,38 +704,19 @@
             document.getElementById('settings-client-id').innerText = savedClientId;
 
             try {
-                if (typeof firebase === 'undefined') {
-                    window.showToast("通信エラー：データベースの読み込みに失敗しました。再読み込みしてください。");
-                    return;
-                }
+                // RULE 3: 認証処理を最優先で完了させてからFirestoreにアクセス
+                await signInAnonymously(auth);
 
-                if (!firebase.apps.length) {
-                    const firebaseConfig = {
-                        apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
-                        authDomain: "carat-d3b01.firebaseapp.com",
-                        projectId: "carat-d3b01",
-                        storageBucket: "carat-d3b01.firebasestorage.app",
-                        messagingSenderId: "273330568464",
-                        appId: "1:273330568464:web:5b4ea4ae2a5429914cf995",
-                        measurementId: "G-27VPZ9TQDW"
-                    };
-                    firebase.initializeApp(firebaseConfig);
-                }
-
-                auth = firebase.auth();
-                db = firebase.firestore();
-
-                await auth.signInAnonymously();
-
-                const userDocRef = db.doc(`artifacts/${appId}/public/data/clientStates/${savedClientId}`);
+                // RULE 1: 正確なパブリックデータスペース
+                const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', savedClientId);
                 
                 if (unsubscribeSync) unsubscribeSync();
                 
-                unsubscribeSync = userDocRef.onSnapshot((docSnap) => {
+                unsubscribeSync = onSnapshot(userDocRef, (docSnap) => {
                     if (docSnap.exists()) {
                         const cloudData = docSnap.data();
                         
-                        // ディープコピーで状態上書き
+                        // ディープコピーで状態上書き（破壊的代入防止）
                         appState = { ...appState, ...JSON.parse(JSON.stringify(cloudData)) };
                         window.appState = appState;
 
@@ -729,20 +733,21 @@
                         document.getElementById('target-f-input').value = appState.targetF || 45;
                         document.getElementById('target-c-input').value = appState.targetC || 230;
 
-                        window.loadMealsForActiveDate();
+                        loadMealsForActiveDate();
                     } else {
-                        userDocRef.set(appState);
+                        setDoc(userDocRef, appState);
                     }
                 }, (error) => {
                     console.error("Firestore Subscribe Error:", error);
-                    window.showToast("データの受信に失敗しました。認証設定をご確認ください。");
+                    showToast("同期データの読み込みに失敗しました。認証設定をご確認ください。");
                 });
 
             } catch (err) {
                 console.error("Auth / Sync Error:", err);
-                window.showToast("データベースへの接続に失敗しました。");
+                showToast("データベースへの接続に失敗しました。");
             }
-        };
+        }
+        window.startSyncSystem = startSyncSystem;
 
         window.connectWithClientId = async function() {
             const idInput = document.getElementById('initial-id-input').value.trim().toUpperCase();
@@ -754,28 +759,14 @@
             document.getElementById('sync-status').innerText = "接続確認中...";
 
             try {
-                if (typeof firebase === 'undefined') {
-                    alert("通信環境が不安定です。時間を置いて再度お試しください。");
-                    return;
-                }
-                if (!firebase.apps.length) {
-                    firebase.initializeApp({
-                        apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
-                        authDomain: "carat-d3b01.firebaseapp.com",
-                        projectId: "carat-d3b01"
-                    });
-                }
-                auth = firebase.auth();
-                db = firebase.firestore();
-
-                await auth.signInAnonymously();
-                const userDocRef = db.doc(`artifacts/${appId}/public/data/clientStates/${idInput}`);
-                const docSnap = await userDocRef.get();
+                await signInAnonymously(auth);
+                const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', idInput);
+                const docSnap = await getDoc(userDocRef);
 
                 if (docSnap.exists()) {
                     localStorage.setItem(`carat_active_client_id_${appId}`, idInput);
-                    window.showToast("CARAT専用目標の同期に成功しました！");
-                    window.startSyncSystem();
+                    showToast("CARAT専用目標の同期に成功しました！");
+                    startSyncSystem();
                 } else {
                     alert("指定されたクライアントIDが存在しません。トレーナーの管理アプリがOnline（緑色）の状態でクライアントが新規発行されているかご確認ください。");
                     document.getElementById('sync-status').innerText = "未連携";
@@ -793,12 +784,12 @@
                 localStorage.removeItem(`carat_active_client_id_${appId}`);
                 document.getElementById('welcome-overlay').classList.remove('hidden');
                 document.getElementById('user-id-display').innerText = "未接続";
-                window.toggleModal('modal-settings');
-                window.showToast("連携を解除しました。");
+                toggleModal('modal-settings');
+                showToast("連携を解除しました。");
             }
         };
 
-        window.syncStateToCloud = async function() {
+        async function syncStateToCloud() {
             const activeId = localStorage.getItem(`carat_active_client_id_${appId}`);
             if (!activeId) return;
 
@@ -806,14 +797,15 @@
                 if (!appState.mealsByDate) appState.mealsByDate = {};
                 appState.mealsByDate[window.currentDateString] = JSON.parse(JSON.stringify(appState.meals || []));
 
-                const userDocRef = db.doc(`artifacts/${appId}/public/data/clientStates/${activeId}`);
-                await userDocRef.set(appState, { merge: true });
+                const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', activeId);
+                await setDoc(userDocRef, appState, { merge: true });
             } catch (err) {
                 console.error("Auto Sync Fail:", err);
             }
-        };
+        }
+        window.syncStateToCloud = syncStateToCloud;
 
-        window.loadMealsForActiveDate = function() {
+        function loadMealsForActiveDate() {
             if (!appState.mealsByDate) appState.mealsByDate = {};
             const activeMeals = appState.mealsByDate[window.currentDateString] ? JSON.parse(JSON.stringify(appState.mealsByDate[window.currentDateString])) : [];
             appState.meals = activeMeals;
@@ -821,8 +813,9 @@
             calculateTotals();
             updateWeeklyLogsForActiveDate();
             updateDateUI();
-            window.updateUI();
-        };
+            updateUI();
+        }
+        window.loadMealsForActiveDate = loadMealsForActiveDate;
 
         function updateWeeklyLogsForActiveDate() {
             const activeDate = new Date(window.currentDateString);
@@ -880,8 +873,8 @@
             const newDateStr = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}-${String(current.getDate()).padStart(2, '0')}`;
             window.currentDateString = newDateStr;
             
-            window.loadMealsForActiveDate();
-            await window.syncStateToCloud();
+            loadMealsForActiveDate();
+            await syncStateToCloud();
         };
 
         window.resetToToday = async function() {
@@ -890,13 +883,13 @@
 
             window.currentDateString = getTodayDateString();
             
-            window.loadMealsForActiveDate();
-            await window.syncStateToCloud();
-            window.showToast("今日の画面に戻りました。");
+            loadMealsForActiveDate();
+            await syncStateToCloud();
+            showToast("今日の画面に戻りました。");
         };
 
         window.selectDayFromWeeklyGrid = function(dayKey) {
-            window.showToast(`${dayKey}曜日のカロリー実績です。日付切り替えは上部矢印をご利用ください。`);
+            showToast(`${dayKey}曜日のカロリー実績です。日付切り替えは上部矢印をご利用ください。`);
         };
 
         window.updateUI = function() {
@@ -970,8 +963,8 @@
 
             renderTimeline();
             renderHistoryQuickList();
-            if (window.lucide) window.lucide.createIcons();
-        };
+            lucide.createIcons();
+        }
 
         function calculateTotals() {
             let cal = 0, p = 0, f = 0, c = 0;
@@ -1083,10 +1076,10 @@
             appState.mealsByDate[window.currentDateString].push(newMeal);
             appState.meals = appState.mealsByDate[window.currentDateString];
 
-            window.syncCurrentDayWithTimeline();
-            window.syncStateToCloud();
-            window.updateUI();
-            window.showToast(`「${newMeal.name}」を追加登録しました！`);
+            syncCurrentDayWithTimeline();
+            syncStateToCloud();
+            updateUI();
+            showToast(`「${newMeal.name}」を追加登録しました！`);
         };
 
         window.toggleModal = function(id) {
@@ -1107,11 +1100,11 @@
             document.getElementById('manual-p').value = '';
             document.getElementById('manual-f').value = '';
             document.getElementById('manual-c').value = '';
-            window.toggleModal('modal-meal');
+            toggleModal('modal-meal');
         };
 
         window.closeMealModal = function() {
-            window.toggleModal('modal-meal');
+            toggleModal('modal-meal');
         };
 
         window.handleManualMealSubmit = function(e) {
@@ -1145,12 +1138,12 @@
             appState.mealsByDate[window.currentDateString].push(newMeal);
             appState.meals = appState.mealsByDate[window.currentDateString];
             
-            window.saveToHistoryDatabase(name, kcal, p, f, c);
+            saveToHistoryDatabase(name, kcal, p, f, c);
             
-            window.syncCurrentDayWithTimeline();
-            window.syncStateToCloud();
-            window.updateUI();
-            window.closeMealModal();
+            syncCurrentDayWithTimeline();
+            syncStateToCloud();
+            updateUI();
+            closeMealModal();
         };
 
         window.deleteMeal = function(id) {
@@ -1160,9 +1153,9 @@
             if (!appState.mealsByDate) appState.mealsByDate = {};
             appState.mealsByDate[window.currentDateString] = appState.meals;
 
-            window.syncCurrentDayWithTimeline();
-            window.syncStateToCloud();
-            window.updateUI();
+            syncCurrentDayWithTimeline();
+            syncStateToCloud();
+            updateUI();
         };
 
         window.saveBodyData = function() {
@@ -1170,9 +1163,9 @@
             const f = parseFloat(document.getElementById('input-fat-rate').value);
             if (!isNaN(w)) appState.weight = w;
             if (!isNaN(f)) appState.fatRate = f;
-            window.syncStateToCloud();
-            window.updateUI();
-            window.toggleModal('modal-weight');
+            syncStateToCloud();
+            updateUI();
+            toggleModal('modal-weight');
         };
 
         window.saveTargetSettings = function() {
@@ -1187,31 +1180,16 @@
             } else {
                 localStorage.removeItem(`carat_user_gemini_key_${appId}`);
             }
-            window.syncStateToCloud();
-            window.updateUI();
-            window.toggleModal('modal-settings');
-            window.showToast("目標設定を更新保存しました。");
+            syncStateToCloud();
+            updateUI();
+            toggleModal('modal-settings');
+            showToast("目標設定を更新保存しました。");
         };
 
         // ==========================================
-        // Gemini API 解析 & パース (安定版)
+        // Gemini API 接続 (店舗共有キー + 自動フォールバック)
         // ==========================================
-        window.parseGeminiJSON = function(text) {
-            try {
-                const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
-                const start = cleaned.indexOf('{');
-                const end = cleaned.lastIndexOf('}');
-                if (start !== -1 && end !== -1) {
-                    return JSON.parse(cleaned.slice(start, end + 1));
-                }
-                return JSON.parse(cleaned);
-            } catch (e) {
-                console.error("JSON Parse Error. Text was:", text);
-                throw new Error("AIの出力形式の読み取りに失敗しました。もう一度お試しください。");
-            }
-        };
-
-        window.resizeAndConvertToJpegBase64 = function(file) {
+        function resizeAndConvertToJpegBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = (event) => {
@@ -1252,12 +1230,12 @@
                 reader.onerror = () => reject(new Error("ファイル読込エラー"));
                 reader.readAsDataURL(file);
             });
-        };
+        }
 
-        window.fetchGeminiWithFallback = async function(payload) {
-            const key = window.getEffectiveApiKey();
+        async function fetchGeminiWithFallback(payload) {
+            const key = getEffectiveApiKey();
             if (!key) {
-                throw new Error("Gemini API Keyがありません。トレーナーに管理画面から『店舗用Gemini Key』を設定してもらうか、目標設定から独自のキーを入力してください。");
+                throw new Error("Gemini API Keyがありません。トレーナーに管理画面から『店舗用Gemini Key』を設定してもらうか、右上の目標設定から独自のキーを入力してください。");
             }
 
             // Google Cloud 最新の 2.5-flash / 1.5-flash を正しいエンドポイント組み合わせでフォールバック
@@ -1299,6 +1277,21 @@
             }
 
             throw new Error(`【解析失敗】${lastError}`);
+        }
+
+        window.parseGeminiJSON = function(text) {
+            try {
+                const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
+                const start = cleaned.indexOf('{');
+                const end = cleaned.lastIndexOf('}');
+                if (start !== -1 && end !== -1) {
+                    return JSON.parse(cleaned.slice(start, end + 1));
+                }
+                return JSON.parse(cleaned);
+            } catch (e) {
+                console.error("JSON Parse Error. Text was:", text);
+                throw new Error("AIの出力形式の読み取りに失敗しました。もう一度お試しください。");
+            }
         };
 
         // ==========================================
@@ -1341,7 +1334,7 @@
                 </button>
             `;
             container.appendChild(row);
-            if (window.lucide) window.lucide.createIcons();
+            lucide.createIcons();
         };
 
         window.addIngredientRow = function() {
@@ -1379,7 +1372,7 @@
                     contents: [{ parts: [{ text: combinedPrompt }] }]
                 };
 
-                const data = await window.fetchGeminiWithFallback(payload);
+                const data = await fetchGeminiWithFallback(payload);
                 const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (text) {
                     const parsed = window.parseGeminiJSON(text);
@@ -1390,7 +1383,7 @@
                 }
             } catch (error) {
                 console.error("Gemini text fail:", error);
-                window.showToast(error.message || "テキスト解析に失敗しました。");
+                showToast(error.message || "テキスト解析に失敗しました。");
             } finally {
                 loader.classList.add('hidden');
             }
@@ -1406,7 +1399,7 @@
             loaderText.innerText = "写真を自動的に最適化・圧縮中...";
 
             try {
-                const base64Data = await window.resizeAndConvertToJpegBase64(file);
+                const base64Data = await resizeAndConvertToJpegBase64(file);
 
                 loaderText.innerText = "画像から使われている食材と分量を割り出し中...";
                 
@@ -1422,7 +1415,7 @@
                     }]
                 };
 
-                const data = await window.fetchGeminiWithFallback(payload);
+                const data = await fetchGeminiWithFallback(payload);
                 const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (text) {
                     const parsed = window.parseGeminiJSON(text);
@@ -1488,7 +1481,7 @@ ${materialsArray.join('\n')}`;
                     contents: [{ parts: [{ text: combinedPrompt }] }]
                 };
 
-                const data = await window.fetchGeminiWithFallback(payload);
+                const data = await fetchGeminiWithFallback(payload);
                 const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (text) {
                     const parsed = window.parseGeminiJSON(text);
@@ -1532,12 +1525,12 @@ ${materialsArray.join('\n')}`;
             appState.mealsByDate[window.currentDateString].push(newMeal);
             appState.meals = appState.mealsByDate[window.currentDateString];
 
-            window.saveToHistoryDatabase(newMeal.name, newMeal.kcal, newMeal.p, newMeal.f, newMeal.c);
+            saveToHistoryDatabase(newMeal.name, newMeal.kcal, newMeal.p, newMeal.f, newMeal.c);
             
-            window.syncCurrentDayWithTimeline();
-            window.syncStateToCloud();
-            window.updateUI();
-            window.showToast(`「${newMeal.name}」を登録しました！`);
+            syncCurrentDayWithTimeline();
+            syncStateToCloud();
+            updateUI();
+            showToast(`「${newMeal.name}」を登録しました！`);
         }
 
         window.syncCurrentDayWithTimeline = function() {
@@ -1588,10 +1581,10 @@ ${materialsArray.join('\n')}`;
             const messageText = inputEl.value.trim();
             if (!messageText) return;
 
-            const key = window.getEffectiveApiKey();
+            const key = getEffectiveApiKey();
             if (!key) {
-                window.showToast("【エラー】Gemini API Keyがありません。右上の『目標・設定』から入力してください。");
-                window.toggleModal('modal-settings');
+                showToast("【エラー】Gemini API Keyがありません。右上の『目標・設定』から入力してください。");
+                toggleModal('modal-settings');
                 return;
             }
 
@@ -1608,10 +1601,11 @@ ${materialsArray.join('\n')}`;
                 `;
 
                 const payload = {
-                    contents: [{ parts: [{ text: systemPrompt + "\n質問: " + messageText }] }]
+                    contents: [{ parts: [{ text: messageText }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
                 };
 
-                const data = await window.fetchGeminiWithFallback(payload);
+                const data = await fetchGeminiWithFallback(payload);
                 const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 const tempDiv = document.getElementById(aiTempId);
                 if (tempDiv && responseText) {
@@ -1630,7 +1624,7 @@ ${materialsArray.join('\n')}`;
             const container = document.getElementById('chat-messages');
             const id = `msg-${Date.now()}`;
             const div = document.createElement('div');
-            div.className = "flex gap-2.5 mb-2";
+            div.className = "flex gap-2.5";
             if (isPending) div.id = id;
 
             if (sender === "user") {
@@ -1652,7 +1646,7 @@ ${materialsArray.join('\n')}`;
             }
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
-            if (window.lucide) window.lucide.createIcons();
+            lucide.createIcons();
             return id;
         }
 
@@ -1665,7 +1659,7 @@ ${materialsArray.join('\n')}`;
             dummy.select();
             document.execCommand("copy");
             document.body.removeChild(dummy);
-            window.showToast("クライアントIDをコピーしました！");
+            showToast("クライアントIDをコピーしました！");
         };
 
         // windowオブジェクトにグローバル操作関数を明示的マウント
@@ -1687,9 +1681,7 @@ ${materialsArray.join('\n')}`;
         window.removeIngredientRow = removeIngredientRow;
         window.reAnalyzeAndRegister = reAnalyzeAndRegister;
 
-        // ==========================================
         // イベントリスナーの直接安全バインド
-        // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
             const inputImg = document.getElementById('ai-image-input');
             if (inputImg) {
