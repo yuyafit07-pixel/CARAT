@@ -103,16 +103,14 @@
                 </button>
             </div>
 
-            <!-- 今日の摂取カロリー・PFC状況 -->
+            <!-- PFC実績表示 -->
             <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-28 h-28 bg-brand-accent/30 rounded-full blur-2xl -mr-8 -mt-8"></div>
-                
                 <h2 class="text-xs font-bold tracking-wider text-brand-muted mb-4 flex items-center gap-2">
                     <i data-lucide="calendar" class="w-4 h-4 text-brand-primary"></i> 選択日の栄養摂取状況
                 </h2>
 
                 <div class="grid grid-cols-12 gap-2 items-center">
-                    <!-- サークルゲージ -->
                     <div class="col-span-5 relative flex items-center justify-center">
                         <svg class="w-28 h-28 transform -rotate-90">
                             <circle cx="56" cy="56" r="46" stroke="currentColor" class="text-brand-accent" stroke-width="6" fill="transparent" />
@@ -131,9 +129,7 @@
                         </div>
                     </div>
 
-                    <!-- PFC比率バー -->
                     <div class="col-span-7 space-y-2.5 pl-2">
-                        <!-- P: Protein -->
                         <div>
                             <div class="flex justify-between text-[11px] mb-0.5">
                                 <span class="font-bold text-brand-primary">P (タンパク質)</span>
@@ -143,7 +139,6 @@
                                 <div id="p-bar" class="h-full bg-brand-primary rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
-                        <!-- F: Fat -->
                         <div>
                             <div class="flex justify-between text-[11px] mb-0.5">
                                 <span class="font-bold text-teal-600">F (脂質)</span>
@@ -153,7 +148,6 @@
                                 <div id="f-bar" class="h-full bg-teal-500 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
-                        <!-- C: Carb -->
                         <div>
                             <div class="flex justify-between text-[11px] mb-0.5">
                                 <span class="font-bold text-sky-600">C (炭水化物)</span>
@@ -231,7 +225,7 @@
                 </div>
             </section>
 
-            <!-- クイックAI解析入力 -->
+            <!-- AI食事解析パネル -->
             <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 relative space-y-4 font-sans">
                 <div class="absolute -top-3 left-6 bg-brand-primary text-white text-[9px] font-bold px-3 py-1 rounded-full tracking-wider uppercase shadow-sm font-mono">
                     AI Instant Input
@@ -267,8 +261,8 @@
                             <i data-lucide="history" class="w-3.5 h-3.5 text-brand-secondary"></i> 定番から1タップ追加
                         </h4>
                     </div>
-                    <div id="quick-history-list" class="flex gap-2 overflow-x-auto pb-1.5 scrollbar-thin">
-                        <!-- 定番チップが入ります -->
+                    <div id="quick-history-list" class="flex gap-2 overflow-x-auto pb-1.5 scrollbar-thin font-sans">
+                        <!-- 定番フード -->
                     </div>
                 </div>
 
@@ -380,11 +374,11 @@
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-[11px] text-teal-600 mb-1">F (g)</label>
+                        <label class="block text-[11px] text-teal-600 mb-1">脂質 (F/g)</label>
                         <input type="number" id="manual-f" step="0.1" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text" placeholder="5">
                     </div>
                     <div>
-                        <label class="block text-[11px] text-sky-500 mb-1">C (g)</label>
+                        <label class="block text-[11px] text-sky-500 mb-1">炭水化物 (C/g)</label>
                         <input type="number" id="manual-c" step="0.1" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text" placeholder="10">
                     </div>
                 </div>
@@ -530,7 +524,7 @@
             mealHistory: [
                 { name: "サラダチキン", kcal: 115, p: 24.1, f: 1.2, c: 0 },
                 { name: "おにぎり(鮭)", kcal: 175, p: 4.2, f: 0.8, c: 38.0 },
-                { name: "ギリシャヨーグヨーグルト", kcal: 92, p: 10.0, f: 0, c: 4.8 }
+                { name: "ギリシャヨーグると", kcal: 92, p: 10.0, f: 0, c: 4.8 }
             ],
             weeklyLogs: {
                 Mon: { kcal: 0, p: 0, f: 0, c: 0 },
@@ -549,11 +543,24 @@
         const dayKeysMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
         // ==========================================
-        // 履歴データベースへの記憶処理（未定義エラーを完全解消）
+        // グローバル・ローカル関数のセーフマッピング
         // ==========================================
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
+            toast.innerHTML = `<i data-lucide="info" class="w-4 h-4"></i> <span>${message}</span>`;
+            document.body.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        window.showToast = showToast; // HTML onclickなど外部からの実行に備えて100%バインド
+
         function saveToHistoryDatabase(name, kcal, p, f, c) {
             if (!appState.mealHistory) appState.mealHistory = [];
-            // 重複排除
             appState.mealHistory = appState.mealHistory.filter(h => h.name.toLowerCase() !== name.toLowerCase());
             appState.mealHistory.unshift({ name, kcal, p, f, c });
             if (appState.mealHistory.length > 15) {
@@ -579,7 +586,7 @@
             document.getElementById('settings-client-id').innerText = savedClientId;
 
             try {
-                // 非同期匿名認証を実行（承認ドメイン・匿名認証設定により、即時Connectedになります）
+                // 匿名認証実行
                 await signInAnonymously(auth);
 
                 const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', savedClientId);
@@ -681,7 +688,6 @@
             updateDateUI();
             updateUI();
         }
-        window.loadMealsForActiveDate = loadMealsForActiveDate;
 
         function updateWeeklyLogsForActiveDate() {
             const activeDate = new Date(window.currentDateString);
@@ -720,11 +726,7 @@
             }
         }
 
-        // ==========================================
-        // 安全なマルチデイ日付切り替えロジック
-        // ==========================================
         window.changeDay = function(direction) {
-            // 1. 変更前の日付のデータをMealsByDateへ同期退避
             if (!appState.mealsByDate) appState.mealsByDate = {};
             appState.mealsByDate[window.currentDateString] = [...appState.meals];
 
@@ -1227,7 +1229,7 @@
                 }
             } catch (error) {
                 console.error("Gemini text fail:", error);
-                alert(error.message || "テキスト解析に失敗しました。");
+                showToast(error.message || "テキスト解析に失敗しました。");
             } finally {
                 loader.classList.add('hidden');
             }
@@ -1283,7 +1285,7 @@
                 }
             } catch (error) {
                 console.error("Gemini image fail:", error);
-                alert(error.message || "写真の解析に失敗しました。");
+                showToast(error.message || "写真の解析に失敗しました。");
             } finally {
                 loader.classList.add('hidden');
                 inputElement.value = ""; 
@@ -1402,7 +1404,7 @@
                 const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
                 const systemPrompt = `
                     あなたはパーソナルジム「CARAT」のチーフトレーナー、または栄養顧問です。
-                    ジムクライアントから寄せられる質問（PFC調整、トレーニング頻度、会食・旅行に伴う週単位での食事の調整戦略、リカバリーなど）に対して、プロの知見に基づき、簡潔・論理的・実践的な回答を提示してください。
+                    ジムクライアントから寄せられる質問（PFC調整、トレーニング頻度、会食・旅行に伴う週単位での食事の調整戦略、リカバリーなど）に対して、プロの知見に基づき、簡潔・論理停・実践的な回答を提示してください。
                 `;
 
                 const payload = {
@@ -1478,18 +1480,6 @@
         startSyncSystem();
         updateDateUI();
 
-        window.showToast = function(message) {
-            const toast = document.createElement('div');
-            toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
-            toast.innerHTML = `<i data-lucide="info" class="w-4 h-4"></i> <span>${message}</span>`;
-            document.body.appendChild(toast);
-            lucide.createIcons();
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        };
     </script>
 </body>
 </html>
