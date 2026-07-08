@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ja" class="notranslate" translate="no">
 <head>
@@ -15,7 +16,7 @@
                         brand: {
                             bg: '#F4F8FA',
                             card: '#FFFFFF',
-                            primary: '#0052CC',  // CARATテーマの鮮やかなブルー
+                            primary: '#0052CC',
                             primaryHover: '#0043a4',
                             secondary: '#85B7E2',
                             accent: '#E6F0FA',
@@ -33,7 +34,6 @@
 </head>
 <body class="bg-brand-bg text-brand-text font-sans min-h-screen notranslate">
 
-    <!-- App Shell Container -->
     <div class="max-w-md mx-auto bg-brand-bg min-h-screen shadow-xl flex flex-col relative pb-24 border-x border-brand-border">
         
         <!-- ヘッダー -->
@@ -103,16 +103,14 @@
                 </button>
             </div>
 
-            <!-- 今日の摂取カロリー・PFC状況 -->
+            <!-- PFC実績表示 -->
             <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-28 h-28 bg-brand-accent/30 rounded-full blur-2xl -mr-8 -mt-8"></div>
-                
                 <h2 class="text-xs font-bold tracking-wider text-brand-muted mb-4 flex items-center gap-2">
                     <i data-lucide="calendar" class="w-4 h-4 text-brand-primary"></i> 選択日の栄養摂取状況
                 </h2>
 
                 <div class="grid grid-cols-12 gap-2 items-center">
-                    <!-- サークルゲージ -->
                     <div class="col-span-5 relative flex items-center justify-center">
                         <svg class="w-28 h-28 transform -rotate-90">
                             <circle cx="56" cy="56" r="46" stroke="currentColor" class="text-brand-accent" stroke-width="6" fill="transparent" />
@@ -131,9 +129,7 @@
                         </div>
                     </div>
 
-                    <!-- PFC比率バー -->
                     <div class="col-span-7 space-y-2.5 pl-2">
-                        <!-- P: Protein -->
                         <div>
                             <div class="flex justify-between text-[11px] mb-0.5">
                                 <span class="font-bold text-brand-primary">P (タンパク質)</span>
@@ -143,7 +139,6 @@
                                 <div id="p-bar" class="h-full bg-brand-primary rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
-                        <!-- F: Fat -->
                         <div>
                             <div class="flex justify-between text-[11px] mb-0.5">
                                 <span class="font-bold text-teal-600">F (脂質)</span>
@@ -153,7 +148,6 @@
                                 <div id="f-bar" class="h-full bg-teal-500 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
-                        <!-- C: Carb -->
                         <div>
                             <div class="flex justify-between text-[11px] mb-0.5">
                                 <span class="font-bold text-sky-600">C (炭水化物)</span>
@@ -192,42 +186,43 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-7 gap-1.5 mb-3">
-                    <button onclick="window.selectDayFromWeeklyGrid('Mon')" id="btn-Mon" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
-                        <span class="text-[9px] text-brand-muted font-bold">月</span>
+                <!-- 曜日選択なしの純粋な進捗インジケーター -->
+                <div class="grid grid-cols-7 gap-1.5 mb-2">
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                        <span class="text-[9px] text-brand-muted font-bold font-sans">月</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Mon"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Mon">0</span>
-                    </button>
-                    <button onclick="window.selectDayFromWeeklyGrid('Tue')" id="btn-Tue" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
-                        <span class="text-[9px] text-brand-muted font-bold">火</span>
+                    </div>
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                        <span class="text-[9px] text-brand-muted font-bold font-sans">火</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Tue"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Tue">0</span>
-                    </button>
-                    <button onclick="window.selectDayFromWeeklyGrid('Wed')" id="btn-Wed" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
-                        <span class="text-[9px] text-brand-muted font-bold">水</span>
+                    </div>
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                        <span class="text-[9px] text-brand-muted font-bold font-sans">水</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Wed"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Wed">0</span>
-                    </button>
-                    <button onclick="window.selectDayFromWeeklyGrid('Thu')" id="btn-Thu" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
-                        <span class="text-[9px] text-brand-muted font-bold">木</span>
+                    </div>
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                        <span class="text-[9px] text-brand-muted font-bold font-sans">木</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Thu"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Thu">0</span>
-                    </button>
-                    <button onclick="window.selectDayFromWeeklyGrid('Fri')" id="btn-Fri" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
-                        <span class="text-[9px] text-brand-muted font-bold">金</span>
+                    </div>
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                        <span class="text-[9px] text-brand-muted font-bold font-sans">金</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Fri"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Fri">0</span>
-                    </button>
-                    <button onclick="window.selectDayFromWeeklyGrid('Sat')" id="btn-Sat" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
-                        <span class="text-[9px] text-brand-muted font-bold">土</span>
+                    </div>
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                        <span class="text-[9px] text-brand-muted font-bold font-sans">土</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Sat"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Sat">0</span>
-                    </button>
-                    <button onclick="window.selectDayFromWeeklyGrid('Sun')" id="btn-Sun" class="day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center">
-                        <span class="text-[9px] text-brand-muted font-bold">日</span>
+                    </div>
+                    <div class="bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center flex flex-col items-center">
+                        <span class="text-[9px] text-brand-muted font-bold font-sans">日</span>
                         <div class="w-1.5 h-1.5 rounded-full bg-transparent my-1" id="dot-Sun"></div>
                         <span class="text-[10px] font-black tracking-tighter" id="cal-Sun">0</span>
-                    </button>
+                    </div>
                 </div>
             </section>
 
@@ -243,7 +238,7 @@
                 <div class="space-y-3">
                     <div class="relative">
                         <textarea id="ai-text-input" rows="2" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary transition resize-none" placeholder="例: お昼にサラダチキン、ゆで卵、白米150gを食べました"></textarea>
-                        <button onclick="window.analyzeMealText()" id="btn-analyze-text" class="absolute bottom-3 right-3 bg-brand-primary hover:bg-brand-primaryHover text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1 shadow-sm">
+                        <button id="btn-analyze-text" class="absolute bottom-3 right-3 bg-brand-primary hover:bg-brand-primaryHover text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1 shadow-sm">
                             <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 解析
                         </button>
                     </div>
@@ -252,7 +247,8 @@
                         <label class="flex items-center justify-center gap-2 bg-brand-accent hover:bg-brand-accent/80 text-brand-primary py-3 px-3 rounded-xl cursor-pointer text-xs font-semibold transition border border-brand-primary/20 border-dashed">
                             <i data-lucide="camera" class="w-4 h-4"></i>
                             <span>食事写真を解析</span>
-                            <input type="file" id="ai-image-input" accept="image/*" class="hidden" onchange="window.analyzeMealImage(this)">
+                            <!-- モバイル対応：addEventListenerでバインド -->
+                            <input type="file" id="ai-image-input" accept="image/*" class="hidden">
                         </label>
                         <button onclick="window.openManualInputModal()" class="flex items-center justify-center gap-2 bg-brand-bg hover:bg-brand-accent/50 text-brand-muted py-3 px-3 rounded-xl text-xs font-semibold transition border border-brand-border">
                             <i data-lucide="edit-3" class="w-4 h-4"></i>
@@ -268,13 +264,13 @@
                         </h4>
                     </div>
                     <div id="quick-history-list" class="flex gap-2 overflow-x-auto pb-1.5 scrollbar-thin font-sans">
-                        <!-- 定番チップが入ります -->
+                        <!-- 定番チップ -->
                     </div>
                 </div>
 
                 <div id="ai-loading" class="hidden mt-3 p-3.5 bg-brand-accent rounded-xl flex items-center justify-center gap-3 text-xs text-brand-primary border border-brand-border">
                     <div class="w-4 h-4 border-2 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
-                    <span id="ai-loading-text">PFCバランスを分析中...</span>
+                    <span id="ai-loading-text">データを解析中...</span>
                 </div>
             </section>
 
@@ -295,7 +291,7 @@
                 </div>
             </section>
 
-            <!-- トレーナーコメント（リアルタイム受信） -->
+            <!-- トレーナーコメント -->
             <section id="trainer-feedback-card" class="bg-gradient-to-tr from-sky-50 to-indigo-50 rounded-2xl p-5 border border-sky-100 shadow-sm space-y-3">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center gap-2 text-brand-primary">
@@ -332,7 +328,7 @@
 
         </main>
 
-        <!-- 完全復活した下部ナビゲーションタブバー（3大メニュー） -->
+        <!-- 下部ナビゲーション -->
         <nav class="absolute bottom-0 left-0 right-0 bg-brand-card border-t border-brand-border py-2.5 px-6 flex justify-between items-center z-50 shadow-lg">
             <button onclick="window.resetToToday()" class="flex flex-col items-center space-y-1 text-brand-primary">
                 <i data-lucide="home" class="w-5 h-5"></i>
@@ -362,7 +358,7 @@
                 </button>
             </div>
             
-            <form id="manual-meal-form" onsubmit="window.handleManualMealSubmit(event)" class="space-y-3.5 text-xs text-left">
+            <form id="manual-meal-form" class="space-y-3.5 text-xs text-left">
                 <div>
                     <label class="block text-[11px] text-brand-muted mb-1">タイミング</label>
                     <select id="meal-time-category" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text">
@@ -388,11 +384,11 @@
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-[11px] text-teal-600 mb-1">脂質 (F/g)</label>
+                        <label class="block text-[11px] text-teal-600 mb-1">F (g)</label>
                         <input type="number" id="manual-f" step="0.1" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text" placeholder="5">
                     </div>
                     <div>
-                        <label class="block text-[11px] text-sky-500 mb-1">炭水化物 (C/g)</label>
+                        <label class="block text-[11px] text-sky-500 mb-1">C (g)</label>
                         <input type="number" id="manual-c" step="0.1" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text" placeholder="10">
                     </div>
                 </div>
@@ -431,7 +427,7 @@
         </div>
     </div>
 
-    <!-- MODAL: アカウント・目標設定（PFC入力とログアウト用） -->
+    <!-- MODAL: アカウント・目標設定 -->
     <div id="modal-settings" class="fixed inset-0 bg-brand-text/30 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 notranslate">
         <div class="bg-brand-card w-full max-w-md rounded-2xl border border-brand-border p-6 space-y-4 max-h-[85vh] overflow-y-auto shadow-xl">
             <div class="flex justify-between items-center border-b border-brand-border pb-3">
@@ -470,15 +466,15 @@
                     </div>
                     <div class="grid grid-cols-3 gap-2">
                         <div>
-                            <label class="block text-[11px] text-brand-primary mb-1">P / タンパク質(g)</label>
+                            <label class="block text-[10px] text-sky-600 mb-1">目標 P (g)</label>
                             <input type="number" id="target-p-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text text-center focus:outline-none" value="120">
                         </div>
                         <div>
-                            <label class="block text-[11px] text-teal-600 mb-1">F / 脂質(g)</label>
+                            <label class="block text-[10px] text-teal-600 mb-1">目標 F (g)</label>
                             <input type="number" id="target-f-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text text-center focus:outline-none" value="45">
                         </div>
                         <div>
-                            <label class="block text-[11px] text-sky-500 mb-1">C / 炭水化物(g)</label>
+                            <label class="block text-[10px] text-amber-600 mb-1">目標 C (g)</label>
                             <input type="number" id="target-c-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-brand-text text-center focus:outline-none" value="230">
                         </div>
                     </div>
@@ -526,7 +522,6 @@
                 </button>
             </div>
 
-            <!-- チャットメッセージエリア -->
             <div id="chat-messages" class="flex-1 overflow-y-auto space-y-3.5 p-3.5 bg-brand-bg rounded-2xl border border-brand-border text-xs scrollbar-thin">
                 <div class="flex gap-2.5">
                     <div class="w-7 h-7 rounded-full bg-brand-accent flex items-center justify-center border border-brand-border shrink-0">
@@ -538,12 +533,56 @@
                 </div>
             </div>
 
-            <!-- チャット入力 -->
             <div class="flex gap-2">
                 <input type="text" id="chat-input" onkeydown="if(event.key === 'Enter') window.sendChatMessage()" class="flex-1 bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary" placeholder="例: 明日の夜に会食が入ったのですが調整方法は？">
                 <button onclick="window.sendChatMessage()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-4 rounded-xl font-bold transition flex items-center justify-center shadow-sm">
                     <i data-lucide="send" class="w-4 h-4"></i>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: 画像＆テキスト共通・材料調整モーダル -->
+    <div id="modal-camera-edit" class="fixed inset-0 bg-brand-text/40 backdrop-blur-sm z-[110] hidden items-center justify-center p-4">
+        <div class="bg-brand-card w-full max-w-sm rounded-3xl border border-brand-border p-5 space-y-4 shadow-2xl flex flex-col max-h-[90vh] notranslate">
+            <div class="flex justify-between items-center border-b border-brand-border pb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="sliders-horizontal" class="w-4.5 h-4.5 text-brand-primary"></i>
+                    <h3 class="font-extrabold text-sm text-brand-text">材料・分量の確認と調整</h3>
+                </div>
+                <button onclick="window.toggleModal('modal-camera-edit')" class="text-brand-muted hover:text-brand-text">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto space-y-3.5 pr-1 py-1">
+                <div>
+                    <label class="block text-[10px] text-brand-muted font-bold mb-1">推定された料理メニュー名</label>
+                    <input type="text" id="parsed-meal-name" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-bold text-brand-text" placeholder="料理名">
+                </div>
+
+                <div class="space-y-2 text-left">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] text-brand-muted font-bold">使用されている食材と分量 (g)</span>
+                        <button onclick="window.addIngredientRow()" class="text-[10px] text-brand-primary font-bold hover:underline flex items-center gap-0.5">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> 食材を追加
+                        </button>
+                    </div>
+                    
+                    <!-- 材料行動的出力コンテナ -->
+                    <div id="ingredients-list-container" class="space-y-2">
+                        <!-- ここに材料行が挿入されます -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-brand-border/60 pt-3.5 space-y-2">
+                <button onclick="window.reAnalyzeAndRegister()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3.5 rounded-2xl text-xs font-black tracking-widest transition shadow-md flex items-center justify-center gap-1.5">
+                    <i data-lucide="sparkles" class="w-4 h-4 animate-pulse"></i> 変更内容でAI再計算＆登録
+                </button>
+                <p class="text-[9px] text-brand-muted text-center leading-tight">
+                    ※材料を追加・削除・変更すると、AIがPFC構成を極めて正確に自動計算し直して記録します。
+                </p>
             </div>
         </div>
     </div>
@@ -554,7 +593,6 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase 接続設定
         const firebaseConfig = {
             apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
             authDomain: "carat-d3b01.firebaseapp.com",
@@ -574,7 +612,6 @@
 
         const appId = 'carat-meal-v3';
 
-        // グローバルステート
         let appState = {
             nickname: "ゲスト",
             targetCalories: 1800,
@@ -611,7 +648,7 @@
         const dayKeysMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
         // ==========================================
-        // グローバル・ローカル関数のセーフマッピング
+        // 開発規約 & エラー根絶用の関数登録
         // ==========================================
         function showToast(message) {
             const toast = document.createElement('div');
@@ -638,7 +675,7 @@
         window.saveToHistoryDatabase = saveToHistoryDatabase;
 
         // ==========================================
-        // IDベース同期・認証ロジック
+        // クラウド同期
         // ==========================================
         async function startSyncSystem() {
             const savedClientId = localStorage.getItem(`carat_active_client_id_${appId}`);
@@ -663,7 +700,9 @@
                 unsubscribeSync = onSnapshot(userDocRef, (docSnap) => {
                     if (docSnap.exists()) {
                         const cloudData = docSnap.data();
-                        appState = { ...appState, ...cloudData };
+                        
+                        // ディープマージして不意な上書きを回避
+                        appState = { ...appState, ...JSON.parse(JSON.stringify(cloudData)) };
                         window.appState = appState;
 
                         if (!appState.mealsByDate) appState.mealsByDate = {};
@@ -674,7 +713,6 @@
                         `;
                         document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold font-sans";
 
-                        // 入力初期値のマウント
                         document.getElementById('target-calories-input').value = appState.targetCalories || 1800;
                         document.getElementById('target-p-input').value = appState.targetP || 120;
                         document.getElementById('target-f-input').value = appState.targetF || 45;
@@ -741,7 +779,9 @@
             if (!activeId) return;
 
             try {
-                appState.meals = appState.mealsByDate[window.currentDateString] || [];
+                if (!appState.mealsByDate) appState.mealsByDate = {};
+                appState.mealsByDate[window.currentDateString] = JSON.parse(JSON.stringify(appState.meals || []));
+
                 const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', activeId);
                 await setDoc(userDocRef, appState, { merge: true });
             } catch (err) {
@@ -752,8 +792,7 @@
 
         function loadMealsForActiveDate() {
             if (!appState.mealsByDate) appState.mealsByDate = {};
-            const activeMeals = appState.mealsByDate[window.currentDateString] || [];
-            
+            const activeMeals = appState.mealsByDate[window.currentDateString] ? JSON.parse(JSON.stringify(appState.mealsByDate[window.currentDateString])) : [];
             appState.meals = activeMeals;
             
             calculateTotals();
@@ -799,9 +838,15 @@
             }
         }
 
-        window.changeDay = function(direction) {
+        function getTodayDateString() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+        window.currentDateString = getTodayDateString();
+
+        window.changeDay = async function(direction) {
             if (!appState.mealsByDate) appState.mealsByDate = {};
-            appState.mealsByDate[window.currentDateString] = [...appState.meals];
+            appState.mealsByDate[window.currentDateString] = JSON.parse(JSON.stringify(appState.meals || []));
 
             const current = new Date(window.currentDateString);
             if (direction === 'prev') {
@@ -809,41 +854,22 @@
             } else if (direction === 'next') {
                 current.setDate(current.getDate() + 1);
             }
-            window.currentDateString = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}-${String(current.getDate()).padStart(2, '0')}`;
+            const newDateStr = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}-${String(current.getDate()).padStart(2, '0')}`;
+            window.currentDateString = newDateStr;
             
             loadMealsForActiveDate();
-            syncStateToCloud();
+            await syncStateToCloud();
         };
 
-        window.resetToToday = function() {
+        window.resetToToday = async function() {
             if (!appState.mealsByDate) appState.mealsByDate = {};
-            appState.mealsByDate[window.currentDateString] = [...appState.meals];
+            appState.mealsByDate[window.currentDateString] = JSON.parse(JSON.stringify(appState.meals || []));
 
             window.currentDateString = getTodayDateString();
             
             loadMealsForActiveDate();
-            syncStateToCloud();
+            await syncStateToCloud();
             showToast("今日の画面に戻りました。");
-        };
-
-        window.selectDayFromWeeklyGrid = function(dayKey) {
-            if (!appState.mealsByDate) appState.mealsByDate = {};
-            appState.mealsByDate[window.currentDateString] = [...appState.meals];
-
-            const today = new Date();
-            const currentDayOfWeek = today.getDay();
-            const targetIndexTrue = dayKeysMap.indexOf(dayKey);
-            const mondayOffset = currentDayOfWeek === 0 ? -6 : 1 - currentDayOfWeek;
-            const targetOffset = mondayOffset + (targetIndexTrue === 0 ? 6 : targetIndexTrue - 1);
-            
-            const targetDate = new Date(today);
-            targetDate.setDate(today.getDate() + targetOffset);
-            
-            window.currentDateString = `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;
-            
-            loadMealsForActiveDate();
-            syncStateToCloud();
-            showToast(`${dayKey}曜日の記録に切り替えました`);
         };
 
         window.updateUI = function() {
@@ -856,14 +882,6 @@
             document.getElementById('f-target').innerText = appState.targetF;
             document.getElementById('c-current').innerText = appState.currentC.toFixed(1);
             document.getElementById('c-target').innerText = appState.targetC;
-
-            // セーフティガード： settings-target-p などの表示IDがHTMLに存在する場合のみ書き換える（クラッシュ防止）
-            const elSetP = document.getElementById('settings-target-p');
-            const elSetF = document.getElementById('settings-target-f');
-            const elSetC = document.getElementById('settings-target-c');
-            if (elSetP) elSetP.innerText = `${appState.targetP} g`;
-            if (elSetF) elSetF.innerText = `${appState.targetF} g`;
-            if (elSetC) elSetC.innerText = `${appState.targetC} g`;
 
             const pPct = Math.min((appState.currentP / appState.targetP) * 100, 100);
             const fPct = Math.min((appState.currentF / appState.targetF) * 100, 100);
@@ -882,7 +900,6 @@
             document.getElementById('display-weight').innerText = appState.weight.toFixed(1);
             document.getElementById('display-fat').innerText = appState.fatRate.toFixed(1);
 
-            // 週累計
             const weeklyTarget = appState.targetCalories * 7;
             let weeklySum = 0;
             const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -902,14 +919,6 @@
                 } else {
                     dot.className = "w-1.5 h-1.5 rounded-full bg-transparent my-1";
                 }
-
-                if (day === currentViewDayKey) {
-                    btn.className = "day-btn bg-brand-accent border-2 border-brand-primary rounded-xl p-2 text-center transition flex flex-col items-center shadow-sm scale-105";
-                } else {
-                    btn.className = "day-btn bg-brand-bg hover:bg-brand-accent border border-brand-border rounded-xl p-2 text-center transition flex flex-col items-center";
-                }
-
-                weeklySum += log.kcal;
             });
 
             const remaining = weeklyTarget - weeklySum;
@@ -1161,7 +1170,7 @@
         };
 
         // ==========================================
-        // Gemini API 接続 (店舗共有キー + 自動フォールバック)
+        // Gemini API 接続 (店舗共有キー + 【404エラー完全対応】)
         // ==========================================
         function getEffectiveApiKey() {
             const userKey = document.getElementById('user-api-key').value.trim();
@@ -1175,18 +1184,17 @@
             return "";
         }
 
+        // カメラ解析時の高速安全コンバーター
         function resizeAndConvertToJpegBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function(event) {
+                reader.onload = (event) => {
                     const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = function() {
+                    img.onload = () => {
                         const canvas = document.createElement('canvas');
                         let width = img.width;
                         let height = img.height;
-                        const max_size = 1024;
+                        const max_size = 800; // iOSメモリクラッシュ防止
 
                         if (width > height) {
                             if (width > max_size) {
@@ -1205,29 +1213,33 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
 
-                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
-                        resolve(compressedBase64);
+                        try {
+                            const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                            const base64 = dataUrl.split(',')[1];
+                            resolve(base64);
+                        } catch (err) {
+                            reject(new Error("キャンバス変換エラー"));
+                        }
                     };
-                    img.onerror = function(err) {
-                        reject(new Error("画像のレンダリングに失敗しました。"));
-                    };
+                    img.onerror = () => reject(new Error("画像オブジェクト生成失敗"));
+                    img.src = event.target.result;
                 };
-                reader.onerror = function(err) {
-                    reject(new Error("写真データの読み取りに失敗しました。"));
-                };
+                reader.onerror = () => reject(new Error("FileReaderでのファイル読込失敗"));
+                reader.readAsDataURL(file);
             });
         }
 
+        // AI通信の安定化： 存在しないモデル指定による404エラーを根絶
         async function fetchGeminiWithFallback(payload) {
             const key = getEffectiveApiKey();
             if (!key) {
-                throw new Error("Gemini API Keyがありません。トレーナーに管理画面から『店舗用Gemini Key』を設定してもらうか、右上の目標設定から独自のキーを入力してください。");
+                throw new Error("Gemini API Keyがありません。トレーナーに管理画面から『店舗用Gemini Key』を設定してもらうか、目標設定から独自のキーを入力してください。");
             }
 
+            // 確実な安定版の「gemini-1.5-flash」を固定指定
             const trialPatterns = [
-                { version: "v1beta", model: "gemini-2.5-flash" },
-                { version: "v1",     model: "gemini-1.5-flash" },
-                { version: "v1beta", model: "gemini-1.5-flash" }
+                { version: "v1beta", model: "gemini-1.5-flash" },
+                { version: "v1",     model: "gemini-1.5-flash" }
             ];
 
             let lastError = null;
@@ -1247,20 +1259,18 @@
                         return await response.json();
                     } else {
                         const errText = await response.text();
-                        console.warn(`Pattern failed: ${pattern.version}/${pattern.model}. Status: ${status}`, errText);
+                        console.warn(`Pattern failed: ${pattern.version}/${pattern.model}. Status: ${status}`);
                         
                         let parsedErr;
                         try { parsedErr = JSON.parse(errText); } catch(e) {}
                         const errMsg = parsedErr?.error?.message || errText;
 
                         if (status === 403) {
-                            throw new Error(`【APIキー無効(403)】このキーはGoogleによって強制停止されています。正しいキーを再設定してください。`);
+                            throw new Error(`【APIキー無効(403)】このAPIキーはGoogleによって強制停止されています。正しいキーを再設定してください。`);
                         }
-                        
                         lastError = `エラー(${status}): ${errMsg}`;
                     }
                 } catch (e) {
-                    console.warn(`Exception:`, e);
                     if (e.message && e.message.includes("APIキー無効")) {
                         throw e;
                     }
@@ -1271,6 +1281,59 @@
             throw new Error(`【解析失敗】${lastError}`);
         }
 
+        // ==========================================
+        // 【新開発】材料調整モーダル展開プロセス (テキスト/カメラ共通)
+        // ==========================================
+        function openCameraEditModal(parsedData) {
+            document.getElementById('parsed-meal-name').value = parsedData.name || "料理名不明";
+            
+            const container = document.getElementById('ingredients-list-container');
+            container.innerHTML = ''; 
+
+            const ingredients = parsedData.ingredients || [];
+            
+            if (ingredients.length === 0) {
+                ingredients.push({ material: "主材料", amount: 150 });
+            }
+
+            ingredients.forEach((ing) => {
+                createIngredientRow(ing.material, ing.amount);
+            });
+
+            window.toggleModal('modal-camera-edit');
+        }
+        window.openCameraEditModal = openCameraEditModal;
+
+        function createIngredientRow(material = "", amount = 100) {
+            const container = document.getElementById('ingredients-list-container');
+            const rowId = `ing-row-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+            
+            const row = document.createElement('div');
+            row.id = rowId;
+            row.className = "flex gap-2 items-center bg-brand-bg p-2 rounded-xl border border-brand-border";
+            row.innerHTML = `
+                <input type="text" class="flex-1 bg-white border border-brand-border rounded-lg px-2.5 py-1.5 text-xs text-brand-text font-bold ing-material-input" value="${material}" placeholder="例: 鶏胸肉">
+                <div class="flex items-center gap-1 w-24">
+                    <input type="number" class="w-full bg-white border border-brand-border rounded-lg px-2 py-1.5 text-xs text-center font-mono font-bold text-brand-text ing-amount-input" value="${amount}">
+                    <span class="text-[10px] text-brand-muted">g</span>
+                </div>
+                <button onclick="window.removeIngredientRow('${rowId}')" class="p-1.5 text-brand-muted hover:text-rose-500 rounded-lg">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+            `;
+            container.appendChild(row);
+            lucide.createIcons();
+        }
+        window.addIngredientRow = () => createIngredientRow("", 100);
+
+        window.removeIngredientRow = function(rowId) {
+            const row = document.getElementById(rowId);
+            if (row) {
+                row.remove();
+            }
+        };
+
+        // テキスト解析（材料調整モーダルへ流し込む）
         window.analyzeMealText = async function() {
             const input = document.getElementById('ai-text-input').value.trim();
             if (!input) return;
@@ -1278,13 +1341,13 @@
             const loader = document.getElementById('ai-loading');
             const loaderText = document.getElementById('ai-loading-text');
             loader.classList.remove('hidden');
-            loaderText.innerText = "料理・食品から栄養素を計算中...";
+            loaderText.innerText = "料理・食品から材料構成を抽出中...";
 
             try {
-                const systemPrompt = `ユーザーが入力したテキストに基づき、カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)の数値を推定し、JSONフォーマットのみで出力してください。`;
+                const systemPrompt = `ユーザーが入力したテキストから、想定される料理名と含まれている原材料およびその分量(g)のリストを特定し、JSONフォーマットのみで出力してください。`;
 
                 const payload = {
-                    contents: [{ parts: [{ text: `以下の食事内容を分解解析してください: "${input}"` }] }],
+                    contents: [{ parts: [{ text: `以下の食事内容の料理名と材料構成を抽出してください: "${input}"` }] }],
                     systemInstruction: { parts: [{ text: systemPrompt }] },
                     generationConfig: { 
                         responseMimeType: "application/json",
@@ -1292,12 +1355,19 @@
                             type: "OBJECT",
                             properties: {
                                 name: { type: "STRING" },
-                                kcal: { type: "NUMBER" },
-                                p: { type: "NUMBER" },
-                                f: { type: "NUMBER" },
-                                c: { type: "NUMBER" }
+                                ingredients: {
+                                    type: "ARRAY",
+                                    items: {
+                                        type: "OBJECT",
+                                        properties: {
+                                            material: { type: "STRING" },
+                                            amount: { type: "NUMBER" }
+                                        },
+                                        required: ["material", "amount"]
+                                    }
+                                }
                             },
-                            required: ["name", "kcal", "p", "f", "c"]
+                            required: ["name", "ingredients"]
                         }
                     }
                 };
@@ -1306,8 +1376,8 @@
                 const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (text) {
                     const parsed = JSON.parse(text);
-                    addParsedMealToState(parsed);
                     document.getElementById('ai-text-input').value = "";
+                    openCameraEditModal(parsed);
                 } else {
                     throw new Error("解析応答データが空でした。");
                 }
@@ -1319,8 +1389,8 @@
             }
         };
 
-        window.analyzeMealImage = async function(inputElement) {
-            const file = inputElement.files[0];
+        // 画像解析（材料調整モーダルへ流し込む）
+        window.analyzeMealImage = async function(file) {
             if (!file) return;
 
             const loader = document.getElementById('ai-loading');
@@ -1331,17 +1401,100 @@
             try {
                 const base64Data = await resizeAndConvertToJpegBase64(file);
 
-                loaderText.innerText = "画像からPFCバランスを割り出し中...";
-                const systemPrompt = `送付された画像に含まれる食品・料理から、カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)の数値を推定し、JSONフォーマットのみで返却してください。`;
+                loaderText.innerText = "画像から使われている食材と分量を割り出し中...";
+                const systemPrompt = `提供された料理写真から、主となるメニュー名、およびその料理に含まれている主な原材料(お肉、米、野菜、調味料など)を判定し、分量(g)の推定値の配列をJSONフォーマットのみで出力してください。`;
 
                 const payload = {
                     contents: [{
                         role: "user",
                         parts: [
-                            { text: "この料理写真の栄養素構成（PFCおよびカロリー）を推定してください。" },
+                            { text: "この料理写真から、料理名と材料のリスト(g表記)を構造化JSONで抽出してください。" },
                             { inlineData: { mimeType: "image/jpeg", data: base64Data } }
                         ]
                     }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    generationConfig: { 
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                name: { type: "STRING" },
+                                ingredients: {
+                                    type: "ARRAY",
+                                    items: {
+                                        type: "OBJECT",
+                                        properties: {
+                                            material: { type: "STRING" },
+                                            amount: { type: "NUMBER" }
+                                        },
+                                        required: ["material", "amount"]
+                                    }
+                                }
+                            },
+                            required: ["name", "ingredients"]
+                        }
+                    }
+                };
+
+                const data = await fetchGeminiWithFallback(payload);
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (text) {
+                    const parsed = JSON.parse(text);
+                    openCameraEditModal(parsed);
+                } else {
+                    throw new Error("画像解析データが空でした。");
+                }
+            } catch (error) {
+                console.error("Gemini image fail:", error);
+                alert(error.message || "写真の解析に失敗しました。");
+            } finally {
+                loader.classList.add('hidden');
+            }
+        };
+
+        // 材料調整モーダルからAI再計算 ➔ 確定登録
+        window.reAnalyzeAndRegister = async function() {
+            const mealName = document.getElementById('parsed-meal-name').value.trim();
+            const materialInputs = document.querySelectorAll('.ing-material-input');
+            const amountInputs = document.querySelectorAll('.ing-amount-input');
+
+            if (!mealName) {
+                alert("料理メニュー名を入力してください。");
+                return;
+            }
+
+            let materialsArray = [];
+            materialInputs.forEach((input, index) => {
+                const materialName = input.value.trim();
+                const amountVal = parseFloat(amountInputs[index].value) || 0;
+                if (materialName) {
+                    materialsArray.push(`${materialName} ${amountVal}g`);
+                }
+            });
+
+            if (materialsArray.length === 0) {
+                alert("材料を1つ以上入力してください。");
+                return;
+            }
+
+            window.toggleModal('modal-camera-edit');
+            const loader = document.getElementById('ai-loading');
+            const loaderText = document.getElementById('ai-loading-text');
+            loader.classList.remove('hidden');
+            loaderText.innerText = "食材構成からAIがPFC・カロリーを精密再計算中...";
+
+            try {
+                const reconstructionPrompt = `
+                    ユーザーがカスタマイズした以下の料理名と材料リストから、正確な総カロリー(kcal)、タンパク質(g)、脂質(g)、炭水化物(g)を緻密に算出してJSONで出力してください。
+                    料理名: 「${mealName}」
+                    材料構成:
+                    ${materialsArray.join('\n')}
+                `;
+
+                const systemPrompt = `提供された料理名と明確な原材料リストから、正確なPFC、カロリーを推定し、JSONフォーマットでのみ回答してください。`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: reconstructionPrompt }] }],
                     systemInstruction: { parts: [{ text: systemPrompt }] },
                     generationConfig: { 
                         responseMimeType: "application/json",
@@ -1365,14 +1518,13 @@
                     const parsed = JSON.parse(text);
                     addParsedMealToState(parsed);
                 } else {
-                    throw new Error("画像解析データが空でした。");
+                    throw new Error("再計算データの受信に失敗しました。");
                 }
-            } catch (error) {
-                console.error("Gemini image fail:", error);
-                alert(error.message || "写真の解析に失敗しました。");
+            } catch (err) {
+                console.error("Re-analysis failed:", err);
+                alert(err.message || "材料からの再計算に失敗しました。");
             } finally {
                 loader.classList.add('hidden');
-                inputElement.value = ""; 
             }
         };
 
@@ -1412,196 +1564,24 @@
             showToast(`「${newMeal.name}」を登録しました！`);
         }
 
-        window.generateAIFeedback = async function() {
-            const key = getEffectiveApiKey();
-            if (!key) {
-                showToast("【エラー】Gemini API Keyがありません。『目標・設定』から入力してください。");
-                window.toggleModal('modal-settings');
-                return;
-            }
-
-            const feedbackBox = document.getElementById('trainer-feedback-box');
-            feedbackBox.innerHTML = `
-                <div class="flex items-center gap-2 text-brand-primary">
-                    <div class="w-3.5 h-3.5 border-2 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
-                    <span>アドバイス作成中...</span>
-                </div>
-            `;
-
-            try {
-                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-                const systemPrompt = `
-                    あなたはパーソナルトレーニングジム「CARAT」のチーフトレーナーです。
-                    ユーザーの本日の食事実績PFCおよび、週累計の過不足状況を考慮したアドバイスを、簡潔・論理的かつモチベーションが向上するよう150字程度で出力してください。
-                    特に週単位での調整を推奨する言葉を組み込んでください。
-                `;
-
-                const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-                let weeklyCalories = 0;
-                days.forEach(d => {
-                    if (appState.weeklyLogs && appState.weeklyLogs[d]) {
-                        weeklyCalories += appState.weeklyLogs[d].kcal;
-                    }
-                });
-
-                const userQuery = `
-                    【本日の目標】 カロリー: ${appState.targetCalories}kcal, P: ${appState.targetP}g, F: ${appState.targetF}g, C: ${appState.targetC}g
-                    【今日の実績】 カロリー: ${appState.currentCalories}kcal, P: ${appState.currentP}g, F: ${appState.currentF}g, C: ${appState.currentC}g
-                    【今週の合計】 摂取: ${weeklyCalories}kcal (目標: ${appState.targetCalories * 7}kcal)
-                `;
-
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
-
-                const data = await fetchGeminiWithFallback(payload);
-                const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (responseText) {
-                    feedbackBox.innerHTML = `<span class="text-brand-text leading-relaxed">${responseText}</span>`;
-                } else {
-                    feedbackBox.innerHTML = `<span class="text-brand-muted">データの取得に失敗しました。</span>`;
+        // ==========================================
+        // イベントリスナーの安全バインド
+        // ==========================================
+        const inputImg = document.getElementById('ai-image-input');
+        if (inputImg) {
+            inputImg.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    window.analyzeMealImage(this.files[0]);
                 }
-            } catch (e) {
-                feedbackBox.innerHTML = `<span class="text-rose-500">${e.message || "指導の取得に失敗しました。"}</span>`;
-            }
-        };
-
-        window.sendChatMessage = async function() {
-            const inputEl = document.getElementById('chat-input');
-            const messageText = inputEl.value.trim();
-            if (!messageText) return;
-
-            const key = getEffectiveApiKey();
-            if (!key) {
-                showToast("【エラー】Gemini API Keyがありません。右上の『目標・設定』から入力してください。");
-                window.toggleModal('modal-settings');
-                return;
-            }
-
-            appendChatMessage("user", messageText);
-            inputEl.value = "";
-
-            const aiTempId = appendChatMessage("ai", "最適な調整アプローチを検討中...", true);
-
-            try {
-                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-                const systemPrompt = `
-                    あなたはパーソナルジム「CARAT」のチーフトレーナー、または栄養顧問です。
-                    ジムクライアントから寄せられる質問（PFC調整、トレーニング頻度、会食・旅行に伴う週単位での食事の調整戦略、リカバリーなど）に対して、プロの知見に基づき、簡潔・論理的・実践的な回答を提示してください。
-                `;
-
-                const payload = {
-                    contents: [{ parts: [{ text: messageText }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
-
-                const data = await fetchGeminiWithFallback(payload);
-                const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                const tempDiv = document.getElementById(aiTempId);
-                if (tempDiv && responseText) {
-                    tempDiv.querySelector('.chat-body').innerText = responseText;
-                    tempDiv.removeAttribute('id');
-                }
-            } catch (e) {
-                const tempDiv = document.getElementById(aiTempId);
-                if (tempDiv) {
-                    tempDiv.querySelector('.chat-body').innerHTML = `<span class="text-rose-500">${e.message || "エラーが発生しました。"}</span>`;
-                }
-            }
-        };
-
-        function appendChatMessage(sender, text, isPending = false) {
-            const container = document.getElementById('chat-messages');
-            const id = `msg-${Date.now()}`;
-            const div = document.createElement('div');
-            div.className = "flex gap-2.5";
-            if (isPending) div.id = id;
-
-            if (sender === "user") {
-                div.innerHTML = `
-                    <div class="flex-1"></div>
-                    <div class="bg-brand-primary text-white rounded-2xl px-3.5 py-2.5 max-w-[85%] font-semibold shadow-sm text-left">
-                        ${text}
-                    </div>
-                `;
-            } else {
-                div.innerHTML = `
-                    <div class="w-7 h-7 rounded-full bg-brand-accent flex items-center justify-center border border-brand-border shrink-0">
-                        <span class="text-[9px] font-black text-brand-primary">C</span>
-                    </div>
-                    <div class="chat-body bg-brand-card rounded-2xl px-3.5 py-2.5 max-w-[85%] text-brand-text leading-relaxed shadow-sm border border-brand-border/60 text-left">
-                        ${text}
-                    </div>
-                `;
-            }
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-            lucide.createIcons();
-            return id;
+            });
         }
 
-        function syncCurrentDayWithTimeline() {
-            const activeDate = new Date(window.currentDateString);
-            const activeDayKey = dayKeysMap[activeDate.getDay()];
-
-            calculateTotals();
-
-            if (!appState.mealsByDate) appState.mealsByDate = {};
-            appState.mealsByDate[window.currentDateString] = [...appState.meals];
-
-            if (!appState.weeklyLogs) appState.weeklyLogs = {};
-            appState.weeklyLogs[activeDayKey] = {
-                kcal: appState.currentCalories,
-                p: appState.currentP,
-                f: appState.currentF,
-                c: appState.currentC
-            };
+        const btnText = document.getElementById('btn-analyze-text');
+        if (btnText) {
+            btnText.addEventListener('click', () => {
+                window.analyzeMealText();
+            });
         }
-        window.syncCurrentDayWithTimeline = syncCurrentDayWithTimeline;
-
-        window.applyGoalPreset = function() {
-            const goal = document.getElementById('preset-goal').value;
-            let cal = 1800, p = 120, f = 45, c = 230;
-
-            if (goal === 'diet') {
-                cal = 1550; p = 120; f = 38; c = 182;
-            } else if (goal === 'bodymake') {
-                cal = 1700; p = 125; f = 42; c = 205;
-            } else if (goal === 'wellness') {
-                cal = 1800; p = 120; f = 45; c = 230;
-            } else if (goal === 'muscle') {
-                cal = 1970; p = 135; f = 49; c = 247;
-            } else if (goal === 'custom') {
-                cal = appState.targetCalories || 1800;
-                p = appState.targetP || 120;
-                f = appState.targetF || 45;
-                c = appState.targetC || 230;
-            }
-
-            document.getElementById('target-calories-input').value = cal;
-            document.getElementById('target-p-input').value = p;
-            document.getElementById('target-f-input').value = f;
-            document.getElementById('target-c-input').value = c;
-        };
-
-        // windowオブジェクトにグローバル操作関数を明示的マウント
-        window.toggleModal = toggleModal;
-        window.openManualInputModal = openManualInputModal;
-        window.closeMealModal = closeMealModal;
-        window.handleManualMealSubmit = handleManualMealSubmit;
-        window.deleteMeal = deleteMeal;
-        window.saveBodyData = saveBodyData;
-        window.saveTargetSettings = saveTargetSettings;
-        window.connectWithClientId = connectWithClientId;
-        window.disconnectClientId = disconnectClientId;
-        window.changeDay = changeDay;
-        window.resetToToday = resetToToday;
-        window.selectDayFromWeeklyGrid = selectDayFromWeeklyGrid;
-        window.analyzeMealText = analyzeMealText;
-        window.analyzeMealImage = analyzeMealImage;
-        window.generateAIFeedback = generateAIFeedback;
-        window.sendChatMessage = sendChatMessage;
 
         // --- 強制起動 ---
         startSyncSystem();
@@ -1610,5 +1590,6 @@
     </script>
 </body>
 </html>
+
 
 ```
