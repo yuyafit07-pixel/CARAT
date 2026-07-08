@@ -31,11 +31,6 @@
     </script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- Firebase Compat SDK (管理者画面の完全なオンライン復帰用の安定CDN) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-brand-bg text-brand-text font-sans min-h-screen notranslate">
 
@@ -234,19 +229,40 @@
         </main>
     </div>
 
-    <!-- 内部ロジック -->
-    <script>
+    <!-- Firebase v11.6.1 Web SDK (ES Modules / Trainer Framework) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
         const appId = 'carat-meal-v3';
         let db, auth;
         let currentTargetClientId = null;
         let unsubscribeClientListener = null;
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
+            authDomain: "carat-d3b01.firebaseapp.com",
+            projectId: "carat-d3b01",
+            storageBucket: "carat-d3b01.firebasestorage.app",
+            messagingSenderId: "273330568464",
+            appId: "1:273330568464:web:5b4ea4ae2a5429914cf995",
+            measurementId: "G-27VPZ9TQDW"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        window.db = db;
+        window.auth = auth;
 
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
             toast.innerHTML = `<i data-lucide="info" class="w-4 h-4"></i> <span>${message}</span>`;
             document.body.appendChild(toast);
-            if (window.lucide) window.lucide.createIcons();
+            lucide.createIcons();
 
             setTimeout(() => {
                 toast.classList.add('opacity-0');
@@ -255,36 +271,16 @@
         }
 
         // ==========================================
-        // オンライン接続と初期化の完全保証
+        // オンライン接続と初期化の完全保証 (RULE 3)
         // ==========================================
         async function initializeTrainerSystem() {
             try {
-                if (typeof firebase === 'undefined') {
-                    showToast("通信エラー：SDKの読み込みに失敗しました。再読み込みしてください。");
-                    return;
-                }
-
-                if (!firebase.apps.length) {
-                    firebase.initializeApp({
-                        apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
-                        authDomain: "carat-d3b01.firebaseapp.com",
-                        projectId: "carat-d3b01",
-                        storageBucket: "carat-d3b01.firebasestorage.app",
-                        messagingSenderId: "273330568464",
-                        appId: "1:273330568464:web:5b4ea4ae2a5429914cf995",
-                        measurementId: "G-27VPZ9TQDW"
-                    });
-                }
-
-                auth = firebase.auth();
-                db = firebase.firestore();
-
                 // 認証制限エラーを回避する強固な非同期ログイン
-                await auth.signInAnonymously();
+                await signInAnonymously(auth);
 
                 document.getElementById('sync-status').innerHTML = `
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    DB Online
+                    DB Connected (Online)
                 `;
                 document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold";
 
@@ -348,7 +344,7 @@
                 `;
                 container.appendChild(item);
             });
-            if (window.lucide) window.lucide.createIcons();
+            lucide.createIcons();
         };
 
         window.selectBookmarkClient = function(id) {
@@ -356,7 +352,7 @@
             window.loadClientData();
         };
 
-        // --- 新規作成・Firestore即時格納（オンライン復帰完了） ---
+        // --- 新規作成・Firestore即時格納 (RULE 1 & RULE 3) ---
         window.createNewClientAndId = async function() {
             const nickname = document.getElementById('new-client-name').value.trim();
             const cal = parseInt(document.getElementById('new-client-kcal').value) || 1800;
@@ -401,14 +397,13 @@
             };
 
             try {
-                if (!db) {
-                    alert("データベースに接続されていません。数秒後に再度お試しください。");
-                    return;
+                if (!auth.currentUser) {
+                    await signInAnonymously(auth);
                 }
 
-                // Public共有フォルダへの即時強制書き込み
-                const docRef = db.doc(`artifacts/${appId}/public/data/clientStates/${newId}`);
-                await docRef.set(initialClientState);
+                // RULE 1: Public共有フォルダにデータを書き込むことでパーミッションエラーを完全回避
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', newId);
+                await setDoc(docRef, initialClientState);
 
                 addBookmark(newId, nickname);
 
@@ -433,39 +428,43 @@
         };
 
         // --- クライアントデータの監視ロード ---
-        window.loadClientData = function() {
+        window.loadClientData = async function() {
             const targetId = document.getElementById('client-id-input').value.trim().toUpperCase();
             if (!targetId) {
                 alert("クライアントIDを入力してください。");
                 return;
             }
 
-            if (!db) {
-                alert("通信エラー：データベースがオフラインです。");
-                return;
-            }
-
-            if (unsubscribeClientListener) unsubscribeClientListener();
-
-            currentTargetClientId = targetId;
-            const clientDocRef = db.doc(`artifacts/${appId}/public/data/clientStates/${targetId}`);
-
-            unsubscribeClientListener = clientDocRef.onSnapshot((docSnap) => {
-                if (docSnap.exists) {
-                    const data = docSnap.data();
-                    renderClientDashboard(data);
-                    document.getElementById('client-data-container').classList.remove('hidden');
-                    
-                    if (data.nickname) {
-                        addBookmark(targetId, data.nickname);
-                    }
-                } else {
-                    alert("指定されたクライアントIDのデータが存在しません。IDの打ち間違いがないか、またはトレーナー画面がOnline（緑色）の状態で正しくID作成が行われているかご確認ください。");
+            try {
+                if (!auth.currentUser) {
+                    await signInAnonymously(auth);
                 }
-            }, (error) => {
-                console.error("Load Client Fail:", error);
-                alert("データベースからの読込に失敗しました。");
-            });
+
+                if (unsubscribeClientListener) unsubscribeClientListener();
+
+                currentTargetClientId = targetId;
+                const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', targetId);
+
+                unsubscribeClientListener = onSnapshot(clientDocRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        renderClientDashboard(data);
+                        document.getElementById('client-data-container').classList.remove('hidden');
+                        
+                        if (data.nickname) {
+                            addBookmark(targetId, data.nickname);
+                        }
+                    } else {
+                        alert("指定されたクライアントIDのデータが存在しません。IDに間違いがないかご確認ください。");
+                    }
+                }, (error) => {
+                    console.error("Load Client Fail:", error);
+                    alert("データベースからの読込に失敗しました。Firestoreルールが正しく「公開」されているかご確認ください。");
+                });
+
+            } catch (err) {
+                console.error("Auth error on load:", err);
+            }
         };
 
         function renderClientDashboard(data) {
@@ -527,13 +526,13 @@
             }
 
             try {
-                const clientDocRef = db.doc(`artifacts/${appId}/public/data/clientStates/${currentTargetClientId}`);
-                await clientDocRef.update({
+                const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
+                await updateDoc(clientDocRef, {
                     trainerFeedback: feedbackText,
                     trainerFeedbackAt: new Date().toISOString()
                 });
 
-                showToast("食事指導アドバイスをリアルタイム送信しました！");
+                showToast("指導コメントをリアルタイム送信しました！");
                 document.getElementById('trainer-feedback-input').value = '';
             } catch (err) {
                 console.error(err);
@@ -552,6 +551,12 @@
             localStorage.setItem(`carat_trainer_gemini_key_${appId}`, key);
             showToast("店舗Gemini APIキーを登録しました。新規クライアント作成時に自動登録同期されます。");
         };
+
+        // windowエクスポート
+        window.saveTrainerGeminiKey = saveTrainerGeminiKey;
+        window.createNewClientAndId = createNewClientAndId;
+        window.loadClientData = loadClientData;
+        window.submitTrainerFeedback = submitTrainerFeedback;
 
         // 起動処理
         document.addEventListener('DOMContentLoaded', () => {
