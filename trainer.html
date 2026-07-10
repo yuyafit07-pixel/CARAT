@@ -1,575 +1,883 @@
-```html
 <!DOCTYPE html>
 <html lang="ja" class="notranslate" translate="no">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="google" content="notranslate">
-    <title>CARAT Trainer Portal - トレーナー専用管理ポータル</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            bg: '#F4F8FA',
-                            card: '#FFFFFF',
-                            primary: '#0052CC',
-                            primaryHover: '#0043a4',
-                            secondary: '#85B7E2',
-                            accent: '#E6F0FA',
-                            text: '#2C3E50',
-                            muted: '#7F8C8D',
-                            border: '#DCE6EE'
-                        }
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="google" content="notranslate">
+  <title>CARAT Trainer Portal - トレーナー専用管理ポータル</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#F4F8FA',
+              card: '#FFFFFF',
+              primary: '#0052CC',
+              primaryHover: '#0043a4',
+              secondary: '#85B7E2',
+              accent: '#E6F0FA',
+              text: '#2C3E50',
+              muted: '#7F8C8D',
+              border: '#DCE6EE'
             }
+          }
         }
-    </script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+      }
+    }
+  </script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+    .font-logo {
+      font-family: 'Montserrat', sans-serif;
+    }
+    /* スクロールバー非表示 */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
 </head>
-<body class="bg-brand-bg text-brand-text font-sans min-h-screen notranslate">
+<body class="bg-brand-bg text-brand-text min-h-screen pb-12 antialiased">
 
-    <div class="max-w-md mx-auto bg-brand-bg min-h-screen shadow-xl flex flex-col relative pb-12 border-x border-brand-border">
+  <!-- ヘッダー -->
+  <header class="bg-brand-card border-b border-brand-border/60 sticky top-0 z-50 shadow-sm px-4 py-3.5 flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <span class="font-logo font-extrabold text-brand-primary tracking-wider text-xl">CARAT</span>
+      <span class="text-[10px] font-bold text-brand-primary bg-brand-accent px-2 py-0.5 rounded-full">TRAINER PORTAL</span>
+    </div>
+    <div id="sync-status" class="text-[10px] px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold">
+      <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+      Connecting...
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 mt-4 space-y-4">
+
+    <!-- 店舗Gemini APIキー設定 (アコーディオン) -->
+    <details class="bg-brand-card rounded-2xl border border-brand-border/60 overflow-hidden shadow-sm transition">
+      <summary class="p-4 font-bold text-xs text-brand-text flex justify-between items-center cursor-pointer select-none list-none group">
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="key" class="w-4 h-4 text-brand-primary"></i>
+          店舗Gemini APIキーの自動同期設定
+        </span>
+        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180 text-brand-muted"></i>
+      </summary>
+      <div class="p-4 pt-0 border-t border-brand-border/40 bg-brand-bg/20 space-y-3">
+        <p class="text-[10px] text-brand-muted leading-relaxed">
+          ここに店舗用のGemini APIキーを設定すると、作成されるすべてのお客様アプリのカメラ食事解析やAI相談窓口に配信され、お客様側での面倒なキー設定やバグを完全に無くすことができます。また、トレーナーコメント自動生成にもこのキーが適用されます。
+        </p>
+        <div class="flex gap-2">
+          <input type="password" id="trainer-gemini-key" class="flex-1 bg-brand-card border border-brand-border rounded-xl px-3.5 py-2.5 text-xs font-mono text-brand-text focus:outline-none focus:border-brand-primary" placeholder="AIzaSy...">
+          <button onclick="window.saveTrainerGeminiKey()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 shrink-0 shadow-sm">
+            保存・適用
+          </button>
+        </div>
+      </div>
+    </details>
+
+    <!-- メイングリッド (2カラム) -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+
+      <!-- 左カラム: 顧客管理 & 選択 -->
+      <div class="md:col-span-5 space-y-4">
         
-        <!-- Header -->
-        <header class="bg-brand-card border-b border-brand-border px-5 py-4 sticky top-0 z-50 flex items-center justify-between">
-            <div class="flex items-center">
-                <div>
-                    <h1 class="text-xl font-black tracking-widest text-brand-primary leading-none">CARAT</h1>
-                    <p class="text-[8px] text-brand-muted tracking-widest font-mono font-bold mt-1">TRAINER DASHBOARD</p>
-                </div>
-            </div>
+        <!-- 新規登録 -->
+        <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm space-y-3 text-left">
+          <h2 class="text-xs font-bold text-brand-text flex items-center gap-1.5 border-b border-brand-border pb-2.5">
+            <i data-lucide="user-plus" class="w-4 h-4 text-brand-primary"></i>
+            ① 新規クライアント登録・専用ID発行
+          </h2>
+          <div class="space-y-2.5">
             <div>
-                <span id="sync-status" class="text-[10px] px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold">
-                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
-                    Offline
-                </span>
+              <label class="text-[10px] text-brand-muted font-bold block mb-1">ニックネーム (必須)</label>
+              <input type="text" id="new-client-name" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs text-brand-text focus:outline-none focus:border-brand-primary" placeholder="例: 鈴木 花子">
             </div>
-        </header>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-[10px] text-brand-muted font-bold block mb-1">目標カロリー(kcal)</label>
+                <input type="number" id="new-client-kcal" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs font-mono text-brand-text text-center focus:outline-none focus:border-brand-primary" value="1800">
+              </div>
+              <div>
+                <label class="text-[10px] text-brand-muted font-bold block mb-1">初期体重(kg)</label>
+                <input type="number" step="0.1" id="new-client-weight" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs font-mono text-brand-text text-center focus:outline-none focus:border-brand-primary" value="55.0">
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-1 bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
+              <div>
+                <label class="text-[8px] text-sky-600 font-bold block text-center mb-0.5">目標 P(g)</label>
+                <input type="number" id="new-client-p" class="w-full bg-brand-card border border-brand-border rounded-lg p-1.5 text-xs font-mono text-center focus:outline-none focus:border-brand-primary" value="110">
+              </div>
+              <div>
+                <label class="text-[8px] text-emerald-600 font-bold block text-center mb-0.5">目標 F(g)</label>
+                <input type="number" id="new-client-f" class="w-full bg-brand-card border border-brand-border rounded-lg p-1.5 text-xs font-mono text-center focus:outline-none focus:border-brand-primary" value="40">
+              </div>
+              <div>
+                <label class="text-[8px] text-amber-600 font-bold block text-center mb-0.5">目標 C(g)</label>
+                <input type="number" id="new-client-c" class="w-full bg-brand-card border border-brand-border rounded-lg p-1.5 text-xs font-mono text-center focus:outline-none focus:border-brand-primary" value="250">
+              </div>
+            </div>
+            <button onclick="window.createNewClientAndId()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              専用クライアントIDを発行する
+            </button>
+          </div>
+        </div>
 
-        <!-- Main Workspace -->
-        <main class="flex-1 px-4.5 py-4 space-y-5 overflow-y-auto">
+        <!-- 登録済クライアントリスト -->
+        <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm space-y-3 text-left">
+          <h2 class="text-xs font-bold text-brand-text flex items-center gap-1.5 border-b border-brand-border pb-2.5">
+            <i data-lucide="users" class="w-4 h-4 text-brand-primary"></i>
+            ② 担当クライアントの選択
+          </h2>
+          <div class="space-y-2">
+            <div class="max-h-[220px] overflow-y-auto space-y-1.5 pr-1 no-scrollbar" id="trainer-bookmarks-container">
+              <!-- ブックマークがここにJSで展開されます -->
+              <span class="text-[10px] text-brand-muted text-center block py-4 bg-brand-bg rounded-xl border border-dashed border-brand-border">登録済みのクライアントはありません</span>
+            </div>
+            
+            <div class="border-t border-brand-border/40 pt-2.5 mt-2.5 space-y-1.5">
+              <label class="text-[10px] text-brand-muted font-bold block">ID手動検索</label>
+              <div class="flex gap-1.5">
+                <input type="text" id="client-id-input" class="flex-1 bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-mono text-brand-text focus:outline-none uppercase" placeholder="CRT-XXXXXX">
+                <button onclick="window.loadClientData()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-4 rounded-xl text-xs font-bold transition flex items-center justify-center shadow-sm">
+                  読込
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            <!-- 店舗・セキュリティ設定 -->
-            <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3">
-                <details class="group" open>
-                    <summary class="text-xs font-bold text-brand-primary cursor-pointer flex justify-between items-center">
-                        <span class="flex items-center gap-1.5"><i data-lucide="key" class="w-4 h-4"></i> 店舗Gemini APIキーの自動同期設定</span>
-                        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180 text-brand-muted"></i>
-                    </summary>
-                    <div class="mt-3 space-y-2 text-left">
-                        <p class="text-[10px] text-brand-muted leading-relaxed">
-                            ここにGeminiキーを設定すると、**全お客様のアプリへ自動適用**されます（お客様側でのAPI設定が一切不要になります）。
-                        </p>
-                        <input type="password" id="trainer-gemini-key" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-mono text-brand-text focus:outline-none" placeholder="AIzaSy...">
-                        <button onclick="window.saveTrainerGeminiKey()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm">
-                            店舗Geminiキーを登録・保存
-                        </button>
-                    </div>
-                </details>
-            </section>
+      </div>
 
-            <!-- クライアントの新規作成・目標ID発行 -->
-            <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3 text-left">
-                <h3 class="text-xs font-bold text-brand-text flex items-center gap-1.5 border-b border-brand-border pb-2.5">
-                    <i data-lucide="user-plus" class="w-4 h-4 text-brand-primary"></i> ① 新規クライアント登録・専用ID発行
-                </h3>
-                
-                <div class="space-y-3">
-                    <div>
-                        <label class="text-[10px] text-brand-muted font-bold block mb-1">ニックネーム (必須)</label>
-                        <input type="text" id="new-client-name" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs text-brand-text focus:outline-none" placeholder="例: 鈴木 太郎 様">
-                    </div>
+      <!-- 右カラム: 選択中クライアントのリアルタイムカルテ -->
+      <div class="md:col-span-7 space-y-4">
+        
+        <div id="client-data-container" class="hidden space-y-4">
 
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-[10px] text-brand-muted font-bold block mb-1">目標カロリー (kcal)</label>
-                            <input type="number" id="new-client-kcal" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs font-mono text-brand-text text-center focus:outline-none" value="1800">
-                        </div>
-                        <div>
-                            <label class="text-[10px] text-brand-muted font-bold block mb-1">初期体重 (kg)</label>
-                            <input type="number" step="0.1" id="new-client-weight" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs font-mono text-brand-text text-center focus:outline-none" value="65.0">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-1.5 pt-1">
-                        <div>
-                            <label class="text-[8px] text-sky-600 font-bold block text-center mb-0.5">目標 P (g)</label>
-                            <input type="number" id="new-client-p" class="w-full bg-brand-bg border border-brand-border rounded-lg p-2 text-xs font-mono text-center focus:outline-none" value="120">
-                        </div>
-                        <div>
-                            <label class="text-[8px] text-emerald-600 font-bold block text-center mb-0.5">目標 F (g)</label>
-                            <input type="number" id="new-client-f" class="w-full bg-brand-bg border border-brand-border rounded-lg p-2 text-xs font-mono text-center focus:outline-none" value="45">
-                        </div>
-                        <div>
-                            <label class="text-[8px] text-amber-600 font-bold block text-center mb-0.5">目標 C (g)</label>
-                            <input type="number" id="new-client-c" class="w-full bg-brand-bg border border-brand-border rounded-lg p-2 text-xs font-mono text-center focus:outline-none" value="230">
-                        </div>
-                    </div>
-
-                    <button onclick="window.createNewClientAndId()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-black tracking-widest transition shadow-sm mt-2 flex items-center justify-center gap-1.5">
-                        <i data-lucide="sparkles" class="w-4 h-4"></i> 専用クライアントIDを発行する
-                    </button>
+          <!-- 基本プロファイルと日付選択 -->
+          <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm space-y-4 text-left">
+            <div class="flex justify-between items-center border-b border-brand-border pb-3">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-brand-accent flex items-center justify-center text-brand-primary font-bold text-sm" id="client-avatar-text">客</div>
+                <div>
+                  <h3 class="font-extrabold text-sm text-brand-text" id="display-client-name">クライアント名</h3>
+                  <span id="last-update-time" class="text-[9px] text-brand-muted font-mono block">更新:未ロード</span>
                 </div>
-            </section>
-
-            <!-- 担当クライアントの選択・ロード -->
-            <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3 text-left">
-                <h3 class="text-xs font-bold text-brand-text flex items-center gap-1.5 pb-2 border-b border-brand-border">
-                    <i data-lucide="users" class="w-4 h-4 text-brand-primary"></i> ② 担当クライアントの選択
-                </h3>
-                
-                <div class="space-y-2">
-                    <span class="text-[9px] text-brand-muted font-bold block">登録済みクライアント一覧（ブラウザ記憶）</span>
-                    <div id="trainer-bookmarks-container" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-1">
-                        <span class="text-[10px] text-brand-muted text-center block py-4 bg-brand-bg rounded-xl border border-dashed border-brand-border">登録済みのクライアントはありません</span>
-                    </div>
-                </div>
-
-                <div class="border-t border-brand-border pt-3">
-                    <label class="text-[9px] text-brand-muted font-bold block mb-1">ID手動検索</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="client-id-input" class="flex-1 bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary font-mono uppercase" placeholder="CRT-XXXXXX">
-                        <button onclick="window.loadClientData()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-4 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1">
-                            <i data-lucide="search" class="w-3.5 h-3.5"></i> 読込
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- クライアントデータ表示（検索成功時に開く） -->
-            <div id="client-data-container" class="hidden space-y-5 text-left">
-                
-                <!-- 本日のステータスカード -->
-                <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-4">
-                    <div class="flex justify-between items-center border-b border-brand-border pb-3">
-                        <div class="flex items-center gap-1.5">
-                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <h4 id="display-client-name" class="text-xs font-extrabold text-brand-text">鈴木 太郎 様</h4>
-                        </div>
-                        <span id="last-update-time" class="text-[9px] text-brand-muted font-mono">更新: 未ロード</span>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4 text-center">
-                        <div class="bg-brand-bg rounded-xl p-3 border border-brand-border">
-                            <span class="text-[9px] text-brand-muted block font-bold">総摂取エネルギー</span>
-                            <span class="text-lg font-black text-brand-primary"><span id="client-cur-cal">0</span> / <span id="client-tar-cal">0</span> <span class="text-[10px] font-normal text-brand-muted">kcal</span></span>
-                        </div>
-                        <div class="bg-brand-bg rounded-xl p-3 border border-brand-border flex flex-col justify-center">
-                            <span class="text-[9px] text-brand-muted block font-bold">身体データ計測値</span>
-                            <span class="text-xs font-bold mt-1 text-brand-text">
-                                体重: <span id="client-weight" class="font-extrabold text-brand-primary">--</span> kg / 
-                                脂肪: <span id="client-fat" class="font-extrabold text-brand-primary">--</span> %
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="space-y-2">
-                        <span class="text-[10px] text-brand-muted font-bold block">PFC実績 (目標値)</span>
-                        <div class="grid grid-cols-3 gap-2 text-center text-xs">
-                            <div class="bg-sky-50 rounded-lg p-2 border border-sky-100">
-                                <span class="text-[8px] text-sky-600 block font-bold">P (タンパク質)</span>
-                                <span class="font-extrabold text-sky-700"><span id="client-cur-p">0</span>g / <span id="client-tar-p">0</span>g</span>
-                            </div>
-                            <div class="bg-emerald-50 rounded-lg p-2 border border-emerald-100">
-                                <span class="text-[8px] text-emerald-600 block font-bold">F (脂質)</span>
-                                <span class="font-extrabold text-emerald-700"><span id="client-cur-f">0</span>g / <span id="client-tar-f">0</span>g</span>
-                            </div>
-                            <div class="bg-amber-50 rounded-lg p-2 border border-amber-100">
-                                <span class="text-[8px] text-amber-600 block font-bold">C (炭水化物)</span>
-                                <span class="font-extrabold text-amber-700"><span id="client-cur-c">0</span>g / <span id="client-tar-c">0</span>g</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 週全体の推移 -->
-                <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60">
-                    <h4 class="text-xs font-bold tracking-wider text-brand-muted mb-3 flex items-center gap-1.5">
-                        <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-primary"></i> 1週間のカロリー調整状況
-                    </h4>
-                    <div class="grid grid-cols-7 gap-1 text-center">
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">月</span><span id="weekly-cal-Mon" class="text-[10px] font-bold">--</span></div>
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">火</span><span id="weekly-cal-Tue" class="text-[10px] font-bold">--</span></div>
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">水</span><span id="weekly-cal-Wed" class="text-[10px] font-bold">--</span></div>
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">木</span><span id="weekly-cal-Thu" class="text-[10px] font-bold">--</span></div>
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">金</span><span id="weekly-cal-Fri" class="text-[10px] font-bold">--</span></div>
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">土</span><span id="weekly-cal-Sat" class="text-[10px] font-bold">--</span></div>
-                        <div class="bg-brand-bg rounded-lg py-1.5 border border-brand-border"><span class="text-[8px] text-brand-muted block font-sans">日</span><span id="weekly-cal-Sun" class="text-[10px] font-bold">--</span></div>
-                    </div>
-                </section>
-
-                <!-- 食事内容 -->
-                <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60">
-                    <h4 class="text-xs font-bold text-brand-text mb-3">選択された日付の食事内容</h4>
-                    <div id="client-meal-timeline" class="space-y-2 max-h-[160px] overflow-y-auto"></div>
-                </section>
-
-                <!-- フィードバック送信 -->
-                <section class="bg-brand-card rounded-2xl p-5 shadow-sm border border-brand-border/60 space-y-3">
-                    <h4 class="text-xs font-bold text-brand-primary flex items-center gap-1.5">
-                        <i data-lucide="message-square-plus" class="w-4 h-4"></i> トレーナー食事指導コメント・アドバイス
-                    </h4>
-                    <p class="text-[11px] text-brand-muted">
-                        お客様のアプリ画面にリアルタイムで届くフィードバック指導メッセージを入力します。
-                    </p>
-                    <textarea id="trainer-feedback-input" rows="4" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-xs text-brand-text placeholder-brand-muted/70 focus:outline-none focus:border-brand-primary resize-none" placeholder="例: 今日のPFCは完璧です！その調子で頑張りましょう！"></textarea>
-                    <button onclick="window.submitTrainerFeedback()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
-                        <i data-lucide="send" class="w-4 h-4"></i> 食事アドバイスコメントを送信する
-                    </button>
-                </section>
-
+              </div>
+              <div class="text-right">
+                <span class="text-[9px] text-brand-muted font-mono block">CLIENT ID</span>
+                <span id="display-client-id-badge" class="font-mono text-xs font-bold text-brand-primary bg-brand-accent px-2.5 py-0.5 rounded-lg border border-brand-primary/10">CRT-XXXXXX</span>
+              </div>
             </div>
 
-        </main>
+            <!-- ★ 新設: 日付変更コントローラー ★ -->
+            <div class="bg-brand-bg/60 border border-brand-border/40 p-2 rounded-2xl flex items-center justify-between shadow-inner">
+              <button onclick="window.changeSelectedDate('prev')" class="p-2 text-brand-primary hover:text-brand-primaryHover hover:bg-brand-accent rounded-xl transition flex items-center justify-center shrink-0">
+                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+              </button>
+              <div class="text-center">
+                <div class="text-[10px] text-brand-muted font-bold flex items-center justify-center gap-1">
+                  <i data-lucide="calendar" class="w-3 h-3 text-brand-primary"></i>
+                  食事データ参照日
+                </div>
+                <span id="display-selected-date" class="font-mono font-bold text-sm text-brand-text block tracking-wide">2026-07-10</span>
+                <span id="display-selected-date-badge" class="inline-block text-[9px] text-brand-primary bg-white px-2 py-0.5 rounded-full mt-1 font-bold border border-brand-border">今日</span>
+              </div>
+              <button onclick="window.changeSelectedDate('next')" class="p-2 text-brand-primary hover:text-brand-primaryHover hover:bg-brand-accent rounded-xl transition flex items-center justify-center shrink-0">
+                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+              </button>
+            </div>
+
+            <!-- 計測値 & 栄養摂取 -->
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-brand-bg/50 p-3 rounded-xl border border-brand-border/40 flex flex-col justify-center">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">身体データ(最新)</span>
+                <div class="text-xs font-medium space-y-0.5 text-brand-text">
+                  体重: <span id="client-weight" class="font-extrabold text-brand-primary text-sm">--</span> kg
+                </div>
+                <div class="text-xs font-medium space-y-0.5 text-brand-text">
+                  体脂肪: <span id="client-fat" class="font-extrabold text-brand-primary text-sm">--</span> %
+                </div>
+              </div>
+              <div class="bg-brand-bg/50 p-3 rounded-xl border border-brand-border/40 flex flex-col justify-center text-left">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1" id="energy-section-title">参照日の総摂取エネルギー</span>
+                <div class="flex items-baseline gap-1.5 mt-0.5">
+                  <span id="client-cur-cal" class="text-lg font-extrabold text-brand-primary tracking-tight">0</span>
+                  <span class="text-[9px] text-brand-muted">/ <span id="client-tar-cal">1800</span> kcal</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- PFC 実績 (目標値) -->
+            <div class="space-y-2">
+              <span class="text-[10px] text-brand-muted font-bold block">参照日のPFC実績 (目標値)</span>
+              <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                <div class="bg-sky-50 border border-sky-100 p-2.5 rounded-xl">
+                  <div class="text-[8px] text-sky-600 font-extrabold tracking-wider">P (タンパク質)</div>
+                  <div class="font-extrabold text-brand-text mt-0.5 text-xs"><span id="client-cur-p" class="text-sky-700">0</span>g</div>
+                  <div class="text-[9px] text-brand-muted mt-0.5">目標: <span id="client-tar-p">0</span>g</div>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-100 p-2.5 rounded-xl">
+                  <div class="text-[8px] text-emerald-600 font-extrabold tracking-wider">F (脂質)</div>
+                  <div class="font-extrabold text-brand-text mt-0.5 text-xs"><span id="client-cur-f" class="text-emerald-700">0</span>g</div>
+                  <div class="text-[9px] text-brand-muted mt-0.5">目標: <span id="client-tar-f">0</span>g</div>
+                </div>
+                <div class="bg-amber-50 border border-amber-100 p-2.5 rounded-xl">
+                  <div class="text-[8px] text-amber-600 font-extrabold tracking-wider">C (炭水化物)</div>
+                  <div class="font-extrabold text-brand-text mt-0.5 text-xs"><span id="client-cur-c" class="text-amber-700">0</span>g</div>
+                  <div class="text-[9px] text-brand-muted mt-0.5">目標: <span id="client-tar-c">0</span>g</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 1週間のカロリー調整状況 -->
+          <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm text-left space-y-2.5">
+            <h4 class="text-xs font-bold text-brand-text flex items-center gap-1.5">
+              <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-primary"></i>
+              1週間のカロリー調整状況（曜日別のサマリー）
+            </h4>
+            <div class="grid grid-cols-7 gap-1 text-center font-sans">
+              <div class="bg-brand-bg/40 p-1.5 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">月</span>
+                <span class="text-[10px] font-bold text-brand-text" id="weekly-cal-Mon">-</span>
+              </div>
+              <div class="bg-brand-bg/40 p-1.5 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">火</span>
+                <span class="text-[10px] font-bold text-brand-text" id="weekly-cal-Tue">-</span>
+              </div>
+              <div class="bg-brand-bg/40 p-1.5 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">水</span>
+                <span class="text-[10px] font-bold text-brand-text" id="weekly-cal-Wed">-</span>
+              </div>
+              <div class="bg-brand-bg/40 p-1.5 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">木</span>
+                <span class="text-[10px] font-bold text-brand-text" id="weekly-cal-Thu">-</span>
+              </div>
+              <div class="bg-brand-bg/40 p-1.5 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">金</span>
+                <span class="text-[10px] font-bold text-brand-text" id="weekly-cal-Fri">-</span>
+              </div>
+              <div class="bg-brand-bg/40 p-1.5 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">土</span>
+                <span class="text-[10px] font-bold text-brand-text" id="weekly-cal-Sat">-</span>
+              </div>
+              <div class="bg-brand-bg/40 p-1.5 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">日</span>
+                <span class="text-[10px] font-bold text-brand-text" id="weekly-cal-Sun">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 参照日食事ログ -->
+          <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm text-left space-y-2.5">
+            <h4 class="text-xs font-bold text-brand-text flex items-center gap-1.5 border-b border-brand-border pb-2.5" id="timeline-section-title">
+              <i data-lucide="utensils" class="w-4 h-4 text-brand-primary"></i>
+              参照日の登録食事明細
+            </h4>
+            <div id="client-meal-timeline" class="max-h-[300px] overflow-y-auto space-y-2 no-scrollbar pr-1">
+              <!-- タイムラインがここに表示されます -->
+            </div>
+          </div>
+
+          <!-- トレーナー指導コメント & AI自動生成 -->
+          <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm text-left space-y-3">
+            <div class="flex justify-between items-center border-b border-brand-border pb-2.5">
+              <h4 class="text-xs font-bold text-brand-text flex items-center gap-1.5">
+                <i data-lucide="message-square" class="w-4 h-4 text-brand-primary"></i>
+                トレーナー食事指導コメント・アドバイス
+              </h4>
+              <!-- AIアドバイス生成ボタン -->
+              <button onclick="window.generateAIAdvice()" id="btn-generate-ai-advice" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 py-1.5 px-3 rounded-lg text-[10px] font-bold transition flex items-center gap-1 shadow-sm">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                ✨ AI女性専門アドバイス下書き生成
+              </button>
+            </div>
+            <p class="text-[10px] text-brand-muted">
+              食事アドバイスを入力するか、上の『AI女性専門アドバイス下書き生成』を押すと、その日の食事結果・PFCバランス・体重をAIが高度に分析し、優しくかつエビデンスに基づいた食事指導メッセージを下書き作成します。
+            </p>
+            <div class="space-y-2">
+              <textarea id="trainer-feedback-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-xs text-brand-text focus:outline-none focus:border-brand-primary" rows="5" placeholder="鈴木様、本日のタンパク質量は非常に良く確保されていますね！夜ご飯の脂質をもう少しセーブするとカロリーバランスも完璧です..."></textarea>
+              <button onclick="window.submitTrainerFeedback()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                食事アドバイスコメントを送信する
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 未選択時のプレースホルダー -->
+        <div id="client-placeholder" class="bg-brand-card rounded-2xl p-12 border border-brand-border/60 border-dashed text-center flex flex-col items-center justify-center space-y-3">
+          <div class="w-12 h-12 rounded-full bg-brand-accent flex items-center justify-center text-brand-primary">
+            <i data-lucide="user-check" class="w-6 h-6"></i>
+          </div>
+          <p class="text-xs font-bold text-brand-text">クライアントが選択されていません</p>
+          <p class="text-[10px] text-brand-muted max-w-sm">
+            左側の『担当クライアントの選択』からクライアントを選択するか、新規クライアントIDを発行すると、ここにリアルタイム食事カルテが表示されます。
+          </p>
+        </div>
+
+      </div>
+
     </div>
 
-    <!-- Firebase v11.6.1 Web SDK (ES Modules / Trainer Framework) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+  </main>
 
-        const appId = 'carat-meal-v3';
-        let db, auth;
-        let currentTargetClientId = null;
-        let unsubscribeClientListener = null;
+  <!-- Firebase JavaScript SDK 11.6.1 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
-            authDomain: "carat-d3b01.firebaseapp.com",
-            projectId: "carat-d3b01",
-            storageBucket: "carat-d3b01.firebasestorage.app",
-            messagingSenderId: "273330568464",
-            appId: "1:273330568464:web:5b4ea4ae2a5429914cf995",
-            measurementId: "G-27VPZ9TQDW"
-        };
+    const appId = 'carat-meal-v3';
+    let db, auth;
+    let currentTargetClientId = null;
+    let unsubscribeClientListener = null;
+    let globalClientData = null; // クラウド受信データを保持する
+    let selectedDateString = getTodayDateString(); // トレーナー側で選択している日付
 
-        const app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
+      authDomain: "carat-d3b01.firebaseapp.com",
+      projectId: "carat-d3b01",
+      storageBucket: "carat-d3b01.firebasestorage.app",
+      messagingSenderId: "273330568464",
+      appId: "1:273330568464:web:5b4ea4ae2a5429914cf995",
+      measurementId: "G-27VPZ9TQDW"
+    };
 
-        window.db = db;
-        window.auth = auth;
+    // Firebaseの初期化
+    const app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
 
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
-            toast.innerHTML = `<i data-lucide="info" class="w-4 h-4"></i> <span>${message}</span>`;
-            document.body.appendChild(toast);
-            lucide.createIcons();
+    // グローバルバインド
+    window.db = db;
+    window.auth = auth;
 
-            setTimeout(() => {
-                toast.classList.add('opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+    // === トースト機能 ===
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
+      toast.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i> ${message}`;
+      document.body.appendChild(toast);
+      lucide.createIcons();
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+    window.showToast = showToast;
+
+    // === 日付取得ユーティリティ ===
+    function getTodayDateString() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    // === オンライン接続の完全保証 (RULE 3) ===
+    async function initializeTrainerSystem() {
+      try {
+        await signInAnonymously(auth);
+        document.getElementById('sync-status').innerHTML = `
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          DB Connected (Online)
+        `;
+        document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold animate-fade-in";
+      } catch (e) {
+        console.error("Initialize Fail:", e);
+        document.getElementById('sync-status').innerHTML = `
+          <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+          Connection Error
+        `;
+        document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold";
+      }
+    }
+
+    // --- ブックマーク一覧管理 (LocalStorage) ---
+    function getBookmarkList() {
+      const stored = localStorage.getItem(`carat_trainer_bookmarks_${appId}`);
+      return stored ? JSON.parse(stored) : [];
+    }
+
+    function saveBookmarkList(list) {
+      localStorage.setItem(`carat_trainer_bookmarks_${appId}`, JSON.stringify(list));
+      window.renderBookmarks();
+    }
+
+    function addBookmark(id, nickname) {
+      let list = getBookmarkList();
+      list = list.filter(b => b.id !== id);
+      list.unshift({ id, nickname });
+      saveBookmarkList(list);
+    }
+
+    window.deleteBookmark = function(id) {
+      if (confirm("ブックマークリストから削除しますか?")) {
+        let list = getBookmarkList();
+        list = list.filter(b => b.id !== id);
+        saveBookmarkList(list);
+        showToast("リストから削除しました");
+      }
+    };
+
+    window.renderBookmarks = function() {
+      const container = document.getElementById('trainer-bookmarks-container');
+      const list = getBookmarkList();
+      if (list.length === 0) {
+        container.innerHTML = `
+          <span class="text-[10px] text-brand-muted text-center block py-4 bg-brand-bg rounded-xl border border-dashed border-brand-border">
+            登録済みのクライアントはありません
+          </span>
+        `;
+        return;
+      }
+      container.innerHTML = "";
+      list.forEach(b => {
+        const item = document.createElement('div');
+        item.className = "flex justify-between items-center bg-brand-bg hover:bg-brand-accent p-2.5 rounded-xl border border-brand-border transition-all mb-1";
+        item.innerHTML = `
+          <button onclick="window.selectBookmarkClient('${b.id}')" class="flex-1 text-left flex flex-col">
+            <span class="text-xs font-bold text-brand-text">${b.nickname} 様</span>
+            <span class="text-[9px] font-mono text-brand-primary">${b.id}</span>
+          </button>
+          <button onclick="window.deleteBookmark('${b.id}')" class="text-brand-muted hover:text-rose-500 p-1 rounded-lg transition">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        `;
+        container.appendChild(item);
+      });
+      lucide.createIcons();
+    };
+
+    window.selectBookmarkClient = function(id) {
+      document.getElementById('client-id-input').value = id;
+      window.loadClientData();
+    };
+
+    // --- 新規クライアント作成・Firestore即時格納 (RULE 1 & RULE 3) ---
+    window.createNewClientAndId = async function() {
+      const nickname = document.getElementById('new-client-name').value.trim();
+      const cal = parseInt(document.getElementById('new-client-kcal').value) || 1800;
+      const weight = parseFloat(document.getElementById('new-client-weight').value) || 55.0;
+      const p = parseInt(document.getElementById('new-client-p').value) || 110;
+      const f = parseInt(document.getElementById('new-client-f').value) || 40;
+      const c = parseInt(document.getElementById('new-client-c').value) || 250;
+
+      if (!nickname) {
+        alert("ニックネームを入力してください。");
+        return;
+      }
+
+      const randomSuffix = Math.floor(100000 + Math.random() * 900000);
+      const newId = `CRT-${randomSuffix}`;
+      const geminiKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
+
+      const initialClientState = {
+        nickname: nickname,
+        targetCalories: cal,
+        targetP: p,
+        targetF: f,
+        targetC: c,
+        currentCalories: 0,
+        currentP: 0,
+        currentF: 0,
+        currentC: 0,
+        meals: [],
+        mealsByDate: {},
+        weight: weight,
+        fatRate: 15.0,
+        weeklyLogs: {
+          Mon: { kcal: 0, p: 0, f: 0, c: 0 },
+          Tue: { kcal: 0, p: 0, f: 0, c: 0 },
+          Wed: { kcal: 0, p: 0, f: 0, c: 0 },
+          Thu: { kcal: 0, p: 0, f: 0, c: 0 },
+          Fri: { kcal: 0, p: 0, f: 0, c: 0 },
+          Sat: { kcal: 0, p: 0, f: 0, c: 0 },
+          Sun: { kcal: 0, p: 0, f: 0, c: 0 }
+        },
+        sharedGeminiKey: geminiKey
+      };
+
+      try {
+        if (!auth.currentUser) {
+          await signInAnonymously(auth);
         }
 
-        // ==========================================
-        // オンライン接続と初期化の完全保証 (RULE 3)
-        // ==========================================
-        async function initializeTrainerSystem() {
-            try {
-                // 認証制限エラーを回避する強固な非同期ログイン
-                await signInAnonymously(auth);
+        // RULE 1: Public共有フォルダに書き込む
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', newId);
+        await setDoc(docRef, initialClientState);
 
-                document.getElementById('sync-status').innerHTML = `
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    DB Connected (Online)
-                `;
-                document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold";
+        addBookmark(newId, nickname);
 
-            } catch (e) {
-                console.error("Initialize Fail:", e);
-                document.getElementById('sync-status').innerHTML = `
-                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                    Connection Error
-                `;
-                document.getElementById('sync-status').className = "text-[10px] px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold";
-            }
+        // ID自動コピー
+        const dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = newId;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+
+        alert(`クライアント 【${nickname}】 様を作成し、オンライン同期しました!\n\n【専用クライアントID】\n${newId}\n\n※IDは自動コピーされています。お客様へお送りください。`);
+        
+        document.getElementById('new-client-name').value = "";
+        document.getElementById('client-id-input').value = newId;
+        window.loadClientData();
+      } catch (err) {
+        console.error("Failed to create client:", err);
+        alert("クライアント作成に失敗しました。接続環境をご確認ください。");
+      }
+    };
+
+    // --- 日付切り替え機能 ---
+    window.changeSelectedDate = function(direction) {
+      const current = new Date(selectedDateString);
+      if (direction === 'prev') {
+        current.setDate(current.getDate() - 1);
+      } else if (direction === 'next') {
+        current.setDate(current.getDate() + 1);
+      }
+      selectedDateString = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}-${String(current.getDate()).padStart(2, '0')}`;
+      updateDateUI();
+      if (globalClientData) {
+        renderClientDashboard(globalClientData);
+      }
+    };
+
+    function updateDateUI() {
+      document.getElementById('display-selected-date').innerText = selectedDateString;
+      const badgeEl = document.getElementById('display-selected-date-badge');
+      const todayStr = getTodayDateString();
+      if (selectedDateString === todayStr) {
+        badgeEl.innerText = "今日";
+        badgeEl.className = "inline-block text-[9px] text-brand-primary bg-white px-2 py-0.5 rounded-full mt-1 font-bold border border-brand-border";
+      } else {
+        const diffTime = new Date(selectedDateString) - new Date(todayStr);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays === -1) {
+          badgeEl.innerText = "昨日";
+          badgeEl.className = "inline-block text-[9px] text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-full mt-1 font-bold border border-amber-100";
+        } else if (diffDays === 1) {
+          badgeEl.innerText = "明日";
+          badgeEl.className = "inline-block text-[9px] text-teal-600 bg-teal-50 px-2.5 py-0.5 rounded-full mt-1 font-bold border border-teal-100";
+        } else {
+          badgeEl.innerText = diffDays < 0 ? `${Math.abs(diffDays)}日前` : `${diffDays}日後`;
+          badgeEl.className = "inline-block text-[9px] text-brand-muted bg-brand-bg px-2.5 py-0.5 rounded-full mt-1 font-bold border border-brand-border";
+        }
+      }
+    }
+
+    // --- 特定日付のPFC・カロリー総計算出ヘルパー ---
+    function calculateTotalsForDate(data, dateStr) {
+      let cal = 0, p = 0, f = 0, c = 0;
+      const meals = data.mealsByDate && data.mealsByDate[dateStr] ? data.mealsByDate[dateStr] : [];
+      meals.forEach(m => {
+        cal += (m.kcal || 0);
+        p += (m.p || 0);
+        f += (m.f || 0);
+        c += (m.c || 0);
+      });
+      return { cal: Math.round(cal), p, f, c, meals };
+    }
+
+    // --- クライアントデータの監視ロード ---
+    window.loadClientData = async function() {
+      const targetId = document.getElementById('client-id-input').value.trim().toUpperCase();
+      if (!targetId) {
+        alert("クライアントIDを入力してください。");
+        return;
+      }
+
+      try {
+        if (!auth.currentUser) {
+          await signInAnonymously(auth);
         }
 
-        // --- ブックマーク一覧管理 ---
-        function getBookmarkList() {
-            const stored = localStorage.getItem(`carat_trainer_bookmarks_${appId}`);
-            return stored ? JSON.parse(stored) : [];
-        }
+        if (unsubscribeClientListener) unsubscribeClientListener();
+        currentTargetClientId = targetId;
 
-        function saveBookmarkList(list) {
-            localStorage.setItem(`carat_trainer_bookmarks_${appId}`, JSON.stringify(list));
-            window.renderBookmarks();
-        }
-
-        function addBookmark(id, nickname) {
-            let list = getBookmarkList();
-            list = list.filter(b => b.id !== id);
-            list.unshift({ id, nickname });
-            saveBookmarkList(list);
-        }
-
-        window.deleteBookmark = function(id) {
-            if (confirm("リストから削除しますか？")) {
-                let list = getBookmarkList();
-                list = list.filter(b => b.id !== id);
-                saveBookmarkList(list);
-            }
-        };
-
-        window.renderBookmarks = function() {
-            const container = document.getElementById('trainer-bookmarks-container');
-            const list = getBookmarkList();
-
-            if (list.length === 0) {
-                container.innerHTML = `<span class="text-[10px] text-brand-muted text-center block py-4 bg-brand-bg rounded-xl border border-dashed border-brand-border">登録済みのクライアントはありません</span>`;
-                return;
-            }
-
-            container.innerHTML = '';
-            list.forEach(b => {
-                const item = document.createElement('div');
-                item.className = "flex justify-between items-center bg-brand-bg hover:bg-brand-accent p-2.5 rounded-xl border border-brand-border transition-all mb-1";
-                item.innerHTML = `
-                    <button onclick="window.selectBookmarkClient('${b.id}')" class="flex-1 text-left flex flex-col">
-                        <span class="text-xs font-bold text-brand-text">${b.nickname}</span>
-                        <span class="text-[9px] font-mono text-brand-muted">${b.id}</span>
-                    </button>
-                    <button onclick="window.deleteBookmark('${b.id}')" class="p-1.5 text-brand-muted hover:text-rose-500 rounded-lg">
-                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                    </button>
-                `;
-                container.appendChild(item);
-            });
-            lucide.createIcons();
-        };
-
-        window.selectBookmarkClient = function(id) {
-            document.getElementById('client-id-input').value = id;
-            window.loadClientData();
-        };
-
-        // --- 新規作成・Firestore即時格納 (RULE 1 & RULE 3) ---
-        window.createNewClientAndId = async function() {
-            const nickname = document.getElementById('new-client-name').value.trim();
-            const cal = parseInt(document.getElementById('new-client-kcal').value) || 1800;
-            const weight = parseFloat(document.getElementById('new-client-weight').value) || 65.0;
-            const p = parseInt(document.getElementById('new-client-p').value) || 120;
-            const f = parseInt(document.getElementById('new-client-f').value) || 45;
-            const c = parseInt(document.getElementById('new-client-c').value) || 230;
-
-            if (!nickname) {
-                alert("ニックネームを入力してください。");
-                return;
-            }
-
-            const randomSuffix = Math.floor(100000 + Math.random() * 900000);
-            const newId = `CRT-${randomSuffix}`;
-            const geminiKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
-
-            const initialClientState = {
-                nickname: nickname,
-                targetCalories: cal,
-                targetP: p,
-                targetF: f,
-                targetC: c,
-                currentCalories: 0,
-                currentP: 0,
-                currentF: 0,
-                currentC: 0,
-                meals: [],
-                mealsByDate: {},
-                weight: weight,
-                fatRate: 15.0,
-                weeklyLogs: {
-                    Mon: { kcal: 0, p: 0, f: 0, c: 0 },
-                    Tue: { kcal: 0, p: 0, f: 0, c: 0 },
-                    Wed: { kcal: 0, p: 0, f: 0, c: 0 },
-                    Thu: { kcal: 0, p: 0, f: 0, c: 0 },
-                    Fri: { kcal: 0, p: 0, f: 0, c: 0 },
-                    Sat: { kcal: 0, p: 0, f: 0, c: 0 },
-                    Sun: { kcal: 0, p: 0, f: 0, c: 0 }
-                },
-                sharedGeminiKey: geminiKey 
-            };
-
-            try {
-                if (!auth.currentUser) {
-                    await signInAnonymously(auth);
-                }
-
-                // RULE 1: Public共有フォルダにデータを書き込むことでパーミッションエラーを完全回避
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', newId);
-                await setDoc(docRef, initialClientState);
-
-                addBookmark(newId, nickname);
-
-                // ID自動コピー
-                const dummy = document.createElement("textarea");
-                document.body.appendChild(dummy);
-                dummy.value = newId;
-                dummy.select();
-                document.execCommand("copy");
-                document.body.removeChild(dummy);
-
-                alert(`クライアント【${nickname}】様を作成し、オンライン同期しました！\n\n【専用クライアントID】\n${newId}\n\n※IDはすでにコピーされています。LINEに貼り付けてお客様へお送りください。`);
-                
-                document.getElementById('new-client-name').value = '';
-                document.getElementById('client-id-input').value = newId;
-                window.loadClientData();
-
-            } catch (err) {
-                console.error("Failed to create client:", err);
-                alert("クライアント作成に失敗しました。接続環境をご確認ください。");
-            }
-        };
-
-        // --- クライアントデータの監視ロード ---
-        window.loadClientData = async function() {
-            const targetId = document.getElementById('client-id-input').value.trim().toUpperCase();
-            if (!targetId) {
-                alert("クライアントIDを入力してください。");
-                return;
-            }
-
-            try {
-                if (!auth.currentUser) {
-                    await signInAnonymously(auth);
-                }
-
-                if (unsubscribeClientListener) unsubscribeClientListener();
-
-                currentTargetClientId = targetId;
-                const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', targetId);
-
-                unsubscribeClientListener = onSnapshot(clientDocRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        renderClientDashboard(data);
-                        document.getElementById('client-data-container').classList.remove('hidden');
-                        
-                        if (data.nickname) {
-                            addBookmark(targetId, data.nickname);
-                        }
-                    } else {
-                        alert("指定されたクライアントIDのデータが存在しません。IDに間違いがないかご確認ください。");
-                    }
-                }, (error) => {
-                    console.error("Load Client Fail:", error);
-                    alert("データベースからの読込に失敗しました。Firestoreルールが正しく「公開」されているかご確認ください。");
-                });
-
-            } catch (err) {
-                console.error("Auth error on load:", err);
-            }
-        };
-
-        function renderClientDashboard(data) {
-            document.getElementById('display-client-name').innerText = `${data.nickname || "ゲスト"} 様`;
+        const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', targetId);
+        unsubscribeClientListener = onSnapshot(clientDocRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            globalClientData = data; // キャッシュに保持する
             
-            document.getElementById('client-cur-cal').innerText = (data.currentCalories || 0).toLocaleString();
-            document.getElementById('client-tar-cal').innerText = (data.targetCalories || 0).toLocaleString();
-
-            document.getElementById('client-weight').innerText = data.weight ? data.weight.toFixed(1) : '--';
-            document.getElementById('client-fat').innerText = data.fatRate ? data.fatRate.toFixed(1) : '--';
-
-            document.getElementById('client-cur-p').innerText = data.currentP ? data.currentP.toFixed(1) : '0';
-            document.getElementById('client-tar-p').innerText = data.targetP || '0';
-            document.getElementById('client-cur-f').innerText = data.currentF ? data.currentF.toFixed(1) : '0';
-            document.getElementById('client-tar-f').innerText = data.targetF || '0';
-            document.getElementById('client-cur-c').innerText = data.currentC ? data.currentC.toFixed(1) : '0';
-            document.getElementById('client-tar-c').innerText = data.targetC || '0';
-
-            const now = new Date();
-            document.getElementById('last-update-time').innerText = `最終同期: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-
-            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            days.forEach(day => {
-                const dayLog = data.weeklyLogs ? data.weeklyLogs[day] : null;
-                document.getElementById(`weekly-cal-${day}`).innerText = dayLog && dayLog.kcal > 0 ? dayLog.kcal.toLocaleString() : '-';
-            });
-
-            const timelineEl = document.getElementById('client-meal-timeline');
-            timelineEl.innerHTML = '';
-            if (data.meals && data.meals.length > 0) {
-                data.meals.forEach(m => {
-                    const row = document.createElement('div');
-                    row.className = "flex justify-between items-center bg-brand-bg rounded-lg p-2.5 text-[11px] border border-brand-border mb-1";
-                    row.innerHTML = `
-                        <div>
-                            <span class="bg-brand-accent text-brand-primary px-1.5 py-0.5 rounded mr-1.5 font-bold">${m.category}</span>
-                            <span class="font-bold text-brand-text">${m.name}</span>
-                        </div>
-                        <span class="font-black text-brand-muted">${m.kcal} kcal</span>
-                    `;
-                    timelineEl.appendChild(row);
-                });
-            } else {
-                timelineEl.innerHTML = `<span class="text-[10px] text-brand-muted text-center block py-4">選択された日の食事は未登録です</span>`;
-            }
-        }
-
-        // --- フィードバック指導送信 ---
-        window.submitTrainerFeedback = async function() {
-            if (!currentTargetClientId) {
-                alert("クライアントが選択されていません。");
-                return;
-            }
-
-            const feedbackText = document.getElementById('trainer-feedback-input').value.trim();
-            if (!feedbackText) {
-                alert("コメントを入力してください。");
-                return;
-            }
-
-            try {
-                const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
-                await updateDoc(clientDocRef, {
-                    trainerFeedback: feedbackText,
-                    trainerFeedbackAt: new Date().toISOString()
-                });
-
-                showToast("指導コメントをリアルタイム送信しました！");
-                document.getElementById('trainer-feedback-input').value = '';
-            } catch (err) {
-                console.error(err);
-                alert("送信に失敗しました。");
-            }
-        };
-
-        // --- 店舗用APIキー自動配信 ---
-        window.saveTrainerGeminiKey = function() {
-            const key = document.getElementById('trainer-gemini-key').value.trim();
-            if (!key) {
-                alert("Geminiキーを入力してください。");
-                return;
-            }
-
-            localStorage.setItem(`carat_trainer_gemini_key_${appId}`, key);
-            showToast("店舗Gemini APIキーを登録しました。新規クライアント作成時に自動登録同期されます。");
-        };
-
-        // windowエクスポート
-        window.saveTrainerGeminiKey = saveTrainerGeminiKey;
-        window.createNewClientAndId = createNewClientAndId;
-        window.loadClientData = loadClientData;
-        window.submitTrainerFeedback = submitTrainerFeedback;
-
-        // 起動処理
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeTrainerSystem();
+            renderClientDashboard(data);
             
-            const savedTrainerKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`);
-            if (savedTrainerKey) {
-                document.getElementById('trainer-gemini-key').value = savedTrainerKey;
+            document.getElementById('client-placeholder').classList.add('hidden');
+            document.getElementById('client-data-container').classList.remove('hidden');
+            
+            if (data.nickname) {
+              addBookmark(targetId, data.nickname);
             }
-            window.renderBookmarks();
+          } else {
+            alert("指定されたクライアントIDのデータが存在しません。IDに間違いがないかご確認ください。");
+          }
+        }, (error) => {
+          console.error("Load Client Fail:", error);
+          alert("データベースからの読込に班員エラー、または同期不全が発生しました。");
         });
-    </script>
+      } catch (err) {
+        console.error("Auth error on load:", err);
+      }
+    };
+
+    function renderClientDashboard(data) {
+      document.getElementById('display-client-name').innerText = `${data.nickname || "ゲスト"} 様`;
+      document.getElementById('client-avatar-text').innerText = (data.nickname || "ゲ").substring(0, 1);
+      document.getElementById('display-client-id-badge').innerText = currentTargetClientId;
+
+      // 日付選択変更に応じた、総摂取・実績PFCの再計算
+      const dailyTotals = calculateTotalsForDate(data, selectedDateString);
+
+      document.getElementById('client-cur-cal').innerText = dailyTotals.cal.toLocaleString();
+      document.getElementById('client-tar-cal').innerText = (data.targetCalories || 1800).toLocaleString();
+
+      document.getElementById('client-weight').innerText = data.weight ? data.weight.toFixed(1) : '--';
+      document.getElementById('client-fat').innerText = data.fatRate ? data.fatRate.toFixed(1) : '--';
+
+      document.getElementById('client-cur-p').innerText = dailyTotals.p.toFixed(1);
+      document.getElementById('client-tar-p').innerText = data.targetP || '0';
+
+      document.getElementById('client-cur-f').innerText = dailyTotals.f.toFixed(1);
+      document.getElementById('client-tar-f').innerText = data.targetF || '0';
+
+      document.getElementById('client-cur-c').innerText = dailyTotals.c.toFixed(1);
+      document.getElementById('client-tar-c').innerText = data.targetC || '0';
+
+      // 参照日の食事一覧表示の動的書き換え
+      document.getElementById('energy-section-title').innerText = `${selectedDateString.substring(5)} の総摂取エネルギー`;
+      document.getElementById('timeline-section-title').innerHTML = `
+        <i data-lucide="utensils" class="w-4 h-4 text-brand-primary"></i>
+        ${selectedDateString.substring(5)} の登録食事明細 (${dailyTotals.meals.length}件)
+      `;
+
+      // 最終同期
+      const now = new Date();
+      document.getElementById('last-update-time').innerText = `最終同期: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+      // 週間の進捗表
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      days.forEach(day => {
+        const dayLog = data.weeklyLogs ? data.weeklyLogs[day] : null;
+        document.getElementById(`weekly-cal-${day}`).innerText = dayLog && dayLog.kcal > 0 ? dayLog.kcal.toLocaleString() : '-';
+      });
+
+      // タイムラインの構築
+      const timelineEl = document.getElementById('client-meal-timeline');
+      timelineEl.innerHTML = "";
+      if (dailyTotals.meals && dailyTotals.meals.length > 0) {
+        dailyTotals.meals.forEach(m => {
+          const row = document.createElement('div');
+          row.className = "flex justify-between items-center bg-brand-bg rounded-xl p-3 text-[11px] border border-brand-border mb-1";
+          row.innerHTML = `
+            <div class="flex items-center gap-1.5">
+              <span class="bg-brand-accent text-brand-primary px-2 py-0.5 rounded-lg font-bold text-[9px]">${m.category}</span>
+              <span class="font-bold text-brand-text text-xs">${m.name}</span>
+              <span class="text-[9px] text-brand-muted font-mono">(${m.time || '--:--'})</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-brand-muted text-[10px] font-medium">P:${m.p} F:${m.f} C:${m.c}</span>
+              <span class="font-extrabold text-brand-text font-mono text-xs">${m.kcal} kcal</span>
+            </div>
+          `;
+          timelineEl.appendChild(row);
+        });
+      } else {
+        timelineEl.innerHTML = `
+          <div class="text-center py-6 bg-brand-bg/60 rounded-xl border border-dashed border-brand-border">
+            <span class="text-[10px] text-brand-muted font-bold block">この日の食事登録はありません</span>
+          </div>
+        `;
+      }
+      lucide.createIcons();
+    }
+
+    // --- フィードバック指導送信 ---
+    window.submitTrainerFeedback = async function() {
+      if (!currentTargetClientId) {
+        alert("クライアントが選択されていません。");
+        return;
+      }
+      const feedbackText = document.getElementById('trainer-feedback-input').value.trim();
+      if (!feedbackText) {
+        alert("アドバイスコメントを入力してください。");
+        return;
+      }
+      try {
+        const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
+        await updateDoc(clientDocRef, {
+          trainerFeedback: feedbackText,
+          trainerFeedbackAt: new Date().toISOString()
+        });
+        showToast("食事アドバイスをリアルタイム送信しました!");
+        document.getElementById('trainer-feedback-input').value = "";
+      } catch (err) {
+        console.error(err);
+        alert("コメント送信に失敗しました。");
+      }
+    };
+
+    // --- 店舗用APIキー登録 ---
+    window.saveTrainerGeminiKey = function() {
+      const key = document.getElementById('trainer-gemini-key').value.trim();
+      if (!key) {
+        alert("Geminiキーを入力してください。");
+        return;
+      }
+      localStorage.setItem(`carat_trainer_gemini_key_${appId}`, key);
+      showToast("店舗Gemini APIキーを保存・登録しました。");
+    };
+
+    // --- Gemini API連携 (フォールバック & エラー検知) ---
+    async function fetchGeminiWithFallback(payload) {
+      const key = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
+      if (!key) {
+        throw new Error("店舗Gemini API Keyが設定されていません。最上部の『店舗Gemini APIキーの自動同期設定』にAPIキーを設定してください。");
+      }
+
+      // 安定的な接続を提供する試行パターン
+      const trialPatterns = [
+        { version: "v1beta", model: "gemini-2.5-flash" },
+        { version: "v1", model: "gemini-1.5-flash" }
+      ];
+      let lastError = null;
+
+      for (const pattern of trialPatterns) {
+        const endpoint = `https://generativelanguage.googleapis.com/${pattern.version}/models/${pattern.model}:generateContent?key=${key}`;
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const status = response.status;
+          if (response.ok) {
+            return await response.json();
+          } else {
+            const errText = await response.text();
+            if (status === 403) {
+              throw new Error("【APIキー無効】Googleによってキーが制限または停止されています。正しいキーを再設定してください。");
+            }
+            lastError = `通信エラー(ステータス: ${status})`;
+          }
+        } catch (e) {
+          if (e.message && e.message.includes("APIキー無効")) {
+            throw e;
+          }
+          lastError = e.message || e;
+        }
+      }
+      throw new Error(`【解析失敗】${lastError}`);
+    }
+
+    // === 新設: 女性専門エビデンスベース食事アドバイス自動生成 ===
+    window.generateAIAdvice = async function() {
+      if (!currentTargetClientId || !globalClientData) {
+        alert("クライアントデータを先にロードしてください。");
+        return;
+      }
+
+      const generateBtn = document.getElementById('btn-generate-ai-advice');
+      const originalText = generateBtn.innerHTML;
+      generateBtn.disabled = true;
+      generateBtn.innerHTML = `
+        <span class="flex items-center gap-1 justify-center">
+          <svg class="animate-spin -ml-1 mr-2 h-3.5 w-3.5 text-emerald-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          女性専門エビデンス分析中...
+        </span>
+      `;
+
+      try {
+        const data = globalClientData;
+        const nickname = data.nickname || "クライアント";
+        const targetCal = data.targetCalories || 1800;
+        const targetP = data.targetP || 110;
+        const targetF = data.targetF || 40;
+        const targetC = data.targetC || 250;
+        const weight = data.weight || "--";
+        const fatRate = data.fatRate || "--";
+
+        // 選択された食事データを合算
+        const dailyTotals = calculateTotalsForDate(data, selectedDateString);
+        const mealsText = dailyTotals.meals.map(m => `・[${m.category}] ${m.name} (${m.kcal}kcal, P:${m.p}g, F:${m.f}g, C:${m.c}g)`).join('\n');
+
+        const systemPrompt = "あなたはパーソナルジムCARATの女性専門チーフトレーナー、兼ヘルスケアスポーツ栄養士です。自律神経、代謝リズム、ホルモン、美肌に配慮し科学的エビデンスに基づいて優しく論理的なアドバイスを作成します。";
+        const userPrompt = `
+クライアント名: ${nickname} 様
+測定値: 体重 ${weight}kg / 体脂肪率 ${fatRate}%
+目標: カロリー ${targetCal}kcal, P:${targetP}g, F:${targetF}g, C:${targetC}g
+
+選択された日付: ${selectedDateString}
+当日の食事実績:
+- 総カロリー: ${dailyTotals.cal} kcal (目標差: ${dailyTotals.cal - targetCal} kcal)
+- タンパク質 (P): ${dailyTotals.p.toFixed(1)}g (目標差: ${(dailyTotals.p - targetP).toFixed(1)}g)
+- 脂質 (F): ${dailyTotals.f.toFixed(1)}g (目標差: ${(dailyTotals.f - targetF).toFixed(1)}g)
+- 炭水化物 (C): ${dailyTotals.c.toFixed(1)}g (目標差: ${(dailyTotals.c - targetC).toFixed(1)}g)
+
+当日の食事内容:
+${mealsText || "（この日の食事登録はありません）"}
+
+【回答要件】
+1. 女性のからだの特性（月経周期による水分貯留、冷えやむくみ、エストロゲン・プロゲステロンのリズム、腸内環境、基礎代謝量、美肌成分など）を論理的に解説する項目を必ず1つ以上含めてください。
+2. スポーツ栄養学（タンパク質合成、糖質補給タイミング、良質な脂質の効果、血糖値スパイクの抑制など）に基づく科学的な指導コメントを、優しく寄り添うトーン（CARATの専属トレーナーらしさ）で構成してください。
+3. 文字数は250文字〜350文字程度。段落や改行を美しく設けてください。
+4. 返答には前置き（「かしこまりました」など）やMarkdownタグ、JSONフォーマットは絶対に含めず、コメント本文のみを直接出力してください。
+`;
+
+        const payload = {
+          contents: [{ parts: [{ text: userPrompt }] }],
+          systemInstruction: { parts: [{ text: systemPrompt }] }
+        };
+
+        const res = await fetchGeminiWithFallback(payload);
+        const text = res.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (text) {
+          document.getElementById('trainer-feedback-input').value = text.trim();
+          showToast("女性専門AIアドバイスを自動生成しました！");
+        } else {
+          throw new Error("AIから有効なアドバイスを取得できませんでした。");
+        }
+      } catch (err) {
+        console.error(err);
+        alert(err.message || "AIアドバイスの自動生成に失敗しました。");
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = originalText;
+        lucide.createIcons();
+      }
+    };
+
+    // 起動処理
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeTrainerSystem();
+      updateDateUI();
+
+      const savedTrainerKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`);
+      if (savedTrainerKey) {
+        document.getElementById('trainer-gemini-key').value = savedTrainerKey;
+      }
+      window.renderBookmarks();
+    });
+  </script>
 </body>
 </html>
 
-```
