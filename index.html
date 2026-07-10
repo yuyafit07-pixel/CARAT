@@ -149,7 +149,7 @@
       </div>
     </div>
 
-    <!-- 今日の目標 & 摂取状況 -->
+    <!-- カロリー＆PFC目標（手動変更機能＆文字サイズ大幅アップ！） -->
     <div class="bg-brand-card rounded-[32px] p-6 border border-brand-border/60 shadow-premium text-left space-y-4 relative overflow-hidden">
       <div class="absolute bottom-0 right-0 w-32 h-32 bg-brand-accent/20 rounded-full blur-3xl -mb-10 -mr-10"></div>
       
@@ -317,30 +317,54 @@
       </div>
     </div>
 
-    <!-- 献立提案AI -->
+    <!-- ★ 変更：逆算献立AI提案（1食・時間帯自動判別＆選択タブ統合！） ★ -->
     <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-4">
       <div class="border-b border-brand-border/50 pb-2 flex justify-between items-center">
         <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
           <i data-lucide="wand-2" class="w-4.5 h-4.5 text-brand-primary"></i>
-          残りの目標枠から逆算：献立提案AI
+          残り目標から逆算：献立提案AI
         </h3>
-        <span class="text-[8px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg font-bold">PFC自動逆算</span>
+        <span class="text-[8px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg font-bold animate-pulse">時間栄養学連動</span>
       </div>
+      
       <p class="text-[9px] text-brand-muted leading-relaxed">
-        今日の残りの目標枠をぴったり埋めるためのメニューをAIがグラム数を含めて詳しく計算。カテゴリを選んで提案ボタンを押してください。
+        今日の残りの目標栄養にピタッと合わせ、g数まで計算して献立を提案します。
+        カテゴリーと、食べたい時間帯（朝・昼・夜・おやつ）を選択してください。
       </p>
       
-      <!-- カテゴリ選択タブ -->
-      <div class="grid grid-cols-3 gap-2 bg-brand-bg p-1 rounded-xl">
-        <button id="menu-cat-home" onclick="window.selectMenuCategory('home')" class="py-2 text-[10px] font-bold rounded-lg transition-all bg-white text-brand-primary shadow-sm border border-brand-border/50">
-          自炊レシピ
-        </button>
-        <button id="menu-cat-convenience" onclick="window.selectMenuCategory('convenience')" class="py-2 text-[10px] font-bold rounded-lg transition-all text-brand-muted">
-          コンビニ
-        </button>
-        <button id="menu-cat-restaurant" onclick="window.selectMenuCategory('restaurant')" class="py-2 text-[10px] font-bold rounded-lg transition-all text-brand-muted">
-          外食・レストラン
-        </button>
+      <!-- 調達カテゴリー選択タブ -->
+      <div class="space-y-1">
+        <span class="text-[8px] text-brand-muted font-bold block uppercase tracking-wider">① 調達シチュエーション</span>
+        <div class="grid grid-cols-3 gap-2 bg-brand-bg p-1 rounded-xl">
+          <button id="menu-cat-home" onclick="window.selectMenuCategory('home')" class="py-2 text-[10px] font-bold rounded-lg transition-all bg-white text-brand-primary shadow-sm border border-brand-border/50">
+            自炊レシピ
+          </button>
+          <button id="menu-cat-convenience" onclick="window.selectMenuCategory('convenience')" class="py-2 text-[10px] font-bold rounded-lg transition-all text-brand-muted">
+            コンビニ
+          </button>
+          <button id="menu-cat-restaurant" onclick="window.selectMenuCategory('restaurant')" class="py-2 text-[10px] font-bold rounded-lg transition-all text-brand-muted">
+            外食・レストラン
+          </button>
+        </div>
+      </div>
+
+      <!-- 朝・昼・晩・間食選択タブ (アプリ起動時に現在時刻で自動フォーカスされます) -->
+      <div class="space-y-1">
+        <span class="text-[8px] text-brand-muted font-bold block uppercase tracking-wider">② 食事区分（時間帯）</span>
+        <div class="grid grid-cols-4 gap-1.5 bg-brand-bg p-1 rounded-xl">
+          <button id="meal-timing-breakfast" onclick="window.selectMealTiming('breakfast')" class="py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
+            🍳 朝食
+          </button>
+          <button id="meal-timing-lunch" onclick="window.selectMealTiming('lunch')" class="py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
+            🍱 昼食
+          </button>
+          <button id="meal-timing-dinner" onclick="window.selectMealTiming('dinner')" class="py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
+            🌙 夕食
+          </button>
+          <button id="meal-timing-snack" onclick="window.selectMealTiming('snack')" class="py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
+            🍪 間食
+          </button>
+        </div>
       </div>
 
       <button onclick="window.generateAIPendingMenu()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-1.5">
@@ -352,7 +376,7 @@
       <div id="ai-menu-suggestion-box" class="hidden bg-brand-accent/30 border border-brand-primary/10 rounded-2xl p-4 space-y-3 relative overflow-hidden transition-all duration-300">
         <div class="flex justify-between items-start">
           <div>
-            <span class="text-[8px] text-brand-primary font-bold block uppercase tracking-wider">AI Recommended Menu</span>
+            <span id="suggested-menu-time-badge" class="inline-block text-[8px] bg-brand-primary text-white px-2 py-0.5 rounded font-black mb-1">夕食</span>
             <h4 id="suggested-menu-name" class="text-sm font-black text-brand-text">--</h4>
           </div>
           <span id="suggested-menu-kcal" class="text-xs font-black text-brand-primary bg-white px-2 py-0.5 rounded-lg border border-brand-border font-mono">0 kcal</span>
@@ -585,7 +609,7 @@
         <input type="text" id="edit-meal-name" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs text-brand-text font-black" value="">
       </div>
 
-      <!-- ★ 割合選択 (10%, 50%, 100%, カスタム) ★ -->
+      <!-- 割合選択 (10%, 50%, 100%, カスタム) -->
       <div class="bg-gradient-to-tr from-brand-accent/50 to-brand-bg p-4 rounded-3xl border border-brand-primary/10 space-y-3">
         <span class="text-[10px] text-brand-text font-black flex items-center gap-1">
           <i data-lucide="pizza" class="w-4 h-4 text-brand-primary"></i>
@@ -723,14 +747,15 @@
     let editingMealObject = null;
     let baseIngredients = []; 
 
+    // ★ 献立提案AI用の状態 (デフォルト食事区分を現在時刻から自動計算してバインド) ★
     let selectedMenuCategory = 'home'; 
+    let selectedMealTiming = getDefaultMealCategory(); // breakfast, lunch, dinner, snack
     let suggestedMenuCache = null; 
 
-    // ★ 新設: 徹底的な「数値型キャスト」防御フィルター関数 (クラッシュ対策の命) ★
     function safeFloat(val) {
       if (val === null || val === undefined) return 0;
       if (typeof val === 'string') {
-        val = val.replace(/[^\d.]/g, ''); // "23.0g" や "110kcal" から数字だけを安全に抽出
+        val = val.replace(/[^\d.]/g, ''); 
       }
       const num = parseFloat(val);
       return isNaN(num) ? 0 : num;
@@ -752,6 +777,15 @@
     function getTodayDateString() {
       const d = new Date();
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    // ★ 現在の時刻から食事区分(朝食/昼食/夕食/間食)を自動判定する世界一スマートな計算式 ★
+    function getDefaultMealCategory() {
+      const hours = new Date().getHours();
+      if (hours >= 5 && hours < 11) return 'breakfast';
+      if (hours >= 11 && hours < 17) return 'lunch';
+      if (hours >= 17 && hours < 24) return 'dinner';
+      return 'snack'; // 夜中AM0:00〜4:59は「間食(夜食)」とする
     }
 
     function getDayOfWeekJp(dateStr) {
@@ -782,6 +816,9 @@
     window.bypassLoginForDemo = function() {
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('main-dashboard').classList.remove('hidden');
+      
+      // AI提案時間区分のUI表示の初期フォーカスをセット
+      window.selectMealTiming(selectedMealTiming);
       renderClientApp();
       showToast("ゲストとしてログインしました。");
     };
@@ -804,6 +841,8 @@
           conLabel.className = "text-[9px] px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold animate-pulse";
           conLabel.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 同期中`;
 
+          // 現在時間帯のUIフォーカスを再描画
+          window.selectMealTiming(selectedMealTiming);
           renderClientApp();
         } else {
           alert("クライアントIDが見つかりませんでした。");
@@ -999,7 +1038,6 @@
       const meals = clientState.mealsByDate?.[selectedDateString] || [];
 
       meals.forEach(m => {
-        // ★ safeFloat を通して、万が一の文字列混入を100%数値型へキャスト ★
         curKcal += safeFloat(m.kcal);
         curP += safeFloat(m.p);
         curF += safeFloat(m.f);
@@ -1084,7 +1122,6 @@
       document.getElementById('input-weight').placeholder = clientState.weight ? clientState.weight.toFixed(1) : "55.0";
       document.getElementById('input-fat').placeholder = clientState.fatRate ? clientState.fatRate.toFixed(1) : "15.0";
 
-      // 食事一覧タイムライン
       const timelineContainer = document.getElementById('meal-timeline-container');
       timelineContainer.innerHTML = "";
       if (meals.length === 0) {
@@ -1100,7 +1137,6 @@
           item.className = "bg-brand-card hover:bg-brand-accent/40 p-4 rounded-2xl border border-brand-border flex justify-between items-center text-xs transition-all duration-200 cursor-pointer shadow-sm relative overflow-hidden group";
           item.onclick = () => window.openEditMealModal(m.id);
           
-          // ★ safeFloat を通して、m.p, m.f, m.c が絶対にNumber型であることを保証。toFixedでのクラッシュバグを永久排除 ★
           const pVal = safeFloat(m.p);
           const fVal = safeFloat(m.f);
           const cVal = safeFloat(m.c);
@@ -1256,7 +1292,6 @@
     };
 
     async function saveMealToCloud(newMeal) {
-      // 保存時にすべてのプロパティを100%安全な数値型へコンバートする
       newMeal.kcal = safeFloat(newMeal.kcal);
       newMeal.p = safeFloat(newMeal.p);
       newMeal.f = safeFloat(newMeal.f);
@@ -1349,8 +1384,8 @@
       }
 
       const trialPatterns = [
-        { version: "v1beta", model: "gemini-2.5-flash-preview-09-2025" },
-        { version: "v1beta", model: "gemini-2.5-flash" }
+        { version: "v1beta", model: "gemini-2.5-flash" },
+        { version: "v1", model: "gemini-1.5-flash" }
       ];
       let lastError = null;
 
@@ -1421,7 +1456,6 @@
         const res = await fetchGeminiForClient(payload);
         let jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text;
 
-        // ★ 新開発: Geminiがまれに出力してしまうマークダウン装飾を100%安全にトリミングして除去する防壁 ★
         jsonText = jsonText.trim();
         if (jsonText.startsWith("```")) {
           jsonText = jsonText.replace(/^```json?/i, "").replace(/```$/, "").trim();
@@ -1433,7 +1467,6 @@
           const now = new Date();
           const targetMealId = 'M-' + Date.now();
           
-          // 全変数に対して safeFloat 変換を実行、型安全を100%保証
           const newMeal = {
             id: targetMealId,
             name: parsed.name,
@@ -1516,7 +1549,6 @@
           const res = await fetchGeminiForClient(payload);
           let jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text;
 
-          // マークダウン装飾トリミング除去
           jsonText = jsonText.trim();
           if (jsonText.startsWith("```")) {
             jsonText = jsonText.replace(/^```json?/i, "").replace(/```$/, "").trim();
@@ -1528,7 +1560,6 @@
             const now = new Date();
             const targetMealId = 'M-' + Date.now();
             
-            // PFCおよびカロリー型安全保障
             const newMeal = {
               id: targetMealId,
               name: parsed.name,
@@ -1566,7 +1597,7 @@
 
 
     // =======================================================
-    // ★ グラム・割合タブ切り替えの精密連動ロジック (バグ完全排除) ★
+    // ★ グラム・割合タブ切り替えの精密連動ロジック ★
     // =======================================================
 
     window.openEditMealModal = function(mealId) {
@@ -1577,8 +1608,6 @@
       editingMealId = mealId;
       editingMealObject = JSON.parse(JSON.stringify(meal)); 
       
-      // 開いた瞬間に、食材ごとの「100%基準時の絶対値オリジナルデータ」を完全にプロパティ退避固定！
-      // これにより、%の変更やスライダー移動を繰り返しても「基準値からの算出」になり、縮小バグは100%発生しません
       const lastSavedScale = safeFloat(editingMealObject.lastScale) || 1;
       editingMealObject.ingredients.forEach(ing => {
         ing.originalWeight = safeFloat(ing.weight) / lastSavedScale;
@@ -1590,7 +1619,6 @@
 
       document.getElementById('edit-meal-name').value = editingMealObject.name;
       
-      // デフォルト等倍(100%)をアクティブにして表示
       window.setQuickScale(Math.round(lastSavedScale * 100));
       window.toggleModal('edit-meal-modal', true);
     };
@@ -1602,7 +1630,6 @@
       baseIngredients = [];
     };
 
-    // 割合選択用のトグル処理 (10%, 50%, 100%, カスタム)
     window.setQuickScale = function(scaleType) {
       const btns = ['10', '50', '100', 'custom'];
       btns.forEach(b => {
@@ -1625,7 +1652,6 @@
       }
     };
 
-    // 微調整モーダル内での食材行展開
     function renderIngredientsInEditor() {
       const container = document.getElementById('ingredients-editor-container');
       container.innerHTML = "";
@@ -1694,7 +1720,6 @@
       renderIngredientsInEditor();
     };
 
-    // 個別のグラム重量を手動変更した際、基準値を再定義して不整合を防ぐ
     window.changeIngredientWeight = function(index, newWeight) {
       const w = safeFloat(newWeight);
       if (w < 0) return;
@@ -1724,7 +1749,6 @@
       renderIngredientsInEditor();
     };
 
-    // ★ originalWeightをベースに一方向で乗算算出するため、50%にしてもカロリー減衰バグが消滅し、きっちり半分になる！ ★
     window.changeMealScale = function(scalePercent) {
       const scale = parseFloat(scalePercent) / 100;
       document.getElementById('scale-percentage-text').innerText = `${scalePercent} %`;
@@ -1791,7 +1815,7 @@
 
 
     // =======================================================
-    // ★ 献立逆算AI提案エンジンの完全実装 ★
+    // ★ 献立逆算AI提案＆食事区分(朝昼夕間食)タブコントロール ★
     // =======================================================
 
     window.selectMenuCategory = function(cat) {
@@ -1807,6 +1831,21 @@
       });
     };
 
+    // ★ 変更点：朝・昼・夕・間食を1タップで切り替え、視覚デザインも即時反映するリスナー ★
+    window.selectMealTiming = function(timing) {
+      selectedMealTiming = timing;
+      const timings = ['breakfast', 'lunch', 'dinner', 'snack'];
+      timings.forEach(t => {
+        const el = document.getElementById(`meal-timing-${t}`);
+        if (t === timing) {
+          el.className = "py-2 text-[9px] font-black rounded-lg transition-all bg-brand-primary text-white shadow-sm border border-brand-primary";
+        } else {
+          el.className = "py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted hover:text-brand-primary hover:bg-white/50";
+        }
+      });
+    };
+
+    // 残り栄養枠 & 選択された時間帯特性からAI献立を逆算
     window.generateAIPendingMenu = async function() {
       const loading = document.getElementById('loading-overlay');
       document.getElementById('loading-main-text').innerText = "本日の残りPFCを逆算中...";
@@ -1836,6 +1875,7 @@
         const tarF = Math.round(baseTarF * scaleRatio);
         const tarC = Math.round(baseTarC * scaleRatio);
 
+        // 本日のトータル残りPFC
         const remCal = Math.max(50, tarCal - curKcal);
         const remP = Math.max(5, tarP - curP);
         const remF = Math.max(2, tarF - curF);
@@ -1845,18 +1885,36 @@
         if (selectedMenuCategory === 'convenience') catJp = "コンビニ商品（セブン、ローソン、ファミマ等で調達できるもの）";
         if (selectedMenuCategory === 'restaurant') catJp = "外食・チェーン店（一般的な居酒屋、定食屋、牛丼、ファミレス等のメニュー）";
 
-        const systemPrompt = "あなたはCARATの食事分析チーフ栄養士AIです。残りの必要摂取PFC枠に高い精度で合致する、健康的で美味しいおすすめの1メニューを食材グラム数(g)単位で逆引き計算してJSONを返してください。";
+        // 朝、昼、晩、間食のテキスト・時間栄養特性の定義
+        let timingJp = "夕食";
+        let timingRules = "夕食：高タンパク、低脂質を意識し、翌日の胃もたれや自律神経を考慮。炭水化物は控えめ、または中程度に調整してください。";
+        if (selectedMealTiming === 'breakfast') {
+          timingJp = "朝食";
+          timingRules = "朝食：一日の代謝スイッチ（時計遺伝子）をオンにするため、炭水化物を一定量含み、かつ消化吸収の早いたんぱく質（アミノ酸合成のトリガー）を最優先。ボリュームは残枠の上限に関わらず、1日の基本エネルギーの20〜30%程度に自律スケールダウン（150kcal〜400kcal程度に抑制）して構成してください。";
+        } else if (selectedMealTiming === 'lunch') {
+          timingJp = "昼食";
+          timingRules = "昼食：日中の仕事効率、血糖値スパイクの抑制を考慮し、食物繊維を適度に含んで眠くなりにくい栄養バランス。ボリューミーでも消化の良い食材を指定してください。";
+        } else if (selectedMealTiming === 'snack') {
+          timingJp = "間食（おやつ/リカバリー）";
+          timingRules = "間食：低脂肪かつ高タンパクなヘルシー補給スナック。残枠の上限に関わらず、絶対にボリュームを100kcal〜200kcal以内にスケールダウンして、小さな1品（例：ギリシャヨーグルトとナッツ、プロテインバー等）として算出してください。残り枠がどれだけ余っていても大盛り夕食のようなものは絶対に間食に提案しないでください。";
+        }
+
+        const systemPrompt = "あなたはCARATの食事分析チーフ栄養士AIです。残りの必要摂取PFC枠に高い精度で合致する、健康的で美味しいおすすめの食事を食材グラム数(g)単位で逆引き計算してJSONを返してください。";
         const userPrompt = `
-現在の目標残枠（PFCおよびカロリー）:
+現在の目標残枠（PFCおよびカロリーの上限）:
 - 目標残りカロリー: ${remCal} kcal
 - 目標残りたんぱく質 (P): ${remP.toFixed(1)} g
 - 目標残り脂質 (F): ${remF.toFixed(1)} g
 - 目標残り炭水化物 (C): ${remC.toFixed(1)} g
 
 食事カテゴリ: 【 ${catJp} 】
+指定された食事時間帯: 【 ${timingJp} 】
+
+【時間帯別の逆算ルール】
+${timingRules}
 
 【作成・逆算ルール】
-1. 提案するメニューの合計値(kcal, P, F, C)は、上記の「目標残枠」を極端にオーバーせず、合致するよう食材重量をg単位で微調整してください。
+1. 提案するメニューの合計値(kcal, P, F, C)は、上記の「食事時間帯のボリュームルール」および「目標残枠」を極端にオーバーせず、合致するよう食材重量をg単位で微調整してください。
 2. 脂質(F)の残り枠が少ない場合は、超低脂質なヘルシーメニュー（例: 鶏ささみとアスパラ、和風のスープ仕立て等）を提案してください。
 3. 女性のホルモンバランス、冷え性改善に配慮したアドバイス（CARAT専用の優しく寄り壮うトーン）を100文字以内で作成してください。
 
@@ -1891,7 +1949,6 @@
         const res = await fetchGeminiForClient(payload);
         let jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text;
 
-        // マークダウン除去
         jsonText = jsonText.trim();
         if (jsonText.startsWith("```")) {
           jsonText = jsonText.replace(/^```json?/i, "").replace(/```$/, "").trim();
@@ -1908,11 +1965,15 @@
           document.getElementById('suggested-menu-f').innerText = safeFloat(parsed.f).toFixed(1);
           document.getElementById('suggested-menu-c').innerText = safeFloat(parsed.c).toFixed(1);
 
+          // 提案時間帯バッジの表示書き換え
+          const timingLabelMap = { 'breakfast': '朝食', 'lunch': '昼食', 'dinner': '夕食', 'snack': '間食' };
+          document.getElementById('suggested-menu-time-badge').innerText = timingLabelMap[selectedMealTiming] || '夕食';
+
           document.getElementById('suggested-menu-ingredients').innerText = parsed.ingredientsText || "食材グラム数は自動計算されました。";
           document.getElementById('suggested-menu-advice').innerText = parsed.advice || "夜ご飯の栄養をしっかり整えましょう！";
 
           document.getElementById('ai-menu-suggestion-box').classList.remove('hidden');
-          showToast("残りのPFCにぴったりな献立をAIが提案しました！");
+          showToast(`今日の「${timingLabelMap[selectedMealTiming] || '夕食'}」にぴったりな献立をAI提案しました！`);
         } else {
           throw new Error("フォーマットエラー");
         }
@@ -1953,7 +2014,7 @@
         await saveMealToCloud(newMeal);
         document.getElementById('ai-menu-suggestion-box').classList.add('hidden');
         suggestedMenuCache = null;
-        showToast("提案された食事をそのまま本日の食事実績に登録しました！");
+        showToast("提案された食事を本日の食事実績に登録完了しました！");
       } catch (e) {
         console.error(e);
         alert("登録に失敗しました。");
