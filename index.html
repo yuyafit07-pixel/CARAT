@@ -149,7 +149,7 @@
       </div>
     </div>
 
-    <!-- ★ 新開発：カロリー借金・オートリカバリー機能搭載ダッシュボード ★ -->
+    <!-- 今日の目標 & 摂取状況 -->
     <div class="bg-brand-card rounded-[32px] p-6 border border-brand-border/60 shadow-premium text-left space-y-4 relative overflow-hidden">
       <div class="absolute bottom-0 right-0 w-32 h-32 bg-brand-accent/20 rounded-full blur-3xl -mb-10 -mr-10"></div>
       
@@ -263,7 +263,7 @@
       </div>
     </div>
 
-    <!-- ★ 変更点：分かりやすさを極めた「前日からのカロリー貯金・オートリカバリー」インジケーター ★ -->
+    <!-- カロリーオートリカバリー貯金箱 -->
     <div id="recovery-indicator-card" class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-3 relative overflow-hidden">
       <div class="absolute top-0 left-0 w-2 h-full bg-emerald-500" id="recovery-bar-color"></div>
       <div class="pl-2">
@@ -286,7 +286,38 @@
       </div>
     </div>
 
-    <!-- 献立提案AI機能 -->
+    <!-- 1週間の帳じり合わせ状況 -->
+    <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-3 relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-2 h-full bg-brand-primary" id="balance-bar-color"></div>
+      <div class="pl-2">
+        <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
+          <i data-lucide="scale" class="w-4 h-4 text-brand-primary"></i>
+          直近1週間の帳じり合わせ状況
+        </h4>
+        <p class="text-[9px] text-brand-muted mt-0.5">選択日を含む過去7日間の目標総計に対する過不足（おトク枠）を判定します。</p>
+        
+        <div class="grid grid-cols-4 gap-2 pt-3 text-center">
+          <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
+            <span class="text-[8px] text-brand-text font-bold block mb-0.5">カロリー</span>
+            <span id="balance-kcal" class="font-sans font-black text-xs block">0</span>
+          </div>
+          <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
+            <span class="text-[8px] text-sky-600 font-bold block mb-0.5">P (g)</span>
+            <span id="balance-p" class="font-sans font-black text-xs block">0</span>
+          </div>
+          <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
+            <span class="text-[8px] text-emerald-600 font-bold block mb-0.5">F (g)</span>
+            <span id="balance-f" class="font-sans font-black text-xs block">0</span>
+          </div>
+          <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
+            <span class="text-[8px] text-amber-600 font-bold block mb-0.5">C (g)</span>
+            <span id="balance-c" class="font-sans font-black text-xs block">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 献立提案AI -->
     <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-4">
       <div class="border-b border-brand-border/50 pb-2 flex justify-between items-center">
         <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
@@ -317,7 +348,7 @@
         この設定で最適な献立をAI提案
       </button>
 
-      <!-- AI提案出力カード (1タップ登録ボタンつき) -->
+      <!-- AI提案出力カード -->
       <div id="ai-menu-suggestion-box" class="hidden bg-brand-accent/30 border border-brand-primary/10 rounded-2xl p-4 space-y-3 relative overflow-hidden transition-all duration-300">
         <div class="flex justify-between items-start">
           <div>
@@ -554,7 +585,7 @@
         <input type="text" id="edit-meal-name" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs text-brand-text font-black" value="">
       </div>
 
-      <!-- ★ 変更点：割合設定(10%, 50%, 100%, カスタム)の精密トグル式 ★ -->
+      <!-- ★ 割合選択 (10%, 50%, 100%, カスタム) ★ -->
       <div class="bg-gradient-to-tr from-brand-accent/50 to-brand-bg p-4 rounded-3xl border border-brand-primary/10 space-y-3">
         <span class="text-[10px] text-brand-text font-black flex items-center gap-1">
           <i data-lucide="pizza" class="w-4 h-4 text-brand-primary"></i>
@@ -656,7 +687,6 @@
       measurementId: "G-27VPZ9TQDW"
     };
 
-    // Firebaseの初期化
     const app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     db = getFirestore(app);
@@ -664,7 +694,6 @@
     window.db = db;
     window.auth = auth;
 
-    // クライアントの状態変数
     let clientState = {
       nickname: "ゲスト",
       targetCalories: 1800,
@@ -690,16 +719,23 @@
 
     let selectedDateString = getTodayDateString();
 
-    // 編集調整モーダル用のテンポラリ変数
     let editingMealId = null;
     let editingMealObject = null;
     let baseIngredients = []; 
 
-    // 献立提案AI用の状態
     let selectedMenuCategory = 'home'; 
     let suggestedMenuCache = null; 
 
-    // トースト通知
+    // ★ 新設: 徹底的な「数値型キャスト」防御フィルター関数 (クラッシュ対策の命) ★
+    function safeFloat(val) {
+      if (val === null || val === undefined) return 0;
+      if (typeof val === 'string') {
+        val = val.replace(/[^\d.]/g, ''); // "23.0g" や "110kcal" から数字だけを安全に抽出
+      }
+      const num = parseFloat(val);
+      return isNaN(num) ? 0 : num;
+    }
+
     function showToast(message) {
       const toast = document.createElement('div');
       toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-text text-white px-5 py-3 rounded-full text-xs font-bold shadow-premium z-[300] transition-opacity duration-300 flex items-center gap-2";
@@ -713,20 +749,17 @@
     }
     window.showToast = showToast;
 
-    // 日付取得
     function getTodayDateString() {
       const d = new Date();
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
 
-    // 曜日を取得する
     function getDayOfWeekJp(dateStr) {
       const d = new Date(dateStr);
       const list = ["日", "月", "火", "水", "木", "金", "土"];
       return list[d.getDay()];
     }
 
-    // 起動シーケンス
     async function initClientApp() {
       signInAnonymously(auth);
 
@@ -898,7 +931,6 @@
       renderClientApp();
     };
 
-    // ★ 新設：前日の超過カロリーと当日の自動スライド引去りを計算するファンクション ★
     function calculateAutoRecoveryKcal() {
       const current = new Date(selectedDateString);
       const yesterday = new Date(current);
@@ -908,13 +940,11 @@
       const yesterdayMeals = clientState.mealsByDate?.[yesterdayStr] || [];
       let yesterdayTotalKcal = 0;
       yesterdayMeals.forEach(m => {
-        yesterdayTotalKcal += (m.kcal || 0);
+        yesterdayTotalKcal += safeFloat(m.kcal);
       });
 
-      const yesterdayTarget = clientState.targetCalories || 1800;
+      const yesterdayTarget = safeFloat(clientState.targetCalories) || 1800;
       const overKcal = Math.max(0, yesterdayTotalKcal - yesterdayTarget);
-
-      // 最大マイナス200kcalまでをオートリカバリー調整幅とする
       const adjustedKcal = Math.min(200, overKcal);
 
       return {
@@ -923,7 +953,6 @@
       };
     }
 
-    // ★ 1週間分(直近7日間)の過不足総計を取得 ★
     function getWeeklyDiffSummary() {
       const baseDate = new Date(selectedDateString);
       let totalKcal = 0, totalP = 0, totalF = 0, totalC = 0;
@@ -935,17 +964,17 @@
         
         const meals = clientState.mealsByDate?.[dStr] || [];
         meals.forEach(m => {
-          totalKcal += (m.kcal || 0);
-          totalP += (m.p || 0);
-          totalF += (m.f || 0);
-          totalC += (m.c || 0);
+          totalKcal += safeFloat(m.kcal);
+          totalP += safeFloat(m.p);
+          totalF += safeFloat(m.f);
+          totalC += safeFloat(m.c);
         });
       }
 
-      const targetCalories7Days = (clientState.targetCalories || 1800) * 7;
-      const targetP7Days = (clientState.targetP || 120) * 7;
-      const targetF7Days = (clientState.targetF || 45) * 7;
-      const targetC7Days = (clientState.targetC || 230) * 7;
+      const targetCalories7Days = (safeFloat(clientState.targetCalories) || 1800) * 7;
+      const targetP7Days = (safeFloat(clientState.targetP) || 120) * 7;
+      const targetF7Days = (safeFloat(clientState.targetF) || 45) * 7;
+      const targetC7Days = (safeFloat(clientState.targetC) || 230) * 7;
 
       return {
         kcalDiff: totalKcal - targetCalories7Days,
@@ -966,35 +995,30 @@
         document.getElementById('btn-today-badge').classList.remove('hidden');
       }
 
-      // 1日の合算値を計算
       let curKcal = 0, curP = 0, curF = 0, curC = 0;
       const meals = clientState.mealsByDate?.[selectedDateString] || [];
 
       meals.forEach(m => {
-        curKcal += (m.kcal || 0);
-        curP += (m.p || 0);
-        curF += (m.f || 0);
-        curC += (m.c || 0);
+        // ★ safeFloat を通して、万が一の文字列混入を100%数値型へキャスト ★
+        curKcal += safeFloat(m.kcal);
+        curP += safeFloat(m.p);
+        curF += safeFloat(m.f);
+        curC += safeFloat(m.c);
       });
 
-      // ★ オートリカバリー計算と目標設定の動的マイナス反映 ★
       const recovery = calculateAutoRecoveryKcal();
       
-      const baseTarCal = clientState.targetCalories || 1800;
-      const baseTarP = clientState.targetP || 120;
-      const baseTarF = clientState.targetF || 45;
-      const baseTarC = clientState.targetC || 230;
+      const baseTarCal = safeFloat(clientState.targetCalories) || 1800;
+      const baseTarP = safeFloat(clientState.targetP) || 120;
+      const baseTarF = safeFloat(clientState.targetF) || 45;
+      const baseTarC = safeFloat(clientState.targetC) || 230;
 
-      // リカバリー後の実質目標値をセット
       const tarCal = Math.max(1000, baseTarCal - recovery.adjustedKcal);
-      
-      // PFCバランス比率を保ったまま目標PFCも微調節スライド
       const scaleRatio = tarCal / baseTarCal;
       const tarP = Math.round(baseTarP * scaleRatio);
       const tarF = Math.round(baseTarF * scaleRatio);
       const tarC = Math.round(baseTarC * scaleRatio);
 
-      // オートリカバリーカードとバッジの表示制御
       const badge = document.getElementById('auto-recovery-status-badge');
       const card = document.getElementById('recovery-indicator-card');
       if (recovery.adjustedKcal > 0) {
@@ -1010,7 +1034,6 @@
         card.classList.add('hidden');
       }
 
-      // カロリープログレス円形バーの計算
       const pct = Math.min(100, (curKcal / tarCal) * 100);
       const strokeOffset = 289 - (289 * pct) / 100;
       document.getElementById('calorie-progress-bar').style.strokeDashoffset = strokeOffset;
@@ -1030,7 +1053,6 @@
       document.getElementById('summary-tar-c').innerText = tarC;
       document.getElementById('bar-c').style.width = `${Math.min(100, (curC / tarC) * 100)}%`;
 
-      // 1週間分(直近7日間)の過不足総計を表示
       const weeklyDiff = getWeeklyDiffSummary();
 
       const formatDiffNum = (num, unit) => {
@@ -1059,7 +1081,6 @@
         balanceBar.className = "absolute top-0 left-0 w-2 h-full bg-emerald-500";
       }
 
-      // 体重・体脂肪入力
       document.getElementById('input-weight').placeholder = clientState.weight ? clientState.weight.toFixed(1) : "55.0";
       document.getElementById('input-fat').placeholder = clientState.fatRate ? clientState.fatRate.toFixed(1) : "15.0";
 
@@ -1076,8 +1097,15 @@
       } else {
         meals.forEach((m) => {
           const item = document.createElement('div');
-          item.className = "bg-brand-bg hover:bg-brand-accent/40 p-4 rounded-2xl border border-brand-border flex justify-between items-center text-xs transition-all duration-200 cursor-pointer shadow-sm relative overflow-hidden group";
+          item.className = "bg-brand-card hover:bg-brand-accent/40 p-4 rounded-2xl border border-brand-border flex justify-between items-center text-xs transition-all duration-200 cursor-pointer shadow-sm relative overflow-hidden group";
           item.onclick = () => window.openEditMealModal(m.id);
+          
+          // ★ safeFloat を通して、m.p, m.f, m.c が絶対にNumber型であることを保証。toFixedでのクラッシュバグを永久排除 ★
+          const pVal = safeFloat(m.p);
+          const fVal = safeFloat(m.f);
+          const cVal = safeFloat(m.c);
+          const kcalVal = Math.round(safeFloat(m.kcal));
+
           item.innerHTML = `
             <div>
               <div class="flex items-center gap-2">
@@ -1085,16 +1113,17 @@
                 <span class="font-bold text-brand-text text-sm group-hover:text-brand-primary transition-colors">${m.name}</span>
               </div>
               <div class="text-[9px] text-brand-muted mt-1.5 font-bold flex gap-3">
-                <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> P: ${m.p.toFixed(1)}g</span>
-                <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> F: ${m.f.toFixed(1)}g</span>
-                <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> C: ${m.c.toFixed(1)}g</span>
+                <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> P: ${pVal.toFixed(1)}g</span>
+                <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> F: ${fVal.toFixed(1)}g</span>
+                <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> C: ${cVal.toFixed(1)}g</span>
               </div>
             </div>
             <div class="text-right flex items-center gap-4 relative z-10">
               <div>
-                <span class="font-black text-base text-brand-text font-mono">${Math.round(m.kcal)}</span>
+                <span class="font-black text-base text-brand-text font-mono">${kcalVal}</span>
                 <span class="text-[9px] text-brand-muted font-bold">kcal</span>
               </div>
+              
               <button onclick="event.stopPropagation(); event.preventDefault(); window.deleteMeal('${m.id}')" class="text-brand-muted hover:text-rose-500 p-2 hover:bg-rose-50 rounded-xl transition-all">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
@@ -1159,10 +1188,10 @@
         id: 'M-' + Date.now() + Math.floor(Math.random() * 100),
         name: document.getElementById('manual-name').value.trim(),
         time: document.getElementById('manual-time').value,
-        kcal: parseFloat(document.getElementById('manual-kcal').value) || 0,
-        p: parseFloat(document.getElementById('manual-p').value) || 0,
-        f: parseFloat(document.getElementById('manual-f').value) || 0,
-        c: parseFloat(document.getElementById('manual-c').value) || 0,
+        kcal: safeFloat(document.getElementById('manual-kcal').value),
+        p: safeFloat(document.getElementById('manual-p').value),
+        f: safeFloat(document.getElementById('manual-f').value),
+        c: safeFloat(document.getElementById('manual-c').value),
         ingredients: []
       };
 
@@ -1227,6 +1256,22 @@
     };
 
     async function saveMealToCloud(newMeal) {
+      // 保存時にすべてのプロパティを100%安全な数値型へコンバートする
+      newMeal.kcal = safeFloat(newMeal.kcal);
+      newMeal.p = safeFloat(newMeal.p);
+      newMeal.f = safeFloat(newMeal.f);
+      newMeal.c = safeFloat(newMeal.c);
+      
+      if (newMeal.ingredients) {
+        newMeal.ingredients.forEach(ing => {
+          ing.weight = safeFloat(ing.weight);
+          ing.kcal = safeFloat(ing.kcal);
+          ing.p = safeFloat(ing.p);
+          ing.f = safeFloat(ing.f);
+          ing.c = safeFloat(ing.c);
+        });
+      }
+
       const targetDate = selectedDateString;
       const nextMealsByDate = { ...clientState.mealsByDate };
       if (!nextMealsByDate[targetDate]) {
@@ -1276,10 +1321,10 @@
         const dayName = daysOfWeekMap[d.getDay()];
         if (currentLogs[dayName] && meals) {
           meals.forEach(m => {
-            currentLogs[dayName].kcal += (m.kcal || 0);
-            currentLogs[dayName].p += (m.p || 0);
-            currentLogs[dayName].f += (m.f || 0);
-            currentLogs[dayName].c += (m.c || 0);
+            currentLogs[dayName].kcal += safeFloat(m.kcal);
+            currentLogs[dayName].p += safeFloat(m.p);
+            currentLogs[dayName].f += safeFloat(m.f);
+            currentLogs[dayName].c += safeFloat(m.c);
           });
           currentLogs[dayName].kcal = Math.round(currentLogs[dayName].kcal);
         }
@@ -1304,8 +1349,8 @@
       }
 
       const trialPatterns = [
-        { version: "v1beta", model: "gemini-2.5-flash" },
-        { version: "v1", model: "gemini-1.5-flash" }
+        { version: "v1beta", model: "gemini-2.5-flash-preview-09-2025" },
+        { version: "v1beta", model: "gemini-2.5-flash" }
       ];
       let lastError = null;
 
@@ -1374,21 +1419,37 @@
         };
 
         const res = await fetchGeminiForClient(payload);
-        const jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text;
+        let jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        // ★ 新開発: Geminiがまれに出力してしまうマークダウン装飾を100%安全にトリミングして除去する防壁 ★
+        jsonText = jsonText.trim();
+        if (jsonText.startsWith("```")) {
+          jsonText = jsonText.replace(/^```json?/i, "").replace(/```$/, "").trim();
+        }
+
         const parsed = JSON.parse(jsonText);
 
         if (parsed && parsed.name) {
           const now = new Date();
           const targetMealId = 'M-' + Date.now();
+          
+          // 全変数に対して safeFloat 変換を実行、型安全を100%保証
           const newMeal = {
             id: targetMealId,
             name: parsed.name,
             time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
-            kcal: parsed.kcal || 0,
-            p: parsed.p || 0,
-            f: parsed.f || 0,
-            c: parsed.c || 0,
-            ingredients: parsed.ingredients || []
+            kcal: safeFloat(parsed.kcal),
+            p: safeFloat(parsed.p),
+            f: safeFloat(parsed.f),
+            c: safeFloat(parsed.c),
+            ingredients: (parsed.ingredients || []).map(ing => ({
+              name: ing.name || "構成食材",
+              weight: safeFloat(ing.weight),
+              kcal: safeFloat(ing.kcal),
+              p: safeFloat(ing.p),
+              f: safeFloat(ing.f),
+              c: safeFloat(ing.c)
+            }))
           };
 
           await saveMealToCloud(newMeal);
@@ -1403,7 +1464,7 @@
         console.error(err);
         loading.classList.add('hidden');
         loading.classList.remove('flex');
-        alert("テキスト解析に失敗しました。接続環境、または店舗キーを再設定してください。");
+        alert("テキスト解析に失敗しました。店舗キーを再設定、または接続環境を確認してください。");
       }
     };
 
@@ -1453,21 +1514,37 @@
           };
 
           const res = await fetchGeminiForClient(payload);
-          const jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text;
+          let jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text;
+
+          // マークダウン装飾トリミング除去
+          jsonText = jsonText.trim();
+          if (jsonText.startsWith("```")) {
+            jsonText = jsonText.replace(/^```json?/i, "").replace(/```$/, "").trim();
+          }
+
           const parsed = JSON.parse(jsonText);
 
           if (parsed && parsed.name) {
             const now = new Date();
             const targetMealId = 'M-' + Date.now();
+            
+            // PFCおよびカロリー型安全保障
             const newMeal = {
               id: targetMealId,
               name: parsed.name,
               time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
-              kcal: parsed.kcal || 0,
-              p: parsed.p || 0,
-              f: parsed.f || 0,
-              c: parsed.c || 0,
-              ingredients: parsed.ingredients || []
+              kcal: safeFloat(parsed.kcal),
+              p: safeFloat(parsed.p),
+              f: safeFloat(parsed.f),
+              c: safeFloat(parsed.c),
+              ingredients: (parsed.ingredients || []).map(ing => ({
+                name: ing.name || "識別食材",
+                weight: safeFloat(ing.weight),
+                kcal: safeFloat(ing.kcal),
+                p: safeFloat(ing.p),
+                f: safeFloat(ing.f),
+                c: safeFloat(ing.c)
+              }))
             };
 
             await saveMealToCloud(newMeal);
@@ -1483,7 +1560,7 @@
         console.error(err);
         loading.classList.add('hidden');
         loading.classList.remove('flex');
-        alert("画像解析に失敗しました。接続環境を確認してください。");
+        alert("画像解析に失敗しました。接続環境、または店舗キーを再設定してください。");
       }
     };
 
@@ -1500,15 +1577,15 @@
       editingMealId = mealId;
       editingMealObject = JSON.parse(JSON.stringify(meal)); 
       
-      // ★ 解決策: 開いた瞬間に、食材ごとの「100%基準時の絶対値オリジナルデータ」を完全にプロパティ退避固定！ ★
-      // これにより、%の変更やスライダー移動を繰り返しても「基準値からの算出」になるため、縮小バグが100%消滅します
-      const lastSavedScale = editingMealObject.lastScale || 1;
+      // 開いた瞬間に、食材ごとの「100%基準時の絶対値オリジナルデータ」を完全にプロパティ退避固定！
+      // これにより、%の変更やスライダー移動を繰り返しても「基準値からの算出」になり、縮小バグは100%発生しません
+      const lastSavedScale = safeFloat(editingMealObject.lastScale) || 1;
       editingMealObject.ingredients.forEach(ing => {
-        ing.originalWeight = (ing.weight || 100) / lastSavedScale;
-        ing.originalKcal = (ing.kcal || 0) / lastSavedScale;
-        ing.originalP = (ing.p || 0) / lastSavedScale;
-        ing.originalF = (ing.f || 0) / lastSavedScale;
-        ing.originalC = (ing.c || 0) / lastSavedScale;
+        ing.originalWeight = safeFloat(ing.weight) / lastSavedScale;
+        ing.originalKcal = safeFloat(ing.kcal) / lastSavedScale;
+        ing.originalP = safeFloat(ing.p) / lastSavedScale;
+        ing.originalF = safeFloat(ing.f) / lastSavedScale;
+        ing.originalC = safeFloat(ing.c) / lastSavedScale;
       });
 
       document.getElementById('edit-meal-name').value = editingMealObject.name;
@@ -1527,7 +1604,6 @@
 
     // 割合選択用のトグル処理 (10%, 50%, 100%, カスタム)
     window.setQuickScale = function(scaleType) {
-      // 全ボタンを非活性デザインにリセット
       const btns = ['10', '50', '100', 'custom'];
       btns.forEach(b => {
         const el = document.getElementById(`scale-btn-${b}`);
@@ -1539,13 +1615,11 @@
       if (scaleType === 'custom') {
         document.getElementById('scale-btn-custom').className = "py-2 text-[10px] font-black rounded-lg transition-all bg-white text-brand-primary shadow-sm border border-brand-border/50";
         sliderArea.classList.remove('hidden');
-        // 現在のスライダー値を取得して適用
         const val = document.getElementById('edit-meal-scale-slider').value;
         window.changeMealScale(val);
       } else {
         document.getElementById(`scale-btn-${scaleType}`).className = "py-2 text-[10px] font-black rounded-lg transition-all bg-white text-brand-primary shadow-sm border border-brand-border/50";
         sliderArea.classList.add('hidden');
-        // スライダー値も連動して上書き
         document.getElementById('edit-meal-scale-slider').value = scaleType;
         window.changeMealScale(scaleType);
       }
@@ -1573,11 +1647,11 @@
           <div class="flex-1 space-y-1">
             <input type="text" value="${ing.name}" class="bg-white border border-brand-border rounded-xl px-2.5 py-1 text-xs font-bold w-full focus:outline-none" onchange="window.updateIngredientName(${i}, this.value)">
             <div class="flex items-center gap-1.5">
-              <span class="text-[9px] text-brand-muted font-bold block">P:${ing.p.toFixed(1)} F:${ing.f.toFixed(1)} C:${ing.c.toFixed(1)}</span>
+              <span class="text-[9px] text-brand-muted font-bold block">P:${safeFloat(ing.p).toFixed(1)} F:${safeFloat(ing.f).toFixed(1)} C:${safeFloat(ing.c).toFixed(1)}</span>
             </div>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
-            <input type="number" value="${Math.round(ing.weight)}" class="bg-white border border-brand-border rounded-xl p-1 text-center font-mono font-black text-xs w-14 focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientWeight(${i}, this.value)">
+            <input type="number" value="${Math.round(safeFloat(ing.weight))}" class="bg-white border border-brand-border rounded-xl p-1 text-center font-mono font-black text-xs w-14 focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientWeight(${i}, this.value)">
             <span class="text-[10px] text-brand-muted font-bold">g</span>
             <button onclick="window.removeIngredientRow(${i})" class="text-brand-muted hover:text-rose-500 p-1.5 rounded-xl transition">
               <i data-lucide="minus-circle" class="w-4 h-4"></i>
@@ -1620,21 +1694,21 @@
       renderIngredientsInEditor();
     };
 
-    // 個別のグラム重量を手動変更した際、その割合に応じた基準オリジナル値をロック上書きする
+    // 個別のグラム重量を手動変更した際、基準値を再定義して不整合を防ぐ
     window.changeIngredientWeight = function(index, newWeight) {
-      const w = parseFloat(newWeight) || 0;
+      const w = safeFloat(newWeight);
       if (w < 0) return;
 
       const ing = editingMealObject.ingredients[index];
       const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
       const currentScale = currentSliderValue / 100;
 
-      ing.originalWeight = w / currentScale;
+      ing.originalWeight = w / (currentScale || 1);
       
-      const kcalRatio = ing.originalKcal ? (ing.originalKcal / (ing.originalWeight || 1)) : 1;
-      const pRatio = ing.originalP ? (ing.originalP / (ing.originalWeight || 1)) : 0.1;
-      const fRatio = ing.originalF ? (ing.originalF / (ing.originalWeight || 1)) : 0.02;
-      const cRatio = ing.originalC ? (ing.originalC / (ing.originalWeight || 1)) : 0.1;
+      const kcalRatio = ing.originalKcal ? (safeFloat(ing.originalKcal) / (safeFloat(ing.originalWeight) || 1)) : 1;
+      const pRatio = ing.originalP ? (safeFloat(ing.originalP) / (safeFloat(ing.originalWeight) || 1)) : 0.1;
+      const fRatio = ing.originalF ? (safeFloat(ing.originalF) / (safeFloat(ing.originalWeight) || 1)) : 0.02;
+      const cRatio = ing.originalC ? (safeFloat(ing.originalC) / (safeFloat(ing.originalWeight) || 1)) : 0.1;
 
       ing.originalKcal = ing.originalWeight * kcalRatio;
       ing.originalP = ing.originalWeight * pRatio;
@@ -1650,17 +1724,17 @@
       renderIngredientsInEditor();
     };
 
-    // ★ 割合スケーリング: originalWeight基準で一方向で算出するため、50%にしたら「完璧に半分」になり、何度変更しても一切の誤差が生じない！ ★
+    // ★ originalWeightをベースに一方向で乗算算出するため、50%にしてもカロリー減衰バグが消滅し、きっちり半分になる！ ★
     window.changeMealScale = function(scalePercent) {
       const scale = parseFloat(scalePercent) / 100;
       document.getElementById('scale-percentage-text').innerText = `${scalePercent} %`;
 
       editingMealObject.ingredients.forEach(ing => {
-        ing.weight = ing.originalWeight * scale;
-        ing.kcal = ing.originalKcal * scale;
-        ing.p = ing.originalP * scale;
-        ing.f = ing.originalF * scale;
-        ing.c = ing.originalC * scale;
+        ing.weight = safeFloat(ing.originalWeight) * scale;
+        ing.kcal = safeFloat(ing.originalKcal) * scale;
+        ing.p = safeFloat(ing.originalP) * scale;
+        ing.f = safeFloat(ing.originalF) * scale;
+        ing.c = safeFloat(ing.originalC) * scale;
       });
 
       const container = document.getElementById('ingredients-editor-container');
@@ -1670,11 +1744,11 @@
         if (row) {
           const numInput = row.querySelector('input[type="number"]');
           if (numInput) {
-            numInput.value = Math.round(ing.weight);
+            numInput.value = Math.round(safeFloat(ing.weight));
           }
           const pfcLabel = row.querySelector('.text-brand-muted');
           if (pfcLabel) {
-            pfcLabel.innerText = `P:${ing.p.toFixed(1)} F:${ing.f.toFixed(1)} C:${ing.c.toFixed(1)}`;
+            pfcLabel.innerText = `P:${safeFloat(ing.p).toFixed(1)} F:${safeFloat(ing.f).toFixed(1)} C:${safeFloat(ing.c).toFixed(1)}`;
           }
         }
       });
@@ -1685,10 +1759,10 @@
     function recalculateTotalsInEditor() {
       let sumKcal = 0, sumP = 0, sumF = 0, sumC = 0;
       editingMealObject.ingredients.forEach(ing => {
-        sumKcal += (ing.kcal || 0);
-        sumP += (ing.p || 0);
-        sumF += (ing.f || 0);
-        sumC += (ing.c || 0);
+        sumKcal += safeFloat(ing.kcal);
+        sumP += safeFloat(ing.p);
+        sumF += safeFloat(ing.f);
+        sumC += safeFloat(ing.c);
       });
 
       editingMealObject.kcal = Math.round(sumKcal);
@@ -1733,7 +1807,6 @@
       });
     };
 
-    // AI提案献立の実行部
     window.generateAIPendingMenu = async function() {
       const loading = document.getElementById('loading-overlay');
       document.getElementById('loading-main-text').innerText = "本日の残りPFCを逆算中...";
@@ -1745,18 +1818,17 @@
         let curKcal = 0, curP = 0, curF = 0, curC = 0;
         const meals = clientState.mealsByDate?.[selectedDateString] || [];
         meals.forEach(m => {
-          curKcal += (m.kcal || 0);
-          curP += (m.p || 0);
-          curF += (m.f || 0);
-          curC += (m.c || 0);
+          curKcal += safeFloat(m.kcal);
+          curP += safeFloat(m.p);
+          curF += safeFloat(m.f);
+          curC += safeFloat(m.c);
         });
 
-        // 今日の目標値(オートリカバリー調整後の実質目標値を逆算ベースに採用)
         const recovery = calculateAutoRecoveryKcal();
-        const baseTarCal = clientState.targetCalories || 1800;
-        const baseTarP = clientState.targetP || 120;
-        const baseTarF = clientState.targetF || 45;
-        const baseTarC = clientState.targetC || 230;
+        const baseTarCal = safeFloat(clientState.targetCalories) || 1800;
+        const baseTarP = safeFloat(clientState.targetP) || 120;
+        const baseTarF = safeFloat(clientState.targetF) || 45;
+        const baseTarC = safeFloat(clientState.targetC) || 230;
 
         const tarCal = Math.max(1000, baseTarCal - recovery.adjustedKcal);
         const scaleRatio = tarCal / baseTarCal;
@@ -1764,7 +1836,6 @@
         const tarF = Math.round(baseTarF * scaleRatio);
         const tarC = Math.round(baseTarC * scaleRatio);
 
-        // 残りの目標枠
         const remCal = Math.max(50, tarCal - curKcal);
         const remP = Math.max(5, tarP - curP);
         const remF = Math.max(2, tarF - curF);
@@ -1787,7 +1858,7 @@
 【作成・逆算ルール】
 1. 提案するメニューの合計値(kcal, P, F, C)は、上記の「目標残枠」を極端にオーバーせず、合致するよう食材重量をg単位で微調整してください。
 2. 脂質(F)の残り枠が少ない場合は、超低脂質なヘルシーメニュー（例: 鶏ささみとアスパラ、和風のスープ仕立て等）を提案してください。
-3. 女性のホルモンバランス、冷え性改善に配慮したアドバイス（CARAT専用の優しく寄り添うトーン）を100文字以内で作成してください。
+3. 女性のホルモンバランス、冷え性改善に配慮したアドバイス（CARAT専用の優しく寄り壮うトーン）を100文字以内で作成してください。
 
 【出力要件JSONスキーマ】
 不要な解説文やMarkdown記法は一切禁止。必ず次のJSONオブジェクト構造のみを出力してください。
@@ -1818,17 +1889,24 @@
         };
 
         const res = await fetchGeminiForClient(payload);
-        const jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text;
+        let jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        // マークダウン除去
+        jsonText = jsonText.trim();
+        if (jsonText.startsWith("```")) {
+          jsonText = jsonText.replace(/^```json?/i, "").replace(/```$/, "").trim();
+        }
+
         const parsed = JSON.parse(jsonText);
 
         if (parsed && parsed.name) {
           suggestedMenuCache = parsed; 
 
           document.getElementById('suggested-menu-name').innerText = parsed.name;
-          document.getElementById('suggested-menu-kcal').innerText = `${Math.round(parsed.kcal)} kcal`;
-          document.getElementById('suggested-menu-p').innerText = parsed.p.toFixed(1);
-          document.getElementById('suggested-menu-f').innerText = parsed.f.toFixed(1);
-          document.getElementById('suggested-menu-c').innerText = parsed.c.toFixed(1);
+          document.getElementById('suggested-menu-kcal').innerText = `${Math.round(safeFloat(parsed.kcal))} kcal`;
+          document.getElementById('suggested-menu-p').innerText = safeFloat(parsed.p).toFixed(1);
+          document.getElementById('suggested-menu-f').innerText = safeFloat(parsed.f).toFixed(1);
+          document.getElementById('suggested-menu-c').innerText = safeFloat(parsed.c).toFixed(1);
 
           document.getElementById('suggested-menu-ingredients').innerText = parsed.ingredientsText || "食材グラム数は自動計算されました。";
           document.getElementById('suggested-menu-advice').innerText = parsed.advice || "夜ご飯の栄養をしっかり整えましょう！";
@@ -1840,7 +1918,7 @@
         }
       } catch (err) {
         console.error(err);
-        alert("献立提案AIの生成に失敗しました。接続環境、または店舗キーを確認してください。");
+        alert("献立提案AIの生成に失敗しました。店舗キーを確認してください。");
       } finally {
         loading.classList.add('hidden');
         loading.classList.remove('flex');
@@ -1857,11 +1935,18 @@
         id: targetMealId,
         name: `[AI提案] ${suggestedMenuCache.name}`,
         time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
-        kcal: suggestedMenuCache.kcal || 0,
-        p: suggestedMenuCache.p || 0,
-        f: suggestedMenuCache.f || 0,
-        c: suggestedMenuCache.c || 0,
-        ingredients: suggestedMenuCache.ingredientsList || []
+        kcal: safeFloat(suggestedMenuCache.kcal),
+        p: safeFloat(suggestedMenuCache.p),
+        f: safeFloat(suggestedMenuCache.f),
+        c: safeFloat(suggestedMenuCache.c),
+        ingredients: (suggestedMenuCache.ingredientsList || []).map(ing => ({
+          name: ing.name || "食材",
+          weight: safeFloat(ing.weight),
+          kcal: safeFloat(ing.kcal),
+          p: safeFloat(ing.p),
+          f: safeFloat(ing.f),
+          c: safeFloat(ing.c)
+        }))
       };
 
       try {
