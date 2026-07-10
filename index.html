@@ -114,7 +114,7 @@
     <button onclick="window.bypassLoginForDemo()" class="text-xs text-brand-primary font-bold hover:underline">IDをお持ちでない方はこちら（ゲスト体験モード）</button>
   </div>
 
-  <!-- ==================== ★ メインダッシュボード画面 (初期非表示) ★ ==================== -->
+  <!-- ==================== ★ メインダッシュボード画面 ★ ==================== -->
   <div id="main-dashboard" class="hidden max-w-md mx-auto px-4 mt-4 space-y-4">
 
     <!-- 連携完了ステータス -->
@@ -149,7 +149,7 @@
       </div>
     </div>
 
-    <!-- カロリー＆PFC目標（手動変更機能＆文字サイズ大幅アップ！） -->
+    <!-- 今日の目標 & 摂取状況 -->
     <div class="bg-brand-card rounded-[32px] p-6 border border-brand-border/60 shadow-premium text-left space-y-4 relative overflow-hidden">
       <div class="absolute bottom-0 right-0 w-32 h-32 bg-brand-accent/20 rounded-full blur-3xl -mb-10 -mr-10"></div>
       
@@ -159,7 +159,6 @@
             <i data-lucide="activity" class="w-4.5 h-4.5 text-brand-primary"></i>
             今日の目標 & 摂取状況
           </h3>
-          <!-- オートリカバリー調整メッセージ -->
           <span id="auto-recovery-status-badge" class="hidden text-[9px] text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-md mt-1 font-bold border border-emerald-100 items-center gap-1 animate-pulse">
             <i data-lucide="sparkles" class="w-3 h-3"></i> 昨日オーバー分を自動リセット中
           </span>
@@ -171,7 +170,7 @@
         </button>
       </div>
 
-      <!-- 目標PFCを手動微調整するインラインスライドパネル -->
+      <!-- 目標PFCを手動微調整パネル -->
       <div id="target-edit-panel" class="hidden bg-brand-bg/80 border border-brand-border/80 p-4 rounded-2xl space-y-3 relative z-10 transition-all">
         <span class="text-[10px] text-brand-text font-black block">🎯 目標値のベース手動設定</span>
         <div class="grid grid-cols-2 gap-2 text-xs">
@@ -317,19 +316,20 @@
       </div>
     </div>
 
-    <!-- ★ 変更：逆算献立AI提案（1食・時間帯自動判別＆選択タブ統合！） ★ -->
+    <!-- ★ 改良版：時間帯の「複数選択・均等分割」対応 献立提案AI ★ -->
     <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-4">
       <div class="border-b border-brand-border/50 pb-2 flex justify-between items-center">
         <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
           <i data-lucide="wand-2" class="w-4.5 h-4.5 text-brand-primary"></i>
           残り目標から逆算：献立提案AI
         </h3>
-        <span class="text-[8px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg font-bold animate-pulse">時間栄養学連動</span>
+        <span class="text-[8px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg font-bold animate-pulse">均等分配逆算</span>
       </div>
       
       <p class="text-[9px] text-brand-muted leading-relaxed">
         今日の残りの目標栄養にピタッと合わせ、g数まで計算して献立を提案します。
-        カテゴリーと、食べたい時間帯（朝・昼・夜・おやつ）を選択してください。
+        カテゴリーと、<b>食べたい時間帯（朝・昼・夜・おやつから複数選択可能）</b>を選択してください。
+        選択された時間帯に自動で均等に分けて献立を計算します。
       </p>
       
       <!-- 調達カテゴリー選択タブ -->
@@ -348,20 +348,20 @@
         </div>
       </div>
 
-      <!-- 朝・昼・晩・間食選択タブ (アプリ起動時に現在時刻で自動フォーカスされます) -->
+      <!-- ★ 複数選択対応 (朝・昼・夕・間食を複数同時にオンオフできます！) ★ -->
       <div class="space-y-1">
-        <span class="text-[8px] text-brand-muted font-bold block uppercase tracking-wider">② 食事区分（時間帯）</span>
+        <span class="text-[8px] text-brand-muted font-bold block uppercase tracking-wider">② 食事区分（時間帯を複数選択）</span>
         <div class="grid grid-cols-4 gap-1.5 bg-brand-bg p-1 rounded-xl">
-          <button id="meal-timing-breakfast" onclick="window.selectMealTiming('breakfast')" class="py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
+          <button id="meal-timing-breakfast" onclick="window.toggleMealTiming('breakfast')" class="py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
             🍳 朝食
           </button>
-          <button id="meal-timing-lunch" onclick="window.selectMealTiming('lunch')" class="py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
+          <button id="meal-timing-lunch" onclick="window.toggleMealTiming('lunch')" class="py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
             🍱 昼食
           </button>
-          <button id="meal-timing-dinner" onclick="window.selectMealTiming('dinner')" class="py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
+          <button id="meal-timing-dinner" onclick="window.toggleMealTiming('dinner')" class="py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
             🌙 夕食
           </button>
-          <button id="meal-timing-snack" onclick="window.selectMealTiming('snack')" class="py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
+          <button id="meal-timing-snack" onclick="window.toggleMealTiming('snack')" class="py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
             🍪 間食
           </button>
         </div>
@@ -369,48 +369,28 @@
 
       <button onclick="window.generateAIPendingMenu()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-1.5">
         <i data-lucide="sparkles" class="w-4 h-4"></i>
-        この設定で最適な献立をAI提案
+        この設定で最適な献立を等分逆算してAI提案
       </button>
 
-      <!-- AI提案出力カード -->
-      <div id="ai-menu-suggestion-box" class="hidden bg-brand-accent/30 border border-brand-primary/10 rounded-2xl p-4 space-y-3 relative overflow-hidden transition-all duration-300">
-        <div class="flex justify-between items-start">
+      <!-- ★ 複数食一括＆個別対応：AI提案出力カード ★ -->
+      <div id="ai-menu-suggestion-box" class="hidden bg-brand-accent/30 border border-brand-primary/10 rounded-2xl p-4 space-y-4 relative overflow-hidden transition-all duration-300">
+        
+        <div class="flex justify-between items-center border-b border-brand-primary/10 pb-2">
           <div>
-            <span id="suggested-menu-time-badge" class="inline-block text-[8px] bg-brand-primary text-white px-2 py-0.5 rounded font-black mb-1">夕食</span>
-            <h4 id="suggested-menu-name" class="text-sm font-black text-brand-text">--</h4>
+            <span class="text-[8px] text-brand-primary font-bold block uppercase tracking-wider">AI Multi-Meal Recommendation</span>
+            <h4 class="text-xs font-black text-brand-text" id="ai-suggestion-summary-title">複数食の均等分割プラン</h4>
           </div>
-          <span id="suggested-menu-kcal" class="text-xs font-black text-brand-primary bg-white px-2 py-0.5 rounded-lg border border-brand-border font-mono">0 kcal</span>
+          <!-- まとめて一括追加ボタン -->
+          <button onclick="window.registerAllSuggestedMenus()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[9px] py-1.5 px-3 rounded-lg shadow-sm transition flex items-center gap-1">
+            <i data-lucide="check-circle-2" class="w-3 h-3"></i>
+            すべて一括で追加
+          </button>
         </div>
 
-        <div class="grid grid-cols-3 gap-1.5 text-center text-[10px] font-bold">
-          <div class="bg-white/80 p-1.5 rounded-lg border border-brand-border/40">
-            <span class="text-[7px] text-sky-600 block">P</span>
-            <span id="suggested-menu-p" class="font-mono">0</span>g
-          </div>
-          <div class="bg-white/80 p-1.5 rounded-lg border border-brand-border/40">
-            <span class="text-[7px] text-emerald-600 block">F</span>
-            <span id="suggested-menu-f" class="font-mono">0</span>g
-          </div>
-          <div class="bg-white/80 p-1.5 rounded-lg border border-brand-border/40">
-            <span class="text-[7px] text-amber-600 block">C</span>
-            <span id="suggested-menu-c" class="font-mono">0</span>g
-          </div>
+        <!-- 提案された個別の食事カードがここに並びます -->
+        <div id="ai-suggested-meals-grid" class="space-y-3">
+          <!-- JSで動的に追加されます -->
         </div>
-
-        <div class="bg-white/90 p-3 rounded-xl border border-brand-border/50 text-[10px] space-y-1 text-brand-text">
-          <span class="font-black text-brand-primary block">🍳 構成食材と詳細グラム数:</span>
-          <p id="suggested-menu-ingredients" class="leading-relaxed whitespace-pre-line font-medium text-brand-muted">--</p>
-        </div>
-
-        <div class="bg-white/90 p-3 rounded-xl border border-brand-border/50 text-[10px] space-y-1 text-brand-text">
-          <span class="font-black text-emerald-600 block">💡 女性専門チーフトレーナーより補足アドバイス:</span>
-          <p id="suggested-menu-advice" class="leading-relaxed font-medium text-brand-muted">--</p>
-        </div>
-
-        <button onclick="window.registerSuggestedMenu()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-1.5">
-          <i data-lucide="check-square" class="w-4 h-4"></i>
-          提案されたこの献立を今日の食事に登録する
-        </button>
       </div>
     </div>
 
@@ -628,7 +608,7 @@
         <div id="custom-scale-slider-area" class="hidden space-y-2 pt-1">
           <div class="flex justify-between items-center text-[10px] font-bold text-brand-muted">
             <span>スライド調整</span>
-            <span id="scale-percentage-text" class="font-mono text-[11px] font-black text-brand-primary bg-white px-2.5 py-0.5 rounded-lg border border-brand-border">100 %</span>
+            <span id="scale-percentage-text" class="font-mono text-[2.5y-0.5] font-black text-brand-primary bg-white px-2.5 py-0.5 rounded-lg border border-brand-border">100 %</span>
           </div>
           <input type="range" id="edit-meal-scale-slider" min="10" max="200" step="5" value="100" class="w-full accent-brand-primary cursor-pointer" oninput="window.changeMealScale(this.value)">
           <div class="flex justify-between text-[8px] text-brand-muted font-bold px-1">
@@ -747,10 +727,10 @@
     let editingMealObject = null;
     let baseIngredients = []; 
 
-    // ★ 献立提案AI用の状態 (デフォルト食事区分を現在時刻から自動計算してバインド) ★
+    // ★ 献立提案AI用の複数食事区分（朝昼夕間食）の状態管理 ★
     let selectedMenuCategory = 'home'; 
-    let selectedMealTiming = getDefaultMealCategory(); // breakfast, lunch, dinner, snack
-    let suggestedMenuCache = null; 
+    let selectedMealTimings = [getDefaultMealCategory()]; // 配列にすることで複数選択に対応！
+    let suggestedMenusCache = []; // AIが提案した複数献立の配列をキャッシュする
 
     function safeFloat(val) {
       if (val === null || val === undefined) return 0;
@@ -779,13 +759,12 @@
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
 
-    // ★ 現在の時刻から食事区分(朝食/昼食/夕食/間食)を自動判定する世界一スマートな計算式 ★
     function getDefaultMealCategory() {
       const hours = new Date().getHours();
       if (hours >= 5 && hours < 11) return 'breakfast';
       if (hours >= 11 && hours < 17) return 'lunch';
       if (hours >= 17 && hours < 24) return 'dinner';
-      return 'snack'; // 夜中AM0:00〜4:59は「間食(夜食)」とする
+      return 'snack'; 
     }
 
     function getDayOfWeekJp(dateStr) {
@@ -817,8 +796,8 @@
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('main-dashboard').classList.remove('hidden');
       
-      // AI提案時間区分のUI表示の初期フォーカスをセット
-      window.selectMealTiming(selectedMealTiming);
+      // 初期食事タイミングのUI活性化を適用
+      syncMealTimingUI();
       renderClientApp();
       showToast("ゲストとしてログインしました。");
     };
@@ -841,8 +820,7 @@
           conLabel.className = "text-[9px] px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold animate-pulse";
           conLabel.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 同期中`;
 
-          // 現在時間帯のUIフォーカスを再描画
-          window.selectMealTiming(selectedMealTiming);
+          syncMealTimingUI();
           renderClientApp();
         } else {
           alert("クライアントIDが見つかりませんでした。");
@@ -1023,7 +1001,6 @@
       };
     }
 
-    // --- メイン描画・更新 ---
     function renderClientApp() {
       renderWeeklyCalendarGrid();
       document.getElementById('display-date-text').innerText = selectedDateString;
@@ -1369,7 +1346,7 @@
 
 
     // =======================================================
-    // ★ 快速AIエンジン（写真・文章から食材を逆引き解析） ★
+    // ★ AI解析エンジン ★
     // =======================================================
 
     async function fetchGeminiForClient(payload) {
@@ -1423,7 +1400,7 @@
       loading.classList.add('flex');
 
       try {
-        const systemPrompt = "あなたはCARATの食事分析AIです。提示された食べたもの情報を詳細に食材分解し、グラム数(g)・PFC・カロリーを弾き出して構造化JSONを返してください。";
+        const systemPrompt = "あなたはCARAT of食事分析AIです。提示された食べたもの情報を詳細に食材分解し、グラム数(g)・PFC・カロリーを弾き出して構造化JSONを返してください。";
         const userPrompt = `
 食べたもの: "${textInput}"
 
@@ -1815,7 +1792,7 @@
 
 
     // =======================================================
-    // ★ 献立逆算AI提案＆食事区分(朝昼夕間食)タブコントロール ★
+    // ★ 複数食・等分逆算AI提案エンジンの完全実装 ★
     // =======================================================
 
     window.selectMenuCategory = function(cat) {
@@ -1831,29 +1808,53 @@
       });
     };
 
-    // ★ 変更点：朝・昼・夕・間食を1タップで切り替え、視覚デザインも即時反映するリスナー ★
-    window.selectMealTiming = function(timing) {
-      selectedMealTiming = timing;
+    // ★ 改修点：食事区分（タイミング）のトグルを「複数オンオフ可能」にするロジック ★
+    window.toggleMealTiming = function(timing) {
+      const idx = selectedMealTimings.indexOf(timing);
+      if (idx > -1) {
+        // すでに選択されている場合、外す（ただし最低1つは選択状態を維持する）
+        if (selectedMealTimings.length > 1) {
+          selectedMealTimings.splice(idx, 1);
+        } else {
+          showToast("少なくとも1つの時間帯を選択してください。");
+          return;
+        }
+      } else {
+        // 新規選択を追加
+        selectedMealTimings.push(timing);
+      }
+      syncMealTimingUI();
+    };
+
+    // 選択配列に合わせてUIのCSSクラスを滑らかに同期描画する
+    function syncMealTimingUI() {
       const timings = ['breakfast', 'lunch', 'dinner', 'snack'];
       timings.forEach(t => {
         const el = document.getElementById(`meal-timing-${t}`);
-        if (t === timing) {
+        if (selectedMealTimings.includes(t)) {
           el.className = "py-2 text-[9px] font-black rounded-lg transition-all bg-brand-primary text-white shadow-sm border border-brand-primary";
         } else {
           el.className = "py-2 text-[9px] font-bold rounded-lg transition-all text-brand-muted hover:text-brand-primary hover:bg-white/50";
         }
       });
-    };
+    }
 
-    // 残り栄養枠 & 選択された時間帯特性からAI献立を逆算
+    // 今日の残りの枠を「等分」し、時間帯を考慮した複数献立をAI一括逆算提案
     window.generateAIPendingMenu = async function() {
+      // 0件選択防止ガード (RULE 3)
+      if (selectedMealTimings.length === 0) {
+        selectedMealTimings = [getDefaultMealCategory()];
+        syncMealTimingUI();
+      }
+
       const loading = document.getElementById('loading-overlay');
-      document.getElementById('loading-main-text').innerText = "本日の残りPFCを逆算中...";
-      document.getElementById('loading-sub-text').innerText = "最適な栄養を埋める献立レシピを計算しています。";
+      document.getElementById('loading-main-text').innerText = "本日の残りPFCを等分逆算中...";
+      document.getElementById('loading-sub-text').innerText = `${selectedMealTimings.length}食分に等しく振り分けた献立を設計中。`;
       loading.classList.remove('hidden');
       loading.classList.add('flex');
 
       try {
+        // 現在の合計値を合算
         let curKcal = 0, curP = 0, curF = 0, curC = 0;
         const meals = clientState.mealsByDate?.[selectedDateString] || [];
         meals.forEach(m => {
@@ -1875,67 +1876,75 @@
         const tarF = Math.round(baseTarF * scaleRatio);
         const tarC = Math.round(baseTarC * scaleRatio);
 
-        // 本日のトータル残りPFC
+        // 残枠
         const remCal = Math.max(50, tarCal - curKcal);
         const remP = Math.max(5, tarP - curP);
         const remF = Math.max(2, tarF - curF);
         const remC = Math.max(5, tarC - curC);
 
+        // ★ 選択された食事件数で正確に「等分（割る）」を実行 ★
+        const mealCount = selectedMealTimings.length;
+        const targetKcalPerMeal = remCal / mealCount;
+        const targetPPerMeal = remP / mealCount;
+        const targetFPerMeal = remF / mealCount;
+        const targetCPerMeal = remC / mealCount;
+
         let catJp = "自炊レシピ（調理しやすいもの）";
         if (selectedMenuCategory === 'convenience') catJp = "コンビニ商品（セブン、ローソン、ファミマ等で調達できるもの）";
         if (selectedMenuCategory === 'restaurant') catJp = "外食・チェーン店（一般的な居酒屋、定食屋、牛丼、ファミレス等のメニュー）";
 
-        // 朝、昼、晩、間食のテキスト・時間栄養特性の定義
-        let timingJp = "夕食";
-        let timingRules = "夕食：高タンパク、低脂質を意識し、翌日の胃もたれや自律神経を考慮。炭水化物は控えめ、または中程度に調整してください。";
-        if (selectedMealTiming === 'breakfast') {
-          timingJp = "朝食";
-          timingRules = "朝食：一日の代謝スイッチ（時計遺伝子）をオンにするため、炭水化物を一定量含み、かつ消化吸収の早いたんぱく質（アミノ酸合成のトリガー）を最優先。ボリュームは残枠の上限に関わらず、1日の基本エネルギーの20〜30%程度に自律スケールダウン（150kcal〜400kcal程度に抑制）して構成してください。";
-        } else if (selectedMealTiming === 'lunch') {
-          timingJp = "昼食";
-          timingRules = "昼食：日中の仕事効率、血糖値スパイクの抑制を考慮し、食物繊維を適度に含んで眠くなりにくい栄養バランス。ボリューミーでも消化の良い食材を指定してください。";
-        } else if (selectedMealTiming === 'snack') {
-          timingJp = "間食（おやつ/リカバリー）";
-          timingRules = "間食：低脂肪かつ高タンパクなヘルシー補給スナック。残枠の上限に関わらず、絶対にボリュームを100kcal〜200kcal以内にスケールダウンして、小さな1品（例：ギリシャヨーグルトとナッツ、プロテインバー等）として算出してください。残り枠がどれだけ余っていても大盛り夕食のようなものは絶対に間食に提案しないでください。";
-        }
+        // 選択された食事タイミングの翻訳・特性指示をプロンプト用に構築
+        const timingsLabelMap = { 'breakfast': '朝食', 'lunch': '昼食', 'dinner': '夕食', 'snack': '間食' };
+        const timingSelectedJpNames = selectedMealTimings.map(t => timingsLabelMap[t]).join('、');
 
-        const systemPrompt = "あなたはCARATの食事分析チーフ栄養士AIです。残りの必要摂取PFC枠に高い精度で合致する、健康的で美味しいおすすめの食事を食材グラム数(g)単位で逆引き計算してJSONを返してください。";
+        const systemPrompt = "あなたはCARATの食事分析チーフ管理栄養士AIです。指示された複数の食事枠それぞれに対して、1日の残枠を指定数で完全に等分（均等に分配）したPFC基準内に美しく収まる複数の独立したおすすめメニューを、食材g数単位で逆引き計算してJSONを返してください。";
+        
         const userPrompt = `
-現在の目標残枠（PFCおよびカロリーの上限）:
-- 目標残りカロリー: ${remCal} kcal
-- 目標残りたんぱく質 (P): ${remP.toFixed(1)} g
-- 目標残り脂質 (F): ${remF.toFixed(1)} g
-- 目標残り炭水化物 (C): ${remC.toFixed(1)} g
+現在の全体残りの目標枠（PFCおよびカロリー）:
+- 目標総残りカロリー: ${remCal} kcal
+- 目標総残りたんぱく質 (P): ${remP.toFixed(1)} g
+- 目標総残り脂質 (F): ${remF.toFixed(1)} g
+- 目標総残り炭水化物 (C): ${remC.toFixed(1)} g
 
-食事カテゴリ: 【 ${catJp} 】
-指定された食事時間帯: 【 ${timingJp} 】
+等分対象となる食事数: 【 ${mealCount}食 】(対象時間帯: ${timingSelectedJpNames})
+調達カテゴリ: 【 ${catJp} 】
 
-【時間帯別の逆算ルール】
-${timingRules}
+【★ 1食あたりの等分された絶対割り当て上限（ターゲット）★】
+- 1食あたり目標カロリー: ${targetKcalPerMeal.toFixed(1)} kcal
+- 1食あたり目標たんぱく質(P): ${targetPPerMeal.toFixed(1)} g
+- 1食あたり目標脂質(F): ${targetFPerMeal.toFixed(1)} g
+- 1食あたり目標炭水化物(C): ${targetCPerMeal.toFixed(1)} g
 
 【作成・逆算ルール】
-1. 提案するメニューの合計値(kcal, P, F, C)は、上記の「食事時間帯のボリュームルール」および「目標残枠」を極端にオーバーせず、合致するよう食材重量をg単位で微調整してください。
-2. 脂質(F)の残り枠が少ない場合は、超低脂質なヘルシーメニュー（例: 鶏ささみとアスパラ、和風のスープ仕立て等）を提案してください。
-3. 女性のホルモンバランス、冷え性改善に配慮したアドバイス（CARAT専用の優しく寄り壮うトーン）を100文字以内で作成してください。
+1. 選択された食事キー（[${selectedMealTimings.join(', ')}]）それぞれに対して、独立したメニュー提案（計${mealCount}件）を作成してください。
+2. 各メニューのPFC・カロリーの合算値は、上記の「1食あたり目標」に極めて高い精度（誤差±15%以内）で合致するよう食材重量をg単位で微調整してください。
+3. もし脂質の割り当て上限が極端に少ない（マイナスや2gなど）である場合は、超低脂質なヘルシーメニュー（例: 鶏ささみとアスパラ、和風のスープ仕立て等）を提案してください。
+4. それぞれの食事タイミングの生理学的特性（朝なら内臓スイッチをオンにするアミノ酸重視、夜なら睡眠を阻害しない消化の良さ、おやつなら100〜200kcal以内への抑制等）を考慮して具体的な品名を考えてください。
+5. 女性のからだに寄り添う温かいワンポイントアドバイスを各100文字以内で作成してください。
 
 【出力要件JSONスキーマ】
 不要な解説文やMarkdown記法は一切禁止。必ず次のJSONオブジェクト構造のみを出力してください。
 {
-  "name": "品名・メニュー名(例: 砂肝とアスパラの塩昆布炒め)",
-  "kcal": 総カロリー(数値),
-  "p": たんぱく質合計g(数値),
-  "f": 脂質合計g(数値),
-  "c": 炭水化物合計g(数値),
-  "ingredientsText": "構成食材名とグラム数(例: 砂肝 120g\\nアスパラガス 50g\\nごま油 3g)",
-  "advice": "女性専門の優しい指導アドバイス(例: 本日は脂質が少なめですので、ごま油を少し使って良質な脂質を補いましょう。)",
-  "ingredientsList": [
+  "menus": [
     {
-      "name": "食材名(例: 砂肝)",
-      "weight": グラム数(数値),
+      "timing": "breakfast / lunch / dinner / snack (選択された食事キーのいずれか)",
+      "name": "メニュー名(例: 砂肝とアスパラの塩昆布炒め)",
       "kcal": カロリー(数値),
       "p": たんぱく質g(数値),
       "f": 脂質g(数値),
-      "c": 炭水化物g(数値)
+      "c": 炭水化物g(数値),
+      "ingredientsText": "構成食材名とグラム数(例: 砂肝 120g\\nアスパラガス 50g\\nごま油 3g)",
+      "advice": "女性専門の優しいアドバイス(例: 朝から良質なアミノ酸を補い、一日の脂肪燃焼スイッチを入れましょう。)",
+      "ingredientsList": [
+        {
+          "name": "食材名",
+          "weight": グラム数(数値),
+          "kcal": カロリー(数値),
+          "p": たんぱく質g(数値),
+          "f": 脂質g(数値),
+          "c": 炭水化物g(数値)
+        }
+      ]
     }
   ]
 }
@@ -1956,51 +1965,103 @@ ${timingRules}
 
         const parsed = JSON.parse(jsonText);
 
-        if (parsed && parsed.name) {
-          suggestedMenuCache = parsed; 
+        if (parsed && parsed.menus && parsed.menus.length > 0) {
+          suggestedMenusCache = parsed.menus; // 配列キャッシュに保持
 
-          document.getElementById('suggested-menu-name').innerText = parsed.name;
-          document.getElementById('suggested-menu-kcal').innerText = `${Math.round(safeFloat(parsed.kcal))} kcal`;
-          document.getElementById('suggested-menu-p').innerText = safeFloat(parsed.p).toFixed(1);
-          document.getElementById('suggested-menu-f').innerText = safeFloat(parsed.f).toFixed(1);
-          document.getElementById('suggested-menu-c').innerText = safeFloat(parsed.c).toFixed(1);
+          // UIに展開表示
+          const gridContainer = document.getElementById('ai-suggested-meals-grid');
+          gridContainer.innerHTML = "";
 
-          // 提案時間帯バッジの表示書き換え
-          const timingLabelMap = { 'breakfast': '朝食', 'lunch': '昼食', 'dinner': '夕食', 'snack': '間食' };
-          document.getElementById('suggested-menu-time-badge').innerText = timingLabelMap[selectedMealTiming] || '夕食';
+          document.getElementById('ai-suggestion-summary-title').innerText = `${selectedMealTimings.length}食の均等逆算プラン (${Math.round(targetKcalPerMeal)}kcal/食)`;
 
-          document.getElementById('suggested-menu-ingredients').innerText = parsed.ingredientsText || "食材グラム数は自動計算されました。";
-          document.getElementById('suggested-menu-advice').innerText = parsed.advice || "夜ご飯の栄養をしっかり整えましょう！";
+          parsed.menus.forEach((menu, index) => {
+            const mealCard = document.createElement('div');
+            mealCard.className = "bg-white/90 p-4 rounded-2xl border border-brand-border/60 shadow-sm space-y-2.5 relative";
+            mealCard.innerHTML = `
+              <div class="flex justify-between items-start">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[8px] bg-brand-primary text-white px-2 py-0.5 rounded font-black uppercase tracking-wider">
+                    ${timingsLabelMap[menu.timing] || 'お食事'}
+                  </span>
+                  <h5 class="text-xs font-black text-brand-text">${menu.name}</h5>
+                </div>
+                <span class="text-[10px] font-mono font-black text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg border border-brand-primary/10">
+                  ${Math.round(safeFloat(menu.kcal))} kcal
+                </span>
+              </div>
 
+              <!-- PFC -->
+              <div class="grid grid-cols-3 gap-1.5 text-center text-[9px] font-bold">
+                <div class="bg-brand-bg/50 p-1 rounded-lg border border-brand-border/30">
+                  <span class="text-[6px] text-sky-600 block">P</span>
+                  <span class="font-mono">${safeFloat(menu.p).toFixed(1)}</span>g
+                </div>
+                <div class="bg-brand-bg/50 p-1 rounded-lg border border-brand-border/30">
+                  <span class="text-[6px] text-emerald-600 block">F</span>
+                  <span class="font-mono">${safeFloat(menu.f).toFixed(1)}</span>g
+                </div>
+                <div class="bg-brand-bg/50 p-1 rounded-lg border border-brand-border/30">
+                  <span class="text-[6px] text-amber-600 block">C</span>
+                  <span class="font-mono">${safeFloat(menu.c).toFixed(1)}</span>g
+                </div>
+              </div>
+
+              <!-- Ingredients -->
+              <div class="bg-brand-bg/40 p-2.5 rounded-xl text-[9px] text-brand-muted leading-relaxed whitespace-pre-line font-medium border border-brand-border/30">
+                <span class="font-black text-brand-primary block text-[8px] mb-0.5">🍳 材料と詳細グラム数:</span>
+                ${menu.ingredientsText}
+              </div>
+
+              <!-- Advice -->
+              <div class="bg-brand-bg/40 p-2.5 rounded-xl text-[9px] text-brand-muted leading-relaxed font-medium border border-brand-border/30">
+                <span class="font-black text-emerald-600 block text-[8px] mb-0.5">💡 女性専門アドバイス:</span>
+                ${menu.advice}
+              </div>
+
+              <!-- 個別登録ボタン -->
+              <button onclick="window.registerSingleSuggestedMenu(${index})" class="w-full bg-brand-accent hover:bg-brand-primary hover:text-white text-brand-primary font-bold text-[10px] py-2 rounded-xl transition-all flex items-center justify-center gap-1 border border-brand-primary/10">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                この時間帯の食事を登録する
+              </button>
+            `;
+            gridContainer.appendChild(mealCard);
+          });
+
+          // ボックスを表示
           document.getElementById('ai-menu-suggestion-box').classList.remove('hidden');
-          showToast(`今日の「${timingLabelMap[selectedMealTiming] || '夕食'}」にぴったりな献立をAI提案しました！`);
+          showToast("残枠から均等逆算した献立を複数AI提案しました！");
+          lucide.createIcons();
         } else {
-          throw new Error("フォーマットエラー");
+          throw new Error("提案配列のロードエラー");
         }
       } catch (err) {
         console.error(err);
-        alert("献立提案AIの生成に失敗しました。店舗キーを確認してください。");
+        alert("献立逆算AIの生成に失敗しました。時間帯の選択または店舗キーを確認してください。");
       } finally {
         loading.classList.add('hidden');
         loading.classList.remove('flex');
       }
     };
 
-    window.registerSuggestedMenu = async function() {
-      if (!suggestedMenuCache) return;
+    // 1食だけ選んで個別登録する
+    window.registerSingleSuggestedMenu = async function(index) {
+      if (!suggestedMenusCache || !suggestedMenusCache[index]) return;
 
+      const menu = suggestedMenusCache[index];
       const now = new Date();
-      const targetMealId = 'M-' + Date.now();
+      const targetMealId = 'M-' + Date.now() + Math.floor(Math.random() * 10);
       
+      const timingsLabelMap = { 'breakfast': '朝食', 'lunch': '昼食', 'dinner': '夕食', 'snack': '間食' };
+
       const newMeal = {
         id: targetMealId,
-        name: `[AI提案] ${suggestedMenuCache.name}`,
+        name: `[AI提案:${timingsLabelMap[menu.timing] || '食事'}] ${menu.name}`,
         time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
-        kcal: safeFloat(suggestedMenuCache.kcal),
-        p: safeFloat(suggestedMenuCache.p),
-        f: safeFloat(suggestedMenuCache.f),
-        c: safeFloat(suggestedMenuCache.c),
-        ingredients: (suggestedMenuCache.ingredientsList || []).map(ing => ({
+        kcal: safeFloat(menu.kcal),
+        p: safeFloat(menu.p),
+        f: safeFloat(menu.f),
+        c: safeFloat(menu.c),
+        ingredients: (menu.ingredientsList || []).map(ing => ({
           name: ing.name || "食材",
           weight: safeFloat(ing.weight),
           kcal: safeFloat(ing.kcal),
@@ -2012,12 +2073,55 @@ ${timingRules}
 
       try {
         await saveMealToCloud(newMeal);
-        document.getElementById('ai-menu-suggestion-box').classList.add('hidden');
-        suggestedMenuCache = null;
-        showToast("提案された食事を本日の食事実績に登録完了しました！");
+        showToast(`「${menu.name}」を登録しました！`);
       } catch (e) {
         console.error(e);
         alert("登録に失敗しました。");
+      }
+    };
+
+    // ★ 変更点2: 提案された複数食を「まとめて一瞬で一括登録」するスーパー機能！ ★
+    window.registerAllSuggestedMenus = async function() {
+      if (!suggestedMenusCache || suggestedMenusCache.length === 0) return;
+
+      try {
+        const timingsLabelMap = { 'breakfast': '朝食', 'lunch': '昼食', 'dinner': '夕食', 'snack': '間食' };
+        const now = new Date();
+
+        // 複数の食事をループ処理でクラウドへ同期セーブ
+        for (let i = 0; i < suggestedMenusCache.length; i++) {
+          const menu = suggestedMenusCache[i];
+          const targetMealId = 'M-' + (Date.now() + i) + Math.floor(Math.random() * 10);
+
+          const newMeal = {
+            id: targetMealId,
+            name: `[AI提案:${timingsLabelMap[menu.timing] || '食事'}] ${menu.name}`,
+            time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
+            kcal: safeFloat(menu.kcal),
+            p: safeFloat(menu.p),
+            f: safeFloat(menu.f),
+            c: safeFloat(menu.c),
+            ingredients: (menu.ingredientsList || []).map(ing => ({
+              name: ing.name || "食材",
+              weight: safeFloat(ing.weight),
+              kcal: safeFloat(ing.kcal),
+              p: safeFloat(ing.p),
+              f: safeFloat(ing.f),
+              c: safeFloat(ing.c)
+            }))
+          };
+
+          // 同期
+          await saveMealToCloud(newMeal);
+        }
+
+        // キャッシュクリアして表示エリアを隠す
+        document.getElementById('ai-menu-suggestion-box').classList.add('hidden');
+        suggestedMenusCache = [];
+        showToast("提案されたすべての食事を一括登録しました！");
+      } catch (e) {
+        console.error(e);
+        alert("一括登録に失敗しました。");
       }
     };
 
