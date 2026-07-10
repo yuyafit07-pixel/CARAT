@@ -39,7 +39,6 @@
     .font-logo {
       font-family: 'Montserrat', sans-serif;
     }
-    /* スクロールバー非表示 */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
@@ -76,7 +75,7 @@
       </summary>
       <div class="p-4 pt-0 border-t border-brand-border/40 bg-brand-bg/20 space-y-3">
         <p class="text-[10px] text-brand-muted leading-relaxed">
-          ここに店舗用のGemini APIキーを設定すると、作成されるすべてのお客様アプリのカメラ食事解析やAI相談窓口に配信され、お客様側での面倒なキー設定やバグを完全に無くすことができます。また、トレーナーコメント自動生成にもこのキーが適用されます。
+          ここに店舗用のGemini APIキーを設定すると、作成されるすべてのお客様アプリのカメラ食事解析やAI相談窓口に配信され、お客様側での面倒なキー設定やバグを完全に無くすことができます。また、一括アナライザー、来店時1週間総括アドバイスの自動生成にもこのキーが適用されます。
         </p>
         <div class="flex gap-2">
           <input type="password" id="trainer-gemini-key" class="flex-1 bg-brand-card border border-brand-border rounded-xl px-3.5 py-2.5 text-xs font-mono text-brand-text focus:outline-none focus:border-brand-primary" placeholder="AIzaSy...">
@@ -86,6 +85,35 @@
         </div>
       </div>
     </details>
+
+    <!-- ★ 完全復活: 全クライアントAI一括プレ・アナライザー ★ -->
+    <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm space-y-3 text-left">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-brand-border pb-3">
+        <div>
+          <h2 class="text-xs font-bold text-brand-text flex items-center gap-1.5">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            【毎日一括監視】担当クライアント食事AIプレ・アナライザー
+          </h2>
+          <p class="text-[9px] text-brand-muted mt-0.5">
+            ブックマーク登録されている全員の今日の食事をAIが一瞬で一括スキャン。過不足を自動判定し、指導の優先度を可視化します。
+          </p>
+        </div>
+        <button onclick="window.analyzeAllClients()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 shrink-0 shadow-sm">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          全員を一括AIスキャン＆評価
+        </button>
+      </div>
+
+      <!-- クライアントAIサマリーカード展開エリア -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-1 no-scrollbar" id="ai-client-analyzer-grid">
+        <div class="col-span-full text-center py-6 bg-brand-bg rounded-xl border border-dashed border-brand-border">
+          <span class="text-[10px] text-brand-muted font-bold block">上の「全員を一括AIスキャン＆評価」を押すと、ここに要指導者リストと自動アドバイス下書きが並びます。</span>
+        </div>
+      </div>
+    </div>
 
     <!-- メイングリッド (2カラム) -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -117,15 +145,15 @@
             <div class="grid grid-cols-3 gap-1 bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
               <div>
                 <label class="text-[8px] text-sky-600 font-bold block text-center mb-0.5">目標 P(g)</label>
-                <input type="number" id="new-client-p" class="w-full bg-brand-card border border-brand-border rounded-lg p-1.5 text-xs font-mono text-center focus:outline-none focus:border-brand-primary" value="110">
+                <input type="number" id="new-client-p" class="w-full bg-brand-card border border-brand-border rounded-lg p-1.5 text-xs font-mono text-center focus:outline-none focus:border-brand-primary" value="120">
               </div>
               <div>
                 <label class="text-[8px] text-emerald-600 font-bold block text-center mb-0.5">目標 F(g)</label>
-                <input type="number" id="new-client-f" class="w-full bg-brand-card border border-brand-border rounded-lg p-1.5 text-xs font-mono text-center focus:outline-none focus:border-brand-primary" value="40">
+                <input type="number" id="new-client-f" class="w-full bg-brand-card border border-brand-border rounded-lg p-1.5 text-xs font-mono text-center focus:outline-none focus:border-brand-primary" value="45">
               </div>
               <div>
                 <label class="text-[8px] text-amber-600 font-bold block text-center mb-0.5">目標 C(g)</label>
-                <input type="number" id="new-client-c" class="w-full bg-brand-card border border-brand-border rounded-lg p-1.5 text-xs font-mono text-center focus:outline-none focus:border-brand-primary" value="250">
+                <input type="number" id="new-client-c" class="w-full bg-brand-card border border-brand-border rounded-lg p-1.5 text-xs font-mono text-center focus:outline-none focus:border-brand-primary" value="230">
               </div>
             </div>
             <button onclick="window.createNewClientAndId()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
@@ -143,7 +171,6 @@
           </h2>
           <div class="space-y-2">
             <div class="max-h-[220px] overflow-y-auto space-y-1.5 pr-1 no-scrollbar" id="trainer-bookmarks-container">
-              <!-- ブックマークがここにJSで展開されます -->
               <span class="text-[10px] text-brand-muted text-center block py-4 bg-brand-bg rounded-xl border border-dashed border-brand-border">登録済みのクライアントはありません</span>
             </div>
             
@@ -182,7 +209,7 @@
               </div>
             </div>
 
-            <!-- ★ 新設: 日付変更コントローラー ★ -->
+            <!-- 日付変更コントローラー -->
             <div class="bg-brand-bg/60 border border-brand-border/40 p-2 rounded-2xl flex items-center justify-between shadow-inner">
               <button onclick="window.changeSelectedDate('prev')" class="p-2 text-brand-primary hover:text-brand-primaryHover hover:bg-brand-accent rounded-xl transition flex items-center justify-center shrink-0">
                 <i data-lucide="chevron-left" class="w-5 h-5"></i>
@@ -288,32 +315,41 @@
               <i data-lucide="utensils" class="w-4 h-4 text-brand-primary"></i>
               参照日の登録食事明細
             </h4>
-            <div id="client-meal-timeline" class="max-h-[300px] overflow-y-auto space-y-2 no-scrollbar pr-1">
-              <!-- タイムラインがここに表示されます -->
+            <div id="client-meal-timeline" class="max-h-[220px] overflow-y-auto space-y-2 no-scrollbar pr-1">
+              <!-- タイムライン表示 -->
             </div>
           </div>
 
-          <!-- トレーナー指導コメント & AI自動生成 -->
-          <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm text-left space-y-3">
-            <div class="flex justify-between items-center border-b border-brand-border pb-2.5">
-              <h4 class="text-xs font-bold text-brand-text flex items-center gap-1.5">
-                <i data-lucide="message-square" class="w-4 h-4 text-brand-primary"></i>
-                トレーナー食事指導コメント・アドバイス
-              </h4>
-              <!-- AIアドバイス生成ボタン -->
-              <button onclick="window.generateAIAdvice()" id="btn-generate-ai-advice" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 py-1.5 px-3 rounded-lg text-[10px] font-bold transition flex items-center gap-1 shadow-sm">
+          <!-- ★ 修復・完全連携: 来店時1週間食事AI総括アナライザー ★ -->
+          <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm text-left space-y-3.5">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 border-b border-brand-border pb-3">
+              <div>
+                <h4 class="text-xs font-extrabold text-brand-text flex items-center gap-1.5">
+                  <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  来店時専用：直近1週間の食事・PFC自動AI総括
+                </h4>
+                <p class="text-[9px] text-brand-muted mt-1 leading-normal">
+                  毎日細かくコメントする代わりに、セッション来店時にこの1週間の食事・体重データをAIが一括スキャン。女性特有の体質リズム・スポーツ栄養学に基づき、優しい1週間の総評レポートを瞬時に作成します。
+                </p>
+              </div>
+              <button onclick="window.generateWeeklyReportAI()" id="btn-generate-weekly" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] py-2 px-3 rounded-xl shadow-sm transition flex items-center justify-center gap-1 shrink-0">
                 <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-                ✨ AI女性専門アドバイス下書き生成
+                1週間の食事をまとめてAI分析
               </button>
             </div>
-            <p class="text-[10px] text-brand-muted">
-              食事アドバイスを入力するか、上の『AI女性専門アドバイス下書き生成』を押すと、その日の食事結果・PFCバランス・体重をAIが高度に分析し、優しくかつエビデンスに基づいた食事指導メッセージを下書き作成します。
-            </p>
-            <div class="space-y-2">
-              <textarea id="trainer-feedback-input" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-xs text-brand-text focus:outline-none focus:border-brand-primary" rows="5" placeholder="鈴木様、本日のタンパク質量は非常に良く確保されていますね！夜ご飯の脂質をもう少しセーブするとカロリーバランスも完璧です..."></textarea>
-              <button onclick="window.submitTrainerFeedback()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
+
+            <!-- 出力と編集・送信フォーム -->
+            <div class="space-y-3">
+              <div>
+                <label class="text-[10px] text-brand-muted font-bold block mb-1">📋 1週間総括フィードバック（送信前の微調整が可能です）</label>
+                <textarea id="weekly-feedback-textarea" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-xs text-brand-text focus:outline-none focus:border-brand-primary" rows="8" placeholder="上の「1週間の食事をまとめてAI分析」をタップすると、女性生理学やスポーツ栄養エビデンスに基づく温かい総括レポートの下書きがここに自動生成されます。"></textarea>
+              </div>
+              <button onclick="window.submitWeeklyFeedback()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1.5">
                 <i data-lucide="send" class="w-4 h-4"></i>
-                食事アドバイスコメントを送信する
+                1週間総括レポートをクライアントアプリに即時送信する
               </button>
             </div>
           </div>
@@ -347,8 +383,8 @@
     let db, auth;
     let currentTargetClientId = null;
     let unsubscribeClientListener = null;
-    let globalClientData = null; // クラウド受信データを保持する
-    let selectedDateString = getTodayDateString(); // トレーナー側で選択している日付
+    let globalClientData = null; 
+    let selectedDateString = getTodayDateString(); 
 
     const firebaseConfig = {
       apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
@@ -408,7 +444,7 @@
       }
     }
 
-    // --- ブックマーク一覧管理 (LocalStorage) ---
+    // --- ブックマーク一覧管理 ---
     function getBookmarkList() {
       const stored = localStorage.getItem(`carat_trainer_bookmarks_${appId}`);
       return stored ? JSON.parse(stored) : [];
@@ -474,9 +510,9 @@
       const nickname = document.getElementById('new-client-name').value.trim();
       const cal = parseInt(document.getElementById('new-client-kcal').value) || 1800;
       const weight = parseFloat(document.getElementById('new-client-weight').value) || 55.0;
-      const p = parseInt(document.getElementById('new-client-p').value) || 110;
-      const f = parseInt(document.getElementById('new-client-f').value) || 40;
-      const c = parseInt(document.getElementById('new-client-c').value) || 250;
+      const p = parseInt(document.getElementById('new-client-p').value) || 120;
+      const f = parseInt(document.getElementById('new-client-f').value) || 45;
+      const c = parseInt(document.getElementById('new-client-c').value) || 230;
 
       if (!nickname) {
         alert("ニックネームを入力してください。");
@@ -518,7 +554,6 @@
           await signInAnonymously(auth);
         }
 
-        // RULE 1: Public共有フォルダに書き込む
         const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', newId);
         await setDoc(docRef, initialClientState);
 
@@ -614,7 +649,7 @@
         unsubscribeClientListener = onSnapshot(clientDocRef, (docSnap) => {
           if (docSnap.exists()) {
             const data = docSnap.data();
-            globalClientData = data; // キャッシュに保持する
+            globalClientData = data; 
             
             renderClientDashboard(data);
             
@@ -629,7 +664,7 @@
           }
         }, (error) => {
           console.error("Load Client Fail:", error);
-          alert("データベースからの読込に班員エラー、または同期不全が発生しました。");
+          alert("データベースからの読込に失敗しました。");
         });
       } catch (err) {
         console.error("Auth error on load:", err);
@@ -641,7 +676,6 @@
       document.getElementById('client-avatar-text').innerText = (data.nickname || "ゲ").substring(0, 1);
       document.getElementById('display-client-id-badge').innerText = currentTargetClientId;
 
-      // 日付選択変更に応じた、総摂取・実績PFCの再計算
       const dailyTotals = calculateTotalsForDate(data, selectedDateString);
 
       document.getElementById('client-cur-cal').innerText = dailyTotals.cal.toLocaleString();
@@ -651,22 +685,20 @@
       document.getElementById('client-fat').innerText = data.fatRate ? data.fatRate.toFixed(1) : '--';
 
       document.getElementById('client-cur-p').innerText = dailyTotals.p.toFixed(1);
-      document.getElementById('client-tar-p').innerText = data.targetP || '0';
+      document.getElementById('client-tar-p').innerText = data.targetP || '120';
 
       document.getElementById('client-cur-f').innerText = dailyTotals.f.toFixed(1);
-      document.getElementById('client-tar-f').innerText = data.targetF || '0';
+      document.getElementById('client-tar-f').innerText = data.targetF || '45';
 
       document.getElementById('client-cur-c').innerText = dailyTotals.c.toFixed(1);
-      document.getElementById('client-tar-c').innerText = data.targetC || '0';
+      document.getElementById('client-tar-c').innerText = data.targetC || '230';
 
-      // 参照日の食事一覧表示の動的書き換え
       document.getElementById('energy-section-title').innerText = `${selectedDateString.substring(5)} の総摂取エネルギー`;
       document.getElementById('timeline-section-title').innerHTML = `
         <i data-lucide="utensils" class="w-4 h-4 text-brand-primary"></i>
         ${selectedDateString.substring(5)} の登録食事明細 (${dailyTotals.meals.length}件)
       `;
 
-      // 最終同期
       const now = new Date();
       document.getElementById('last-update-time').innerText = `最終同期: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
 
@@ -677,7 +709,6 @@
         document.getElementById(`weekly-cal-${day}`).innerText = dayLog && dayLog.kcal > 0 ? dayLog.kcal.toLocaleString() : '-';
       });
 
-      // タイムラインの構築
       const timelineEl = document.getElementById('client-meal-timeline');
       timelineEl.innerHTML = "";
       if (dailyTotals.meals && dailyTotals.meals.length > 0) {
@@ -707,31 +738,6 @@
       lucide.createIcons();
     }
 
-    // --- フィードバック指導送信 ---
-    window.submitTrainerFeedback = async function() {
-      if (!currentTargetClientId) {
-        alert("クライアントが選択されていません。");
-        return;
-      }
-      const feedbackText = document.getElementById('trainer-feedback-input').value.trim();
-      if (!feedbackText) {
-        alert("アドバイスコメントを入力してください。");
-        return;
-      }
-      try {
-        const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
-        await updateDoc(clientDocRef, {
-          trainerFeedback: feedbackText,
-          trainerFeedbackAt: new Date().toISOString()
-        });
-        showToast("食事アドバイスをリアルタイム送信しました!");
-        document.getElementById('trainer-feedback-input').value = "";
-      } catch (err) {
-        console.error(err);
-        alert("コメント送信に失敗しました。");
-      }
-    };
-
     // --- 店舗用APIキー登録 ---
     window.saveTrainerGeminiKey = function() {
       const key = document.getElementById('trainer-gemini-key').value.trim();
@@ -740,17 +746,16 @@
         return;
       }
       localStorage.setItem(`carat_trainer_gemini_key_${appId}`, key);
-      showToast("店舗Gemini APIキーを保存・登録しました。");
+      showToast("店舗Gemini APIキーを登録しました。");
     };
 
-    // --- Gemini API連携 (フォールバック & エラー検知) ---
+    // --- Gemini API連携 ---
     async function fetchGeminiWithFallback(payload) {
       const key = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
       if (!key) {
-        throw new Error("店舗Gemini API Keyが設定されていません。最上部の『店舗Gemini APIキーの自動同期設定』にAPIキーを設定してください。");
+        throw new Error("店舗Gemini API Keyが設定されていません。最上部の設定に入力してください。");
       }
 
-      // 安定的な接続を提供する試行パターン
       const trialPatterns = [
         { version: "v1beta", model: "gemini-2.5-flash" },
         { version: "v1", model: "gemini-1.5-flash" }
@@ -769,77 +774,111 @@
           if (response.ok) {
             return await response.json();
           } else {
-            const errText = await response.text();
             if (status === 403) {
-              throw new Error("【APIキー無効】Googleによってキーが制限または停止されています。正しいキーを再設定してください。");
+              throw new Error("【APIキー無効】Googleによって制限または停止されています。");
             }
-            lastError = `通信エラー(ステータス: ${status})`;
+            lastError = `通信エラー(${status})`;
           }
         } catch (e) {
-          if (e.message && e.message.includes("APIキー無効")) {
-            throw e;
-          }
+          if (e.message && e.message.includes("APIキー無効")) throw e;
           lastError = e.message || e;
         }
       }
       throw new Error(`【解析失敗】${lastError}`);
     }
 
-    // === 新設: 女性専門エビデンスベース食事アドバイス自動生成 ===
-    window.generateAIAdvice = async function() {
+    // ==========================================
+    // ★ 来店時専用：直近1週間食事AI総括分析 ★
+    // ==========================================
+    window.generateWeeklyReportAI = async function() {
       if (!currentTargetClientId || !globalClientData) {
         alert("クライアントデータを先にロードしてください。");
         return;
       }
 
-      const generateBtn = document.getElementById('btn-generate-ai-advice');
+      const generateBtn = document.getElementById('btn-generate-weekly');
       const originalText = generateBtn.innerHTML;
       generateBtn.disabled = true;
       generateBtn.innerHTML = `
         <span class="flex items-center gap-1 justify-center">
-          <svg class="animate-spin -ml-1 mr-2 h-3.5 w-3.5 text-emerald-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <svg class="animate-spin -ml-1 mr-2 h-3.5 w-3.5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          女性専門エビデンス分析中...
+          1週間分の食事を解析中...
         </span>
       `;
 
       try {
         const data = globalClientData;
-        const nickname = data.nickname || "クライアント";
+        
+        // 1週間分の過去日食事データを抽出 (参照日から遡って7日間)
+        const dateList = [];
+        const baseDate = new Date(selectedDateString);
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(baseDate);
+          d.setDate(baseDate.getDate() - i);
+          const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+          dateList.push(dStr);
+        }
+
+        let totalKcalSum = 0;
+        let totalPSum = 0;
+        let totalFSum = 0;
+        let totalCSum = 0;
+        let recordedDaysCount = 0;
+        let weeklyMealsSummaryText = "";
+
+        dateList.forEach(dateStr => {
+          const totals = calculateTotalsForDate(data, dateStr);
+          if (totals.meals && totals.meals.length > 0) {
+            recordedDaysCount++;
+            totalKcalSum += totals.cal;
+            totalPSum += totals.p;
+            totalFSum += totals.f;
+            totalCSum += totals.c;
+
+            const mealNames = totals.meals.map(m => m.name).join(', ');
+            weeklyMealsSummaryText += `・[${dateStr}] カロリー:${totals.cal}kcal (P:${totals.p.toFixed(1)}g, F:${totals.f.toFixed(1)}g, C:${totals.c.toFixed(1)}g) 主な食事: ${mealNames}\n`;
+          }
+        });
+
+        if (recordedDaysCount === 0) {
+          throw new Error("過去1週間(選択日基準)の食事ログが1件も登録されていません。お客様アプリで食事を入力してください。");
+        }
+
+        const avgKcal = Math.round(totalKcalSum / recordedDaysCount);
+        const avgP = (totalPSum / recordedDaysCount).toFixed(1);
+        const avgF = (totalFSum / recordedDaysCount).toFixed(1);
+        const avgC = (totalCSum / recordedDaysCount).toFixed(1);
+
         const targetCal = data.targetCalories || 1800;
-        const targetP = data.targetP || 110;
-        const targetF = data.targetF || 40;
-        const targetC = data.targetC || 250;
-        const weight = data.weight || "--";
-        const fatRate = data.fatRate || "--";
+        const targetP = data.targetP || 120;
+        const targetF = data.targetF || 45;
+        const targetC = data.targetC || 230;
 
-        // 選択された食事データを合算
-        const dailyTotals = calculateTotalsForDate(data, selectedDateString);
-        const mealsText = dailyTotals.meals.map(m => `・[${m.category}] ${m.name} (${m.kcal}kcal, P:${m.p}g, F:${m.f}g, C:${m.c}g)`).join('\n');
-
-        const systemPrompt = "あなたはパーソナルジムCARATの女性専門チーフトレーナー、兼ヘルスケアスポーツ栄養士です。自律神経、代謝リズム、ホルモン、美肌に配慮し科学的エビデンスに基づいて優しく論理的なアドバイスを作成します。";
+        const systemPrompt = "あなたは女性専門のチーフトレーナー、兼ヘルスケアスポーツ栄養士です。自律神経、基礎代謝量、エストロゲン・プロゲステロンの周期的な影響、むくみ対策、腸内環境等に配慮し、科学的エビデンスに基づいて1週間の食事実績を総合分析し、優しい語り口（CARAT指導方針）でアドバイスを作成します。";
         const userPrompt = `
-クライアント名: ${nickname} 様
-測定値: 体重 ${weight}kg / 体脂肪率 ${fatRate}%
-目標: カロリー ${targetCal}kcal, P:${targetP}g, F:${targetF}g, C:${targetC}g
+クライアント: ${data.nickname || "クライアント"} 様
+測定値: 体重 ${data.weight || '--'}kg / 体脂肪率 ${data.fatRate || '--'}%
+1日の設定目標: カロリー ${targetCal}kcal, P:${targetP}g, F:${targetF}g, C:${targetC}g
 
-選択された日付: ${selectedDateString}
-当日の食事実績:
-- 総カロリー: ${dailyTotals.cal} kcal (目標差: ${dailyTotals.cal - targetCal} kcal)
-- タンパク質 (P): ${dailyTotals.p.toFixed(1)}g (目標差: ${(dailyTotals.p - targetP).toFixed(1)}g)
-- 脂質 (F): ${dailyTotals.f.toFixed(1)}g (目標差: ${(dailyTotals.f - targetF).toFixed(1)}g)
-- 炭水化物 (C): ${dailyTotals.c.toFixed(1)}g (目標差: ${(dailyTotals.c - targetC).toFixed(1)}g)
+過去1週間の食事実績（記録日: ${recordedDaysCount}日 / 7日中）:
+- 1日平均摂取カロリー: ${avgKcal} kcal (目標: ${targetCal}kcal)
+- 1日平均タンパク質(P): ${avgP} g (目標: ${targetP}g)
+- 1日平均脂質(F): ${avgF} g (目標: ${targetF}g)
+- 1日平均炭水化物(C): ${avgC} g (目標: ${targetC}g)
 
-当日の食事内容:
-${mealsText || "（この日の食事登録はありません）"}
+1週間の日別実績詳細:
+${weeklyMealsSummaryText}
 
-【回答要件】
-1. 女性のからだの特性（月経周期による水分貯留、冷えやむくみ、エストロゲン・プロゲステロンのリズム、腸内環境、基礎代謝量、美肌成分など）を論理的に解説する項目を必ず1つ以上含めてください。
-2. スポーツ栄養学（タンパク質合成、糖質補給タイミング、良質な脂質の効果、血糖値スパイクの抑制など）に基づく科学的な指導コメントを、優しく寄り添うトーン（CARATの専属トレーナーらしさ）で構成してください。
-3. 文字数は250文字〜350文字程度。段落や改行を美しく設けてください。
-4. 返答には前置き（「かしこまりました」など）やMarkdownタグ、JSONフォーマットは絶対に含めず、コメント本文のみを直接出力してください。
+【記述内容のルール】
+1. この1週間のがんばりをしっかりと労い、肯定的なフィードバックを最初に行ってください。
+2. 平均PFCと目標値とのギャップを論理的に分析し、「なぜその過不足が起きたか」の理由と対策をスポーツ栄養学をベースに優しく指摘してください。
+3. 女性のからだの特性（月経周期のホルモン、むくみ、自律神経、美肌、冷え、腸内環境のいずれか1点以上）を交えた、説得力ある改善コメント（エビデンスベース）を必ず盛り込んでください。
+4. 「来週の具体的な1アクション（例: コンビニの〇〇を週2回取り入れる、夜の脂質を3g減らすなど）」を明確に1点提示してください。
+5. 文字数は350〜450文字程度で、スマートフォンでスクロールして読みやすいよう、段落・改行、絵文字をバランスよく配置してください。
+6. 前置き（「かしこまりました」など）やMarkdownタグは含めず、コメント本文のみを直接出力してください。
 `;
 
         const payload = {
@@ -851,20 +890,222 @@ ${mealsText || "（この日の食事登録はありません）"}
         const text = res.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (text) {
-          document.getElementById('trainer-feedback-input').value = text.trim();
-          showToast("女性専門AIアドバイスを自動生成しました！");
+          document.getElementById('weekly-feedback-textarea').value = text.trim();
+          showToast("直近1週間の食事データをAIが分析し、総括レポートを作成しました！");
         } else {
-          throw new Error("AIから有効なアドバイスを取得できませんでした。");
+          throw new Error("AIから総評データを受信できませんでした。");
         }
       } catch (err) {
         console.error(err);
-        alert(err.message || "AIアドバイスの自動生成に失敗しました。");
+        alert(err.message || "1週間総括アドバイスの自動生成に失敗しました。");
       } finally {
         generateBtn.disabled = false;
         generateBtn.innerHTML = originalText;
         lucide.createIcons();
       }
     };
+
+    // --- 1週間フィードバック指導の送信 ---
+    window.submitWeeklyFeedback = async function() {
+      if (!currentTargetClientId) {
+        alert("クライアントが選択されていません。");
+        return;
+      }
+      const feedbackText = document.getElementById('weekly-feedback-textarea').value.trim();
+      if (!feedbackText) {
+        alert("1週間総括アドバイスコメントを入力またはAI自動生成してください。");
+        return;
+      }
+      try {
+        const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
+        await updateDoc(clientDocRef, {
+          trainerFeedback: feedbackText,
+          trainerFeedbackAt: new Date().toISOString()
+        });
+        showToast("1週間の総評アドバイスをクライアントアプリに即時送信しました！");
+        document.getElementById('weekly-feedback-textarea').value = "";
+      } catch (err) {
+        console.error(err);
+        alert("送信に失敗しました。接続環境をご確認ください。");
+      }
+    };
+
+
+    // ==========================================
+    // ★ 完全復活: 全クライアントAI一括プレ・アナライザー ★
+    // ==========================================
+    window.analyzeAllClients = async function() {
+      const list = getBookmarkList();
+      if (list.length === 0) {
+        alert("登録されているクライアントがありません。新規クライアントを登録してください。");
+        return;
+      }
+
+      const gridContainer = document.getElementById('ai-client-analyzer-grid');
+      gridContainer.innerHTML = `
+        <div class="col-span-full text-center py-10 bg-brand-bg rounded-xl border border-dashed border-brand-border flex flex-col items-center justify-center gap-2">
+          <div class="w-8 h-8 rounded-full border-4 border-brand-primary border-t-transparent animate-spin"></div>
+          <span class="text-xs font-bold text-brand-text">全担当クライアントデータを巡回・AI分析中...</span>
+          <span class="text-[9px] text-brand-muted">これには10秒〜20秒程度かかる場合があります。画面を閉じずにお待ちください。</span>
+        </div>
+      `;
+
+      try {
+        if (!auth.currentUser) {
+          await signInAnonymously(auth);
+        }
+
+        const analyzedResults = [];
+        const todayStr = getTodayDateString();
+
+        const fetchPromises = list.map(async (client) => {
+          const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', client.id);
+          const snap = await getDoc(clientDocRef);
+          if (snap.exists()) {
+            return { id: client.id, nickname: client.nickname, data: snap.data() };
+          }
+          return null;
+        });
+
+        const rawResults = await Promise.all(fetchPromises);
+        const validClients = rawResults.filter(r => r !== null);
+
+        for (const client of validClients) {
+          const data = client.data;
+          const totals = calculateTotalsForDate(data, todayStr);
+          
+          let status = "未入力"; 
+          let statusColorClass = "bg-gray-100 text-gray-600 border-gray-200";
+          let alertReason = "今日の食事がまだ登録されていません。";
+
+          if (totals.meals && totals.meals.length > 0) {
+            const calDiff = totals.cal - (data.targetCalories || 1800);
+            const pDiff = totals.p - (data.targetP || 120);
+            
+            if (totals.cal > (data.targetCalories || 1800) + 200) {
+              status = "要指導";
+              statusColorClass = "bg-rose-50 text-rose-700 border-rose-200";
+              alertReason = "1日目標のエネルギー枠をオーバーしています。";
+            } else if (pDiff < -25) {
+              status = "要指導";
+              statusColorClass = "bg-amber-50 text-amber-700 border-amber-200";
+              alertReason = "たんぱく質の摂取量が目標より大きく不足しています。";
+            } else {
+              status = "順調";
+              statusColorClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
+              alertReason = "PFC、カロリーバランスともに順調に調整できています！";
+            }
+          }
+
+          let adviceDraft = "";
+          try {
+            const mealsText = totals.meals.map(m => `・[${m.category}] ${m.name} (${m.kcal}kcal, P:${m.p}g, F:${m.f}g, C:${m.c}g)`).join('\n');
+            const systemPrompt = "あなたはCARATのパーソナルトレーナーです。女性生理学やスポーツ栄養エビデンスに基づき、寄り添う優しいアドバイスを200文字以内で作成してください。前置きやMarkdownマークは一切禁止。本文のみ。";
+            const userPrompt = `
+クライアント: ${client.nickname}様
+目標: ${data.targetCalories || 1800}kcal, P:${data.targetP || 120}g, F:${data.targetF || 45}g, C:${data.targetC || 230}g
+実績: ${totals.cal}kcal, P:${totals.p.toFixed(1)}g, F:${totals.f.toFixed(1)}g, C:${totals.c.toFixed(1)}g
+食事:
+${mealsText || "食事の登録なし"}
+状況分析: ${alertReason}
+`;
+            const payload = {
+              contents: [{ parts: [{ text: userPrompt }] }],
+              systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+            const res = await fetchGeminiWithFallback(payload);
+            adviceDraft = res.candidates?.[0]?.content?.parts?.[0]?.text || "";
+          } catch (e) {
+            adviceDraft = `${client.nickname}様、本日の食事ログを確認しました！ ${alertReason} 今後も体調を最優先にPFC管理を進めましょう！`;
+          }
+
+          analyzedResults.push({
+            id: client.id,
+            nickname: client.nickname,
+            totals,
+            status,
+            statusColorClass,
+            alertReason,
+            adviceDraft: adviceDraft.trim()
+          });
+        }
+
+        gridContainer.innerHTML = "";
+        analyzedResults.forEach((res, i) => {
+          const card = document.createElement('div');
+          card.className = "bg-brand-card p-4 rounded-xl border border-brand-border/60 shadow-sm flex flex-col justify-between space-y-3";
+          card.innerHTML = `
+            <div class="flex justify-between items-start border-b border-brand-border/40 pb-2">
+              <div>
+                <span class="text-xs font-bold text-brand-text block">${res.nickname} 様</span>
+                <span class="text-[9px] font-mono text-brand-muted block">ID: ${res.id}</span>
+              </div>
+              <span class="text-[9px] px-2 py-0.5 rounded-full font-bold border ${res.statusColorClass}">
+                ${res.status}
+              </span>
+            </div>
+
+            <div class="text-[10px] space-y-1">
+              <div class="flex justify-between font-mono">
+                <span>本日摂取カロリー:</span>
+                <span class="font-bold text-brand-primary">${res.totals.cal} / ${res.status === '未入力' ? 0 : (globalClientData?.targetCalories || 1800)} kcal</span>
+              </div>
+              <p class="text-xs text-brand-primary font-bold mt-1">
+                📍 AI判定: ${res.alertReason}
+              </p>
+            </div>
+
+            <div class="space-y-1.5 pt-2 border-t border-brand-border/40">
+              <span class="text-[9px] text-brand-muted font-bold block">✨ AI女性専門コーチングメッセージ（下書き）</span>
+              <textarea id="ai-draft-textarea-${i}" class="w-full bg-brand-bg border border-brand-border rounded-lg p-2 text-[10px] text-brand-text focus:outline-none focus:border-brand-primary" rows="4">${res.adviceDraft}</textarea>
+            </div>
+
+            <div class="flex gap-2 pt-1">
+              <button onclick="window.selectBookmarkClient('${res.id}')" class="flex-1 bg-brand-bg hover:bg-brand-accent text-brand-primary text-[10px] font-bold py-2 rounded-lg border border-brand-primary/20 transition flex items-center justify-center gap-1">
+                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                詳細カルテ
+              </button>
+              <button onclick="window.approveAndSendDraft('${res.id}', ${i})" class="flex-2 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold py-2 px-4 rounded-lg shadow-sm transition flex items-center justify-center gap-1">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                1タップ承認・即時送信
+              </button>
+            </div>
+          `;
+          gridContainer.appendChild(card);
+        });
+
+        lucide.createIcons();
+        showToast("全員の自動AIスクリーニング＆プレアドバイス作成が完了しました！");
+      } catch (err) {
+        console.error("Batch analyze fail:", err);
+        gridContainer.innerHTML = `
+          <div class="col-span-full text-center py-6 bg-rose-50 rounded-xl border border-dashed border-rose-200">
+            <span class="text-[10px] text-rose-700 font-bold block">一括スキャンに失敗しました。店舗Geminiキーが正しく設定されているか確認してください。</span>
+          </div>
+        `;
+      }
+    };
+
+    // 一括画面からの直接送信機能
+    window.approveAndSendDraft = async function(clientId, index) {
+      const draftText = document.getElementById(`ai-draft-textarea-${index}`).value.trim();
+      if (!draftText) {
+        alert("メッセージが空です。");
+        return;
+      }
+      try {
+        const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', clientId);
+        await updateDoc(clientDocRef, {
+          trainerFeedback: draftText,
+          trainerFeedbackAt: new Date().toISOString()
+        });
+        showToast(`${clientId}様へアドバイスを送信しました！`);
+      } catch (e) {
+        console.error(e);
+        alert("送信に失敗しました。接続環境を確認してください。");
+      }
+    };
+
 
     // 起動処理
     document.addEventListener('DOMContentLoaded', () => {
