@@ -232,7 +232,7 @@
           </div>
           
           <!-- PFC目標表示 -->
-          <div class="flex-1 space-y-2 text-brand-text">
+          <div class="flex-1 space-y-2 text-brand-text font-bold">
             <div class="space-y-0.5">
               <div class="flex justify-between items-baseline">
                 <span class="text-sky-600 text-[11px] font-black flex items-center gap-1">
@@ -571,7 +571,7 @@
         <p class="text-[10px] text-brand-muted leading-relaxed font-medium">食べたものを文章で入力してください。AIが自動で食材に分解して計算します。</p>
         <textarea id="text-analyze-input" class="w-full bg-brand-bg border border-brand-border rounded-2xl p-3.5 text-xs text-brand-text font-bold focus:outline-none focus:border-brand-primary transition-all" rows="4" placeholder="例: 昼食に白米200gと、焼き鳥のもも塩3本、ほうれん草のお浸しを食べました。"></textarea>
         <button onclick="window.analyzeMealText()" id="btn-text-submit" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3.5 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-1.5">
-          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          <i data-lucide="sparkles" class="w-4.5 h-4.5"></i>
           解析して自動記録する
         </button>
       </div>
@@ -590,7 +590,7 @@
     </div>
   </div>
 
-  <!-- ★ 改良版：微調整・編集モーダル ★ -->
+  <!-- ★ 微調整・編集モーダル（100g備考欄、2段階アコーディオン食材確認、50%バグ対策を完全実装！） ★ -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-6 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
       
@@ -615,14 +615,14 @@
 
       <!-- 備考欄：100gあたりの換算カロリー表示 -->
       <div class="bg-brand-primary/5 border border-brand-primary/10 rounded-2xl p-3 text-[10px] text-brand-primary font-bold flex items-center gap-2">
-        <i data-lucide="info" class="w-4 h-4 text-brand-primary shrink-0"></i>
+        <i data-lucide="info" class="w-4.5 h-4.5 text-brand-primary shrink-0"></i>
         <div class="flex-1">
           <span class="block text-[8px] text-brand-muted uppercase tracking-wider">💡 栄養密度換算（100gあたり）</span>
           <span id="edit-meal-100g-density-info" class="font-sans text-brand-text font-black block mt-0.5">計算中...</span>
         </div>
       </div>
 
-      <!-- 割合選択 (10, 50, 100, カスタム) -->
+      <!-- 割合選択 (10, 50, 100, カスタム の仕様に統一) -->
       <div class="bg-gradient-to-tr from-brand-accent/50 to-brand-bg p-4 rounded-3xl border border-brand-primary/10 space-y-3">
         <span class="text-[10px] text-brand-text font-black flex items-center gap-1">
           <i data-lucide="pizza" class="w-4 h-4 text-brand-primary"></i>
@@ -669,7 +669,7 @@
           </div>
           
           <!-- 食材追加ボタン（食材確認アコーディオンを開いた時のみ一番下に露出！） -->
-          <button onclick="window.addIngredientRow()" class="w-full bg-white hover:bg-brand-accent text-brand-primary font-bold text-[10px] py-2 rounded-xl border border-brand-primary/20 transition flex items-center justify-center gap-1">
+          <button onclick="window.addIngredientRow()" class="w-full bg-white hover:bg-brand-accent text-brand-primary font-bold text-[10px] py-2.5 rounded-xl border border-brand-primary/20 transition flex items-center justify-center gap-1 shadow-sm">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i>
             ＋ 食材を新しく追加
           </button>
@@ -768,12 +768,13 @@
 
     let editingMealId = null;
     let editingMealObject = null;
-    let baseIngredients = []; 
 
+    // 献立提案AI用の状態
     let selectedMenuCategory = 'home'; 
     let selectedMealTimings = [getDefaultMealCategory()]; 
     let suggestedMenusCache = []; 
 
+    // ★ ロバストな型キャスト防御関数 ★
     function safeFloat(val) {
       if (val === null || val === undefined) return 0;
       if (typeof val === 'string') {
@@ -781,6 +782,42 @@
       }
       const num = parseFloat(val);
       return isNaN(num) ? 0 : num;
+    }
+
+    // ★ データ破壊を防ぐ共通イニシャライザ/標準化関数 ★
+    function standardizeMealObject(meal) {
+      if (!meal) return null;
+      const std = {
+        id: meal.id || 'M-' + Date.now() + Math.floor(Math.random() * 100),
+        name: meal.name || "お食事",
+        time: meal.time || "12:00",
+        kcal: safeFloat(meal.kcal),
+        p: safeFloat(meal.p),
+        f: safeFloat(meal.f),
+        c: safeFloat(meal.c),
+        lastScale: safeFloat(meal.lastScale) || 1,
+        ingredients: []
+      };
+
+      const rawIngredients = meal.ingredients || [];
+      std.ingredients = rawIngredients.map(ing => {
+        const w = safeFloat(ing.weight || ing.originalWeight || 100);
+        return {
+          name: ing.name || "食材",
+          weight: safeFloat(ing.weight || 100),
+          kcal: safeFloat(ing.kcal),
+          p: safeFloat(ing.p),
+          f: safeFloat(ing.f),
+          c: safeFloat(ing.c),
+          originalWeight: safeFloat(ing.originalWeight) || (w / std.lastScale),
+          originalKcal: safeFloat(ing.originalKcal) || (safeFloat(ing.kcal) / std.lastScale),
+          originalP: safeFloat(ing.originalP) || (safeFloat(ing.p) / std.lastScale),
+          originalF: safeFloat(ing.originalF) || (safeFloat(ing.f) / std.lastScale),
+          originalC: safeFloat(ing.originalC) || (safeFloat(ing.c) / std.lastScale)
+        };
+      });
+
+      return std;
     }
 
     function showToast(message) {
@@ -1153,7 +1190,12 @@
         meals.forEach((m) => {
           const item = document.createElement('div');
           item.className = "bg-brand-card hover:bg-brand-accent/40 p-4 rounded-2xl border border-brand-border flex justify-between items-center text-xs transition-all duration-200 cursor-pointer shadow-sm relative overflow-hidden group";
-          item.onclick = () => window.openEditMealModal(m.id);
+          
+          // ★ SVG削除ボタン等の誤タップ競合を完全に遮断する安全onclickモデル ★
+          item.onclick = (e) => {
+            if (e.target.closest('button')) return;
+            window.openEditMealModal(m.id);
+          };
           
           const pVal = safeFloat(m.p);
           const fVal = safeFloat(m.f);
@@ -1178,6 +1220,7 @@
                 <span class="text-[9px] text-brand-muted font-bold">kcal</span>
               </div>
               
+              <!-- 削除ボタン自体 -->
               <button onclick="event.stopPropagation(); event.preventDefault(); window.deleteMeal('${m.id}')" class="text-brand-muted hover:text-rose-500 p-2 hover:bg-rose-50 rounded-xl transition-all">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
@@ -1309,21 +1352,10 @@
       }
     };
 
-    async function saveMealToCloud(newMeal) {
-      newMeal.kcal = safeFloat(newMeal.kcal);
-      newMeal.p = safeFloat(newMeal.p);
-      newMeal.f = safeFloat(newMeal.f);
-      newMeal.c = safeFloat(newMeal.c);
-      
-      if (newMeal.ingredients) {
-        newMeal.ingredients.forEach(ing => {
-          ing.weight = safeFloat(ing.weight);
-          ing.kcal = safeFloat(ing.kcal);
-          ing.p = safeFloat(ing.p);
-          ing.f = safeFloat(ing.f);
-          ing.c = safeFloat(ing.c);
-        });
-      }
+    async function saveMealToCloud(mealRaw) {
+      // データベース保存時の完全なるクレンジング・標準化キャスト
+      const newMeal = standardizeMealObject(mealRaw);
+      if (!newMeal) return;
 
       const targetDate = selectedDateString;
       const nextMealsByDate = { ...clientState.mealsByDate };
@@ -1387,7 +1419,7 @@
 
 
     // =======================================================
-    // ★ AI解析エンジン ★
+    // ★ 快速AIエンジン（写真・文章から食材を逆引き解析） ★
     // =======================================================
 
     async function fetchGeminiForClient(payload) {
@@ -1425,6 +1457,44 @@
         }
       }
       throw new Error(`【解析失敗】${lastError}`);
+    }
+
+    // ★ 完璧なJSON抽出＆キーマッピング防壁 ★
+    function parseGeminiJSON(text) {
+      try {
+        const cleaned = text.replace(/^```json/g, "").replace(/```$/g, "").trim();
+        const start = cleaned.indexOf('{');
+        const end = cleaned.lastIndexOf('}');
+        if (start === -1 || end === -1) {
+          throw new Error("JSONの括弧が見つかりません。");
+        }
+        const jsonStr = cleaned.slice(start, end + 1);
+        const parsed = JSON.parse(jsonStr);
+
+        const normalized = {
+          name: parsed.name || parsed.menuName || parsed.title || "料理名不明",
+          kcal: safeFloat(parsed.kcal || parsed.calories || parsed.energy),
+          p: safeFloat(parsed.p || parsed.protein || parsed.proteins),
+          f: safeFloat(parsed.f || parsed.fat || parsed.fats),
+          c: safeFloat(parsed.c || parsed.carbo || parsed.carbohydrate || parsed.carbohydrates),
+          ingredients: []
+        };
+
+        const rawIngredients = parsed.ingredients || parsed.ingredientsList || parsed.components || parsed.items || [];
+        normalized.ingredients = rawIngredients.map(ing => ({
+          name: ing.name || ing.material || ing.ingredient || "食材",
+          weight: safeFloat(ing.weight || ing.amount || ing.quantity || 100),
+          kcal: safeFloat(ing.kcal || ing.calories || ing.energy),
+          p: safeFloat(ing.p || ing.protein),
+          f: safeFloat(ing.f || ing.fat),
+          c: safeFloat(ing.c || ing.carbo || ing.carbohydrate)
+        }));
+
+        return normalized;
+      } catch (err) {
+        console.error("JSON Parse Fail. Text was:", text, err);
+        throw new Error("AIデータの解読に失敗しました。");
+      }
     }
 
     window.analyzeMealText = async function() {
@@ -1472,14 +1542,8 @@
         };
 
         const res = await fetchGeminiForClient(payload);
-        let jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        jsonText = jsonText.trim();
-        if (jsonText.startsWith("```")) {
-          jsonText = jsonText.replace(/^```json?/i, "").replace(/```$/, "").trim();
-        }
-
-        const parsed = JSON.parse(jsonText);
+        let rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsed = parseGeminiJSON(rawText);
 
         if (parsed && parsed.name) {
           const now = new Date();
@@ -1489,18 +1553,11 @@
             id: targetMealId,
             name: parsed.name,
             time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
-            kcal: safeFloat(parsed.kcal),
-            p: safeFloat(parsed.p),
-            f: safeFloat(parsed.f),
-            c: safeFloat(parsed.c),
-            ingredients: (parsed.ingredients || []).map(ing => ({
-              name: ing.name || "構成食材",
-              weight: safeFloat(ing.weight),
-              kcal: safeFloat(ing.kcal),
-              p: safeFloat(ing.p),
-              f: safeFloat(ing.f),
-              c: safeFloat(ing.c)
-            }))
+            kcal: parsed.kcal,
+            p: parsed.p,
+            f: parsed.f,
+            c: parsed.c,
+            ingredients: parsed.ingredients
           };
 
           await saveMealToCloud(newMeal);
@@ -1543,7 +1600,7 @@
   "c": 炭水化物総計g(数値),
   "ingredients": [
     {
-      "name": "識別された構成食材(例: 鶏もも揚げ肉)",
+      "name": "識別された構成食材",
       "weight": 推定グラム数(数値),
       "kcal": カロリー(数値),
       "p": タンパク質g(数値),
@@ -1565,14 +1622,8 @@
           };
 
           const res = await fetchGeminiForClient(payload);
-          let jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text;
-
-          jsonText = jsonText.trim();
-          if (jsonText.startsWith("```")) {
-            jsonText = jsonText.replace(/^```json?/i, "").replace(/```$/, "").trim();
-          }
-
-          const parsed = JSON.parse(jsonText);
+          let rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
+          const parsed = parseGeminiJSON(rawText);
 
           if (parsed && parsed.name) {
             const now = new Date();
@@ -1582,18 +1633,11 @@
               id: targetMealId,
               name: parsed.name,
               time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
-              kcal: safeFloat(parsed.kcal),
-              p: safeFloat(parsed.p),
-              f: safeFloat(parsed.f),
-              c: safeFloat(parsed.c),
-              ingredients: (parsed.ingredients || []).map(ing => ({
-                name: ing.name || "識別食材",
-                weight: safeFloat(ing.weight),
-                kcal: safeFloat(ing.kcal),
-                p: safeFloat(ing.p),
-                f: safeFloat(ing.f),
-                c: safeFloat(ing.c)
-              }))
+              kcal: parsed.kcal,
+              p: parsed.p,
+              f: parsed.f,
+              c: parsed.c,
+              ingredients: parsed.ingredients
             };
 
             await saveMealToCloud(newMeal);
@@ -1615,7 +1659,7 @@
 
 
     // =======================================================
-    // ★ グラム・割合タブ切り替えの精密連動ロジック ★
+    // ★ グラム・割合・アコーディオン完全連動 ★
     // =======================================================
 
     window.openEditMealModal = function(mealId) {
@@ -1624,27 +1668,22 @@
       if (!meal) return;
 
       editingMealId = mealId;
-      editingMealObject = JSON.parse(JSON.stringify(meal)); 
-      
-      const lastSavedScale = safeFloat(editingMealObject.lastScale) || 1;
-      editingMealObject.ingredients.forEach(ing => {
-        ing.originalWeight = safeFloat(ing.weight) / lastSavedScale;
-        ing.originalKcal = safeFloat(ing.kcal) / lastSavedScale;
-        ing.originalP = safeFloat(ing.p) / lastSavedScale;
-        ing.originalF = safeFloat(ing.f) / lastSavedScale;
-        ing.originalC = safeFloat(ing.c) / lastSavedScale;
-      });
+      editingMealObject = standardizeMealObject(meal); // ★ 確実に標準化イニシャライザを通す
 
       document.getElementById('edit-meal-name').value = editingMealObject.name;
       
-      // アコーディオン表示領域を初期状態では畳んでスッキリさせる
+      // アコーディオン初期化：閉じた状態にする
       const collapseArea = document.getElementById('ingredients-collapse-area');
       collapseArea.classList.add('hidden');
       const arrowIcon = document.getElementById('ingredients-accordion-arrow');
       if (arrowIcon) arrowIcon.style.transform = 'rotate(0deg)';
 
-      window.setQuickScale(Math.round(lastSavedScale * 100));
-      renderIngredientsInEditor(); // ★ 描画命令トリガーを完璧に配置！
+      // 割合選択の活性化
+      window.setQuickScale(Math.round(editingMealObject.lastScale * 100));
+      
+      // モーダルオープン時に裏で食材確認DOMを先行描画
+      renderIngredientsInEditor();
+      
       window.toggleModal('edit-meal-modal', true);
     };
 
@@ -1652,7 +1691,6 @@
       window.toggleModal('edit-meal-modal', false);
       editingMealId = null;
       editingMealObject = null;
-      baseIngredients = [];
     };
 
     window.toggleIngredientsAccordion = function() {
@@ -1661,6 +1699,8 @@
       
       const isHidden = collapseArea.classList.contains('hidden');
       if (isHidden) {
+        // 開く瞬間に最新描画トリガーを確実に実行
+        renderIngredientsInEditor();
         collapseArea.classList.remove('hidden');
         if (arrowIcon) arrowIcon.style.transform = 'rotate(180deg)';
       } else {
@@ -1698,7 +1738,7 @@
       if (!editingMealObject.ingredients || editingMealObject.ingredients.length === 0) {
         container.innerHTML = `
           <div class="text-center py-5 bg-brand-bg rounded-2xl border border-dashed border-brand-border">
-            <span class="text-[10px] text-brand-muted font-bold block">構成食材データはありません。追加してください。</span>
+            <span class="text-[10px] text-brand-muted font-bold block">構成食材データはありません。食材を追加してください。</span>
           </div>
         `;
         recalculateTotalsInEditor();
@@ -1737,13 +1777,17 @@
     };
 
     window.addIngredientRow = function() {
+      const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
+      const currentScale = currentSliderValue / 100;
+
+      // ★ 新規追加時も現在スケールを正確に逆算退避することで、スケール変更バグを物理駆逐 ★
       const newIng = {
         name: "新しい食材",
-        weight: 100,
-        kcal: 100,
-        p: 10,
-        f: 2,
-        c: 10,
+        weight: 100 * currentScale,
+        kcal: 100 * currentScale,
+        p: 10 * currentScale,
+        f: 2 * currentScale,
+        c: 10 * currentScale,
         originalWeight: 100,
         originalKcal: 100,
         originalP: 10,
@@ -1841,7 +1885,6 @@
       document.getElementById('preview-total-c').innerText = sumC.toFixed(1);
       document.getElementById('preview-total-kcal').innerText = Math.round(sumKcal).toLocaleString();
 
-      // 100gあたりのカロリー換算表示
       const densityEl = document.getElementById('edit-meal-100g-density-info');
       if (totalWeight > 0) {
         const factor = 100 / totalWeight;
@@ -1886,6 +1929,7 @@
         
         homeContent.classList.remove('hidden');
         aiMenuContent.classList.add('hidden');
+        renderClientApp();
       } else {
         homeBtn.className = "py-2.5 text-xs font-black rounded-xl transition-all text-brand-muted hover:text-brand-primary";
         aiMenuBtn.className = "py-2.5 text-xs font-black rounded-xl transition-all bg-brand-primary text-white shadow-md";
@@ -2035,7 +2079,7 @@
       "p": たんぱく質g(数値),
       "f": 脂質g(数値),
       "c": 炭水化物g(数値),
-      "ingredientsText": "構成食材や注文する単品名とグラム数(例: マグロ刺身 80g\\n納豆 1パック)",
+      "ingredientsText": "構成食材や注文する単品名とグラム数(例: 砂肝 120g\\nアスパラガス 50g\\nごま油 3g)",
       "advice": "女性専門の優しい指導アドバイス(例: 大戸屋のばくだん丼は、オクラや納豆などの食物繊維が豊富で、日中の血糖値の急上昇を抑え、代謝を高めてくれますよ。)",
       "ingredientsList": [
         {
