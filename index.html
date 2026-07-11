@@ -83,7 +83,7 @@
   <!-- メインコンテナエリア -->
   <main class="max-w-md mx-auto px-4 mt-4 animate-fade-in">
 
-    <!-- ==================== ★ 初期ログイン・連携画面 (コンテナ独立・崩れ完全防止) ★ ==================== -->
+    <!-- ==================== ★ 初期ログイン・連携画面 (コンテナ完全分離) ★ ==================== -->
     <div id="login-screen" class="space-y-6 text-center py-8">
       <div class="space-y-2">
         <h1 class="font-logo font-black text-3xl text-brand-primary tracking-wider">CARAT LOGIN</h1>
@@ -117,7 +117,7 @@
       <button onclick="window.bypassLoginForDemo()" class="text-xs text-brand-primary font-bold hover:underline">IDをお持ちでない方はこちら（ゲスト体験モード）</button>
     </div>
 
-    <!-- ==================== ★ メインダッシュボード画面 (初期非表示・レイアウト崩れ対策を完全ガード) ★ ==================== -->
+    <!-- ==================== ★ メインダッシュボード画面 ★ ==================== -->
     <div id="main-dashboard" class="hidden space-y-4">
 
       <!-- 連携完了ステータス -->
@@ -177,7 +177,6 @@
                 <i data-lucide="activity" class="w-4.5 h-4.5 text-brand-primary"></i>
                 今日の目標 & 摂取状況
               </h3>
-              <!-- オートリカバリー調整メッセージ -->
               <span id="auto-recovery-status-badge" class="hidden text-[9px] text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-md mt-1 font-bold border border-emerald-100 items-center gap-1 animate-pulse">
                 <i data-lucide="sparkles" class="w-3 h-3"></i> 昨日オーバー分を自動リセット中
               </span>
@@ -284,7 +283,7 @@
           <div class="absolute top-0 left-0 w-2 h-full bg-emerald-500" id="recovery-bar-color"></div>
           <div class="pl-2">
             <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-              <i data-lucide="sparkles" class="w-4 h-4 text-emerald-600"></i>
+              <i data-lucide="sparkles" class="w-4.5 h-4.5 text-emerald-600"></i>
               カロリーオートリカバリー貯金箱
             </h4>
             <p class="text-[9px] text-brand-muted mt-0.5" id="recovery-sub-info">昨日食べすぎたエネルギーを、自動で今日の目標から引いて相殺しています。</p>
@@ -313,19 +312,19 @@
             <p class="text-[9px] text-brand-muted mt-0.5">選択日を含む過去7日間の目標総計に対する過不足（おトク枠）を判定します。</p>
             
             <div class="grid grid-cols-4 gap-2 pt-3 text-center">
-              <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
+              <div class="bg-brand-bg p-2 rounded-2xl border border-brand-border/50">
                 <span class="text-[8px] text-brand-text font-bold block mb-0.5">カロリー</span>
                 <span id="balance-kcal" class="font-sans font-black text-xs block">0</span>
               </div>
-              <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
+              <div class="bg-brand-bg p-2 rounded-2xl border border-brand-border/50">
                 <span class="text-[8px] text-sky-600 font-bold block mb-0.5">P (g)</span>
                 <span id="balance-p" class="font-sans font-black text-xs block">0</span>
               </div>
-              <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
+              <div class="bg-brand-bg p-2 rounded-2xl border border-brand-border/50">
                 <span class="text-[8px] text-emerald-600 font-bold block mb-0.5">F (g)</span>
                 <span id="balance-f" class="font-sans font-black text-xs block">0</span>
               </div>
-              <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
+              <div class="bg-brand-bg p-2 rounded-2xl border border-brand-border/50">
                 <span class="text-[8px] text-amber-600 font-bold block mb-0.5">C (g)</span>
                 <span id="balance-c" class="font-sans font-black text-xs block">0</span>
               </div>
@@ -790,7 +789,7 @@
       return isNaN(num) ? 0 : num;
     }
 
-    // ★ FileReader非同期Promiseヘルパー関数 (サイレントハングを物理遮断する要) ★
+    // ★ FileReaderをPromise化して非同期ハングを物理遮断するヘルパー ★
     const convertFileToBase64 = (file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
       
@@ -1466,7 +1465,7 @@
 
 
     // =======================================================
-    // ★ AI解析エンジン ★
+    // ★ AI解析エンジン (環境推奨モデル名へ完全固定マージ) ★
     // =======================================================
 
     async function fetchGeminiForClient(payload) {
@@ -1481,7 +1480,7 @@
         throw new Error("API_KEY_MISSING");
       }
 
-      // ★ 解決：プレビュー環境と本番環境の競合を防ぐマルチモデル・ローテーション機能
+      // ★ 解決：プレビュー環境と製品環境のモデル制限404バグを永久絶滅させる、製品版モデルへのフォールバック機構
       const models = [
         "gemini-2.5-flash",
         "gemini-1.5-flash",
@@ -1611,6 +1610,8 @@
 
         const res = await fetchGeminiForClient(payload);
         let rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        // 正規表現抽出フィルターを介して安全デコード
         const parsed = parseGeminiJSON(rawText);
 
         if (parsed && parsed.name) {
@@ -1651,6 +1652,7 @@
       }
     };
 
+    // カメラ画像解析
     window.analyzeMealImage = async function(file) {
       if (!file) return;
 
@@ -2139,7 +2141,7 @@
 例: 【やよい軒】しまほっけ定食（もち麦ご飯・普通盛）、【大戸屋】鶏と野菜の黒酢あん定食（五穀ご飯少なめ）、【スシロー】まぐろ2皿・えびアボカド1皿・茶碗蒸し、【サイゼリヤ】若鶏のディアボラ風＋スモールライス
 
 【時間帯別の逆算ルール】
-各食事時間帯の生理学的特性（朝なら内臓スイッチをオンにする糖質＋アミノ酸重視、夜なら睡眠を阻害しない消化の良さ、おやつなら 100〜200kcal 以内への抑制等）を考慮して具体的なメニュー名とPFC配分比を調整してください。
+各食事時間帯の生理学的特性（朝なら内臓スイッチをオンにする糖質＋アミノ酸重視、夜なら睡眠を阻害しない消化の良さ、おやつなら 100〜200kcal 以ないへの抑制等）を考慮して具体的なメニュー名とPFC配分比を調整してください。
 ※特に間食（おやつ）は、残り枠の上限がどれだけ大きくても、1日の栄養リズムの観点から必ず1食あたり目標値よりさらにスケールダウンして、小さな1品（100〜200kcal以内、例：ギリシャヨーグルト、ナッツ、プロテイン）として無理なく構成してください。
 
 【出力要件JSONスキーマ】
