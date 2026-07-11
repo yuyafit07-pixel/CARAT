@@ -83,7 +83,7 @@
   <!-- メインコンテナエリア -->
   <main class="max-w-md mx-auto px-4 mt-4 animate-fade-in">
 
-    <!-- ==================== ★ 初期ログイン・連携画面 ★ ==================== -->
+    <!-- ==================== ★ 初期ログイン・連携画面 (コンテナ独立・崩れ完全防止) ★ ==================== -->
     <div id="login-screen" class="space-y-6 text-center py-8">
       <div class="space-y-2">
         <h1 class="font-logo font-black text-3xl text-brand-primary tracking-wider">CARAT LOGIN</h1>
@@ -596,7 +596,7 @@
     </div>
   </div>
 
-  <!-- ★ 微調整・編集モーダル（100g備考欄、2段階アコーディオン食材確認、50%バグ対策を完全実装！） ★ -->
+  <!-- ★ 微調整・編集モーダル ★ -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-6 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
       
@@ -790,7 +790,7 @@
       return isNaN(num) ? 0 : num;
     }
 
-    // ★ FileReaderをPromise化して非同期ハングを物理遮断するヘルパー ★
+    // ★ FileReader非同期Promiseヘルパー関数 (サイレントハングを物理遮断する要) ★
     const convertFileToBase64 = (file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
       
@@ -884,7 +884,7 @@
         if (user) {
           currentUserId = user.uid;
           
-          // ★ 解決：店舗APIキーを中央の「CRT-SETTINGS」ドキュメントから全自動で同期・適用する最強システム
+          // ★ 解決：店舗APIキーを中央の「CRT-SETTINGS」ドキュメントから全自動で同期・適用するシステム
           const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
           onSnapshot(settingsRef, (snap) => {
             if (snap.exists()) {
@@ -1179,7 +1179,7 @@
 
       const pct = Math.min(100, (curKcal / tarCal) * 100);
       const strokeOffset = 289 - (289 * pct) / 100;
-      document.getElementById('calorie-progress-bar').style.dashoffset = strokeOffset;
+      document.getElementById('calorie-progress-bar').style.strokeDashoffset = strokeOffset;
 
       document.getElementById('summary-cur-cal').innerText = Math.round(curKcal).toLocaleString();
       document.getElementById('summary-tar-cal').innerText = tarCal.toLocaleString();
@@ -1483,7 +1483,7 @@
 
       // ★ 解決：プレビュー環境と本番環境の競合を防ぐマルチモデル・ローテーション機能
       const models = [
-        "gemini-2.5-flash-preview-09-2025",
+        "gemini-2.5-flash",
         "gemini-1.5-flash",
         "gemini-1.5-pro"
       ];
@@ -1514,12 +1514,12 @@
       throw new Error(`API_ERROR_STATUS_${lastStatus || 'UNKNOWN'}_DETAILS_${lastError}`);
     }
 
-    // ★ 完璧なJSON抽出＆キーマッピング防壁 ★
+    // ★ 最外周の中括弧 { ... } のみを完全自動抽出してデコードする最強パーサー ★
     function parseGeminiJSON(text) {
       try {
         const cleaned = text.trim();
         
-        // 最外周の中括弧のみを強制抽出する最高強度の正規表現パターン
+        // どれほど前後に日本語のおしゃべりやマークダウン記号が含まれていても、最外周のブラケットだけを引きずり出す
         const start = cleaned.indexOf('{');
         const end = cleaned.lastIndexOf('}');
         if (start === -1 || end === -1) {
