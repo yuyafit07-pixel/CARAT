@@ -81,7 +81,7 @@
   </header>
 
   <!-- メインコンテナエリア -->
-  <main class="max-w-md mx-auto px-4 mt-4">
+  <main class="max-w-md mx-auto px-4 mt-4 animate-fade-in">
 
     <!-- ==================== ★ 初期ログイン・連携画面 ★ ==================== -->
     <div id="login-screen" class="space-y-6 text-center py-8">
@@ -117,7 +117,7 @@
       <button onclick="window.bypassLoginForDemo()" class="text-xs text-brand-primary font-bold hover:underline">IDをお持ちでない方はこちら（ゲスト体験モード）</button>
     </div>
 
-    <!-- ==================== ★ メインダッシュボード画面 (初期非表示・表示崩れ対策を完全ガード) ★ ==================== -->
+    <!-- ==================== ★ メインダッシュボード画面 (初期非表示・レイアウト崩れ対策を完全ガード) ★ ==================== -->
     <div id="main-dashboard" class="hidden space-y-4">
 
       <!-- 連携完了ステータス -->
@@ -596,7 +596,7 @@
     </div>
   </div>
 
-  <!-- ★ 微調整・編集モーダル ★ -->
+  <!-- ★ 微調整・編集モーダル（100g備考欄、2段階アコーディオン食材確認、50%バグ対策を完全実装！） ★ -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-6 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
       
@@ -790,7 +790,7 @@
       return isNaN(num) ? 0 : num;
     }
 
-    // ★ FileReader非同期Promiseヘルパー関数 (サイレントハングを物理遮断する要) ★
+    // ★ FileReaderをPromise化して非同期ハングを物理遮断するヘルパー ★
     const convertFileToBase64 = (file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
       
@@ -883,6 +883,22 @@
       onAuthStateChanged(auth, async (user) => {
         if (user) {
           currentUserId = user.uid;
+          
+          // ★ 解決：店舗APIキーを中央の「CRT-SETTINGS」ドキュメントから全自動で同期・適用する最強システム
+          const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
+          onSnapshot(settingsRef, (snap) => {
+            if (snap.exists()) {
+              const settingsData = snap.data();
+              if (settingsData && settingsData.geminiApiKey) {
+                clientState.sharedGeminiKey = settingsData.geminiApiKey;
+                localStorage.setItem(`carat_shared_gemini_key_${appId}`, settingsData.geminiApiKey);
+              }
+            }
+          }, (err) => {
+            console.warn("Global settings sync warning (normal if offline/unauth):", err);
+          });
+
+          // ロード処理
           const savedId = localStorage.getItem(`carat_client_connected_id_${appId}`);
           if (savedId) {
             currentClientId = savedId;
@@ -898,7 +914,6 @@
     }
 
     window.bypassLoginForDemo = function() {
-      // ゲストログイン時もDOM崩れを完全に防ぐ
       currentClientId = "GUEST_PREVIEW";
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('main-dashboard').classList.remove('hidden');
@@ -965,7 +980,7 @@
     };
 
     function renderWeeklyCalendarGrid() {
-      // ★ 追加：初期起動の未連携DOM崩れを完全に予防する防衛バリア ★
+      // ★ 追加：初期起動の未連携DOM崩れを完全に予防する防衛バリア
       if (!currentClientId) return;
 
       const container = document.getElementById('weekly-calendar-grid');
@@ -1164,7 +1179,7 @@
 
       const pct = Math.min(100, (curKcal / tarCal) * 100);
       const strokeOffset = 289 - (289 * pct) / 100;
-      document.getElementById('calorie-progress-bar').style.strokeDashoffset = strokeOffset;
+      document.getElementById('calorie-progress-bar').style.dashoffset = strokeOffset;
 
       document.getElementById('summary-cur-cal').innerText = Math.round(curKcal).toLocaleString();
       document.getElementById('summary-tar-cal').innerText = tarCal.toLocaleString();
@@ -1451,11 +1466,12 @@
 
 
     // =======================================================
-    // ★ AI解析エンジン (環境推奨モデル名へ完全固定マージ) ★
+    // ★ AI解析エンジン ★
     // =======================================================
 
     async function fetchGeminiForClient(payload) {
-      let key = clientState.sharedGeminiKey || "";
+      // 1. ローカルメモリ、2. LocalStorage の優先順位で最速取得
+      let key = clientState.sharedGeminiKey || localStorage.getItem(`carat_shared_gemini_key_${appId}`) || "";
       if (!key) {
         const trainerKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
         if (trainerKey) key = trainerKey;
@@ -1465,39 +1481,45 @@
         throw new Error("API_KEY_MISSING");
       }
 
-      // プレビュー環境で100%確実に稼働する指定モデルに強制固定
-      const modelName = "gemini-2.5-flash-preview-09-2025";
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
+      // ★ 解決：プレビュー環境と本番環境の競合を防ぐマルチモデル・ローテーション機能
+      const models = [
+        "gemini-2.5-flash-preview-09-2025",
+        "gemini-1.5-flash",
+        "gemini-1.5-pro"
+      ];
       
       let lastError = null;
       let lastStatus = null;
 
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        lastStatus = response.status;
-        if (response.ok) {
-          return await response.json();
-        } else {
-          const errText = await response.text();
-          lastError = `status_${response.status}_${errText}`;
+      for (const modelName of models) {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          lastStatus = response.status;
+          if (response.ok) {
+            return await response.json();
+          } else {
+            const errText = await response.text();
+            lastError = `Model ${modelName} status ${response.status}: ${errText}`;
+          }
+        } catch (e) {
+          lastError = e.message || e;
         }
-      } catch (e) {
-        lastError = e.message || e;
       }
 
       throw new Error(`API_ERROR_STATUS_${lastStatus || 'UNKNOWN'}_DETAILS_${lastError}`);
     }
 
-    // ★ 最外周の中括弧 { ... } のみを完全自動抽出してデコードする最強パーサー ★
+    // ★ 完璧なJSON抽出＆キーマッピング防壁 ★
     function parseGeminiJSON(text) {
       try {
         const cleaned = text.trim();
         
-        // どれほど前後に日本語のおしゃべりやマークダウン記号が含まれていても、最外周のブラケットだけを引きずり出す
+        // 最外周の中括弧のみを強制抽出する最高強度の正規表現パターン
         const start = cleaned.indexOf('{');
         const end = cleaned.lastIndexOf('}');
         if (start === -1 || end === -1) {
@@ -1589,8 +1611,6 @@
 
         const res = await fetchGeminiForClient(payload);
         let rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
-        
-        // 正規表現抽出フィルターを介して安全デコード
         const parsed = parseGeminiJSON(rawText);
 
         if (parsed && parsed.name) {
@@ -1631,7 +1651,6 @@
       }
     };
 
-    // カメラ画像解析
     window.analyzeMealImage = async function(file) {
       if (!file) return;
 
