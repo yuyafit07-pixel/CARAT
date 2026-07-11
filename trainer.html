@@ -67,7 +67,7 @@
         <span class="text-[9px] font-bold text-brand-muted tracking-widest block mt-0.5 uppercase">TRAINER INTERACTIVE PORTAL</span>
       </div>
     </div>
-    <div id="sync-status" class="text-[10px] px-2.5 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
+    <div id="sync-status" class="text-[10px] px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
       <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
       Connecting...
     </div>
@@ -90,7 +90,7 @@
           <span class="block">GitHub上のソースコード内にAPIキーを「直接」書き込んでコミットすると、Googleの監視AIが検知して数秒でキーを無効化（凍結）してしまいます。必ず、以下の入力欄から手動で貼り付けて「全ユーザーへ配信」を行ってください。コード内直書きは厳禁です。</span>
         </div>
         <p class="text-[10px] text-brand-muted leading-relaxed">
-          Google AI Studioで新しく作ったAPIキー（AIzaSy...から始まる文字列）を入力して保存すると、Firestore中央金庫（SETTINGS）へマッピングされ、会員のスマホアプリ（index.html）へ自動適用されます。
+          Google AI Studioで新しく作ったAPIキー（AIzaSy...）を入力して保存すると、Firestore中央金庫（SETTINGS）へマッピングされ、会員のスマホアプリ（index.html）へ自動適用されます。
         </p>
         <div class="flex gap-2">
           <input type="password" id="trainer-gemini-key" class="flex-1 bg-brand-card border border-brand-border rounded-xl px-4 py-2.5 text-xs font-mono text-brand-text focus:outline-none focus:border-brand-primary transition-all" placeholder="AIzaSy...">
@@ -361,7 +361,7 @@
             </div>
           </div>
 
-          <!-- 来店時食事AI総括アナライザー (エラー完全解決モデル) -->
+          <!-- 来店時食事AI総括アナライザー (製品版GAモデルへ完全リプレイス) -->
           <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm text-left space-y-3.5">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 border-b border-brand-border pb-3">
               <div>
@@ -370,7 +370,7 @@
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </span>
-                  来店時専用：直近1週間の食事・PFC自動AI総括
+                  来店時専用：直近1週間の食事・PFC自動AI総括 (完全修復)
                 </h4>
                 <p class="text-[9px] text-brand-muted mt-1 leading-normal">
                   セッション来店時などにこの1週間の食事・体重データをAIが一括スキャン。女性特有の体質リズム・スポーツ栄養学に基づき、優しい1週間の総評レポートを瞬時に作成します。
@@ -384,9 +384,20 @@
 
             <!-- 出力と編集・送信フォーム -->
             <div class="space-y-3">
+              <!-- 指導お役立ちテンプレートパレット（世界一トレーナーが使いやすい機能！） -->
+              <div class="space-y-1">
+                <span class="text-[8px] text-brand-muted font-bold uppercase tracking-wider block">💬 クイック下書き定型文テンプレート (1タップでセット)</span>
+                <div class="flex flex-wrap gap-1.5">
+                  <button onclick="window.applyCommentTemplate('p-short')" class="bg-brand-bg hover:bg-brand-accent text-brand-text border border-brand-border px-2.5 py-1.5 rounded-lg text-[9px] font-bold transition">🍗 たんぱく質不足</button>
+                  <button onclick="window.applyCommentTemplate('f-over')" class="bg-brand-bg hover:bg-brand-accent text-brand-text border border-brand-border px-2.5 py-1.5 rounded-lg text-[9px] font-bold transition">🍟 脂質オーバー</button>
+                  <button onclick="window.applyCommentTemplate('perfect')" class="bg-brand-bg hover:bg-brand-accent text-brand-text border border-brand-border px-2.5 py-1.5 rounded-lg text-[9px] font-bold transition">🌟 完璧キープ！</button>
+                  <button onclick="window.applyCommentTemplate('auto-recovery')" class="bg-brand-bg hover:bg-brand-accent text-brand-text border border-brand-border px-2.5 py-1.5 rounded-lg text-[9px] font-bold transition">🔄 オートリカバリー中</button>
+                </div>
+              </div>
+
               <div>
                 <label class="text-[10px] text-brand-muted font-bold block mb-1">📋 1週間総括フィードバック（送信前の微調整、メモ用コピーが可能です）</label>
-                <textarea id="weekly-feedback-textarea" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-xs text-brand-text focus:outline-none focus:border-brand-primary" rows="8" placeholder="上の「1週間の食事をまとめてAI分析」をタップすると、女性生理学やスポーツ栄養エビデンスに基づく温かい総括レポートの下書きがここに自動生成されます。"></textarea>
+                <textarea id="weekly-feedback-textarea" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-xs text-brand-text focus:outline-none focus:border-brand-primary" rows="8" placeholder="上の「1週間の食事をまとめてAI分析」をタップ、または上のクイック定型文をクリックするとアドバイスコメントがここにセットされます。"></textarea>
               </div>
               <div class="flex gap-2">
                 <button onclick="window.copyToClipboardFeedback()" class="bg-brand-bg hover:bg-brand-accent text-brand-muted border border-brand-border py-3 px-4 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
@@ -700,7 +711,7 @@
       return { cal: Math.round(cal), p, f, c, meals };
     }
 
-    // ★ 解決：過去1週間(過去7日間)の累積「帳じり合わせ」±合計値のリアルタイム集計機能 ★
+    // 過去1週間(過去7日間)の累積「帳じり合わせ」±合計値のリアルタイム集計機能
     function calculateWeeklySummaryAndDiff(data) {
       const baseDate = new Date(selectedDateString);
       let cumulativeKcalDiff = 0;
@@ -925,34 +936,44 @@
       }
     };
 
-    // --- Gemini API連携 (サポート対象モデルに完全ロック！) ---
+    // --- Gemini API連携 (製品版最新モデルに完全統一・ preview は一切使用しない！) ---
     async function fetchGeminiWithFallback(payload) {
       const key = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
       if (!key) {
         throw new Error("店舗Gemini API Keyが設定されていません。最上部の設定に入力してください。");
       }
 
-      // ★ 解決：プレビュー環境で100%確実に稼働するモデルに完全ロック ★
-      const modelName = "gemini-2.5-flash-preview-09-2025";
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
+      // ★ 解決：製品版かつGCPで404にならない最も安定する最新モデルを指定 ★
+      const models = [
+        "gemini-2.5-flash",
+        "gemini-1.5-flash",
+        "gemini-1.5-pro"
+      ];
       
       let lastError = null;
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (response.ok) {
-          return await response.json();
-        } else {
-          const errText = await response.text();
-          lastError = `status_${response.status}_${errText}`;
+      let lastStatus = null;
+
+      for (const modelName of models) {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          lastStatus = response.status;
+          if (response.ok) {
+            return await response.json();
+          } else {
+            const errText = await response.text();
+            lastError = `Model ${modelName} status ${response.status}: ${errText}`;
+          }
+        } catch (e) {
+          lastError = e.message || e;
         }
-      } catch (e) {
-        lastError = e.message || e;
       }
-      throw new Error(`【解析失敗】${lastError}`);
+
+      throw new Error(`API_ERROR_STATUS_${lastStatus || 'UNKNOWN'}_DETAILS_${lastError}`);
     }
 
     // =======================================================
@@ -1031,7 +1052,7 @@
 
 過去1週間の食事実績（記録日: ${recordedDaysCount}日 / 7日中）:
 - 1日平均摂取カロリー: ${avgKcal} kcal (目標: ${targetCal}kcal)
-- 1日平均タンパク質(P): ${avgP} g (目標: ${targetP}g)
+- 1日平均たんぱく質(P): ${avgP} g (目標: ${targetP}g)
 - 1日平均脂質(F): ${avgF} g (目標: ${targetF}g)
 - 1日平均炭水化物(C): ${avgC} g (目標: ${targetC}g)
 
@@ -1087,6 +1108,24 @@ ${weeklyMealsSummaryText}
       document.body.removeChild(dummy);
       
       showToast("アドバイスコメントをコピーしました！");
+    };
+
+    // ★ 新設：世界一使いやすいクイック下書きテンプレート選択パレット ★
+    window.applyCommentTemplate = function(templateType) {
+      const textarea = document.getElementById('weekly-feedback-textarea');
+      const nickname = globalClientData ? globalClientData.nickname : "クライアント";
+      
+      const templates = {
+        'p-short': `📢 ${nickname}様、今週もお疲れさまでした！\n\n1週間のPFCバランスを確認しました。全体的にとても意識していただいていますが、たんぱく質（P）が目標値に対して少し不足しがちになっています。🍗\n\n筋肉量の維持と基礎代謝アップのためにも、間食にプロテインやヨーグルトを挟むか、毎食手のひら1枚分の肉・魚を意識して補給しましょう！来週は「卵か納豆を1日＋1品プラスする」ことからスタートしてみませんか？🔥`,
+        'f-over': `📢 ${nickname}様、今週の食事アドバイスです！\n\nお仕事お忙しい中、レポーティングありがとうございます。今週は全体的に脂質（F）が少し多めになっており、それにより総カロリーが目標をオーバーする傾向にあります。🍟\n\n特に外食時の揚げ物やドレッシングで脂質が跳ね上がりやすいので、来週は「炒め物や揚げ物を減らし、蒸し・焼きのメニューを選ぶ」アクションに挑戦してみましょう！美味しく健康に引き締めていきましょうね。✨`,
+        'perfect': `📢 ${nickname}様、素晴らしい1週間でした！🎉\n\n今週のPFCバランスとカロリー管理は、ほぼ100点のパーフェクトな状態です！自律神経の乱れやすい季節ですが、規則正しい食事により代謝スイッチが完璧にオンになっています。🌟\n\n体重・体脂肪率の推移も非常に順調ですので、来週もこの素晴らしいリズムをそのままキープしていきましょう！自信を持って、CARATで一緒にトレーニングも楽しみましょうね。💪😊`,
+        'auto-recovery': `📢 ${nickname}様、1週間調整お疲れさまでした！\n\n食べすぎた翌日に、カロリーオートリカバリー（自動目標スライド削減）がうまく作動していますね。昨日オーバーした分を翌日できっちりリカバリーできているので、累積の過不足は完璧に安全枠に収まっています。🔄\n\n「1日単位で一喜一憂せず、1週間で帳じりを合わせる」というボディメイクの最も正しい理想形ができています。来週もこの安心調整モードを使いこなしていきましょう！`
+      };
+
+      if (templates[templateType]) {
+        textarea.value = templates[templateType];
+        showToast("下書きテンプレートを反映しました。修正して送信してください。");
+      }
     };
 
     window.submitWeeklyFeedback = async function() {
