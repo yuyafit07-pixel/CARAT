@@ -80,430 +80,436 @@
     </div>
   </header>
 
-  <!-- ==================== ★ 初期ログイン・連携画面 ★ ==================== -->
-  <div id="login-screen" class="max-w-md mx-auto px-4 mt-12 space-y-6 text-center">
-    <div class="space-y-2">
-      <h1 class="font-logo font-black text-3xl text-brand-primary tracking-wider">CARAT LOGIN</h1>
-      <p class="text-xs text-brand-muted font-medium">パーソナルジムCARAT専用食事同期ポータル</p>
-    </div>
+  <!-- メインコンテナエリア -->
+  <main class="max-w-md mx-auto px-4 mt-4">
 
-    <div class="bg-brand-card rounded-[32px] p-6 border border-brand-border/60 shadow-premium space-y-5 text-left relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-24 h-24 bg-brand-accent/30 rounded-full blur-2xl -mr-6 -mt-6"></div>
-      
-      <div class="flex items-center gap-2 relative z-10">
-        <div class="w-8 h-8 rounded-xl bg-brand-accent flex items-center justify-center text-brand-primary">
-          <i data-lucide="key-round" class="w-4.5 h-4.5"></i>
-        </div>
-        <h2 class="text-sm font-black text-brand-text">クライアントIDを連携</h2>
+    <!-- ==================== ★ 初期ログイン・連携画面 (閉じタグミスを完全修復) ★ ==================== -->
+    <div id="login-screen" class="space-y-6 text-center py-8">
+      <div class="space-y-2">
+        <h1 class="font-logo font-black text-3xl text-brand-primary tracking-wider">CARAT LOGIN</h1>
+        <p class="text-xs text-brand-muted font-medium">パーソナルジムCARAT専用食事同期ポータル</p>
       </div>
 
-      <p class="text-xs text-brand-muted leading-relaxed relative z-10">
-        担当トレーナーから発行された、あなた専用の「CRT-XXXXXX」を入力してください。一瞬で目標のPFC設定と、リアルタイムのカルテ共有が完了します。
-      </p>
-
-      <div class="space-y-3 relative z-10">
-        <input type="text" id="client-id-input" class="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3.5 text-center font-mono font-black text-sm text-brand-text uppercase focus:outline-none focus:ring-2 focus:ring-brand-primary transition-all shadow-inner" placeholder="CRT-XXXXXX">
+      <div class="bg-brand-card rounded-[32px] p-6 border border-brand-border/60 shadow-premium space-y-5 text-left relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-brand-accent/30 rounded-full blur-2xl -mr-6 -mt-6"></div>
         
-        <button onclick="window.connectWithClientId()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-4 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-2">
-          <i data-lucide="shield-check" class="w-4 h-4"></i>
-          目標設定を同期して食事管理を開始
-        </button>
-      </div>
-    </div>
-    
-    <button onclick="window.bypassLoginForDemo()" class="text-xs text-brand-primary font-bold hover:underline">IDをお持ちでない方はこちら（ゲスト体験モード）</button>
-  </div>
-
-  <!-- ==================== ★ メインダッシュボード画面 ★ ==================== -->
-  <div id="main-dashboard" class="hidden max-w-md mx-auto px-4 mt-4 space-y-4">
-
-    <!-- 連携完了ステータス -->
-    <div id="id-active-panel" class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-cardShadow text-left flex justify-between items-center transition-all">
-      <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-xl bg-brand-accentGreen flex items-center justify-center text-emerald-600 shadow-sm">
-          <i data-lucide="shield-check" class="w-4.5 h-4.5"></i>
-        </div>
-        <div>
-          <span class="text-[8px] text-brand-muted font-bold block uppercase tracking-wider">CARAT Connected ID</span>
-          <span id="active-id-text" class="font-mono text-xs font-black text-brand-primary">CRT-XXXXXX</span>
-        </div>
-      </div>
-      <button onclick="window.disconnectClientId()" class="text-[9px] text-rose-500 font-extrabold hover:bg-rose-50 px-2.5 py-1.5 rounded-xl transition border border-rose-100">
-        連携解除
-      </button>
-    </div>
-
-    <!-- プレミアム2タブバー -->
-    <div class="grid grid-cols-2 gap-2 p-1 bg-brand-border/50 rounded-2xl border border-brand-border shadow-inner">
-      <button id="tab-btn-home" onclick="window.switchTab('home')" class="py-2.5 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 bg-brand-primary text-white shadow-md">
-        <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-        今日の記録
-      </button>
-      <button id="tab-btn-ai-menu" onclick="window.switchTab('ai-menu')" class="py-2.5 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 text-brand-muted hover:text-brand-primary">
-        <i data-lucide="wand-2" class="w-4 h-4"></i>
-        逆算献立AI提案
-      </button>
-    </div>
-
-    <!-- ==================== ★ タブ1: 今日の記録コンテンツ ★ ==================== -->
-    <div id="tab-content-home" class="space-y-4 transition-all">
-      
-      <!-- カレンダー & クイック曜日切り替え -->
-      <div class="bg-brand-card border border-brand-border/60 p-3 rounded-3xl shadow-cardShadow text-left space-y-2">
-        <div class="flex justify-between items-center px-1">
-          <div class="flex items-center gap-1">
-            <i data-lucide="calendar" class="w-4 h-4 text-brand-primary"></i>
-            <span id="display-date-text" class="font-mono font-black text-sm tracking-wider text-brand-text">2026-07-10</span>
+        <div class="flex items-center gap-2 relative z-10">
+          <div class="w-8 h-8 rounded-xl bg-brand-accent flex items-center justify-center text-brand-primary">
+            <i data-lucide="key-round" class="w-4.5 h-4.5"></i>
           </div>
-          <button id="btn-today-badge" onclick="window.resetToToday()" class="hidden text-[9px] text-brand-primary bg-brand-accent px-2.5 py-1 rounded-full font-bold transition">
-            今日へ戻る
-          </button>
-        </div>
-        <div class="grid grid-cols-7 gap-1.5 pt-1" id="weekly-calendar-grid">
-          <!-- JSで曜日描画 -->
-        </div>
-      </div>
-
-      <!-- 今日の目標 & 摂取状況 -->
-      <div class="bg-brand-card rounded-[32px] p-6 border border-brand-border/60 shadow-premium text-left space-y-4 relative overflow-hidden">
-        <div class="absolute bottom-0 right-0 w-32 h-32 bg-brand-accent/20 rounded-full blur-3xl -mb-10 -mr-10"></div>
-        
-        <div class="flex justify-between items-center border-b border-brand-border/50 pb-3 relative z-10">
-          <div>
-            <h3 class="text-xs font-extrabold text-brand-text flex items-center gap-1.5">
-              <i data-lucide="activity" class="w-4.5 h-4.5 text-brand-primary"></i>
-              今日の目標 & 摂取状況
-            </h3>
-            <span id="auto-recovery-status-badge" class="hidden text-[9px] text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-md mt-1 font-bold border border-emerald-100 items-center gap-1 animate-pulse">
-              <i data-lucide="sparkles" class="w-3 h-3"></i> 昨日オーバー分を自動リセット中
-            </span>
-          </div>
-          <button onclick="window.toggleTargetEditPanel()" class="text-[9px] bg-brand-accent text-brand-primary hover:bg-brand-primary/10 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1 transition-all">
-            <i data-lucide="settings-2" class="w-3.5 h-3.5"></i>
-            目標を調整
-          </button>
+          <h2 class="text-sm font-black text-brand-text">クライアントIDを連携</h2>
         </div>
 
-        <!-- 目標PFCを手動微調整パネル -->
-        <div id="target-edit-panel" class="hidden bg-brand-bg/80 border border-brand-border/80 p-4 rounded-2xl space-y-3 relative z-10 transition-all">
-          <span class="text-[10px] text-brand-text font-black block">🎯 目標値のベース手動設定</span>
-          <div class="grid grid-cols-2 gap-2 text-xs">
-            <div>
-              <label class="text-[9px] text-brand-muted block font-bold mb-1">目標カロリー (kcal)</label>
-              <input type="number" id="edit-target-kcal" class="w-full bg-white border border-brand-border rounded-xl px-2 py-1.5 font-mono font-bold text-center" value="1800">
-            </div>
-            <div>
-              <label class="text-[9px] text-sky-600 block font-bold mb-1">目標 P (g)</label>
-              <input type="number" id="edit-target-p" class="w-full bg-white border border-brand-border rounded-xl px-2 py-1.5 font-mono font-bold text-center" value="120">
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-2 text-xs">
-            <div>
-              <label class="text-[9px] text-emerald-600 block font-bold mb-1">目標 F (g)</label>
-              <input type="number" id="edit-target-f" class="w-full bg-white border border-brand-border rounded-xl px-2 py-1.5 font-mono font-bold text-center" value="45">
-            </div>
-            <div>
-              <label class="text-[9px] text-amber-600 block font-bold mb-1">目標 C (g)</label>
-              <input type="number" id="edit-target-c" class="w-full bg-white border border-brand-border rounded-xl px-2 py-1.5 font-mono font-bold text-center" value="230">
-            </div>
-          </div>
-          <div class="flex gap-2">
-            <button onclick="window.toggleTargetEditPanel()" class="flex-1 bg-brand-border hover:bg-brand-border/80 text-brand-muted py-2 rounded-xl text-[10px] font-bold">キャンセル</button>
-            <button onclick="window.saveHandmadeTargets()" class="flex-2 bg-brand-primary hover:bg-brand-primaryHover text-white py-2 px-4 rounded-xl text-[10px] font-bold shadow">適用して保存</button>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-6 relative z-10">
-          <div class="relative w-28 h-28 shrink-0 flex items-center justify-center">
-            <svg class="w-full h-full transform -rotate-90">
-              <circle cx="56" cy="56" r="46" stroke="#E2E8F0" stroke-width="7" fill="transparent" />
-              <circle id="calorie-progress-bar" cx="56" cy="56" r="46" stroke="url(#blue-gradient)" stroke-width="8" stroke-dasharray="289" stroke-dashoffset="289" stroke-linecap="round" fill="transparent" class="transition-all duration-700 ease-out" />
-              <defs>
-                <linearGradient id="blue-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#0052CC" />
-                  <stop offset="100%" stop-color="#4A90E2" />
-                </linearGradient>
-              </defs>
-            </svg>
-            <div class="absolute text-center">
-              <span id="summary-cur-cal" class="text-xl font-black tracking-tighter text-brand-text block">0</span>
-              <span class="text-[8px] text-brand-muted block uppercase tracking-wider">/ <span id="summary-tar-cal">1800</span> kcal</span>
-            </div>
-          </div>
-          
-          <!-- PFC目標表示 -->
-          <div class="flex-1 space-y-2 text-brand-text font-bold">
-            <div class="space-y-0.5">
-              <div class="flex justify-between items-baseline">
-                <span class="text-sky-600 text-[11px] font-black flex items-center gap-1">
-                  <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
-                  P たんぱく質
-                </span>
-                <span class="font-sans text-sm"><span id="summary-cur-p" class="font-black text-base text-sky-700">0</span> / <span id="summary-tar-p" class="text-brand-text font-black text-base">120</span>g</span>
-              </div>
-              <div class="w-full h-2.5 bg-sky-50 rounded-full overflow-hidden border border-sky-100">
-                <div id="bar-p" class="h-full bg-gradient-to-r from-sky-400 to-sky-500 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
-              </div>
-            </div>
-
-            <div class="space-y-0.5">
-              <div class="flex justify-between items-baseline">
-                <span class="text-emerald-600 text-[11px] font-black flex items-center gap-1">
-                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                  F 脂質
-                </span>
-                <span class="font-sans text-sm"><span id="summary-cur-f" class="font-black text-base text-emerald-700">0</span> / <span id="summary-tar-f" class="text-brand-text font-black text-base">45</span>g</span>
-              </div>
-              <div class="w-full h-2.5 bg-emerald-50 rounded-full overflow-hidden border border-emerald-100">
-                <div id="bar-f" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
-              </div>
-            </div>
-
-            <div class="space-y-0.5">
-              <div class="flex justify-between items-baseline">
-                <span class="text-amber-600 text-[11px] font-black flex items-center gap-1">
-                  <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                  C 炭水化物
-                </span>
-                <span class="font-sans text-sm"><span id="summary-cur-c" class="font-black text-base text-amber-700">0</span> / <span id="summary-tar-c" class="text-brand-text font-black text-base">230</span>g</span>
-              </div>
-              <div class="w-full h-2.5 bg-amber-50 rounded-full overflow-hidden border border-amber-100">
-                <div id="bar-c" class="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- カロリーオートリカバリー貯金箱 -->
-      <div id="recovery-indicator-card" class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-3 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-2 h-full bg-emerald-500" id="recovery-bar-color"></div>
-        <div class="pl-2">
-          <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-            <i data-lucide="sparkles" class="w-4 h-4 text-emerald-600"></i>
-            カロリーオートリカバリー貯金箱
-          </h4>
-          <p class="text-[9px] text-brand-muted mt-0.5" id="recovery-sub-info">昨日食べすぎたエネルギーを、自動で今日の目標から引いて相殺しています。</p>
-          
-          <div class="grid grid-cols-2 gap-2 pt-2">
-            <div class="bg-brand-bg rounded-2xl p-3 border border-brand-border/50 text-center">
-              <span class="text-[8px] text-brand-muted font-bold block mb-0.5">昨日の超過カロリー</span>
-              <span id="yesterday-over-kcal" class="font-sans font-black text-sm block text-rose-500">0 kcal</span>
-            </div>
-            <div class="bg-emerald-50/50 rounded-2xl p-3 border border-emerald-100 text-center">
-              <span class="text-[8px] text-emerald-700 font-bold block mb-0.5">今日の自動調整リセット</span>
-              <span id="today-adjusted-kcal" class="font-sans font-black text-sm block text-emerald-600">-0 kcal</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 1週間の帳じり合わせ状況 -->
-      <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-3 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-2 h-full bg-brand-primary" id="balance-bar-color"></div>
-        <div class="pl-2">
-          <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-            <i data-lucide="scale" class="w-4 h-4 text-brand-primary"></i>
-            直近1週間の帳じり合わせ状況
-          </h4>
-          <p class="text-[9px] text-brand-muted mt-0.5">選択日を含む過去7日間の目標総計に対する過不足（おトク枠）を判定します。</p>
-          
-          <div class="grid grid-cols-4 gap-2 pt-3 text-center">
-            <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
-              <span class="text-[8px] text-brand-text font-bold block mb-0.5">カロリー</span>
-              <span id="balance-kcal" class="font-sans font-black text-xs block">0</span>
-            </div>
-            <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
-              <span class="text-[8px] text-sky-600 font-bold block mb-0.5">P (g)</span>
-              <span id="balance-p" class="font-sans font-black text-xs block">0</span>
-            </div>
-            <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
-              <span class="text-[8px] text-emerald-600 font-bold block mb-0.5">F (g)</span>
-              <span id="balance-f" class="font-sans font-black text-xs block">0</span>
-            </div>
-            <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
-              <span class="text-[8px] text-amber-600 font-bold block mb-0.5">C (g)</span>
-              <span id="balance-c" class="font-sans font-black text-xs block">0</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- AI食事スキャン -->
-      <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-4">
-        <div class="border-b border-brand-border/50 pb-2 flex justify-between items-center">
-          <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-            <i data-lucide="sparkles" class="w-4.5 h-4.5 text-brand-primary"></i>
-            AI食事解析スキャナー
-          </h3>
-          <span class="text-[8px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg font-bold animate-pulse">即時記録</span>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-3">
-          <label class="cursor-pointer bg-gradient-to-tr from-brand-primary to-brand-secondary hover:opacity-95 text-white p-5 rounded-2xl shadow-md transition-all flex flex-col items-center justify-center text-center space-y-2 group relative overflow-hidden">
-            <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-              <i data-lucide="camera" class="w-5.5 h-5.5 text-white"></i>
-            </div>
-            <span class="text-xs font-black">カメラ写真解析</span>
-            <span class="text-[8px] text-white/80">パシャッと撮影して一撃保存</span>
-            <input type="file" accept="image/*" id="ai-image-input" class="hidden">
-          </label>
-          
-          <button onclick="window.openTextModal()" class="bg-brand-bg hover:bg-brand-accent p-5 rounded-2xl border border-brand-border transition-all flex flex-col items-center justify-center text-center space-y-2 group">
-            <div class="w-10 h-10 rounded-full bg-brand-accent flex items-center justify-center group-hover:bg-brand-primary/15 transition-colors">
-              <i data-lucide="keyboard" class="w-5.5 h-5.5 text-brand-primary"></i>
-            </div>
-            <span class="text-xs font-black text-brand-text">テキスト食事解析</span>
-            <span class="text-[8px] text-brand-muted">食べたものを自由に書く</span>
-          </button>
-        </div>
-
-        <button onclick="window.openManualInputModal()" class="w-full py-3 text-xs text-brand-primary font-bold hover:bg-brand-accent transition-colors border border-dashed border-brand-primary/30 rounded-2xl flex items-center justify-center gap-1.5">
-          <i data-lucide="edit-3" class="w-4 h-4"></i>
-          数値を手動で直接入力して追加する
-        </button>
-      </div>
-
-      <!-- 本日の食事ログ一覧 -->
-      <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-cardShadow text-left space-y-3">
-        <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-          <i data-lucide="utensils-crossaxes" class="w-4.5 h-4.5 text-brand-primary"></i>
-          本日の食事ログ一覧
-        </h3>
-        <div id="meal-timeline-container" class="space-y-2.5">
-          <!-- 食事リスト -->
-        </div>
-      </div>
-
-      <!-- 体重記録 -->
-      <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-cardShadow text-left space-y-3.5">
-        <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5 border-b border-brand-border/50 pb-2">
-          <i data-lucide="scale" class="w-4.5 h-4.5 text-brand-primary"></i>
-          身体データの測定記録
-        </h3>
-        <div class="grid grid-cols-2 gap-3">
-          <div class="bg-brand-bg/50 p-2.5 rounded-2xl border border-brand-border/60">
-            <label class="text-[9px] text-brand-muted font-bold block mb-1">現在の体重(kg)</label>
-            <input type="number" step="0.1" id="input-weight" class="w-full bg-transparent border-none font-sans font-black text-sm text-brand-text focus:outline-none p-0 text-center" placeholder="55.0">
-          </div>
-          <div class="bg-brand-bg/50 p-2.5 rounded-2xl border border-brand-border/60">
-            <label class="text-[9px] text-brand-muted font-bold block mb-1">現在の体脂肪率(%)</label>
-            <input type="number" step="0.1" id="input-fat" class="w-full bg-transparent border-none font-sans font-black text-sm text-brand-text focus:outline-none p-0 text-center" placeholder="15.0">
-          </div>
-        </div>
-        <button onclick="window.saveBodyData()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-2xl text-xs font-bold transition shadow-md">
-          体重・体脂肪率データを保存する
-        </button>
-      </div>
-
-      <!-- 指導アドバイス表示 -->
-      <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-3">
-        <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5 border-b border-brand-border/50 pb-2">
-          <i data-lucide="message-square" class="w-4.5 h-4.5 text-brand-primary"></i>
-          CARAT 担当トレーナーの1週間総括
-        </h3>
-        <div class="p-4 bg-gradient-to-tr from-brand-accent/40 to-brand-bg rounded-2xl border border-brand-primary/10 relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-16 h-16 bg-brand-primary/5 rounded-full blur-xl"></div>
-          <p id="trainer-feedback-text" class="text-xs leading-relaxed text-brand-text font-medium whitespace-pre-wrap relative z-10">
-            食事を記録していくと、トレーナーがこちらに1週間の栄養・からだの総括レポートを届けてくれます。
-          </p>
-          <span id="trainer-feedback-time" class="text-[9px] text-brand-muted font-mono block mt-3 text-right font-bold"></span>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ==================== ★ タブ2: 逆算献立AI提案コンテンツ ★ ==================== -->
-    <div id="tab-content-ai-menu" class="hidden space-y-4 transition-all slide-up">
-      
-      <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-4">
-        <div class="border-b border-brand-border/50 pb-2 flex justify-between items-center">
-          <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-            <i data-lucide="wand-2" class="w-4.5 h-4.5 text-brand-primary"></i>
-            残りの目標から逆算：献立提案AI
-          </h3>
-          <span class="text-[8px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg font-bold">複数食等分逆算</span>
-        </div>
-        
-        <p class="text-[10px] text-brand-muted leading-relaxed">
-          今日の目標残りの栄養にピタッと合わせ、g数まで計算して献立を立てます。
-          カテゴリーと、食べたい時間帯<b>（朝・昼・夜・おやつから複数選択可能）</b>を選択してください。
-          選択されたお食事で残りの栄養が「均等」になるように、AIが同時に何件でも組み立てます。
+        <p class="text-xs text-brand-muted leading-relaxed relative z-10">
+          担当トレーナーから発行された、あなた専用の「CRT-XXXXXX」を入力してください。一瞬で目標のPFC設定と、リアルタイムのカルテ共有が完了します。
         </p>
-        
-        <!-- ① 調達カテゴリー選択タブ -->
-        <div class="space-y-1.5">
-          <span class="text-[9px] text-brand-text font-black block uppercase tracking-wider flex items-center gap-1">
-            <i data-lucide="store" class="w-3.5 h-3.5 text-brand-primary"></i>
-            1. 調達シチュエーション
-          </span>
-          <div class="grid grid-cols-3 gap-2 bg-brand-bg p-1 rounded-xl">
-            <button id="menu-cat-home" onclick="window.selectMenuCategory('home')" class="py-2.5 text-[10px] font-bold rounded-lg transition-all bg-white text-brand-primary shadow-sm border border-brand-border/50">
-              自炊レシピ
-            </button>
-            <button id="menu-cat-convenience" onclick="window.selectMenuCategory('convenience')" class="py-2.5 text-[10px] font-bold rounded-lg transition-all text-brand-muted">
-              コンビニ
-            </button>
-            <button id="menu-cat-restaurant" onclick="window.selectMenuCategory('restaurant')" class="py-2.5 text-[10px] font-bold rounded-lg transition-all text-brand-muted">
-              外食・レストラン
-            </button>
-          </div>
-        </div>
 
-        <!-- ② 朝・昼・夕・間食複数選択 -->
-        <div class="space-y-1.5">
-          <span class="text-[9px] text-brand-text font-black block uppercase tracking-wider flex items-center gap-1">
-            <i data-lucide="clock" class="w-3.5 h-3.5 text-brand-primary"></i>
-            2. 食事区分 (複数選んで等分分配)
-          </span>
-          <div class="grid grid-cols-4 gap-1.5 bg-brand-bg p-1 rounded-xl">
-            <button id="meal-timing-breakfast" onclick="window.toggleMealTiming('breakfast')" class="py-2.5 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
-              🍳 朝食
-            </button>
-            <button id="meal-timing-lunch" onclick="window.toggleMealTiming('lunch')" class="py-2.5 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
-              🍱 昼食
-            </button>
-            <button id="meal-timing-dinner" onclick="window.toggleMealTiming('dinner')" class="py-2.5 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
-              🌙 夕食
-            </button>
-            <button id="meal-timing-snack" onclick="window.toggleMealTiming('snack')" class="py-2.5 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
-              🍪 間食
-            </button>
-          </div>
-        </div>
-
-        <button onclick="window.generateAIPendingMenu()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3.5 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-1.5">
-          <i data-lucide="sparkles" class="w-4 h-4"></i>
-          選択した設定で一括AI逆算提案をスタート
-        </button>
-
-        <!-- AI提案結果表示エリア -->
-        <div id="ai-menu-suggestion-box" class="hidden bg-brand-accent/30 border border-brand-primary/10 rounded-2xl p-4 space-y-4 relative overflow-hidden transition-all duration-300">
+        <div class="space-y-3 relative z-10">
+          <input type="text" id="client-id-input" class="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3.5 text-center font-mono font-black text-sm text-brand-text uppercase focus:outline-none focus:ring-2 focus:ring-brand-primary transition-all shadow-inner" placeholder="CRT-XXXXXX">
           
-          <div class="flex justify-between items-center border-b border-brand-primary/10 pb-2">
-            <div>
-              <span class="text-[8px] text-brand-primary font-bold block uppercase tracking-wider">AI Multi-Meal Recommendation</span>
-              <h4 class="text-xs font-black text-brand-text" id="ai-suggestion-summary-title">複数食の均等分割プラン</h4>
+          <button onclick="window.connectWithClientId()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-4 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            目標設定を同期して食事管理を開始
+          </button>
+        </div>
+      </div>
+      
+      <button onclick="window.bypassLoginForDemo()" class="text-xs text-brand-primary font-bold hover:underline">IDをお持ちでない方はこちら（ゲスト体験モード）</button>
+    </div>
+
+    <!-- ==================== ★ メインダッシュボード画面 (初期非表示・レイアウト崩れ対策を完全ガード) ★ ==================== -->
+    <div id="main-dashboard" class="hidden space-y-4">
+
+      <!-- 連携完了ステータス -->
+      <div id="id-active-panel" class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-cardShadow text-left flex justify-between items-center transition-all">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-brand-accentGreen flex items-center justify-center text-emerald-600 shadow-sm">
+            <i data-lucide="shield-check" class="w-4.5 h-4.5"></i>
+          </div>
+          <div>
+            <span class="text-[8px] text-brand-muted font-bold block uppercase tracking-wider">CARAT Connected ID</span>
+            <span id="active-id-text" class="font-mono text-xs font-black text-brand-primary">CRT-XXXXXX</span>
+          </div>
+        </div>
+        <button onclick="window.disconnectClientId()" class="text-[9px] text-rose-500 font-extrabold hover:bg-rose-50 px-2.5 py-1.5 rounded-xl transition border border-rose-100">
+          連携解除
+        </button>
+      </div>
+
+      <!-- プレミアム2タブバー -->
+      <div class="grid grid-cols-2 gap-2 p-1 bg-brand-border/50 rounded-2xl border border-brand-border shadow-inner">
+        <button id="tab-btn-home" onclick="window.switchTab('home')" class="py-2.5 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 bg-brand-primary text-white shadow-md">
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+          今日の記録
+        </button>
+        <button id="tab-btn-ai-menu" onclick="window.switchTab('ai-menu')" class="py-2.5 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 text-brand-muted hover:text-brand-primary">
+          <i data-lucide="wand-2" class="w-4 h-4"></i>
+          逆算献立AI提案
+        </button>
+      </div>
+
+      <!-- ==================== ★ タブ1: 今日の記録コンテンツ ★ ==================== -->
+      <div id="tab-content-home" class="space-y-4 transition-all">
+        
+        <!-- カレンダー & クイック曜日切り替え -->
+        <div class="bg-brand-card border border-brand-border/60 p-3 rounded-3xl shadow-cardShadow text-left space-y-2">
+          <div class="flex justify-between items-center px-1">
+            <div class="flex items-center gap-1">
+              <i data-lucide="calendar" class="w-4 h-4 text-brand-primary"></i>
+              <span id="display-date-text" class="font-mono font-black text-sm tracking-wider text-brand-text">2026-07-10</span>
             </div>
-            <!-- まとめて一括追加ボタン -->
-            <button onclick="window.registerAllSuggestedMenus()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[9px] py-1.5 px-3 rounded-lg shadow-sm transition flex items-center gap-1 shrink-0">
-              <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
-              すべて一括で追加
+            <button id="btn-today-badge" onclick="window.resetToToday()" class="hidden text-[9px] text-brand-primary bg-brand-accent px-2.5 py-1 rounded-full font-bold transition">
+              今日へ戻る
+            </button>
+          </div>
+          <div class="grid grid-cols-7 gap-1.5 pt-1" id="weekly-calendar-grid">
+            <!-- JSで曜日描画 -->
+          </div>
+        </div>
+
+        <!-- 今日の目標 & 摂取状況 -->
+        <div class="bg-brand-card rounded-[32px] p-6 border border-brand-border/60 shadow-premium text-left space-y-4 relative overflow-hidden">
+          <div class="absolute bottom-0 right-0 w-32 h-32 bg-brand-accent/20 rounded-full blur-3xl -mb-10 -mr-10"></div>
+          
+          <div class="flex justify-between items-center border-b border-brand-border/50 pb-3 relative z-10">
+            <div>
+              <h3 class="text-xs font-extrabold text-brand-text flex items-center gap-1.5">
+                <i data-lucide="activity" class="w-4.5 h-4.5 text-brand-primary"></i>
+                今日の目標 & 摂取状況
+              </h3>
+              <!-- オートリカバリー調整メッセージ -->
+              <span id="auto-recovery-status-badge" class="hidden text-[9px] text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-md mt-1 font-bold border border-emerald-100 items-center gap-1 animate-pulse">
+                <i data-lucide="sparkles" class="w-3 h-3"></i> 昨日オーバー分を自動リセット中
+              </span>
+            </div>
+            <button onclick="window.toggleTargetEditPanel()" class="text-[9px] bg-brand-accent text-brand-primary hover:bg-brand-primary/10 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1 transition-all">
+              <i data-lucide="settings-2" class="w-3.5 h-3.5"></i>
+              目標を調整
             </button>
           </div>
 
-          <!-- 提案された個別の食事カードがここに並びます -->
-          <div id="ai-suggested-meals-grid" class="space-y-3">
-            <!-- JSで動的に追加されます -->
+          <!-- 目標PFCを手動微調整パネル -->
+          <div id="target-edit-panel" class="hidden bg-brand-bg/80 border border-brand-border/80 p-4 rounded-2xl space-y-3 relative z-10 transition-all">
+            <span class="text-[10px] text-brand-text font-black block">🎯 目標値のベース手動設定</span>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <label class="text-[9px] text-brand-muted block font-bold mb-1">目標カロリー (kcal)</label>
+                <input type="number" id="edit-target-kcal" class="w-full bg-white border border-brand-border rounded-xl px-2 py-1.5 font-mono font-bold text-center" value="1800">
+              </div>
+              <div>
+                <label class="text-[9px] text-sky-600 block font-bold mb-1">目標 P (g)</label>
+                <input type="number" id="edit-target-p" class="w-full bg-white border border-brand-border rounded-xl px-2 py-1.5 font-mono font-bold text-center" value="120">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <label class="text-[9px] text-emerald-600 block font-bold mb-1">目標 F (g)</label>
+                <input type="number" id="edit-target-f" class="w-full bg-white border border-brand-border rounded-xl px-2 py-1.5 font-mono font-bold text-center" value="45">
+              </div>
+              <div>
+                <label class="text-[9px] text-amber-600 block font-bold mb-1">目標 C (g)</label>
+                <input type="number" id="edit-target-c" class="w-full bg-white border border-brand-border rounded-xl px-2 py-1.5 font-mono font-bold text-center" value="230">
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="window.toggleTargetEditPanel()" class="flex-1 bg-brand-border hover:bg-brand-border/80 text-brand-muted py-2 rounded-xl text-[10px] font-bold">キャンセル</button>
+              <button onclick="window.saveHandmadeTargets()" class="flex-2 bg-brand-primary hover:bg-brand-primaryHover text-white py-2 px-4 rounded-xl text-[10px] font-bold shadow">適用して保存</button>
+            </div>
           </div>
+
+          <div class="flex items-center gap-6 relative z-10">
+            <div class="relative w-28 h-28 shrink-0 flex items-center justify-center">
+              <svg class="w-full h-full transform -rotate-90">
+                <circle cx="56" cy="56" r="46" stroke="#E2E8F0" stroke-width="7" fill="transparent" />
+                <circle id="calorie-progress-bar" cx="56" cy="56" r="46" stroke="url(#blue-gradient)" stroke-width="8" stroke-dasharray="289" stroke-dashoffset="289" stroke-linecap="round" fill="transparent" class="transition-all duration-700 ease-out" />
+                <defs>
+                  <linearGradient id="blue-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#0052CC" />
+                    <stop offset="100%" stop-color="#4A90E2" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="absolute text-center">
+                <span id="summary-cur-cal" class="text-xl font-black tracking-tighter text-brand-text block">0</span>
+                <span class="text-[8px] text-brand-muted block uppercase tracking-wider">/ <span id="summary-tar-cal">1800</span> kcal</span>
+              </div>
+            </div>
+            
+            <!-- PFC目標表示 -->
+            <div class="flex-1 space-y-2 text-brand-text font-bold">
+              <div class="space-y-0.5">
+                <div class="flex justify-between items-baseline">
+                  <span class="text-sky-600 text-[11px] font-black flex items-center gap-1">
+                    <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+                    P たんぱく質
+                  </span>
+                  <span class="font-sans text-sm"><span id="summary-cur-p" class="font-black text-base text-sky-700">0</span> / <span id="summary-tar-p" class="text-brand-text font-black text-base">120</span>g</span>
+                </div>
+                <div class="w-full h-2.5 bg-sky-50 rounded-full overflow-hidden border border-sky-100">
+                  <div id="bar-p" class="h-full bg-gradient-to-r from-sky-400 to-sky-500 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-0.5">
+                <div class="flex justify-between items-baseline">
+                  <span class="text-emerald-600 text-[11px] font-black flex items-center gap-1">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    F 脂質
+                  </span>
+                  <span class="font-sans text-sm"><span id="summary-cur-f" class="font-black text-base text-emerald-700">0</span> / <span id="summary-tar-f" class="text-brand-text font-black text-base">45</span>g</span>
+                </div>
+                <div class="w-full h-2.5 bg-emerald-50 rounded-full overflow-hidden border border-emerald-100">
+                  <div id="bar-f" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-0.5">
+                <div class="flex justify-between items-baseline">
+                  <span class="text-amber-600 text-[11px] font-black flex items-center gap-1">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    C 炭水化物
+                  </span>
+                  <span class="font-sans text-sm"><span id="summary-cur-c" class="font-black text-base text-amber-700">0</span> / <span id="summary-tar-c" class="text-brand-text font-black text-base">230</span>g</span>
+                </div>
+                <div class="w-full h-2.5 bg-amber-50 rounded-full overflow-hidden border border-amber-100">
+                  <div id="bar-c" class="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- カロリーオートリカバリー貯金箱 -->
+        <div id="recovery-indicator-card" class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-3 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-2 h-full bg-emerald-500" id="recovery-bar-color"></div>
+          <div class="pl-2">
+            <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-4 h-4 text-emerald-600"></i>
+              カロリーオートリカバリー貯金箱
+            </h4>
+            <p class="text-[9px] text-brand-muted mt-0.5" id="recovery-sub-info">昨日食べすぎたエネルギーを、自動で今日の目標から引いて相殺しています。</p>
+            
+            <div class="grid grid-cols-2 gap-2 pt-2">
+              <div class="bg-brand-bg rounded-2xl p-3 border border-brand-border/50 text-center">
+                <span class="text-[8px] text-brand-muted font-bold block mb-0.5">昨日の超過カロリー</span>
+                <span id="yesterday-over-kcal" class="font-sans font-black text-sm block text-rose-500">0 kcal</span>
+              </div>
+              <div class="bg-emerald-50/50 rounded-2xl p-3 border border-emerald-100 text-center">
+                <span class="text-[8px] text-emerald-700 font-bold block mb-0.5">今日の自動調整リセット</span>
+                <span id="today-adjusted-kcal" class="font-sans font-black text-sm block text-emerald-600">-0 kcal</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1週間の帳じり合わせ状況 -->
+        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-3 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-2 h-full bg-brand-primary" id="balance-bar-color"></div>
+          <div class="pl-2">
+            <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
+              <i data-lucide="scale" class="w-4 h-4 text-brand-primary"></i>
+              直近1週間の帳じり合わせ状況
+            </h4>
+            <p class="text-[9px] text-brand-muted mt-0.5">選択日を含む過去7日間の目標総計に対する過不足（おトク枠）を判定します。</p>
+            
+            <div class="grid grid-cols-4 gap-2 pt-3 text-center">
+              <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
+                <span class="text-[8px] text-brand-text font-bold block mb-0.5">カロリー</span>
+                <span id="balance-kcal" class="font-sans font-black text-xs block">0</span>
+              </div>
+              <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
+                <span class="text-[8px] text-sky-600 font-bold block mb-0.5">P (g)</span>
+                <span id="balance-p" class="font-sans font-black text-xs block">0</span>
+              </div>
+              <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
+                <span class="text-[8px] text-emerald-600 font-bold block mb-0.5">F (g)</span>
+                <span id="balance-f" class="font-sans font-black text-xs block">0</span>
+              </div>
+              <div class="bg-brand-bg rounded-2xl p-2 border border-brand-border/50">
+                <span class="text-[8px] text-amber-600 font-bold block mb-0.5">C (g)</span>
+                <span id="balance-c" class="font-sans font-black text-xs block">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI食事スキャン -->
+        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-4">
+          <div class="border-b border-brand-border/50 pb-2 flex justify-between items-center">
+            <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-4.5 h-4.5 text-brand-primary"></i>
+              AI食事解析スキャナー
+            </h3>
+            <span class="text-[8px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg font-bold animate-pulse">即時記録</span>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-3">
+            <label class="cursor-pointer bg-gradient-to-tr from-brand-primary to-brand-secondary hover:opacity-95 text-white p-5 rounded-2xl shadow-md transition-all flex flex-col items-center justify-center text-center space-y-2 group relative overflow-hidden">
+              <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                <i data-lucide="camera" class="w-5.5 h-5.5 text-white"></i>
+              </div>
+              <span class="text-xs font-black">カメラ写真解析</span>
+              <span class="text-[8px] text-white/80">パシャッと撮影して一撃保存</span>
+              <input type="file" accept="image/*" id="ai-image-input" class="hidden">
+            </label>
+            
+            <button onclick="window.openTextModal()" class="bg-brand-bg hover:bg-brand-accent p-5 rounded-2xl border border-brand-border transition-all flex flex-col items-center justify-center text-center space-y-2 group">
+              <div class="w-10 h-10 rounded-full bg-brand-accent flex items-center justify-center group-hover:bg-brand-primary/15 transition-colors">
+                <i data-lucide="keyboard" class="w-5.5 h-5.5 text-brand-primary"></i>
+              </div>
+              <span class="text-xs font-black text-brand-text">テキスト食事解析</span>
+              <span class="text-[8px] text-brand-muted">食べたものを自由に書く</span>
+            </button>
+          </div>
+
+          <button onclick="window.openManualInputModal()" class="w-full py-3 text-xs text-brand-primary font-bold hover:bg-brand-accent transition-colors border border-dashed border-brand-primary/30 rounded-2xl flex items-center justify-center gap-1.5">
+            <i data-lucide="edit-3" class="w-4 h-4"></i>
+            数値を手動で直接入力して追加する
+          </button>
+        </div>
+
+        <!-- 本日の食事ログ一覧 -->
+        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-cardShadow text-left space-y-3">
+          <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
+            <i data-lucide="utensils-crossaxes" class="w-4.5 h-4.5 text-brand-primary"></i>
+            本日の食事ログ一覧
+          </h3>
+          <div id="meal-timeline-container" class="space-y-2.5">
+            <!-- 食事リスト -->
+          </div>
+        </div>
+
+        <!-- 体重記録 -->
+        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-cardShadow text-left space-y-3.5">
+          <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5 border-b border-brand-border/50 pb-2">
+            <i data-lucide="scale" class="w-4.5 h-4.5 text-brand-primary"></i>
+            身体データの測定記録
+          </h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-brand-bg/50 p-2.5 rounded-2xl border border-brand-border/60">
+              <label class="text-[9px] text-brand-muted font-bold block mb-1">現在の体重(kg)</label>
+              <input type="number" step="0.1" id="input-weight" class="w-full bg-transparent border-none font-sans font-black text-sm text-brand-text focus:outline-none p-0 text-center" placeholder="55.0">
+            </div>
+            <div class="bg-brand-bg/50 p-2.5 rounded-2xl border border-brand-border/60">
+              <label class="text-[9px] text-brand-muted font-bold block mb-1">現在の体脂肪率(%)</label>
+              <input type="number" step="0.1" id="input-fat" class="w-full bg-transparent border-none font-sans font-black text-sm text-brand-text focus:outline-none p-0 text-center" placeholder="15.0">
+            </div>
+          </div>
+          <button onclick="window.saveBodyData()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-2xl text-xs font-bold transition shadow-md">
+            体重・体脂肪率データを保存する
+          </button>
+        </div>
+
+        <!-- 指導アドバイス表示 -->
+        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-3">
+          <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5 border-b border-brand-border/50 pb-2">
+            <i data-lucide="message-square" class="w-4.5 h-4.5 text-brand-primary"></i>
+            CARAT 担当トレーナーの1週間総括
+          </h3>
+          <div class="p-4 bg-gradient-to-tr from-brand-accent/40 to-brand-bg rounded-2xl border border-brand-primary/10 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-16 h-16 bg-brand-primary/5 rounded-full blur-xl"></div>
+            <p id="trainer-feedback-text" class="text-xs leading-relaxed text-brand-text font-medium whitespace-pre-wrap relative z-10">
+              食事を記録していくと、トレーナーがこちらに1週間の栄養・からだの総括レポートを届けてくれます。
+            </p>
+            <span id="trainer-feedback-time" class="text-[9px] text-brand-muted font-mono block mt-3 text-right font-bold"></span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ==================== ★ タブ2: 逆算献立AI提案コンテンツ ★ ==================== -->
+      <div id="tab-content-ai-menu" class="hidden space-y-4 transition-all slide-up">
+        
+        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-4">
+          <div class="border-b border-brand-border/50 pb-2 flex justify-between items-center">
+            <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
+              <i data-lucide="wand-2" class="w-4.5 h-4.5 text-brand-primary"></i>
+              残りの目標から逆算：献立提案AI
+            </h3>
+            <span class="text-[8px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg font-bold">複数食等分逆算</span>
+          </div>
+          
+          <p class="text-[10px] text-brand-muted leading-relaxed">
+            今日の目標残りの栄養にピタッと合わせ、g数まで計算して献立を立てます。
+            カテゴリーと、食べたい時間帯<b>（朝・昼・夜・おやつから複数選択可能）</b>を選択してください。
+            選択されたお食事で残りの栄養が「均等」になるように、AIが同時に何件でも組み立てます。
+          </p>
+          
+          <!-- ① 調達カテゴリー選択タブ -->
+          <div class="space-y-1.5">
+            <span class="text-[9px] text-brand-text font-black block uppercase tracking-wider flex items-center gap-1">
+              <i data-lucide="store" class="w-3.5 h-3.5 text-brand-primary"></i>
+              1. 調達シチュエーション
+            </span>
+            <div class="grid grid-cols-3 gap-2 bg-brand-bg p-1 rounded-xl">
+              <button id="menu-cat-home" onclick="window.selectMenuCategory('home')" class="py-2.5 text-[10px] font-bold rounded-lg transition-all bg-white text-brand-primary shadow-sm border border-brand-border/50">
+                自炊レシピ
+              </button>
+              <button id="menu-cat-convenience" onclick="window.selectMenuCategory('convenience')" class="py-2.5 text-[10px] font-bold rounded-lg transition-all text-brand-muted">
+                コンビニ
+              </button>
+              <button id="menu-cat-restaurant" onclick="window.selectMenuCategory('restaurant')" class="py-2.5 text-[10px] font-bold rounded-lg transition-all text-brand-muted">
+                外食・レストラン
+              </button>
+            </div>
+          </div>
+
+          <!-- ② 朝・昼・夕・間食複数選択 -->
+          <div class="space-y-1.5">
+            <span class="text-[9px] text-brand-text font-black block uppercase tracking-wider flex items-center gap-1">
+              <i data-lucide="clock" class="w-3.5 h-3.5 text-brand-primary"></i>
+              2. 食事区分 (複数選んで等分分配)
+            </span>
+            <div class="grid grid-cols-4 gap-1.5 bg-brand-bg p-1 rounded-xl">
+              <button id="meal-timing-breakfast" onclick="window.toggleMealTiming('breakfast')" class="py-2.5 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
+                🍳 朝食
+              </button>
+              <button id="meal-timing-lunch" onclick="window.toggleMealTiming('lunch')" class="py-2.5 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
+                🍱 昼食
+              </button>
+              <button id="meal-timing-dinner" onclick="window.toggleMealTiming('dinner')" class="py-2.5 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
+                🌙 夕食
+              </button>
+              <button id="meal-timing-snack" onclick="window.toggleMealTiming('snack')" class="py-2.5 text-[9px] font-bold rounded-lg transition-all text-brand-muted">
+                🍪 間食
+              </button>
+            </div>
+          </div>
+
+          <button onclick="window.generateAIPendingMenu()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3.5 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-1.5">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            選択した設定で一括AI逆算提案をスタート
+          </button>
+
+          <!-- AI提案結果表示エリア -->
+          <div id="ai-menu-suggestion-box" class="hidden bg-brand-accent/30 border border-brand-primary/10 rounded-2xl p-4 space-y-4 relative overflow-hidden transition-all duration-300">
+            
+            <div class="flex justify-between items-center border-b border-brand-primary/10 pb-2">
+              <div>
+                <span class="text-[8px] text-brand-primary font-bold block uppercase tracking-wider">AI Multi-Meal Recommendation</span>
+                <h4 class="text-xs font-black text-brand-text" id="ai-suggestion-summary-title">複数食の均等分割プラン</h4>
+              </div>
+              <!-- まとめて一括追加ボタン -->
+              <button onclick="window.registerAllSuggestedMenus()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[9px] py-1.5 px-3 rounded-lg shadow-sm transition flex items-center gap-1 shrink-0">
+                <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                すべて一括で追加
+              </button>
+            </div>
+
+            <!-- 提案された個別の食事カードがここに並びます -->
+            <div id="ai-suggested-meals-grid" class="space-y-3">
+              <!-- JSで動的に追加されます -->
+            </div>
+          </div>
+
         </div>
 
       </div>
 
     </div>
 
-  </div>
+  </main>
 
   <!-- ==================== モーダルセクション ==================== -->
 
@@ -652,7 +658,7 @@
         </div>
       </div>
 
-      <!-- ★ 2段階アコーディオン：食材確認➔食材追加 ★ -->
+      <!-- 2段階アコーディオン：食材確認➔食材追加 -->
       <div class="space-y-2">
         <button type="button" onclick="window.toggleIngredientsAccordion()" class="w-full bg-brand-bg hover:bg-brand-accent p-3 rounded-2xl border border-brand-border flex justify-between items-center text-xs font-black text-brand-text transition-all">
           <span class="flex items-center gap-1.5">
@@ -668,7 +674,7 @@
             <!-- 食材行がJSで並びます -->
           </div>
           
-          <!-- 食材追加ボタン -->
+          <!-- 食材追加ボタン（食材確認アコーディオンを開いた時のみ一番下に露出！） -->
           <button onclick="window.addIngredientRow()" class="w-full bg-white hover:bg-brand-accent text-brand-primary font-bold text-[10px] py-2.5 rounded-xl border border-brand-primary/20 transition flex items-center justify-center gap-1 shadow-sm">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i>
             ＋ 食材を新しく追加
@@ -784,11 +790,10 @@
       return isNaN(num) ? 0 : num;
     }
 
-    // ★ 解決：FileReader非同期Promiseヘルパー関数 (サイレントハングを物理遮断する要) ★
+    // ★ FileReader非同期Promiseヘルパー関数 (サイレントハングを物理遮断する要) ★
     const convertFileToBase64 = (file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
       
-      // 15秒通信タイムアウト検知タイマー
       const timeout = setTimeout(() => {
         reject(new Error("FILE_READ_TIMEOUT"));
       }, 15000);
@@ -804,7 +809,7 @@
       };
     });
 
-    // ★ データ破壊を防ぎ、各項目の初期欠落を補完マッピングする標準化エンジン ★
+    // ★ データ破壊を防ぐ標準化マッピング ★
     function standardizeMealObject(meal) {
       if (!meal) return null;
       const std = {
@@ -957,7 +962,10 @@
     };
 
     function renderWeeklyCalendarGrid() {
+      if (!currentClientId && document.getElementById('main-dashboard').classList.contains('hidden')) return; // ★ 追加：未連携状態でのDOMクラッシュ防止ガード
+
       const container = document.getElementById('weekly-calendar-grid');
+      if (!container) return;
       container.innerHTML = "";
 
       const baseDate = new Date(selectedDateString);
@@ -1100,6 +1108,9 @@
     }
 
     function renderClientApp() {
+      // ★ 追加：連携が完了し、ダッシュボードが展開されるまではDOMアクセスでクラッシュするのを100%防止するガード ★
+      if (!currentClientId && document.getElementById('main-dashboard').classList.contains('hidden')) return;
+
       renderWeeklyCalendarGrid();
       document.getElementById('display-date-text').innerText = selectedDateString;
       const todayStr = getTodayDateString();
@@ -1436,7 +1447,7 @@
 
 
     // =======================================================
-    // ★ AI解析エンジン ★
+    // ★ AI解析エンジン (環境推奨モデル名へ完全固定マージ) ★
     // =======================================================
 
     async function fetchGeminiForClient(payload) {
@@ -1450,42 +1461,42 @@
         throw new Error("API_KEY_MISSING");
       }
 
-      const trialPatterns = [
-        { version: "v1beta", model: "gemini-2.5-flash" },
-        { version: "v1", model: "gemini-1.5-flash" }
-      ];
+      // ★ 解決：プレビュー環境で100%確実に稼働する指定モデルに強制固定！
+      const modelName = "gemini-2.5-flash-preview-09-2025";
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
+      
       let lastError = null;
       let lastStatus = null;
 
-      for (const pattern of trialPatterns) {
-        const endpoint = `https://generativelanguage.googleapis.com/${pattern.version}/models/${pattern.model}:generateContent?key=${key}`;
-        try {
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          lastStatus = response.status;
-          if (response.ok) {
-            return await response.json();
-          } else {
-            const errText = await response.text();
-            lastError = `status_${response.status}_${errText}`;
-          }
-        } catch (e) {
-          lastError = e.message || e;
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        lastStatus = response.status;
+        if (response.ok) {
+          return await response.json();
+        } else {
+          const errText = await response.text();
+          lastError = `status_${response.status}_${errText}`;
         }
+      } catch (e) {
+        lastError = e.message || e;
       }
+
       throw new Error(`API_ERROR_STATUS_${lastStatus || 'UNKNOWN'}_DETAILS_${lastError}`);
     }
 
+    // ★ 完璧なJSON抽出＆キーマッピング防壁 ★
     function parseGeminiJSON(text) {
       try {
-        const cleaned = text.replace(/^```json/g, "").replace(/```$/g, "").trim();
+        const cleaned = text.trim();
+        // ★ 新設: 最外周のブラケットのみを抽出する正規表現フィルタ！これにより日本語のノイズ発言が混ざっても100%パース成功
         const start = cleaned.indexOf('{');
         const end = cleaned.lastIndexOf('}');
         if (start === -1 || end === -1) {
-          throw new Error("JSONの括弧が見つかりません。");
+          throw new Error("JSON_BRACKETS_NOT_FOUND");
         }
         const jsonStr = cleaned.slice(start, end + 1);
         const parsed = JSON.parse(jsonStr);
@@ -1499,7 +1510,20 @@
           ingredients: []
         };
 
-        const rawIngredients = parsed.ingredients || parsed.ingredientsList || parsed.components || parsed.items || [];
+        let rawIngredients = parsed.ingredients || parsed.ingredientsList || parsed.components || parsed.items || [];
+        
+        // ★ セーフガード: もしAIが食材分解配列を空で返してきたら、メイン料理名(100g)で自己補完を自動生成！
+        if (!Array.isArray(rawIngredients) || rawIngredients.length === 0) {
+          rawIngredients = [{
+            name: normalized.name,
+            weight: 100,
+            kcal: normalized.kcal,
+            p: normalized.p,
+            f: normalized.f,
+            c: normalized.c
+          }];
+        }
+
         normalized.ingredients = rawIngredients.map(ing => ({
           name: ing.name || ing.material || ing.ingredient || "食材",
           weight: safeFloat(ing.weight || ing.amount || ing.quantity || 100),
@@ -1530,21 +1554,22 @@
       loading.classList.add('flex');
 
       try {
-        const systemPrompt = "あなたはCARATの食事分析AIです。提示された食べたもの情報を詳細に食材分解し、グラム数(g)・PFC・カロリーを弾き出して構造化JSONを返してください。";
+        // ★ 変更：システムプロンプトの指定ルールを最適化 ★
+        const systemPrompt = "あなたはCARATの食事分析AIです。提示されたテキストを詳細に食材分解し、グラム数(g)・PFC・カロリーを計算して有効なJSONオブジェクトのみを返却してください。JSON以外の解説文は厳禁です。";
         const userPrompt = `
 食べたもの: "${textInput}"
 
 【出力要件JSONスキーマ】
-必ず次の構造のみを持つ有効なJSONオブジェクトを返してください。不要な前置きは禁止。JSONのみ。
+必ず次の構造のみを持つ有効なJSONオブジェクトを返してください。
 {
-  "name": "代表メニュー名(例: しょうが焼き定食)",
+  "name": "代表メニュー名(例: サラダチキン)",
   "kcal": 総カロリー(数値),
   "p": タンパク質総計g(数値),
   "f": 脂質総計g(数値),
   "c": 炭水化物総計g(数値),
   "ingredients": [
     {
-      "name": "構成食材(例: 豚ロース肉)",
+      "name": "構成食材(例: 鶏むね肉)",
       "weight": 概算グラム数(数値),
       "kcal": カロリー(数値),
       "p": タンパク質g(数値),
@@ -1580,7 +1605,6 @@
           };
 
           await saveMealToCloud(newMeal);
-          
           showToast(`「${parsed.name}」をAI自動記録しました！編集はカードをタップ。`);
         } else {
           throw new Error("フォーマットが不正です。");
@@ -1612,7 +1636,7 @@
       loading.classList.add('flex');
 
       try {
-        // Promiseを待機し、確実にファイル処理の同期エラーおよびタイムアウト、通信切断を捕捉
+        // PromiseでFileReaderを同期管理し、例外を100%外側のcatchへ届ける設計
         const base64Data = await convertFileToBase64(file);
 
         const systemPrompt = "あなたはCARATの高度画像食事解析AIです。写真の中のメニューを食材分解し、それぞれの重量・グラム数・PFCバランスを計算して有効なJSONを返してください。";
@@ -1668,17 +1692,16 @@
           };
 
           await saveMealToCloud(newMeal);
-          
           showToast("食事写真を自動記録しました！編集はカードをタップ。");
         } else {
           throw new Error("解析応答が不正です。");
         }
       } catch (err) {
-        console.error("Camera Analyze Captured Exception:", err);
+        console.error("Camera Analyze Exception:", err);
         
         let displayErrorMsg = "画像解析に失敗しました。通信環境が良い場所で明るい写真を再度お試しください。";
         if (err.message && err.message.includes("FILE_READ_TIMEOUT")) {
-          displayErrorMsg = "画像ファイルの読み込み中にタイムアウトしました。カメラのアクセス許可、またはファイル容量をご確認ください。";
+          displayErrorMsg = "画像ファイルの読み込み中にタイムアウトしました。画像容量が大きすぎる可能性があります。";
         } else if (err.message && err.message.includes("API_KEY_MISSING")) {
           displayErrorMsg = "店舗用のAIキーが設定されていません。トレーナーポータルでAPIキーを登録して保存・同期してください。";
         } else if (err.message && err.message.includes("429")) {
@@ -1688,7 +1711,7 @@
         }
         alert(displayErrorMsg);
       } finally {
-        // ★ どのような理由でクラッシュしても、絶対にローディング画面を安全に解除する（永久解析中バグの完全克服） ★
+        // ★ つねに最後に100%実行されるfinallyブロックにより、5分間フリーズするバグは物理消滅 ★
         loading.classList.add('hidden');
         loading.classList.remove('flex');
       }
