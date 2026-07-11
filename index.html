@@ -188,7 +188,7 @@
             </button>
           </div>
 
-          <!-- 目標PFCを手動微調整パネル -->
+          <!-- 目報PFCを手動微調整パネル -->
           <div id="target-edit-panel" class="hidden bg-brand-bg/80 border border-brand-border/80 p-4 rounded-2xl space-y-3 relative z-10 transition-all">
             <span class="text-[10px] text-brand-text font-black block">🎯 目標値のベース手動設定</span>
             <div class="grid grid-cols-2 gap-2 text-xs">
@@ -596,7 +596,7 @@
     </div>
   </div>
 
-  <!-- ★ 微調整・編集モーダル（バグ対策を完全実装！） ★ -->
+  <!-- ★ 微調整・編集モーダル（食材追加時のカロリー・PFC手動入力を完全サポート！） ★ -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-6 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
       
@@ -670,7 +670,7 @@
 
         <!-- アコーディオン展開エリア -->
         <div id="ingredients-collapse-area" class="hidden space-y-3 bg-brand-bg/30 p-3 rounded-3xl border border-brand-border/40 slide-up">
-          <div id="ingredients-editor-container" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 no-scrollbar">
+          <div id="ingredients-editor-container" class="space-y-2 max-h-[220px] overflow-y-auto pr-1 no-scrollbar flex flex-col gap-2">
             <!-- 食材行がJSで並びます -->
           </div>
           
@@ -790,7 +790,7 @@
       return isNaN(num) ? 0 : num;
     }
 
-    // ★ FileReader非同期Promiseヘルパー関数 (サイレントハングを物理遮断する要) ★
+    // ★ FileReaderをPromise化して非同期ハングを物理遮断するヘルパー ★
     const convertFileToBase64 = (file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
       
@@ -1821,20 +1821,37 @@
 
       editingMealObject.ingredients.forEach((ing, i) => {
         const row = document.createElement('div');
-        row.className = "bg-white rounded-2xl p-3 border border-brand-border flex items-center justify-between gap-2 text-xs text-brand-text mb-1 shrink-0 shadow-sm";
+        row.className = "bg-white rounded-2xl p-3 border border-brand-border flex flex-col gap-2 text-xs text-brand-text mb-1 shrink-0 shadow-sm";
         row.innerHTML = `
-          <div class="flex-1 space-y-1">
-            <input type="text" value="${ing.name}" class="bg-brand-bg border border-brand-border rounded-xl px-2.5 py-1 text-xs font-bold w-full focus:outline-none" onchange="window.updateIngredientName(${i}, this.value)">
-            <div class="flex items-center gap-1.5">
-              <span class="text-[9px] text-brand-muted font-bold block">P:${safeFloat(ing.p).toFixed(1)} F:${safeFloat(ing.f).toFixed(1)} C:${safeFloat(ing.c).toFixed(1)}</span>
-            </div>
-          </div>
-          <div class="flex items-center gap-1.5 shrink-0">
-            <input type="number" value="${Math.round(safeFloat(ing.weight))}" class="bg-brand-bg border border-brand-border rounded-xl p-1 text-center font-mono font-black text-xs w-14 focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientWeight(${i}, this.value)">
-            <span class="text-[10px] text-brand-muted font-bold">g</span>
-            <button onclick="window.removeIngredientRow(${i})" class="text-brand-muted hover:text-rose-500 p-1.5 rounded-xl transition">
-              <i data-lucide="minus-circle" class="w-4 h-4"></i>
+          <!-- 上段: 食材名と削除ボタン -->
+          <div class="flex items-center justify-between gap-2">
+            <input type="text" value="${ing.name}" class="bg-brand-bg border border-brand-border rounded-xl px-2.5 py-1.5 text-xs font-bold flex-1 focus:outline-none focus:border-brand-primary" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
+            <button onclick="window.removeIngredientRow(${i})" class="text-brand-muted hover:text-rose-500 p-1.5 rounded-xl transition shrink-0">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
+          </div>
+          <!-- 下段: 重量とPFC・カロリーの手動微調整インプット (完全リアルタイム連動) -->
+          <div class="grid grid-cols-5 gap-1.5 text-center">
+            <div>
+              <label class="text-[8px] text-brand-muted block font-bold mb-0.5">重量(g)</label>
+              <input type="number" value="${Math.round(safeFloat(ing.weight))}" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientWeight(${i}, this.value)">
+            </div>
+            <div>
+              <label class="text-[8px] text-sky-600 block font-bold mb-0.5">P(g)</label>
+              <input type="number" step="0.1" value="${safeFloat(ing.p).toFixed(1)}" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientPFC(${i}, 'p', this.value)">
+            </div>
+            <div>
+              <label class="text-[8px] text-emerald-600 block font-bold mb-0.5">F(g)</label>
+              <input type="number" step="0.1" value="${safeFloat(ing.f).toFixed(1)}" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientPFC(${i}, 'f', this.value)">
+            </div>
+            <div>
+              <label class="text-[8px] text-amber-600 block font-bold mb-0.5">C(g)</label>
+              <input type="number" step="0.1" value="${safeFloat(ing.c).toFixed(1)}" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientPFC(${i}, 'c', this.value)">
+            </div>
+            <div>
+              <label class="text-[8px] text-brand-text block font-bold mb-0.5">kcal</label>
+              <input type="number" value="${Math.round(safeFloat(ing.kcal))}" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientPFC(${i}, 'kcal', this.value)">
+            </div>
           </div>
         `;
         container.appendChild(row);
@@ -1854,6 +1871,7 @@
       const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
       const currentScale = currentSliderValue / 100;
 
+      // ★ 解決：新しく食材を追加したときにダミーの基準値を100%スケールで安全セットする
       const newIng = {
         name: "新しい食材",
         weight: 100 * currentScale,
@@ -1876,7 +1894,7 @@
       renderIngredientsInEditor();
     };
 
-    // ★ 解決：食材変更時の1gあたり比率（栄養素密度）を書き換え前の「オリジナル基準値」から安全取得して計算し直す究極バグ駆逐ロジック ★
+    // 食材変更時の1gあたり比率を書き換え前の「オリジナル基準値」から安全取得して計算し直すバグ駆逐ロジック
     window.changeIngredientWeight = function(index, newWeight) {
       const w = safeFloat(newWeight);
       if (w < 0) return;
@@ -1885,19 +1903,21 @@
       const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
       const currentScale = currentSliderValue / 100;
 
-      // 1gあたりのPFC/カロリー比率を変更前の絶対退避値（originalWeight等）から安全算出
+      // 1gあたりのPFC/カロリー比率を変更前の絶対退避値から安全算出
       const baseWeight = safeFloat(ing.originalWeight) || safeFloat(ing.weight) || 100;
       const baseKcal = safeFloat(ing.originalKcal) || safeFloat(ing.kcal) || 0;
       const baseP = safeFloat(ing.originalP) || safeFloat(ing.p) || 0;
       const baseF = safeFloat(ing.originalF) || safeFloat(ing.f) || 0;
       const baseC = safeFloat(ing.originalC) || safeFloat(ing.c) || 0;
 
-      const kcalRatio = baseKcal / baseWeight;
-      const pRatio = baseP / baseWeight;
-      const fRatio = baseF / baseWeight;
-      const cRatio = baseC / baseWeight;
+      // 0除算防止セーフガード
+      const denom = baseWeight <= 0 ? 1 : baseWeight;
+      const kcalRatio = baseKcal / denom;
+      const pRatio = baseP / denom;
+      const fRatio = baseF / denom;
+      const cRatio = baseC / denom;
 
-      // 新しいオリジナル絶対基準値をスライダー逆算（100%スケール値に換算）して上書き
+      // 新しいオリジナル絶対基準値をスライダー逆算して上書き
       ing.originalWeight = w / (currentScale || 1);
       ing.originalKcal = ing.originalWeight * kcalRatio;
       ing.originalP = ing.originalWeight * pRatio;
@@ -1912,6 +1932,34 @@
       ing.c = ing.originalC * currentScale;
 
       renderIngredientsInEditor();
+    };
+
+    // ★ 新設：手動追加・既存食材のP, F, C, kcal を直接変更した際の同期書き換えハンドラー
+    window.changeIngredientPFC = function(index, type, val) {
+      const v = safeFloat(val);
+      if (v < 0) return;
+
+      const ing = editingMealObject.ingredients[index];
+      const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
+      const currentScale = currentSliderValue / 100;
+
+      // 変更された栄養値をスライダー逆算してオリジナル基準と画面表示用の双方にリアルタイムバインド
+      if (type === 'p') {
+        ing.p = v;
+        ing.originalP = v / (currentScale || 1);
+      } else if (type === 'f') {
+        ing.f = v;
+        ing.originalF = v / (currentScale || 1);
+      } else if (type === 'c') {
+        ing.c = v;
+        ing.originalC = v / (currentScale || 1);
+      } else if (type === 'kcal') {
+        ing.kcal = v;
+        ing.originalKcal = v / (currentScale || 1);
+      }
+
+      // エディター内プレビュー表示と、ドキュメント全体のカロリー総計をリアルタイム更新
+      recalculateTotalsInEditor();
     };
 
     window.changeMealScale = function(scalePercent) {
@@ -1935,9 +1983,13 @@
           if (numInput) {
             numInput.value = Math.round(safeFloat(ing.weight));
           }
-          const pfcLabel = row.querySelector('.text-brand-muted');
-          if (pfcLabel) {
-            pfcLabel.innerText = `P:${safeFloat(ing.p).toFixed(1)} F:${safeFloat(ing.f).toFixed(1)} C:${safeFloat(ing.c).toFixed(1)}`;
+          // PFC、Kcalインプットの表示値をスライダー連動で動的に書き換える
+          const inputs = row.querySelectorAll('input[type="number"]');
+          if (inputs.length >= 5) {
+            inputs[1].value = safeFloat(ing.p).toFixed(1); // P
+            inputs[2].value = safeFloat(ing.f).toFixed(1); // F
+            inputs[3].value = safeFloat(ing.c).toFixed(1); // C
+            inputs[4].value = Math.round(safeFloat(ing.kcal)); // kcal
           }
         }
       });
@@ -2144,7 +2196,7 @@
 - 1食あたり目標炭水化物(C): ${targetCPerMeal.toFixed(1)} g
 
 【重要な外食・店舗名提案ルール】
-調達カテゴリが「外食・レストラン」の場合、メニュー名のテキストに、必ず「大戸屋」「やよい軒」「スシロー」「くら寿司」「ガスト」「サイゼリヤ」などの大手有名フランチャイズ店名を【店名】として冠したメニュー名にしてください。
+調達カテゴリが「外食・レストラン」の場合、メニュー名のテキストに、必ず「大戸屋」「やよい軒」「スシロー」「くら寿司】【ガスト】【サイゼリヤ」などの大手有名フランチャイズ店名を【店名】として冠したメニュー名にしてください。
 例: 【やよい軒】しまほっけ定食（もち麦ご飯・普通盛）、【大戸屋】鶏と野菜の黒酢あん定食（五穀ご飯少なめ）、【スシロー】まぐろ2皿・えびアボカド1皿・茶碗蒸し、【サイゼリヤ】若鶏のディアボラ風＋スモールライス
 
 【時間帯別の逆算ルール】
