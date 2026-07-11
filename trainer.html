@@ -64,29 +64,29 @@
 
   <main class="max-w-4xl mx-auto px-4 mt-4 space-y-4">
 
-    <!-- 店舗Gemini APIキー設定 (アコーディオン) -->
+    <!-- 店舗Gemini APIキー設定 (中央自動同期設定ドキュメント連携) -->
     <details class="bg-brand-card rounded-2xl border border-brand-border/60 overflow-hidden shadow-sm transition">
       <summary class="p-4 font-bold text-xs text-brand-text flex justify-between items-center cursor-pointer select-none list-none group">
         <span class="flex items-center gap-1.5">
           <i data-lucide="key" class="w-4 h-4 text-brand-primary"></i>
-          店舗Gemini APIキーの自動同期設定
+          店舗Gemini APIキーの中央金庫自動配信
         </span>
         <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180 text-brand-muted"></i>
       </summary>
       <div class="p-4 pt-0 border-t border-brand-border/40 bg-brand-bg/20 space-y-3">
         <p class="text-[10px] text-brand-muted leading-relaxed">
-          ここに店舗用のGemini APIキーを設定すると、作成されるすべてのお客様アプリのカメラ食事解析やAI相談窓口に配信され、お客様側での面倒なキー設定やバグを完全に無くすことができます。また、トレーナーコメント自動生成にもこのキーが適用されます。
+          ここに店舗用のGemini APIキーを設定して保存すると、Firestore中央のセキュリティに守られた金庫（SETTINGS）へ保存され、連携されたすべてのお客様のスマホアプリ（index.html）へカメラ解析やAI相談、献立逆算用として<b>全自動で即時に配信・同期</b>されます。お客様側での面倒なキー設定や、設定ミスによるエラーは一切発生しなくなります。
         </p>
         <div class="flex gap-2">
           <input type="password" id="trainer-gemini-key" class="flex-1 bg-brand-card border border-brand-border rounded-xl px-3.5 py-2.5 text-xs font-mono text-brand-text focus:outline-none focus:border-brand-primary" placeholder="AIzaSy...">
           <button onclick="window.saveTrainerGeminiKey()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 shrink-0 shadow-sm">
-            保存・適用
+            保存・全ユーザーへ配信
           </button>
         </div>
       </div>
     </details>
 
-    <!-- メイングリッド (2カラム) -->
+    <!-- メイングリッド -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
 
       <!-- 左カラム: 顧客管理 & 選択 -->
@@ -142,7 +142,6 @@
           </h2>
           <div class="space-y-2">
             <div class="max-h-[220px] overflow-y-auto space-y-1.5 pr-1 no-scrollbar" id="trainer-bookmarks-container">
-              <!-- ブックマークがここにJSで展開されます -->
               <span class="text-[10px] text-brand-muted text-center block py-4 bg-brand-bg rounded-xl border border-dashed border-brand-border">登録済みのクライアントはありません</span>
             </div>
             
@@ -181,7 +180,7 @@
               </div>
             </div>
 
-            <!-- ★ 日付変更コントローラー ★ -->
+            <!-- 日付変更コントローラー -->
             <div class="bg-brand-bg/60 border border-brand-border/40 p-2 rounded-2xl flex items-center justify-between shadow-inner">
               <button onclick="window.changeSelectedDate('prev')" class="p-2 text-brand-primary hover:text-brand-primaryHover hover:bg-brand-accent rounded-xl transition flex items-center justify-center shrink-0">
                 <i data-lucide="chevron-left" class="w-5 h-5"></i>
@@ -292,7 +291,7 @@
             </div>
           </div>
 
-          <!-- ★ 新設: 来店時1週間食事AI総括アナライザー ★ -->
+          <!-- 来店時食事AI総括アナライザー -->
           <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm text-left space-y-3.5">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 border-b border-brand-border pb-3">
               <div>
@@ -615,12 +614,6 @@
             
             renderClientDashboard(data);
             
-            // ★ プッシュキー検証：もし顧客DBのキーが空、もしくは店舗キーと違う場合はリアルタイムにプッシュ書き込み
-            const storedKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
-            if (storedKey && data.sharedGeminiKey !== storedKey) {
-              updateDoc(clientDocRef, { sharedGeminiKey: storedKey }).catch(e => console.error("Auto key sync fail:", e));
-            }
-            
             document.getElementById('client-placeholder').classList.add('hidden');
             document.getElementById('client-data-container').classList.remove('hidden');
             
@@ -705,7 +698,7 @@
       lucide.createIcons();
     }
 
-    // ★ 解決：店舗Geminiキー保存時に、ロード中のお客様ドキュメントへもリアルタイムに即座にプッシュ同期配信するアクティブ機構 ★
+    // ★ 店舗Gemini APIキーを中央の「SETTINGS」ドメインと、現在ロード中のクライアントの双方へ即時書き込み同期するアクティブ配信ロジック ★
     window.saveTrainerGeminiKey = async function() {
       const key = document.getElementById('trainer-gemini-key').value.trim();
       if (!key) {
@@ -713,16 +706,27 @@
         return;
       }
       localStorage.setItem(`carat_trainer_gemini_key_${appId}`, key);
-      showToast("店舗Gemini APIキーを登録しました。");
+      showToast("店舗Gemini APIキーをトレーナーブラウザに登録しました。");
 
-      if (currentTargetClientId) {
-        try {
+      try {
+        if (!auth.currentUser) {
+          await signInAnonymously(auth);
+        }
+
+        // 1. 特異ドキュメント SETTINGS へ即時書き込み
+        const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
+        await setDoc(settingsDocRef, { geminiApiKey: key }, { merge: true });
+
+        // 2. 現在開いているカルテのお客様側ドキュメントへもバックアップ同期
+        if (currentTargetClientId) {
           const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
           await updateDoc(clientDocRef, { sharedGeminiKey: key });
-          showToast("店舗APIキーを現在ロード中のお客様アプリに即時プッシュ同期しました！");
-        } catch (err) {
-          console.error("Key Realtime Push Failed:", err);
         }
+
+        showToast("店舗用Gemini APIキーを金庫に保存し、全お客様アプリへ同期配信しました！");
+      } catch (err) {
+        console.error("API Key Global Sync Failed:", err);
+        alert("店舗APIキーの同期配信に失敗しました。Firebaseのセキュリティルールが正しいかご確認ください。");
       }
     };
 
