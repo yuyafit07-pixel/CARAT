@@ -83,7 +83,7 @@
   <!-- メインコンテナエリア -->
   <main class="max-w-md mx-auto px-4 mt-4 animate-fade-in">
 
-    <!-- ==================== ★ 初期ログイン・連携画面 (コンテナ完全分離) ★ ==================== -->
+    <!-- ==================== ★ 初期ログイン・連携画面 ★ ==================== -->
     <div id="login-screen" class="space-y-6 text-center py-8">
       <div class="space-y-2">
         <h1 class="font-logo font-black text-3xl text-brand-primary tracking-wider">CARAT LOGIN</h1>
@@ -177,6 +177,7 @@
                 <i data-lucide="activity" class="w-4.5 h-4.5 text-brand-primary"></i>
                 今日の目標 & 摂取状況
               </h3>
+              <!-- オートリカバリー調整メッセージ -->
               <span id="auto-recovery-status-badge" class="hidden text-[9px] text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-md mt-1 font-bold border border-emerald-100 items-center gap-1 animate-pulse">
                 <i data-lucide="sparkles" class="w-3 h-3"></i> 昨日オーバー分を自動リセット中
               </span>
@@ -306,7 +307,7 @@
           <div class="absolute top-0 left-0 w-2 h-full bg-brand-primary" id="balance-bar-color"></div>
           <div class="pl-2">
             <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-              <i data-lucide="scale" class="w-4 h-4 text-brand-primary"></i>
+              <i data-lucide="scale" class="w-4.5 h-4.5 text-brand-primary"></i>
               直近1週間の帳じり合わせ状況
             </h4>
             <p class="text-[9px] text-brand-muted mt-0.5">選択日を含む過去7日間の目標総計に対する過不足（おトク枠）を判定します。</p>
@@ -595,7 +596,7 @@
     </div>
   </div>
 
-  <!-- ★ 微調整・編集モーダル ★ -->
+  <!-- ★ 微調整・編集モーダル（バグ対策を完全実装！） ★ -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-6 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
       
@@ -789,7 +790,7 @@
       return isNaN(num) ? 0 : num;
     }
 
-    // ★ FileReaderをPromise化して非同期ハングを物理遮断するヘルパー ★
+    // ★ FileReader非同期Promiseヘルパー関数 (サイレントハングを物理遮断する要) ★
     const convertFileToBase64 = (file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
       
@@ -1610,8 +1611,6 @@
 
         const res = await fetchGeminiForClient(payload);
         let rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
-        
-        // 正規表現抽出フィルターを介して安全デコード
         const parsed = parseGeminiJSON(rawText);
 
         if (parsed && parsed.name) {
@@ -1652,7 +1651,6 @@
       }
     };
 
-    // カメラ画像解析
     window.analyzeMealImage = async function(file) {
       if (!file) return;
 
@@ -1878,6 +1876,7 @@
       renderIngredientsInEditor();
     };
 
+    // ★ 解決：食材変更時の1gあたり比率（栄養素密度）を書き換え前の「オリジナル基準値」から安全取得して計算し直す究極バグ駆逐ロジック ★
     window.changeIngredientWeight = function(index, newWeight) {
       const w = safeFloat(newWeight);
       if (w < 0) return;
@@ -1886,18 +1885,26 @@
       const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
       const currentScale = currentSliderValue / 100;
 
-      ing.originalWeight = w / (currentScale || 1);
-      
-      const kcalRatio = ing.originalKcal ? (safeFloat(ing.originalKcal) / (safeFloat(ing.originalWeight) || 1)) : 1;
-      const pRatio = ing.originalP ? (safeFloat(ing.originalP) / (safeFloat(ing.originalWeight) || 1)) : 0.1;
-      const fRatio = ing.originalF ? (safeFloat(ing.originalF) / (safeFloat(ing.originalWeight) || 1)) : 0.02;
-      const cRatio = ing.originalC ? (safeFloat(ing.originalC) / (safeFloat(ing.originalWeight) || 1)) : 0.1;
+      // 1gあたりのPFC/カロリー比率を変更前の絶対退避値（originalWeight等）から安全算出
+      const baseWeight = safeFloat(ing.originalWeight) || safeFloat(ing.weight) || 100;
+      const baseKcal = safeFloat(ing.originalKcal) || safeFloat(ing.kcal) || 0;
+      const baseP = safeFloat(ing.originalP) || safeFloat(ing.p) || 0;
+      const baseF = safeFloat(ing.originalF) || safeFloat(ing.f) || 0;
+      const baseC = safeFloat(ing.originalC) || safeFloat(ing.c) || 0;
 
+      const kcalRatio = baseKcal / baseWeight;
+      const pRatio = baseP / baseWeight;
+      const fRatio = baseF / baseWeight;
+      const cRatio = baseC / baseWeight;
+
+      // 新しいオリジナル絶対基準値をスライダー逆算（100%スケール値に換算）して上書き
+      ing.originalWeight = w / (currentScale || 1);
       ing.originalKcal = ing.originalWeight * kcalRatio;
       ing.originalP = ing.originalWeight * pRatio;
       ing.originalF = ing.originalWeight * fRatio;
       ing.originalC = ing.originalWeight * cRatio;
 
+      // 現在のスライダースケールを掛け合わせ、実際の画面表示数値を算出して代入更新
       ing.weight = w;
       ing.kcal = ing.originalKcal * currentScale;
       ing.p = ing.originalP * currentScale;
@@ -2141,7 +2148,7 @@
 例: 【やよい軒】しまほっけ定食（もち麦ご飯・普通盛）、【大戸屋】鶏と野菜の黒酢あん定食（五穀ご飯少なめ）、【スシロー】まぐろ2皿・えびアボカド1皿・茶碗蒸し、【サイゼリヤ】若鶏のディアボラ風＋スモールライス
 
 【時間帯別の逆算ルール】
-各食事時間帯の生理学的特性（朝なら内臓スイッチをオンにする糖質＋アミノ酸重視、夜なら睡眠を阻害しない消化の良さ、おやつなら 100〜200kcal 以ないへの抑制等）を考慮して具体的なメニュー名とPFC配分比を調整してください。
+各食事時間帯の生理学的特性（朝なら内臓スイッチをオンにする糖質＋アミノ酸重視、夜なら睡眠を阻害しない消化の良さ、おやつなら 100〜200kcal 以内への抑制等）を考慮して具体的なメニュー名とPFC配分比を調整してください。
 ※特に間食（おやつ）は、残り枠の上限がどれだけ大きくても、1日の栄養リズムの観点から必ず1食あたり目標値よりさらにスケールダウンして、小さな1品（100〜200kcal以内、例：ギリシャヨーグルト、ナッツ、プロテイン）として無理なく構成してください。
 
 【出力要件JSONスキーマ】
