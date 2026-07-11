@@ -133,7 +133,7 @@
       </button>
     </div>
 
-    <!-- ★ 変更点1: 画面をスマートに切り替えるプレミアム2タブバー ★ -->
+    <!-- プレミアム2タブバー -->
     <div class="grid grid-cols-2 gap-2 p-1 bg-brand-border/50 rounded-2xl border border-brand-border shadow-inner">
       <button id="tab-btn-home" onclick="window.switchTab('home')" class="py-2.5 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 bg-brand-primary text-white shadow-md">
         <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
@@ -414,7 +414,7 @@
 
     </div>
 
-    <!-- ==================== ★ タブ2: 逆算献立AI提案コンテンツ (別タブ化) ★ ==================== -->
+    <!-- ==================== ★ タブ2: 逆算献立AI提案コンテンツ ★ ==================== -->
     <div id="tab-content-ai-menu" class="hidden space-y-4 transition-all slide-up">
       
       <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-4">
@@ -590,7 +590,7 @@
     </div>
   </div>
 
-  <!-- ★ 微調整・編集モーダル ★ -->
+  <!-- ★ 改良版：微調整・編集モーダル（100g備考欄、2段階アコーディオン食材確認を完全実装！） ★ -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-6 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
       
@@ -613,7 +613,16 @@
         <input type="text" id="edit-meal-name" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs text-brand-text font-black" value="">
       </div>
 
-      <!-- 割合選択 (10%, 50%, 100%, カスタム) -->
+      <!-- ★ 備考欄：100gあたりの換算カロリー表示（Nutrient Density） ★ -->
+      <div class="bg-brand-primary/5 border border-brand-primary/10 rounded-2xl p-3 text-[10px] text-brand-primary font-bold flex items-center gap-2">
+        <i data-lucide="info" class="w-4 h-4 text-brand-primary shrink-0"></i>
+        <div class="flex-1">
+          <span class="block text-[8px] text-brand-muted uppercase tracking-wider">💡 栄養密度換算（100gあたり）</span>
+          <span id="edit-meal-100g-density-info" class="font-sans text-brand-text font-black block mt-0.5">計算中...</span>
+        </div>
+      </div>
+
+      <!-- ★ 割合選択 (10, 50, 100, カスタム の仕様に統一) ★ -->
       <div class="bg-gradient-to-tr from-brand-accent/50 to-brand-bg p-4 rounded-3xl border border-brand-primary/10 space-y-3">
         <span class="text-[10px] text-brand-text font-black flex items-center gap-1">
           <i data-lucide="pizza" class="w-4 h-4 text-brand-primary"></i>
@@ -622,9 +631,9 @@
         
         <!-- 割合選択トグルグリッド -->
         <div class="grid grid-cols-4 gap-1.5 p-1 bg-brand-bg rounded-xl border border-brand-border/40">
-          <button id="scale-btn-10" onclick="window.setQuickScale(10)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">10%</button>
-          <button id="scale-btn-50" onclick="window.setQuickScale(50)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">半分 (50%)</button>
-          <button id="scale-btn-100" onclick="window.setQuickScale(100)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">等倍 (100%)</button>
+          <button id="scale-btn-10" onclick="window.setQuickScale(10)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">10</button>
+          <button id="scale-btn-50" onclick="window.setQuickScale(50)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">50</button>
+          <button id="scale-btn-100" onclick="window.setQuickScale(100)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">100</button>
           <button id="scale-btn-custom" onclick="window.setQuickScale('custom')" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">カスタム</button>
         </div>
 
@@ -636,24 +645,34 @@
           </div>
           <input type="range" id="edit-meal-scale-slider" min="10" max="200" step="5" value="100" class="w-full accent-brand-primary cursor-pointer" oninput="window.changeMealScale(this.value)">
           <div class="flex justify-between text-[8px] text-brand-muted font-bold px-1">
-            <span>10%</span>
-            <span>100%</span>
-            <span>大盛り 200%</span>
+            <span>10</span>
+            <span>100</span>
+            <span>200</span>
           </div>
         </div>
       </div>
 
-      <!-- 食材個別調整リスト -->
+      <!-- ★ 食材追加を食材確認に変更➔食材確認から食材追加を表示に変える 2段階アコーディオン ★ -->
       <div class="space-y-2">
-        <div class="flex justify-between items-center">
-          <span class="text-[9px] text-brand-muted font-bold uppercase tracking-wider">構成食材とグラム数(g)</span>
-          <button onclick="window.addIngredientRow()" class="text-[9px] text-brand-primary font-bold hover:bg-brand-accent px-2.5 py-1 rounded-lg border border-brand-primary/20 transition flex items-center gap-0.5">
+        <button type="button" onclick="window.toggleIngredientsAccordion()" class="w-full bg-brand-bg hover:bg-brand-accent p-3 rounded-2xl border border-brand-border flex justify-between items-center text-xs font-black text-brand-text transition-all">
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="eye" class="w-4 h-4 text-brand-primary"></i>
+            🔍 食材構成を確認・編集
+          </span>
+          <i id="ingredients-accordion-arrow" data-lucide="chevron-down" class="w-4 h-4 transition-transform text-brand-muted"></i>
+        </button>
+
+        <!-- アコーディオン展開エリア -->
+        <div id="ingredients-collapse-area" class="hidden space-y-3 bg-brand-bg/30 p-3 rounded-3xl border border-brand-border/40 slide-up">
+          <div id="ingredients-editor-container" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 no-scrollbar">
+            <!-- 食材行がJSで並びます -->
+          </div>
+          
+          <!-- 食材追加ボタン（食材確認アコーディオンを開いた時のみ一番下に露出！） -->
+          <button onclick="window.addIngredientRow()" class="w-full bg-white hover:bg-brand-accent text-brand-primary font-bold text-[10px] py-2 rounded-xl border border-brand-primary/20 transition flex items-center justify-center gap-1">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-            食材を追加
+            ＋ 食材を新しく追加
           </button>
-        </div>
-        <div id="ingredients-editor-container" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 no-scrollbar">
-          <!-- 食材行がJSで並びます -->
         </div>
       </div>
 
@@ -751,7 +770,6 @@
     let editingMealObject = null;
     let baseIngredients = []; 
 
-    // 献立提案AI用の状態
     let selectedMenuCategory = 'home'; 
     let selectedMealTimings = [getDefaultMealCategory()]; 
     let suggestedMenusCache = []; 
@@ -1369,7 +1387,7 @@
 
 
     // =======================================================
-    // ★ 快速AIエンジン（写真・文章から食材を逆引き解析） ★
+    // ★ AI解析エンジン ★
     // =======================================================
 
     async function fetchGeminiForClient(payload) {
@@ -1619,6 +1637,12 @@
 
       document.getElementById('edit-meal-name').value = editingMealObject.name;
       
+      // アコーディオン表示領域を初期状態では畳んでスッキリさせる
+      const collapseArea = document.getElementById('ingredients-collapse-area');
+      collapseArea.classList.add('hidden');
+      const arrowIcon = document.getElementById('ingredients-accordion-arrow');
+      if (arrowIcon) arrowIcon.style.transform = 'rotate(0deg)';
+
       window.setQuickScale(Math.round(lastSavedScale * 100));
       window.toggleModal('edit-meal-modal', true);
     };
@@ -1628,6 +1652,21 @@
       editingMealId = null;
       editingMealObject = null;
       baseIngredients = [];
+    };
+
+    // ★ 変更：食材確認（アコーディオン）トグル開閉処理 ★
+    window.toggleIngredientsAccordion = function() {
+      const collapseArea = document.getElementById('ingredients-collapse-area');
+      const arrowIcon = document.getElementById('ingredients-accordion-arrow');
+      
+      const isHidden = collapseArea.classList.contains('hidden');
+      if (isHidden) {
+        collapseArea.classList.remove('hidden');
+        if (arrowIcon) arrowIcon.style.transform = 'rotate(180deg)';
+      } else {
+        collapseArea.classList.add('hidden');
+        if (arrowIcon) arrowIcon.style.transform = 'rotate(0deg)';
+      }
     };
 
     window.setQuickScale = function(scaleType) {
@@ -1668,16 +1707,16 @@
 
       editingMealObject.ingredients.forEach((ing, i) => {
         const row = document.createElement('div');
-        row.className = "bg-brand-bg rounded-2xl p-3 border border-brand-border flex items-center justify-between gap-2 text-xs text-brand-text mb-1 shrink-0 shadow-sm";
+        row.className = "bg-white rounded-2xl p-3 border border-brand-border flex items-center justify-between gap-2 text-xs text-brand-text mb-1 shrink-0 shadow-sm";
         row.innerHTML = `
           <div class="flex-1 space-y-1">
-            <input type="text" value="${ing.name}" class="bg-white border border-brand-border rounded-xl px-2.5 py-1 text-xs font-bold w-full focus:outline-none" onchange="window.updateIngredientName(${i}, this.value)">
+            <input type="text" value="${ing.name}" class="bg-brand-bg border border-brand-border rounded-xl px-2.5 py-1 text-xs font-bold w-full focus:outline-none" onchange="window.updateIngredientName(${i}, this.value)">
             <div class="flex items-center gap-1.5">
               <span class="text-[9px] text-brand-muted font-bold block">P:${safeFloat(ing.p).toFixed(1)} F:${safeFloat(ing.f).toFixed(1)} C:${safeFloat(ing.c).toFixed(1)}</span>
             </div>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
-            <input type="number" value="${Math.round(safeFloat(ing.weight))}" class="bg-white border border-brand-border rounded-xl p-1 text-center font-mono font-black text-xs w-14 focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientWeight(${i}, this.value)">
+            <input type="number" value="${Math.round(safeFloat(ing.weight))}" class="bg-brand-bg border border-brand-border rounded-xl p-1 text-center font-mono font-black text-xs w-14 focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientWeight(${i}, this.value)">
             <span class="text-[10px] text-brand-muted font-bold">g</span>
             <button onclick="window.removeIngredientRow(${i})" class="text-brand-muted hover:text-rose-500 p-1.5 rounded-xl transition">
               <i data-lucide="minus-circle" class="w-4 h-4"></i>
@@ -1780,13 +1819,17 @@
       recalculateTotalsInEditor();
     };
 
+    // ★ 変更：備考欄（栄養密度）への100gあたりのカロリー自動換算表示 ★
     function recalculateTotalsInEditor() {
       let sumKcal = 0, sumP = 0, sumF = 0, sumC = 0;
+      let totalWeight = 0;
+
       editingMealObject.ingredients.forEach(ing => {
         sumKcal += safeFloat(ing.kcal);
         sumP += safeFloat(ing.p);
         sumF += safeFloat(ing.f);
         sumC += safeFloat(ing.c);
+        totalWeight += safeFloat(ing.weight);
       });
 
       editingMealObject.kcal = Math.round(sumKcal);
@@ -1798,6 +1841,19 @@
       document.getElementById('preview-total-f').innerText = sumF.toFixed(1);
       document.getElementById('preview-total-c').innerText = sumC.toFixed(1);
       document.getElementById('preview-total-kcal').innerText = Math.round(sumKcal).toLocaleString();
+
+      // 100gあたりのカロリー換算（密度）表示の更新
+      const densityEl = document.getElementById('edit-meal-100g-density-info');
+      if (totalWeight > 0) {
+        const factor = 100 / totalWeight;
+        const densKcal = Math.round(sumKcal * factor);
+        const densP = (sumP * factor).toFixed(1);
+        const densF = (sumF * factor).toFixed(1);
+        const densC = (sumC * factor).toFixed(1);
+        densityEl.innerHTML = `<span class="text-brand-primary text-xs">${densKcal} kcal</span> <span class="text-brand-muted font-bold text-[9px] ml-1.5">(P: ${densP}g, F: ${densF}g, C: ${densC}g) / 総重量 ${Math.round(totalWeight)}g</span>`;
+      } else {
+        densityEl.innerText = "重量未設定（PFCは上の推定栄養価をご覧ください）";
+      }
     }
 
     window.saveEditedMeal = async function() {
@@ -1838,7 +1894,6 @@
         homeContent.classList.add('hidden');
         aiMenuContent.classList.remove('hidden');
         
-        // タブ切り替え時にアイコンの再レンダリングを実行
         lucide.createIcons();
       }
     };
@@ -1888,7 +1943,7 @@
       });
     }
 
-    // 残り目標から均等逆算して一括提案 (★大手実名フランチャイズ店名付き対応プロンプト！) ★
+    // 残り目標から均等逆算して一括提案
     window.generateAIPendingMenu = async function() {
       if (selectedMealTimings.length === 0) {
         selectedMealTimings = [getDefaultMealCategory()];
@@ -1935,9 +1990,8 @@
         const targetCPerMeal = remC / mealCount;
 
         let catJp = "自炊レシピ（自宅で手軽に作れる健康的・高PFCな料理）";
-        if (selectedMenuCategory === 'convenience') catJp = "コンビニ指定（セブンイレブン、ファミリーマート、ローソン等で実際に売っている定番の高PFC商品名）";
+        if (selectedMenuCategory === 'convenience') catJp = "コンビニ商品（セブンイレブン、ファミリーマート、ローソン等で実際に売っている定番の高PFC商品名）";
         
-        // ★ 変更点2: 外食時に「大戸屋」「やよい軒」「スシロー」「くら寿司」「ガスト」「サイゼリヤ」「ココス」など、日本の大手有名フランチャイズの実店名＆メニューで正確に提案するようプロンプトを大幅拡張！ ★
         if (selectedMenuCategory === 'restaurant') {
           catJp = `外食フランチャイズ店名指定（日本の大手チェーン店である【大戸屋】【やよい軒】【スシロー】【くら寿司】【ガスト】【サイゼリヤ】【ココス】【吉野家】等の具体的な「実店舗名」を明確に冠したうえで、そのお店の実在メニュー、または非常に再現性の高い定番PFCメニュー名）`;
         }
@@ -1982,7 +2036,7 @@
       "p": たんぱく質g(数値),
       "f": 脂質g(数値),
       "c": 炭水化物g(数値),
-      "ingredientsText": "構成食材や注文する単品名とグラム数・個数(例: マグロ刺身 80g\\n納豆 1パック\\nオクラ 30g\\n白米 120g)",
+      "ingredientsText": "構成食材や注文する単品名とグラム数(例: マグロ刺身 80g\\n納豆 1パック)",
       "advice": "女性専門の優しい指導アドバイス(例: 大戸屋のばくだん丼は、オクラや納豆などの食物繊維が豊富で、日中の血糖値の急上昇を抑え、代謝を高めてくれますよ。)",
       "ingredientsList": [
         {
@@ -2033,7 +2087,7 @@
                   </span>
                   <h5 class="text-xs font-black text-brand-text leading-snug">${menu.name}</h5>
                 </div>
-                <span class="text-[10px] font-mono font-black text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg border border-brand-primary/10 shrink-0">
+                <span class="text-[10px] font-mono font-black text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg border border-brand-border shrink-0">
                   ${Math.round(safeFloat(menu.kcal))} kcal
                 </span>
               </div>
@@ -2161,7 +2215,6 @@
         suggestedMenusCache = [];
         showToast("提案されたすべての食事を一括登録しました！");
         
-        // 登録完了後に自動でホームタブに切り替えて実績を描画
         window.switchTab('home');
       } catch (e) {
         console.error(e);
