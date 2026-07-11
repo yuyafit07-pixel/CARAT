@@ -83,7 +83,7 @@
   <!-- メインコンテナエリア -->
   <main class="max-w-md mx-auto px-4 mt-4">
 
-    <!-- ==================== ★ 初期ログイン・連携画面 (閉じタグミスを完全修復) ★ ==================== -->
+    <!-- ==================== ★ 初期ログイン・連携画面 ★ ==================== -->
     <div id="login-screen" class="space-y-6 text-center py-8">
       <div class="space-y-2">
         <h1 class="font-logo font-black text-3xl text-brand-primary tracking-wider">CARAT LOGIN</h1>
@@ -117,7 +117,7 @@
       <button onclick="window.bypassLoginForDemo()" class="text-xs text-brand-primary font-bold hover:underline">IDをお持ちでない方はこちら（ゲスト体験モード）</button>
     </div>
 
-    <!-- ==================== ★ メインダッシュボード画面 (初期非表示・レイアウト崩れ対策を完全ガード) ★ ==================== -->
+    <!-- ==================== ★ メインダッシュボード画面 (初期非表示・表示崩れ対策を完全ガード) ★ ==================== -->
     <div id="main-dashboard" class="hidden space-y-4">
 
       <!-- 連携完了ステータス -->
@@ -638,7 +638,7 @@
         <!-- 割合選択トグルグリッド -->
         <div class="grid grid-cols-4 gap-1.5 p-1 bg-brand-bg rounded-xl border border-brand-border/40">
           <button id="scale-btn-10" onclick="window.setQuickScale(10)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">10</button>
-          <button id="scale-btn-50" onclick="window.setQuickScale(50)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">50</button>
+          <button id="scale-btn-50" onclick="window.setQuickScale(50)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary font-extrabold text-brand-primary">50</button>
           <button id="scale-btn-100" onclick="window.setQuickScale(100)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">100</button>
           <button id="scale-btn-custom" onclick="window.setQuickScale('custom')" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">カスタム</button>
         </div>
@@ -1465,7 +1465,7 @@
         throw new Error("API_KEY_MISSING");
       }
 
-      // ★ 解決：プレビュー環境で100%確実に稼働する指定モデルに強制固定！
+      // プレビュー環境で100%確実に稼働する指定モデルに強制固定
       const modelName = "gemini-2.5-flash-preview-09-2025";
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
       
@@ -1492,12 +1492,12 @@
       throw new Error(`API_ERROR_STATUS_${lastStatus || 'UNKNOWN'}_DETAILS_${lastError}`);
     }
 
-    // ★ 解決：最外周の中括弧 { ... } のみを完全自動抽出してデコードする最強パーサー ★
+    // ★ 最外周の中括弧 { ... } のみを完全自動抽出してデコードする最強パーサー ★
     function parseGeminiJSON(text) {
       try {
         const cleaned = text.trim();
         
-        // ★ 導入：どれほど前後に日本語のおしゃべりやマークダウン記号が含まれていても、最外周のブラケットだけを引きずり出す
+        // どれほど前後に日本語のおしゃべりやマークダウン記号が含まれていても、最外周のブラケットだけを引きずり出す
         const start = cleaned.indexOf('{');
         const end = cleaned.lastIndexOf('}');
         if (start === -1 || end === -1) {
@@ -1517,7 +1517,7 @@
 
         let rawIngredients = parsed.ingredients || parsed.ingredientsList || parsed.components || parsed.items || [];
         
-        // ★ 解決：サラダチキンやごはんのような単一おやつの際、ingredients配列が空または未定義だった場合、自動で自己補完を合成
+        // サラダチキンやごはんのような単一おやつの際、ingredients配列が空または未定義だった場合、自動で自己補完を合成
         if (!Array.isArray(rawIngredients) || rawIngredients.length === 0) {
           rawIngredients = [{
             name: normalized.name,
@@ -1559,7 +1559,6 @@
       loading.classList.add('flex');
 
       try {
-        // ★ 変更：リクエストから余計な制限を撤廃し、元の100%動いていたcontentsのみの極めて強固なシンプルな構造に巻き戻し ★
         const userPrompt = `
 食べた食事： "${textInput}"
 
@@ -1621,7 +1620,7 @@
         if (err.message && err.message.includes("API_KEY_MISSING")) {
           displayErrorMsg = "店舗用のAIキーが設定されていません。トレーナーポータルでAPIキーを登録して保存・同期してください。";
         } else if (err.message && err.message.includes("429")) {
-          displayErrorMsg = "Gemini API of 無料枠制限に一時的に達しました。混み合っているため、1分ほど待ってからもう一度お試しください。";
+          displayErrorMsg = "Gemini APIの無料枠制限に一時的に達しました。混み合っているため、1分ほど待ってからもう一度お試しください。";
         } else if (err.message && (err.message.includes("400") || err.message.includes("403"))) {
           displayErrorMsg = "APIキーが無効、またはGoogle側からブロックされています。正しいAPIキーを再設定してください。";
         }
