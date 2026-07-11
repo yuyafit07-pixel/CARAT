@@ -668,7 +668,7 @@
             <!-- 食材行がJSで並びます -->
           </div>
           
-          <!-- 食材追加ボタン（食材確認アコーディオンを開いた時のみ一番下に露出！） -->
+          <!-- 食材追加ボタン -->
           <button onclick="window.addIngredientRow()" class="w-full bg-white hover:bg-brand-accent text-brand-primary font-bold text-[10px] py-2.5 rounded-xl border border-brand-primary/20 transition flex items-center justify-center gap-1 shadow-sm">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i>
             ＋ 食材を新しく追加
@@ -774,7 +774,7 @@
     let selectedMealTimings = [getDefaultMealCategory()]; 
     let suggestedMenusCache = []; 
 
-    // ★ 徹底した型セキュリティ：あらゆる文字列をNumber型へ強制キャストし、バグを物理駆逐 ★
+    // ★ 徹底した型セキュリティ ★
     function safeFloat(val) {
       if (val === null || val === undefined) return 0;
       if (typeof val === 'string') {
@@ -783,6 +783,26 @@
       const num = parseFloat(val);
       return isNaN(num) ? 0 : num;
     }
+
+    // ★ 解決：FileReader非同期Promiseヘルパー関数 (サイレントハングを物理遮断する要) ★
+    const convertFileToBase64 = (file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      // 15秒通信タイムアウト検知タイマー
+      const timeout = setTimeout(() => {
+        reject(new Error("FILE_READ_TIMEOUT"));
+      }, 15000);
+
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        clearTimeout(timeout);
+        resolve(reader.result.split(',')[1]);
+      };
+      reader.onerror = (error) => {
+        clearTimeout(timeout);
+        reject(error);
+      };
+    });
 
     // ★ データ破壊を防ぎ、各項目の初期欠落を補完マッピングする標準化エンジン ★
     function standardizeMealObject(meal) {
@@ -1416,7 +1436,7 @@
 
 
     // =======================================================
-    // ★ 快速AIエンジン（写真・文章から食材を逆引き解析） ★
+    // ★ AI解析エンジン ★
     // =======================================================
 
     async function fetchGeminiForClient(payload) {
@@ -1459,7 +1479,6 @@
       throw new Error(`API_ERROR_STATUS_${lastStatus || 'UNKNOWN'}_DETAILS_${lastError}`);
     }
 
-    // ★ 完璧なJSON抽出＆キーマッピング防壁 ★
     function parseGeminiJSON(text) {
       try {
         const cleaned = text.replace(/^```json/g, "").replace(/```$/g, "").trim();
@@ -1561,8 +1580,6 @@
           };
 
           await saveMealToCloud(newMeal);
-          loading.classList.add('hidden');
-          loading.classList.remove('flex');
           
           showToast(`「${parsed.name}」をAI自動記録しました！編集はカードをタップ。`);
         } else {
@@ -1570,11 +1587,8 @@
         }
       } catch (err) {
         console.error(err);
-        loading.classList.add('hidden');
-        loading.classList.remove('flex');
-
-        // ★ 新開発: 詳細なエラー原因を突き止めてユーザーに親切に教えてあげるアラート分岐 ★
-        let displayErrorMsg = "テキスト解析に失敗しました。接続環境、または店舗キーを再設定してください。";
+        
+        let displayErrorMsg = "テキスト解析に失敗しました。店舗キーを再設定、または接続環境を確認してください。";
         if (err.message && err.message.includes("API_KEY_MISSING")) {
           displayErrorMsg = "店舗用のAIキーが設定されていません。トレーナーポータルでAPIキーを登録して保存・同期してください。";
         } else if (err.message && err.message.includes("429")) {
@@ -1583,9 +1597,13 @@
           displayErrorMsg = "APIキーが無効、またはGoogle側からブロックされています。正しいAPIキーを再設定してください。";
         }
         alert(displayErrorMsg);
+      } finally {
+        loading.classList.add('hidden');
+        loading.classList.remove('flex');
       }
     };
 
+    // ★ 解決：カメラ解析での永久「解析中」ローディングバグを完全駆逐した最新非同期処理 ★
     window.analyzeMealImage = async function(file) {
       if (!file) return;
 
@@ -1594,12 +1612,11 @@
       loading.classList.add('flex');
 
       try {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = async () => {
-          const base64Data = reader.result.split(',')[1];
-          const systemPrompt = "あなたはCARATの高度画像食事解析AIです。写真の中のメニューを食材分解し、それぞれの重量・グラム数・PFCバランスを計算して有効なJSONを返してください。";
-          const userPrompt = `
+        // Promiseを待機し、確実にファイル処理の同期エラーおよびタイムアウト、通信切断を捕捉
+        const base64Data = await convertFileToBase64(file);
+
+        const systemPrompt = "あなたはCARATの高度画像食事解析AIです。写真の中のメニューを食材分解し、それぞれの重量・グラム数・PFCバランスを計算して有効なJSONを返してください。";
+        const userPrompt = `
 【出力要件JSONスキーマ】
 必ず次の構造のみを持つ有効なJSONオブジェクトを返してください。不要な前置きは一切禁止。JSONのみ。
 {
@@ -1620,52 +1637,49 @@
   ]
 }
 `;
-          const payload = {
-            contents: [{
-              parts: [
-                { text: userPrompt },
-                { inlineData: { mimeType: "image/png", data: base64Data } }
-              ]
-            }],
-            systemInstruction: { parts: [{ text: systemPrompt }] },
-            generationConfig: { responseMimeType: "application/json" }
+        const payload = {
+          contents: [{
+            parts: [
+              { text: userPrompt },
+              { inlineData: { mimeType: "image/png", data: base64Data } }
+            ]
+          }],
+          systemInstruction: { parts: [{ text: systemPrompt }] },
+          generationConfig: { responseMimeType: "application/json" }
+        };
+
+        const res = await fetchGeminiForClient(payload);
+        let rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsed = parseGeminiJSON(rawText);
+
+        if (parsed && parsed.name) {
+          const now = new Date();
+          const targetMealId = 'M-' + Date.now();
+          
+          const newMeal = {
+            id: targetMealId,
+            name: parsed.name,
+            time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
+            kcal: parsed.kcal,
+            p: parsed.p,
+            f: parsed.f,
+            c: parsed.c,
+            ingredients: parsed.ingredients
           };
 
-          const res = await fetchGeminiForClient(payload);
-          let rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
-          const parsed = parseGeminiJSON(rawText);
-
-          if (parsed && parsed.name) {
-            const now = new Date();
-            const targetMealId = 'M-' + Date.now();
-            
-            const newMeal = {
-              id: targetMealId,
-              name: parsed.name,
-              time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
-              kcal: parsed.kcal,
-              p: parsed.p,
-              f: parsed.f,
-              c: parsed.c,
-              ingredients: parsed.ingredients
-            };
-
-            await saveMealToCloud(newMeal);
-            loading.classList.add('hidden');
-            loading.classList.remove('flex');
-            
-            showToast("食事写真を自動記録しました！編集はカードをタップ。");
-          } else {
-            throw new Error("解析応答が不正です。");
-          }
-        };
+          await saveMealToCloud(newMeal);
+          
+          showToast("食事写真を自動記録しました！編集はカードをタップ。");
+        } else {
+          throw new Error("解析応答が不正です。");
+        }
       } catch (err) {
-        console.error(err);
-        loading.classList.add('hidden');
-        loading.classList.remove('flex');
+        console.error("Camera Analyze Captured Exception:", err);
         
-        let displayErrorMsg = "画像解析に失敗しました。お写真が明るいものであるか、通信環境をご確認ください。";
-        if (err.message && err.message.includes("API_KEY_MISSING")) {
+        let displayErrorMsg = "画像解析に失敗しました。通信環境が良い場所で明るい写真を再度お試しください。";
+        if (err.message && err.message.includes("FILE_READ_TIMEOUT")) {
+          displayErrorMsg = "画像ファイルの読み込み中にタイムアウトしました。カメラのアクセス許可、またはファイル容量をご確認ください。";
+        } else if (err.message && err.message.includes("API_KEY_MISSING")) {
           displayErrorMsg = "店舗用のAIキーが設定されていません。トレーナーポータルでAPIキーを登録して保存・同期してください。";
         } else if (err.message && err.message.includes("429")) {
           displayErrorMsg = "Gemini APIの無料枠制限に一時的に達しました。混み合っているため、1分ほど待ってからもう一度お試しください。";
@@ -1673,6 +1687,10 @@
           displayErrorMsg = "APIキーが無効、またはGoogle側からブロックされています。正しいAPIキーを再設定してください。";
         }
         alert(displayErrorMsg);
+      } finally {
+        // ★ どのような理由でクラッシュしても、絶対にローディング画面を安全に解除する（永久解析中バグの完全克服） ★
+        loading.classList.add('hidden');
+        loading.classList.remove('flex');
       }
     };
 
@@ -2060,7 +2078,7 @@
         
         const userPrompt = `
 現在の全体残りの目標枠（PFCおよびカロリー）:
-- 目獲総残りカロリー: ${remCal} kcal
+- 目標総残りカロリー: ${remCal} kcal
 - 目標総残りたんぱく質 (P): ${remP.toFixed(1)} g
 - 目標総残り脂質 (F): ${remF.toFixed(1)} g
 - 目標総残り炭水化物 (C): ${remC.toFixed(1)} g
@@ -2097,7 +2115,7 @@
       "advice": "女性専門の優しい指導アドバイス(例: 大戸屋のばくだん丼は、オクラや納豆などの食物繊維が豊富で、日中の血糖値の急上昇を抑え、代謝を高めてくれますよ。)",
       "ingredientsList": [
         {
-          "name": "食材名(例: マグロ刺身)",
+          "name": "食材名(例: ...)",
           "weight": グラム数(数値),
           "kcal": カロリー(数値),
           "p": たんぱく質g(数値),
