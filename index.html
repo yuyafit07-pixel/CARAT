@@ -590,7 +590,7 @@
     </div>
   </div>
 
-  <!-- ★ 微調整・編集モーダル（100g備考欄、2段階アコーディオン食材確認、50%バグ対策を完全実装！） ★ -->
+  <!-- ★ 微調整・編集モーダル ★ -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-6 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
       
@@ -622,7 +622,7 @@
         </div>
       </div>
 
-      <!-- 割合選択 (10, 50, 100, カスタム の仕様に統一) -->
+      <!-- 割合選択 (10, 50, 100, カスタム) -->
       <div class="bg-gradient-to-tr from-brand-accent/50 to-brand-bg p-4 rounded-3xl border border-brand-primary/10 space-y-3">
         <span class="text-[10px] text-brand-text font-black flex items-center gap-1">
           <i data-lucide="pizza" class="w-4 h-4 text-brand-primary"></i>
@@ -632,7 +632,7 @@
         <!-- 割合選択トグルグリッド -->
         <div class="grid grid-cols-4 gap-1.5 p-1 bg-brand-bg rounded-xl border border-brand-border/40">
           <button id="scale-btn-10" onclick="window.setQuickScale(10)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">10</button>
-          <button id="scale-btn-50" onclick="window.setQuickScale(50)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">50</button>
+          <button id="scale-btn-50" onclick="window.setQuickScale(50)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary font-extrabold text-brand-primary">50</button>
           <button id="scale-btn-100" onclick="window.setQuickScale(100)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">100</button>
           <button id="scale-btn-custom" onclick="window.setQuickScale('custom')" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">カスタム</button>
         </div>
@@ -769,12 +769,12 @@
     let editingMealId = null;
     let editingMealObject = null;
 
-    // 献立提案AI用の状態
+    // 複数食等分逆算AI提案用の状態
     let selectedMenuCategory = 'home'; 
     let selectedMealTimings = [getDefaultMealCategory()]; 
     let suggestedMenusCache = []; 
 
-    // ★ ロバストな型キャスト防御関数 ★
+    // ★ 徹底した型セキュリティ：あらゆる文字列をNumber型へ強制キャストし、バグを物理駆逐 ★
     function safeFloat(val) {
       if (val === null || val === undefined) return 0;
       if (typeof val === 'string') {
@@ -784,7 +784,7 @@
       return isNaN(num) ? 0 : num;
     }
 
-    // ★ データ破壊を防ぐ共通イニシャライザ/標準化関数 ★
+    // ★ データ破壊を防ぎ、各項目の初期欠落を補完マッピングする標準化エンジン ★
     function standardizeMealObject(meal) {
       if (!meal) return null;
       const std = {
@@ -1191,7 +1191,6 @@
           const item = document.createElement('div');
           item.className = "bg-brand-card hover:bg-brand-accent/40 p-4 rounded-2xl border border-brand-border flex justify-between items-center text-xs transition-all duration-200 cursor-pointer shadow-sm relative overflow-hidden group";
           
-          // ★ SVG削除ボタン等の誤タップ競合を完全に遮断する安全onclickモデル ★
           item.onclick = (e) => {
             if (e.target.closest('button')) return;
             window.openEditMealModal(m.id);
@@ -1220,7 +1219,6 @@
                 <span class="text-[9px] text-brand-muted font-bold">kcal</span>
               </div>
               
-              <!-- 削除ボタン自体 -->
               <button onclick="event.stopPropagation(); event.preventDefault(); window.deleteMeal('${m.id}')" class="text-brand-muted hover:text-rose-500 p-2 hover:bg-rose-50 rounded-xl transition-all">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
@@ -1353,7 +1351,6 @@
     };
 
     async function saveMealToCloud(mealRaw) {
-      // データベース保存時の完全なるクレンジング・標準化キャスト
       const newMeal = standardizeMealObject(mealRaw);
       if (!newMeal) return;
 
@@ -1430,7 +1427,7 @@
       }
       
       if (!key) {
-        throw new Error("店舗用Gemini API Keyがありません。トレーナーポータルでキーを設定してください。");
+        throw new Error("API_KEY_MISSING");
       }
 
       const trialPatterns = [
@@ -1438,6 +1435,7 @@
         { version: "v1", model: "gemini-1.5-flash" }
       ];
       let lastError = null;
+      let lastStatus = null;
 
       for (const pattern of trialPatterns) {
         const endpoint = `https://generativelanguage.googleapis.com/${pattern.version}/models/${pattern.model}:generateContent?key=${key}`;
@@ -1447,16 +1445,18 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
+          lastStatus = response.status;
           if (response.ok) {
             return await response.json();
           } else {
-            lastError = `通信エラー(ステータス:${response.status})`;
+            const errText = await response.text();
+            lastError = `status_${response.status}_${errText}`;
           }
         } catch (e) {
           lastError = e.message || e;
         }
       }
-      throw new Error(`【解析失敗】${lastError}`);
+      throw new Error(`API_ERROR_STATUS_${lastStatus || 'UNKNOWN'}_DETAILS_${lastError}`);
     }
 
     // ★ 完璧なJSON抽出＆キーマッピング防壁 ★
@@ -1572,7 +1572,17 @@
         console.error(err);
         loading.classList.add('hidden');
         loading.classList.remove('flex');
-        alert("テキスト解析に失敗しました。店舗キーを再設定、または接続環境を確認してください。");
+
+        // ★ 新開発: 詳細なエラー原因を突き止めてユーザーに親切に教えてあげるアラート分岐 ★
+        let displayErrorMsg = "テキスト解析に失敗しました。接続環境、または店舗キーを再設定してください。";
+        if (err.message && err.message.includes("API_KEY_MISSING")) {
+          displayErrorMsg = "店舗用のAIキーが設定されていません。トレーナーポータルでAPIキーを登録して保存・同期してください。";
+        } else if (err.message && err.message.includes("429")) {
+          displayErrorMsg = "Gemini APIの無料枠制限に一時的に達しました。混み合っているため、1分ほど待ってからもう一度お試しください。";
+        } else if (err.message && (err.message.includes("400") || err.message.includes("403"))) {
+          displayErrorMsg = "APIキーが無効、またはGoogle側からブロックされています。正しいAPIキーを再設定してください。";
+        }
+        alert(displayErrorMsg);
       }
     };
 
@@ -1653,7 +1663,16 @@
         console.error(err);
         loading.classList.add('hidden');
         loading.classList.remove('flex');
-        alert("画像解析に失敗しました。接続環境、または店舗キーを再設定してください。");
+        
+        let displayErrorMsg = "画像解析に失敗しました。お写真が明るいものであるか、通信環境をご確認ください。";
+        if (err.message && err.message.includes("API_KEY_MISSING")) {
+          displayErrorMsg = "店舗用のAIキーが設定されていません。トレーナーポータルでAPIキーを登録して保存・同期してください。";
+        } else if (err.message && err.message.includes("429")) {
+          displayErrorMsg = "Gemini APIの無料枠制限に一時的に達しました。混み合っているため、1分ほど待ってからもう一度お試しください。";
+        } else if (err.message && (err.message.includes("400") || err.message.includes("403"))) {
+          displayErrorMsg = "APIキーが無効、またはGoogle側からブロックされています。正しいAPIキーを再設定してください。";
+        }
+        alert(displayErrorMsg);
       }
     };
 
@@ -1668,20 +1687,16 @@
       if (!meal) return;
 
       editingMealId = mealId;
-      editingMealObject = standardizeMealObject(meal); // ★ 確実に標準化イニシャライザを通す
+      editingMealObject = standardizeMealObject(meal); 
 
       document.getElementById('edit-meal-name').value = editingMealObject.name;
       
-      // アコーディオン初期化：閉じた状態にする
       const collapseArea = document.getElementById('ingredients-collapse-area');
       collapseArea.classList.add('hidden');
       const arrowIcon = document.getElementById('ingredients-accordion-arrow');
       if (arrowIcon) arrowIcon.style.transform = 'rotate(0deg)';
 
-      // 割合選択の活性化
       window.setQuickScale(Math.round(editingMealObject.lastScale * 100));
-      
-      // モーダルオープン時に裏で食材確認DOMを先行描画
       renderIngredientsInEditor();
       
       window.toggleModal('edit-meal-modal', true);
@@ -1699,7 +1714,6 @@
       
       const isHidden = collapseArea.classList.contains('hidden');
       if (isHidden) {
-        // 開く瞬間に最新描画トリガーを確実に実行
         renderIngredientsInEditor();
         collapseArea.classList.remove('hidden');
         if (arrowIcon) arrowIcon.style.transform = 'rotate(180deg)';
@@ -1780,7 +1794,6 @@
       const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
       const currentScale = currentSliderValue / 100;
 
-      // ★ 新規追加時も現在スケールを正確に逆算退避することで、スケール変更バグを物理駆逐 ★
       const newIng = {
         name: "新しい食材",
         weight: 100 * currentScale,
@@ -1935,6 +1948,7 @@
         aiMenuBtn.className = "py-2.5 text-xs font-black rounded-xl transition-all bg-brand-primary text-white shadow-md";
         
         homeContent.classList.add('hidden');
+        aiMenuContent.className = "space-y-4 transition-all slide-up";
         aiMenuContent.classList.remove('hidden');
         
         lucide.createIcons();
@@ -2046,7 +2060,7 @@
         
         const userPrompt = `
 現在の全体残りの目標枠（PFCおよびカロリー）:
-- 目標総残りカロリー: ${remCal} kcal
+- 目獲総残りカロリー: ${remCal} kcal
 - 目標総残りたんぱく質 (P): ${remP.toFixed(1)} g
 - 目標総残り脂質 (F): ${remF.toFixed(1)} g
 - 目標総残り炭水化物 (C): ${remC.toFixed(1)} g
@@ -2065,7 +2079,7 @@
 例: 【やよい軒】しまほっけ定食（もち麦ご飯・普通盛）、【大戸屋】鶏と野菜の黒酢あん定食（五穀ご飯少なめ）、【スシロー】まぐろ2皿・えびアボカド1皿・茶碗蒸し、【サイゼリヤ】若鶏のディアボラ風＋スモールライス
 
 【時間帯別の逆算ルール】
-各食事時間帯の生理学的特性（朝なら内臓スイッチをオンにする糖質＋アミノ酸重視、夜なら睡眠を阻害しない消化の良さ、おやつなら100〜200kcal以内への抑制等）を考慮して具体的なメニュー名とPFC配分比を調整してください。
+各食事時間帯の生理学的特性（朝なら内臓スイッチをオンにする糖質＋アミノ酸重視、夜なら睡眠を阻害しない消化の良さ、おやつなら 100〜200kcal 以内への抑制等）を考慮して具体的なメニュー名とPFC配分比を調整してください。
 ※特に間食（おやつ）は、残り枠の上限がどれだけ大きくても、1日の栄養リズムの観点から必ず1食あたり目標値よりさらにスケールダウンして、小さな1品（100〜200kcal以内、例：ギリシャヨーグルト、ナッツ、プロテイン）として無理なく構成してください。
 
 【出力要件JSONスキーマ】
@@ -2079,7 +2093,7 @@
       "p": たんぱく質g(数値),
       "f": 脂質g(数値),
       "c": 炭水化物g(数値),
-      "ingredientsText": "構成食材や注文する単品名とグラム数(例: 砂肝 120g\\nアスパラガス 50g\\nごま油 3g)",
+      "ingredientsText": "構成食材や注文する単品名とグラム数(例: 砂肝 120g\\n納豆 1パック)",
       "advice": "女性専門の優しい指導アドバイス(例: 大戸屋のばくだん丼は、オクラや納豆などの食物繊維が豊富で、日中の血糖値の急上昇を抑え、代謝を高めてくれますよ。)",
       "ingredientsList": [
         {
