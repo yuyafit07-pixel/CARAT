@@ -638,7 +638,7 @@
         <!-- 割合選択トグルグリッド -->
         <div class="grid grid-cols-4 gap-1.5 p-1 bg-brand-bg rounded-xl border border-brand-border/40">
           <button id="scale-btn-10" onclick="window.setQuickScale(10)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">10</button>
-          <button id="scale-btn-50" onclick="window.setQuickScale(50)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary font-extrabold text-brand-primary">50</button>
+          <button id="scale-btn-50" onclick="window.setQuickScale(50)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">50</button>
           <button id="scale-btn-100" onclick="window.setQuickScale(100)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">100</button>
           <button id="scale-btn-custom" onclick="window.setQuickScale('custom')" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">カスタム</button>
         </div>
@@ -790,7 +790,7 @@
       return isNaN(num) ? 0 : num;
     }
 
-    // ★ FileReaderをPromise化して非同期ハングを物理遮断するヘルパー ★
+    // ★ FileReader非同期Promiseヘルパー関数 (サイレントハングを物理遮断する要) ★
     const convertFileToBase64 = (file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
       
@@ -965,7 +965,7 @@
     };
 
     function renderWeeklyCalendarGrid() {
-      // ★ 追加：初期起動の未連携DOM崩れ（画像11）を完全に予防する防衛バリア ★
+      // ★ 追加：初期起動の未連携DOM崩れを完全に予防する防衛バリア ★
       if (!currentClientId) return;
 
       const container = document.getElementById('weekly-calendar-grid');
@@ -1621,7 +1621,7 @@
         if (err.message && err.message.includes("API_KEY_MISSING")) {
           displayErrorMsg = "店舗用のAIキーが設定されていません。トレーナーポータルでAPIキーを登録して保存・同期してください。";
         } else if (err.message && err.message.includes("429")) {
-          displayErrorMsg = "Gemini APIの無料枠制限に一時的に達しました。混み合っているため、1分ほど待ってからもう一度お試しください。";
+          displayErrorMsg = "Gemini API of 無料枠制限に一時的に達しました。混み合っているため、1分ほど待ってからもう一度お試しください。";
         } else if (err.message && (err.message.includes("400") || err.message.includes("403"))) {
           displayErrorMsg = "APIキーが無効、またはGoogle側からブロックされています。正しいAPIキーを再設定してください。";
         }
