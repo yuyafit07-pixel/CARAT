@@ -54,10 +54,10 @@
     }
   </style>
 </head>
-<body class="text-brand-text min-h-screen pb-12 antialiased">
+<body class="bg-brand-bg text-brand-text min-h-screen pb-12 antialiased">
 
   <!-- ヘッダー -->
-  <header class="bg-brand-card/90 backdrop-blur-md border-b border-brand-border sticky top-0 z-50 shadow-sm px-6 py-4 flex justify-between items-center transition-all">
+  <header class="bg-brand-card border-b border-brand-border sticky top-0 z-50 shadow-sm px-6 py-4 flex justify-between items-center">
     <div class="flex items-center gap-2.5">
       <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-primary to-brand-secondary flex items-center justify-center shadow-md">
         <span class="font-logo font-black text-white text-lg">C</span>
@@ -67,7 +67,7 @@
         <span class="text-[9px] font-bold text-brand-muted tracking-widest block mt-0.5 uppercase">TRAINER INTERACTIVE PORTAL</span>
       </div>
     </div>
-    <div id="sync-status" class="text-[10px] px-3 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
+    <div id="sync-status" class="text-[10px] px-2.5 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
       <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
       Connecting...
     </div>
@@ -273,7 +273,7 @@
 
           </div>
 
-          <!-- ★ 新設：週間過不足「帳じり合わせ」±合計値ダッシュボードボード ★ -->
+          <!-- ★ 週間過不足「帳じり合わせ」±合計値ダッシュボードボード ★ -->
           <div class="bg-gradient-to-tr from-brand-primary to-brand-secondary text-white rounded-3xl p-5 shadow-premium text-left space-y-3 relative overflow-hidden">
             <div class="absolute inset-0 bg-white/5 backdrop-blur-sm"></div>
             <div class="absolute bottom-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mb-10 -mr-10"></div>
@@ -281,7 +281,7 @@
             <div class="relative z-10 flex justify-between items-center border-b border-white/10 pb-2.5">
               <div>
                 <h4 class="text-xs font-black flex items-center gap-1.5 uppercase tracking-wider text-white">
-                  <i data-lucide="scale-3d" class="w-4.5 h-4.5 text-white animate-bounce"></i>
+                  <i data-lucide="scale" class="w-4.5 h-4.5 text-white animate-bounce"></i>
                   直近1週間 (過去7日間) 帳じり合わせ合計過不足
                 </h4>
                 <p class="text-[9px] text-white/80 mt-0.5">選択日を含む過去7日間の目標総計と実績総計の過不足を完璧に足し引き計算した最新貯金値です。</p>
@@ -697,7 +697,7 @@
       return { cal: Math.round(cal), p, f, c, meals };
     }
 
-    // ★ 新設：過去1週間(過去7日間)の累積「帳じり合わせ」±合計値のリアルタイム集計機能 ★
+    // ★ 解決：過去1週間(過去7日間)の累積「帳じり合わせ」±合計値のリアルタイム集計機能 ★
     function calculateWeeklySummaryAndDiff(data) {
       const baseDate = new Date(selectedDateString);
       let cumulativeKcalDiff = 0;
@@ -852,7 +852,7 @@
           const row = document.createElement('div');
           row.className = "flex flex-col sm:flex-row sm:justify-between sm:items-center bg-brand-bg rounded-2xl p-4.5 text-[11px] border border-brand-border mb-2.5 relative overflow-hidden group hover:border-brand-primary/20 hover:bg-brand-accent/5 transition-all";
           
-          // PFC特徴検出によるスマートハイライトバッジ（世界一教えやすいUIフック）
+          // PFC特徴検出によるスマートハイライトバッジ
           let featureTags = "";
           if (safeFloat(m.p) >= 20) {
             featureTags += `<span class="bg-sky-100 text-sky-700 text-[8px] font-black px-2 py-0.5 rounded-md border border-sky-200 uppercase">高タンパク P:${safeFloat(m.p).toFixed(1)}g</span>`;
@@ -890,7 +890,7 @@
       lucide.createIcons();
     }
 
-    // ★ 解決：店舗Geminiキー保存時に、SETTINGSドメインへも同期自動配信するアクティブ配信ロジック ★
+    // 店舗Gemini APIキーを共有設定（SETTINGS）とロード中のクライアント双方へ即時配信
     window.saveTrainerGeminiKey = async function() {
       const key = document.getElementById('trainer-gemini-key').value.trim();
       if (!key) {
@@ -922,14 +922,14 @@
       }
     };
 
-    // --- Gemini API連携 (サポート対象プレビューモデルに完全固定！) ---
+    // --- Gemini API連携 (サポート対象モデルに完全ロック！) ---
     async function fetchGeminiWithFallback(payload) {
       const key = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
       if (!key) {
         throw new Error("店舗Gemini API Keyが設定されていません。最上部の設定に入力してください。");
       }
 
-      // ★ 解決：プレビュー環境で100%確実に稼働するモデルに完全ロック ★
+      // プレビュー環境で100%確実に稼働するモデルに完全ロック
       const modelName = "gemini-2.5-flash-preview-09-2025";
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
       
@@ -1068,7 +1068,7 @@ ${weeklyMealsSummaryText}
       }
     };
 
-    // クリップボードコピーヘルパー
+    // クリップボードコピー
     window.copyToClipboardFeedback = function() {
       const textarea = document.getElementById('weekly-feedback-textarea');
       if (!textarea.value.trim()) {
@@ -1080,11 +1080,10 @@ ${weeklyMealsSummaryText}
       document.body.appendChild(dummy);
       dummy.value = textarea.value;
       dummy.select();
-      // iframe環境下でも確実に動作する document.execCommand('copy')
       document.execCommand("copy");
       document.body.removeChild(dummy);
       
-      showToast("アドバイスコメントをクリップボードにコピーしました！");
+      showToast("アドバイスコメントをコピーしました！");
     };
 
     window.submitWeeklyFeedback = async function() {
