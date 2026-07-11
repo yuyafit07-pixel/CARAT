@@ -790,7 +790,7 @@
       return isNaN(num) ? 0 : num;
     }
 
-    // ★ FileReader非同期Promiseヘルパー関数 (サイレントハングを物理遮断する要) ★
+    // ★ FileReaderをPromise化して非同期ハングを物理遮断するヘルパー ★
     const convertFileToBase64 = (file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
       
@@ -889,6 +889,7 @@
             document.getElementById('client-id-input').value = savedId;
             startClientRealtimeSync(savedId);
           } else {
+            // 初期状態は確実にダッシュボードを完全に隠し、ログインのみを美しく露出する
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('main-dashboard').classList.add('hidden');
           }
@@ -897,6 +898,8 @@
     }
 
     window.bypassLoginForDemo = function() {
+      // ゲストログイン時もDOM崩れを完全に防ぐ
+      currentClientId = "GUEST_PREVIEW";
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('main-dashboard').classList.remove('hidden');
       
@@ -962,7 +965,8 @@
     };
 
     function renderWeeklyCalendarGrid() {
-      if (!currentClientId && document.getElementById('main-dashboard').classList.contains('hidden')) return; // ★ 追加：未連携状態でのDOMクラッシュ防止ガード
+      // ★ 追加：初期起動の未連携DOM崩れ（画像11）を完全に予防する防衛バリア ★
+      if (!currentClientId) return;
 
       const container = document.getElementById('weekly-calendar-grid');
       if (!container) return;
@@ -1108,8 +1112,8 @@
     }
 
     function renderClientApp() {
-      // ★ 追加：連携が完了し、ダッシュボードが展開されるまではDOMアクセスでクラッシュするのを100%防止するガード ★
-      if (!currentClientId && document.getElementById('main-dashboard').classList.contains('hidden')) return;
+      // ★ 追加：連携完了するまではDOM要素アクセスでのフリーズを100%防止する安全防壁 ★
+      if (!currentClientId) return;
 
       renderWeeklyCalendarGrid();
       document.getElementById('display-date-text').innerText = selectedDateString;
@@ -1488,11 +1492,12 @@
       throw new Error(`API_ERROR_STATUS_${lastStatus || 'UNKNOWN'}_DETAILS_${lastError}`);
     }
 
-    // ★ 完璧なJSON抽出＆キーマッピング防壁 ★
+    // ★ 解決：最外周の中括弧 { ... } のみを完全自動抽出してデコードする最強パーサー ★
     function parseGeminiJSON(text) {
       try {
         const cleaned = text.trim();
-        // ★ 新設: 最外周のブラケットのみを抽出する正規表現フィルタ！これにより日本語のノイズ発言が混ざっても100%パース成功
+        
+        // ★ 導入：どれほど前後に日本語のおしゃべりやマークダウン記号が含まれていても、最外周のブラケットだけを引きずり出す
         const start = cleaned.indexOf('{');
         const end = cleaned.lastIndexOf('}');
         if (start === -1 || end === -1) {
@@ -1512,7 +1517,7 @@
 
         let rawIngredients = parsed.ingredients || parsed.ingredientsList || parsed.components || parsed.items || [];
         
-        // ★ セーフガード: もしAIが食材分解配列を空で返してきたら、メイン料理名(100g)で自己補完を自動生成！
+        // ★ 解決：サラダチキンやごはんのような単一おやつの際、ingredients配列が空または未定義だった場合、自動で自己補完を合成
         if (!Array.isArray(rawIngredients) || rawIngredients.length === 0) {
           rawIngredients = [{
             name: normalized.name,
@@ -1554,25 +1559,25 @@
       loading.classList.add('flex');
 
       try {
-        // ★ 変更：システムプロンプトの指定ルールを最適化 ★
-        const systemPrompt = "あなたはCARATの食事分析AIです。提示されたテキストを詳細に食材分解し、グラム数(g)・PFC・カロリーを計算して有効なJSONオブジェクトのみを返却してください。JSON以外の解説文は厳禁です。";
+        // ★ 変更：リクエストから余計な制限を撤廃し、元の100%動いていたcontentsのみの極めて強固なシンプルな構造に巻き戻し ★
         const userPrompt = `
-食べたもの: "${textInput}"
+食べた食事： "${textInput}"
 
-【出力要件JSONスキーマ】
-必ず次の構造のみを持つ有効なJSONオブジェクトを返してください。
+上記の食事に含まれるカロリーとPFC、さらに構成食材とグラム数を推定して、必ず次のJSONフォーマットのみを返却してください。解説やおしゃべりは絶対に含めないでください。
+
+【JSONフォーマット】
 {
-  "name": "代表メニュー名(例: サラダチキン)",
+  "name": "料理名(例: 白米ごはん)",
   "kcal": 総カロリー(数値),
-  "p": タンパク質総計g(数値),
-  "f": 脂質総計g(数値),
-  "c": 炭水化物総計g(数値),
+  "p": タンパク質総計(数値),
+  "f": 脂質総計(数値),
+  "c": 炭水化物総計(数値),
   "ingredients": [
     {
-      "name": "構成食材(例: 鶏むね肉)",
-      "weight": 概算グラム数(数値),
-      "kcal": カロリー(数値),
-      "p": タンパク質g(数値),
+      "name": "構成食材(例: ごはん)",
+      "weight": 推定重量グラム(数値),
+      "kcal": この食材のカロリー(数値),
+      "p": たんぱく質g(数値),
       "f": 脂質g(数値),
       "c": 炭水化物g(数値)
     }
@@ -1580,13 +1585,13 @@
 }
 `;
         const payload = {
-          contents: [{ parts: [{ text: userPrompt }] }],
-          systemInstruction: { parts: [{ text: systemPrompt }] },
-          generationConfig: { responseMimeType: "application/json" }
+          contents: [{ parts: [{ text: userPrompt }] }]
         };
 
         const res = await fetchGeminiForClient(payload);
         let rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        // 正規表現抽出フィルターを介して安全デコード
         const parsed = parseGeminiJSON(rawText);
 
         if (parsed && parsed.name) {
@@ -1627,7 +1632,7 @@
       }
     };
 
-    // ★ 解決：カメラ解析での永久「解析中」ローディングバグを完全駆逐した最新非同期処理 ★
+    // カメラ画像解析
     window.analyzeMealImage = async function(file) {
       if (!file) return;
 
@@ -1636,25 +1641,24 @@
       loading.classList.add('flex');
 
       try {
-        // PromiseでFileReaderを同期管理し、例外を100%外側のcatchへ届ける設計
         const base64Data = await convertFileToBase64(file);
 
-        const systemPrompt = "あなたはCARATの高度画像食事解析AIです。写真の中のメニューを食材分解し、それぞれの重量・グラム数・PFCバランスを計算して有効なJSONを返してください。";
         const userPrompt = `
-【出力要件JSONスキーマ】
-必ず次の構造のみを持つ有効なJSONオブジェクトを返してください。不要な前置きは一切禁止。JSONのみ。
+写真の食事に含まれるカロリーとPFC、さらに構成食材とグラム数を推定して、必ず次のJSONフォーマットのみを返却してください。解説やおしゃべりは絶対に含めないでください。
+
+【JSONフォーマット】
 {
-  "name": "写真全体の判定メニュー名(例: チキン南蛮弁当)",
-  "kcal": 総カロリー合計(数値),
-  "p": タンパク質総計g(数値),
-  "f": 脂質総計g(数値),
-  "c": 炭水化物総計g(数値),
+  "name": "判定メニュー名(例: チキン南蛮弁当)",
+  "kcal": 総カロリー(数値),
+  "p": タンパク質総計(数値),
+  "f": 脂質総計(数値),
+  "c": 炭水化物総計(数値),
   "ingredients": [
     {
-      "name": "識別された構成食材",
-      "weight": 推定グラム数(数値),
-      "kcal": カロリー(数値),
-      "p": タンパク質g(数値),
+      "name": "構成食材",
+      "weight": 推定重量グラム(数値),
+      "kcal": この食材のカロリー(数値),
+      "p": たんぱく質g(数値),
       "f": 脂質g(数値),
       "c": 炭水化物g(数値)
     }
@@ -1667,9 +1671,7 @@
               { text: userPrompt },
               { inlineData: { mimeType: "image/png", data: base64Data } }
             ]
-          }],
-          systemInstruction: { parts: [{ text: systemPrompt }] },
-          generationConfig: { responseMimeType: "application/json" }
+          }]
         };
 
         const res = await fetchGeminiForClient(payload);
@@ -1711,7 +1713,6 @@
         }
         alert(displayErrorMsg);
       } finally {
-        // ★ つねに最後に100%実行されるfinallyブロックにより、5分間フリーズするバグは物理消滅 ★
         loading.classList.add('hidden');
         loading.classList.remove('flex');
       }
@@ -2151,9 +2152,7 @@
 }
 `;
         const payload = {
-          contents: [{ parts: [{ text: userPrompt }] }],
-          systemInstruction: { parts: [{ text: systemPrompt }] },
-          generationConfig: { responseMimeType: "application/json" }
+          contents: [{ parts: [{ text: userPrompt }] }]
         };
 
         const res = await fetchGeminiForClient(payload);
