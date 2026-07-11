@@ -478,7 +478,7 @@
           選択した設定で一括AI逆算提案をスタート
         </button>
 
-        <!-- AI提案結果表示エリア (一括＆個別対応) -->
+        <!-- AI提案結果表示エリア -->
         <div id="ai-menu-suggestion-box" class="hidden bg-brand-accent/30 border border-brand-primary/10 rounded-2xl p-4 space-y-4 relative overflow-hidden transition-all duration-300">
           
           <div class="flex justify-between items-center border-b border-brand-primary/10 pb-2">
@@ -590,7 +590,7 @@
     </div>
   </div>
 
-  <!-- ★ 改良版：微調整・編集モーダル（100g備考欄、2段階アコーディオン食材確認を完全実装！） ★ -->
+  <!-- ★ 改良版：微調整・編集モーダル ★ -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-6 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
       
@@ -613,7 +613,7 @@
         <input type="text" id="edit-meal-name" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3.5 py-2.5 text-xs text-brand-text font-black" value="">
       </div>
 
-      <!-- ★ 備考欄：100gあたりの換算カロリー表示（Nutrient Density） ★ -->
+      <!-- 備考欄：100gあたりの換算カロリー表示 -->
       <div class="bg-brand-primary/5 border border-brand-primary/10 rounded-2xl p-3 text-[10px] text-brand-primary font-bold flex items-center gap-2">
         <i data-lucide="info" class="w-4 h-4 text-brand-primary shrink-0"></i>
         <div class="flex-1">
@@ -622,7 +622,7 @@
         </div>
       </div>
 
-      <!-- ★ 割合選択 (10, 50, 100, カスタム の仕様に統一) ★ -->
+      <!-- 割合選択 (10, 50, 100, カスタム) -->
       <div class="bg-gradient-to-tr from-brand-accent/50 to-brand-bg p-4 rounded-3xl border border-brand-primary/10 space-y-3">
         <span class="text-[10px] text-brand-text font-black flex items-center gap-1">
           <i data-lucide="pizza" class="w-4 h-4 text-brand-primary"></i>
@@ -652,7 +652,7 @@
         </div>
       </div>
 
-      <!-- ★ 食材追加を食材確認に変更➔食材確認から食材追加を表示に変える 2段階アコーディオン ★ -->
+      <!-- ★ 2段階アコーディオン：食材確認➔食材追加 ★ -->
       <div class="space-y-2">
         <button type="button" onclick="window.toggleIngredientsAccordion()" class="w-full bg-brand-bg hover:bg-brand-accent p-3 rounded-2xl border border-brand-border flex justify-between items-center text-xs font-black text-brand-text transition-all">
           <span class="flex items-center gap-1.5">
@@ -1644,6 +1644,7 @@
       if (arrowIcon) arrowIcon.style.transform = 'rotate(0deg)';
 
       window.setQuickScale(Math.round(lastSavedScale * 100));
+      renderIngredientsInEditor(); // ★ 描画命令トリガーを完璧に配置！
       window.toggleModal('edit-meal-modal', true);
     };
 
@@ -1654,7 +1655,6 @@
       baseIngredients = [];
     };
 
-    // ★ 変更：食材確認（アコーディオン）トグル開閉処理 ★
     window.toggleIngredientsAccordion = function() {
       const collapseArea = document.getElementById('ingredients-collapse-area');
       const arrowIcon = document.getElementById('ingredients-accordion-arrow');
@@ -1819,7 +1819,6 @@
       recalculateTotalsInEditor();
     };
 
-    // ★ 変更：備考欄（栄養密度）への100gあたりのカロリー自動換算表示 ★
     function recalculateTotalsInEditor() {
       let sumKcal = 0, sumP = 0, sumF = 0, sumC = 0;
       let totalWeight = 0;
@@ -1842,7 +1841,7 @@
       document.getElementById('preview-total-c').innerText = sumC.toFixed(1);
       document.getElementById('preview-total-kcal').innerText = Math.round(sumKcal).toLocaleString();
 
-      // 100gあたりのカロリー換算（密度）表示の更新
+      // 100gあたりのカロリー換算表示
       const densityEl = document.getElementById('edit-meal-100g-density-info');
       if (totalWeight > 0) {
         const factor = 100 / totalWeight;
@@ -1900,7 +1899,7 @@
 
 
     // =======================================================
-    // ★ 複数食等分逆算AI提案エンジンの完全実装 ★
+    // ★ 複数食等分逆算AI提案エンジン ★
     // =======================================================
 
     window.selectMenuCategory = function(cat) {
