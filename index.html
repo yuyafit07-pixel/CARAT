@@ -188,7 +188,7 @@
             </button>
           </div>
 
-          <!-- 目報PFCを手動微調整パネル -->
+          <!-- 目標PFCを手動微調整パネル -->
           <div id="target-edit-panel" class="hidden bg-brand-bg/80 border border-brand-border/80 p-4 rounded-2xl space-y-3 relative z-10 transition-all">
             <span class="text-[10px] text-brand-text font-black block">🎯 目標値のベース手動設定</span>
             <div class="grid grid-cols-2 gap-2 text-xs">
@@ -596,7 +596,7 @@
     </div>
   </div>
 
-  <!-- ★ 微調整・編集モーダル（食材追加時のカロリー・PFC手動入力を完全サポート！） ★ -->
+  <!-- ★ 微調整・編集モーダル ★ -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-6 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
       
@@ -980,7 +980,6 @@
     };
 
     function renderWeeklyCalendarGrid() {
-      // ★ 追加：初期起動の未連携DOM崩れを完全に予防する防衛バリア
       if (!currentClientId) return;
 
       const container = document.getElementById('weekly-calendar-grid');
@@ -1127,7 +1126,6 @@
     }
 
     function renderClientApp() {
-      // ★ 追加：連携完了するまではDOM要素アクセスでのフリーズを100%防止する安全防壁 ★
       if (!currentClientId) return;
 
       renderWeeklyCalendarGrid();
@@ -1470,7 +1468,6 @@
     // =======================================================
 
     async function fetchGeminiForClient(payload) {
-      // 1. ローカルメモリ、2. LocalStorage の優先順位で最速取得
       let key = clientState.sharedGeminiKey || localStorage.getItem(`carat_shared_gemini_key_${appId}`) || "";
       if (!key) {
         const trainerKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
@@ -1481,7 +1478,6 @@
         throw new Error("API_KEY_MISSING");
       }
 
-      // ★ 解決：プレビュー環境と製品環境のモデル制限404バグを永久絶滅させる、製品版モデルへのフォールバック機構
       const models = [
         "gemini-2.5-flash",
         "gemini-1.5-flash",
@@ -1518,8 +1514,6 @@
     function parseGeminiJSON(text) {
       try {
         const cleaned = text.trim();
-        
-        // どれほど前後に日本語のおしゃべりやマークダウン記号が含まれていても、最外周のブラケットだけを引きずり出す
         const start = cleaned.indexOf('{');
         const end = cleaned.lastIndexOf('}');
         if (start === -1 || end === -1) {
@@ -1539,7 +1533,6 @@
 
         let rawIngredients = parsed.ingredients || parsed.ingredientsList || parsed.components || parsed.items || [];
         
-        // サラダチキンやごはんのような単一おやつの際、ingredients配列が空または未定義だった場合、自動で自己補完を合成
         if (!Array.isArray(rawIngredients) || rawIngredients.length === 0) {
           rawIngredients = [{
             name: normalized.name,
@@ -1821,16 +1814,22 @@
 
       editingMealObject.ingredients.forEach((ing, i) => {
         const row = document.createElement('div');
-        row.className = "bg-white rounded-2xl p-3 border border-brand-border flex flex-col gap-2 text-xs text-brand-text mb-1 shrink-0 shadow-sm";
+        row.className = "bg-white rounded-2xl p-4 border border-brand-border flex flex-col gap-2.5 text-xs text-brand-text mb-1 shrink-0 shadow-sm relative";
         row.innerHTML = `
-          <!-- 上段: 食材名と削除ボタン -->
-          <div class="flex items-center justify-between gap-2">
+          <!-- 上段: 食材名、AI自動推定ボタン、削除ボタン -->
+          <div class="flex items-center gap-2">
             <input type="text" value="${ing.name}" class="bg-brand-bg border border-brand-border rounded-xl px-2.5 py-1.5 text-xs font-bold flex-1 focus:outline-none focus:border-brand-primary" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
-            <button onclick="window.removeIngredientRow(${i})" class="text-brand-muted hover:text-rose-500 p-1.5 rounded-xl transition shrink-0">
+            
+            <!-- ★ 新設: 個別食材・AI栄養素自動スキャンボタン（g数を変えて1タップするだけでAIが正確なPFCを予測書き戻し！） -->
+            <button type="button" onclick="window.estimateIngredientPFC(${i})" class="bg-brand-accent hover:bg-brand-primary hover:text-white text-brand-primary text-[9px] font-black px-2.5 py-1.5 rounded-xl transition flex items-center gap-1 border border-brand-primary/10 shrink-0">
+              <i data-lucide="sparkles" class="w-3 h-3"></i> AI自動推定
+            </button>
+
+            <button onclick="window.removeIngredientRow(${i})" class="text-brand-muted hover:text-rose-500 p-1 rounded-lg transition shrink-0">
               <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
           </div>
-          <!-- 下段: 重量とPFC・カロリーの手動微調整インプット (完全リアルタイム連動) -->
+          <!-- 下段: 重量、およびPFC・カロリーの手動微調整フィールド -->
           <div class="grid grid-cols-5 gap-1.5 text-center">
             <div>
               <label class="text-[8px] text-brand-muted block font-bold mb-0.5">重量(g)</label>
@@ -1871,19 +1870,19 @@
       const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
       const currentScale = currentSliderValue / 100;
 
-      // ★ 解決：新しく食材を追加したときにダミーの基準値を100%スケールで安全セットする
+      // ★ 解決：オリーブオイル追加時のバグを完全に予防するため、初期PFC/カロリーはダミーを使わず、空に近い0ベースで綺麗にセット
       const newIng = {
-        name: "新しい食材",
-        weight: 100 * currentScale,
-        kcal: 100 * currentScale,
-        p: 10 * currentScale,
-        f: 2 * currentScale,
-        c: 10 * currentScale,
-        originalWeight: 100,
-        originalKcal: 100,
-        originalP: 10,
-        originalF: 2,
-        originalC: 10
+        name: "オリーブオイル",
+        weight: 10 * currentScale,
+        kcal: 0,
+        p: 0,
+        f: 0,
+        c: 0,
+        originalWeight: 10,
+        originalKcal: 0,
+        originalP: 0,
+        originalF: 0,
+        originalC: 0
       };
       editingMealObject.ingredients.push(newIng);
       renderIngredientsInEditor();
@@ -1903,28 +1902,24 @@
       const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
       const currentScale = currentSliderValue / 100;
 
-      // 1gあたりのPFC/カロリー比率を変更前の絶対退避値から安全算出
       const baseWeight = safeFloat(ing.originalWeight) || safeFloat(ing.weight) || 100;
       const baseKcal = safeFloat(ing.originalKcal) || safeFloat(ing.kcal) || 0;
       const baseP = safeFloat(ing.originalP) || safeFloat(ing.p) || 0;
       const baseF = safeFloat(ing.originalF) || safeFloat(ing.f) || 0;
       const baseC = safeFloat(ing.originalC) || safeFloat(ing.c) || 0;
 
-      // 0除算防止セーフガード
       const denom = baseWeight <= 0 ? 1 : baseWeight;
       const kcalRatio = baseKcal / denom;
       const pRatio = baseP / denom;
       const fRatio = baseF / denom;
       const cRatio = baseC / denom;
 
-      // 新しいオリジナル絶対基準値をスライダー逆算して上書き
       ing.originalWeight = w / (currentScale || 1);
       ing.originalKcal = ing.originalWeight * kcalRatio;
       ing.originalP = ing.originalWeight * pRatio;
       ing.originalF = ing.originalWeight * fRatio;
       ing.originalC = ing.originalWeight * cRatio;
 
-      // 現在のスライダースケールを掛け合わせ、実際の画面表示数値を算出して代入更新
       ing.weight = w;
       ing.kcal = ing.originalKcal * currentScale;
       ing.p = ing.originalP * currentScale;
@@ -1934,7 +1929,7 @@
       renderIngredientsInEditor();
     };
 
-    // ★ 新設：手動追加・既存食材のP, F, C, kcal を直接変更した際の同期書き換えハンドラー
+    // 手動追加・既存食材のP, F, C, kcal を直接変更した際の同期書き換えハンドラー
     window.changeIngredientPFC = function(index, type, val) {
       const v = safeFloat(val);
       if (v < 0) return;
@@ -1943,7 +1938,6 @@
       const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
       const currentScale = currentSliderValue / 100;
 
-      // 変更された栄養値をスライダー逆算してオリジナル基準と画面表示用の双方にリアルタイムバインド
       if (type === 'p') {
         ing.p = v;
         ing.originalP = v / (currentScale || 1);
@@ -1958,8 +1952,83 @@
         ing.originalKcal = v / (currentScale || 1);
       }
 
-      // エディター内プレビュー表示と、ドキュメント全体のカロリー総計をリアルタイム更新
       recalculateTotalsInEditor();
+    };
+
+    // ★ 新設: 個別追加した食材名と重量(g)から、100%正確なPFC・カロリーをAIが裏側で自動計算して自動記入するAPI機能
+    window.estimateIngredientPFC = async function(index) {
+      const ing = editingMealObject.ingredients[index];
+      if (!ing) return;
+
+      const ingName = ing.name.trim();
+      const ingWeight = safeFloat(ing.weight) || 100;
+
+      if (!ingName) {
+        alert("食材名を入力してから自動推定ボタンを押してください。");
+        return;
+      }
+
+      const toast = document.createElement('div');
+      toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[300] flex items-center gap-2 animate-bounce";
+      toast.innerHTML = `<i data-lucide="brain-circuit" class="w-4 h-4 animate-spin"></i> AIが「${ingName} ${ingWeight}g」の栄養を正確に調査中...`;
+      document.body.appendChild(toast);
+      lucide.createIcons();
+
+      try {
+        const userPrompt = `
+食材名: "${ingName}"
+重量: ${ingWeight}g
+
+上記の食材・料理単体のカロリー、タンパク質(P)、脂質(F)、炭水化物(C)を推定して、必ず次のJSONフォーマットのみを返却してください。解説やおしゃべりは絶対に含めないでください。JSONのみ。
+
+【JSONフォーマット】
+{
+  "p": たんぱく質g(数値),
+  "f": 脂質g(数値),
+  "c": 炭水化物g(数値),
+  "kcal": カロリー(数値)
+}
+`;
+        const payload = {
+          contents: [{ parts: [{ text: userPrompt }] }]
+        };
+
+        const res = await fetchGeminiForClient(payload);
+        let rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        // 最外周の中括弧を抽出
+        const start = rawText.indexOf('{');
+        const end = rawText.lastIndexOf('}');
+        if (start === -1 || end === -1) {
+          throw new Error("JSON_FORMAT_ERROR");
+        }
+        const parsed = JSON.parse(rawText.slice(start, end + 1));
+
+        const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
+        const currentScale = currentSliderValue / 100;
+
+        // 計算結果を安全代入
+        ing.p = safeFloat(parsed.p);
+        ing.f = safeFloat(parsed.f);
+        ing.c = safeFloat(parsed.c);
+        ing.kcal = safeFloat(parsed.kcal);
+
+        ing.originalP = ing.p / (currentScale || 1);
+        ing.originalF = ing.f / (currentScale || 1);
+        ing.originalC = ing.c / (currentScale || 1);
+        ing.originalKcal = ing.kcal / (currentScale || 1);
+        ing.originalWeight = ingWeight / (currentScale || 1);
+
+        // UIのエディター要素をリロード・再描画
+        renderIngredientsInEditor();
+        showToast(`AIが「${ingName}」の栄養価を自動適用しました！`);
+
+      } catch (err) {
+        console.error("Ingredient AI Estimation Error:", err);
+        alert("食材のAI自動推定に失敗しました。店舗キーの設定、またはインターネット接続状況をご確認ください。");
+      } finally {
+        toast.remove();
+      }
     };
 
     window.changeMealScale = function(scalePercent) {
@@ -2196,7 +2265,7 @@
 - 1食あたり目標炭水化物(C): ${targetCPerMeal.toFixed(1)} g
 
 【重要な外食・店舗名提案ルール】
-調達カテゴリが「外食・レストラン」の場合、メニュー名のテキストに、必ず「大戸屋」「やよい軒」「スシロー」「くら寿司】【ガスト】【サイゼリヤ」などの大手有名フランチャイズ店名を【店名】として冠したメニュー名にしてください。
+調達カテゴリが「外食・レストラン」の場合、メニュー名のテキストに、必ず「大戸屋」「やよい軒」「スシロー」「くら寿司」「ガスト」「サイゼリヤ」などの大手有名フランチャイズ店名を【店名】として冠したメニュー名にしてください。
 例: 【やよい軒】しまほっけ定食（もち麦ご飯・普通盛）、【大戸屋】鶏と野菜の黒酢あん定食（五穀ご飯少なめ）、【スシロー】まぐろ2皿・えびアボカド1皿・茶碗蒸し、【サイゼリヤ】若鶏のディアボラ風＋スモールライス
 
 【時間帯別の逆算ルール】
