@@ -14,21 +14,21 @@
         extend: {
           colors: {
             brand: {
-              bg: '#F8FAFC',
+              bg: '#F5F7FA',
               card: '#FFFFFF',
               primary: '#0052CC',
               primaryHover: '#0043a4',
               secondary: '#4A90E2',
-              accent: '#F1F5F9',
-              accentGreen: '#E2F0D9',
-              text: '#0F172A',
+              accent: '#E6F0FA',
+              accentGreen: '#E6F4EA',
+              text: '#1E293B',
               muted: '#64748B',
               border: '#E2E8F0'
             }
           },
           boxShadow: {
-            premium: '0 20px 40px -15px rgba(0, 82, 204, 0.07), 0 8px 20px -6px rgba(0, 82, 204, 0.03)',
-            cardShadow: '0 10px 30px -5px rgba(148, 163, 184, 0.12)'
+            premium: '0 10px 30px -5px rgba(0, 82, 204, 0.08), 0 4px 12px -2px rgba(0, 82, 204, 0.03)',
+            cardShadow: '0 4px 20px -2px rgba(100, 116, 139, 0.06)'
           }
         }
       }
@@ -40,7 +40,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
     body {
       font-family: 'Noto Sans JP', sans-serif;
-      background: linear-gradient(135deg, #F8FAFC 0%, #E2EAF4 100%);
+      background: linear-gradient(135deg, #F5F7FA 0%, #E6EEF8 100%);
     }
     .font-logo {
       font-family: 'Montserrat', sans-serif;
@@ -53,7 +53,7 @@
       scrollbar-width: none;
     }
     .slide-up {
-      animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     @keyframes slideUp {
       from { transform: translateY(100%); }
@@ -63,10 +63,10 @@
 </head>
 <body class="text-brand-text min-h-screen pb-24 antialiased">
 
-  <!-- 高級フラットヘッダー -->
-  <header class="bg-brand-card/95 backdrop-blur-md border-b border-brand-border/60 sticky top-0 z-50 shadow-sm px-5 py-4 flex justify-between items-center transition-all">
-    <div class="flex items-center gap-2.5">
-      <div class="w-8.5 h-8.5 rounded-xl bg-gradient-to-tr from-brand-primary to-brand-secondary flex items-center justify-center shadow-md">
+  <!-- ヘッダー -->
+  <header class="bg-brand-card/90 backdrop-blur-md border-b border-brand-border/80 sticky top-0 z-50 shadow-sm px-4 py-3.5 flex justify-between items-center transition-all">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-primary to-brand-secondary flex items-center justify-center shadow-md">
         <span class="font-logo font-black text-white text-base">C</span>
       </div>
       <div>
@@ -74,7 +74,7 @@
         <span class="text-[8px] font-bold text-brand-muted tracking-widest block mt-0.5 uppercase">Premium Health Management</span>
       </div>
     </div>
-    <div id="connection-status" class="text-[9px] px-3 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
+    <div id="connection-status" class="text-[9px] px-3 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
       <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
       未連携
     </div>
@@ -94,7 +94,7 @@
         <div class="absolute top-0 right-0 w-24 h-24 bg-brand-accent/30 rounded-full blur-2xl -mr-6 -mt-6"></div>
         
         <div class="flex items-center gap-2 relative z-10">
-          <div class="w-8 h-8 rounded-xl bg-brand-accent flex items-center justify-center text-brand-primary shadow-sm">
+          <div class="w-8 h-8 rounded-xl bg-brand-accent flex items-center justify-center text-brand-primary">
             <i data-lucide="key-round" class="w-4.5 h-4.5"></i>
           </div>
           <h2 class="text-sm font-black text-brand-text">クライアントIDを連携</h2>
@@ -131,18 +131,18 @@
             <span id="active-id-text" class="font-mono text-xs font-black text-brand-primary">CRT-XXXXXX</span>
           </div>
         </div>
-        <button onclick="window.disconnectClientId()" class="text-[9px] text-rose-500 font-extrabold hover:bg-rose-50 px-3 py-2 rounded-xl transition border border-rose-100">
+        <button onclick="window.disconnectClientId()" class="text-[9px] text-rose-500 font-extrabold hover:bg-rose-50 px-2.5 py-1.5 rounded-xl transition border border-rose-100">
           連携解除
         </button>
       </div>
 
       <!-- プレミアム2タブバー -->
       <div class="grid grid-cols-2 gap-2 p-1 bg-brand-border/50 rounded-2xl border border-brand-border shadow-inner">
-        <button id="tab-btn-home" onclick="window.switchTab('home')" class="py-3 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 bg-brand-primary text-white shadow-md">
+        <button id="tab-btn-home" onclick="window.switchTab('home')" class="py-2.5 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 bg-brand-primary text-white shadow-md">
           <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
           今日の記録
         </button>
-        <button id="tab-btn-ai-menu" onclick="window.switchTab('ai-menu')" class="py-3 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 text-brand-muted hover:text-brand-primary">
+        <button id="tab-btn-ai-menu" onclick="window.switchTab('ai-menu')" class="py-2.5 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 text-brand-muted hover:text-brand-primary">
           <i data-lucide="wand-2" class="w-4 h-4"></i>
           逆算献立AI提案
         </button>
@@ -152,9 +152,9 @@
       <div id="tab-content-home" class="space-y-4 transition-all">
         
         <!-- カレンダー & クイック曜日切り替え -->
-        <div class="bg-brand-card border border-brand-border/60 p-3.5 rounded-3xl shadow-cardShadow text-left space-y-2">
+        <div class="bg-brand-card border border-brand-border/60 p-3 rounded-3xl shadow-cardShadow text-left space-y-2">
           <div class="flex justify-between items-center px-1">
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-1">
               <i data-lucide="calendar" class="w-4 h-4 text-brand-primary"></i>
               <span id="display-date-text" class="font-mono font-black text-sm tracking-wider text-brand-text">2026-07-10</span>
             </div>
@@ -171,7 +171,7 @@
         <div class="bg-brand-card rounded-[32px] p-6 border border-brand-border/60 shadow-premium text-left space-y-4 relative overflow-hidden">
           <div class="absolute bottom-0 right-0 w-32 h-32 bg-brand-accent/20 rounded-full blur-3xl -mb-10 -mr-10"></div>
           
-          <div class="flex justify-between items-center border-b border-brand-border/50 pb-3.5 relative z-10">
+          <div class="flex justify-between items-center border-b border-brand-border/50 pb-3 relative z-10">
             <div>
               <h3 class="text-xs font-extrabold text-brand-text flex items-center gap-1.5">
                 <i data-lucide="activity" class="w-4.5 h-4.5 text-brand-primary"></i>
@@ -213,7 +213,7 @@
             </div>
             <div class="flex gap-2">
               <button onclick="window.toggleTargetEditPanel()" class="flex-1 bg-brand-border hover:bg-brand-border/80 text-brand-muted py-2 rounded-xl text-[10px] font-bold">キャンセル</button>
-              <button onclick="window.saveHandmadeTargets()" class="flex-2 bg-brand-primary hover:bg-brand-primaryHover text-white py-2 px-4 rounded-xl text-[10px] font-bold shadow animate-pulse">適用して保存</button>
+              <button onclick="window.saveHandmadeTargets()" class="flex-2 bg-brand-primary hover:bg-brand-primaryHover text-white py-2 px-4 rounded-xl text-[10px] font-bold shadow">適用して保存</button>
             </div>
           </div>
 
@@ -230,7 +230,7 @@
                 </defs>
               </svg>
               <div class="absolute text-center">
-                <span id="summary-cur-cal" class="text-xl font-black tracking-tighter text-brand-text block font-mono">0</span>
+                <span id="summary-cur-cal" class="text-xl font-black tracking-tighter text-brand-text block">0</span>
                 <span class="text-[8px] text-brand-muted block uppercase tracking-wider font-bold">/ <span id="summary-tar-cal">1800</span> kcal</span>
               </div>
             </div>
@@ -240,7 +240,7 @@
               <div class="space-y-0.5">
                 <div class="flex justify-between items-baseline">
                   <span class="text-sky-600 text-[11px] font-black flex items-center gap-1">
-                    <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
                     P たんぱく質
                   </span>
                   <span class="font-sans text-xs text-brand-muted font-bold"><span id="summary-cur-p" class="font-black text-sm text-sky-700">0</span> / <span id="summary-tar-p" class="text-brand-text font-black text-xs">120</span>g</span>
@@ -253,7 +253,7 @@
               <div class="space-y-0.5">
                 <div class="flex justify-between items-baseline">
                   <span class="text-emerald-600 text-[11px] font-black flex items-center gap-1">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                     F 脂質
                   </span>
                   <span class="font-sans text-xs text-brand-muted font-bold"><span id="summary-cur-f" class="font-black text-sm text-emerald-700">0</span> / <span id="summary-tar-f" class="text-brand-text font-black text-xs">45</span>g</span>
@@ -266,7 +266,7 @@
               <div class="space-y-0.5">
                 <div class="flex justify-between items-baseline">
                   <span class="text-amber-600 text-[11px] font-black flex items-center gap-1">
-                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
                     C 炭水化物
                   </span>
                   <span class="font-sans text-xs text-brand-muted font-bold"><span id="summary-cur-c" class="font-black text-sm text-amber-700">0</span> / <span id="summary-tar-c" class="text-brand-text font-black text-xs">230</span>g</span>
@@ -284,7 +284,7 @@
           <div class="absolute top-0 left-0 w-2 h-full bg-emerald-500" id="recovery-bar-color"></div>
           <div class="pl-2">
             <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-              <i data-lucide="sparkles" class="w-4 h-4 text-emerald-600 animate-pulse"></i>
+              <i data-lucide="sparkles" class="w-4.5 h-4.5 text-emerald-600 animate-pulse"></i>
               カロリーオートリカバリー貯金箱
             </h4>
             <p class="text-[10px] text-brand-muted mt-0.5" id="recovery-sub-info">昨日食べすぎたエネルギーを、自動で今日の目標から引いて相殺しています。</p>
@@ -307,7 +307,7 @@
           <div class="absolute top-0 left-0 w-2 h-full bg-brand-primary" id="balance-bar-color"></div>
           <div class="pl-2">
             <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-              <i data-lucide="scale" class="w-4 h-4 text-brand-primary"></i>
+              <i data-lucide="scale" class="w-4.5 h-4.5 text-brand-primary"></i>
               直近1週間の帳じり合わせ状況
             </h4>
             <p class="text-[10px] text-brand-muted mt-0.5">選択日を含む過去7日間の目標総計に対する過不足（おトク枠）を判定します。</p>
@@ -367,6 +367,23 @@
             <i data-lucide="edit-3" class="w-4 h-4"></i>
             数値を手動で直接入力して追加する
           </button>
+        </div>
+
+        <!-- ★ 完全復活・大復活：食事履歴からクイック記録システム ★ -->
+        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-3.5">
+          <div class="flex justify-between items-center border-b border-brand-border/50 pb-2.5">
+            <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
+              <i data-lucide="history" class="w-4.5 h-4.5 text-brand-primary animate-pulse"></i>
+              🕒 過去の履歴からワンタップ登録
+            </h3>
+            <span class="text-[8px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg font-bold">複製記録</span>
+          </div>
+          <p class="text-[9px] text-brand-muted font-medium leading-relaxed">
+            これまでの全日程から食べたメニューを自動抽出！食材データや比率バランスを完璧に引き継ぎ、現在の時間で今日の記録にそのまま一瞬でコピーできます。
+          </p>
+          <div id="meals-history-container" class="flex gap-3 overflow-x-auto py-1.5 no-scrollbar">
+            <!-- JavaScriptでスライドカードが横スクロール配置されます -->
+          </div>
         </div>
 
         <!-- 本日の食事ログ一覧 -->
@@ -596,13 +613,13 @@
     </div>
   </div>
 
-  <!-- ★ 微調整・編集モーダル（画面崩れなし・AI自動推定横マウント設計） ★ -->
+  <!-- ★ 微調整・編集モーダル（食材追加時のカロリー・PFC手動入力を完全サポート！） ★ -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-5 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
       
       <div class="flex justify-between items-center border-b border-brand-border/50 pb-3">
         <div>
-          <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
+          <h4 class="text-xs font-black text-brand-text flex items-center gap-1">
             <i data-lucide="sliders" class="w-4.5 h-4.5 text-brand-primary"></i>
             食事・食材の極微細調整
           </h4>
@@ -828,7 +845,7 @@
       std.ingredients = rawIngredients.map(ing => {
         const w = safeFloat(ing.weight || ing.originalWeight || 100);
         return {
-          name: ing.name || "食材",
+          name: ing.name || "追加食材",
           weight: safeFloat(ing.weight || 100),
           kcal: safeFloat(ing.kcal),
           p: safeFloat(ing.p),
@@ -875,6 +892,30 @@
       const d = new Date(dateStr);
       const list = ["日", "月", "火", "水", "木", "金", "土"];
       return list[d.getDay()];
+    }
+
+    // ★ 解決：過去に登録した全食事データ（mealsByDate）からユニークな履歴を自動抽出するエンジン ★
+    function getMealsHistory() {
+      const historyMap = new Map();
+      if (!clientState.mealsByDate) return [];
+      
+      // すべての日付の食事をスキャンして重複排除
+      for (const [dateStr, meals] of Object.entries(clientState.mealsByDate)) {
+        if (!meals) continue;
+        meals.forEach(m => {
+          if (!m.name) return;
+          // キーとして食事名を使用（常に最新のPFCと食材情報をキープする）
+          historyMap.set(m.name, {
+            name: m.name,
+            kcal: safeFloat(m.kcal),
+            p: safeFloat(m.p),
+            f: safeFloat(m.f),
+            c: safeFloat(m.c),
+            ingredients: m.ingredients || []
+          });
+        });
+      }
+      return Array.from(historyMap.values()).slice(0, 10); // 最大10件表示
     }
 
     async function initClientApp() {
@@ -1126,6 +1167,78 @@
       };
     }
 
+    // ★ 解決：大復活した履歴スライダーを描画するエンジンを組み込み ★
+    function renderMealsHistory() {
+      const container = document.getElementById('meals-history-container');
+      if (!container) return;
+      container.innerHTML = "";
+
+      const history = getMealsHistory();
+      if (history.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-6 w-full bg-brand-bg/50 rounded-2xl border border-dashed border-brand-border/60 flex flex-col items-center justify-center">
+            <span class="text-[10px] text-brand-muted font-bold block">食事の記録を増やすと、ここに履歴が出現します</span>
+          </div>
+        `;
+        return;
+      }
+
+      history.forEach((h) => {
+        const card = document.createElement('div');
+        card.className = "bg-brand-bg hover:bg-brand-accent/40 border border-brand-border/60 p-3.5 rounded-2xl shrink-0 w-[150px] text-left flex flex-col justify-between transition-all shadow-sm group cursor-pointer relative overflow-hidden";
+        // カード全体のクリック時にもクイック複製追加される快適仕様
+        card.onclick = () => window.quickAddMealFromHistory(h.name);
+
+        card.innerHTML = `
+          <div class="space-y-1">
+            <span class="text-xs font-black text-brand-text block truncate group-hover:text-brand-primary transition-colors">${h.name}</span>
+            <span class="font-sans font-black text-xs text-brand-primary block">${Math.round(h.kcal)} <span class="text-[8px] text-brand-muted font-bold">kcal</span></span>
+            
+            <div class="grid grid-cols-3 gap-0.5 text-center text-[8px] font-bold text-brand-muted pt-1">
+              <div class="bg-white/80 rounded border border-brand-border/30 py-0.5">P:${Math.round(h.p)}</div>
+              <div class="bg-white/80 rounded border border-brand-border/30 py-0.5">F:${Math.round(h.f)}</div>
+              <div class="bg-white/80 rounded border border-brand-border/30 py-0.5">C:${Math.round(h.c)}</div>
+            </div>
+          </div>
+          <button type="button" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-bold text-[9px] py-1.5 rounded-xl transition-all flex items-center justify-center gap-1 shadow-sm mt-2.5 shrink-0">
+            <i data-lucide="plus" class="w-2.5 h-2.5"></i> 今日に登録
+          </button>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    // ★ 解決：履歴からワンタップで今日の食事ログに完全複製追加するアクション ★
+    window.quickAddMealFromHistory = async function(mealName) {
+      const history = getMealsHistory();
+      const mealData = history.find(h => h.name === mealName);
+      if (!mealData) return;
+
+      const now = new Date();
+      const targetMealId = 'M-' + Date.now() + Math.floor(Math.random() * 100);
+
+      // 食材配列（ingredients）を含む完全なデータを現在の記録時間で複製
+      const newMeal = {
+        id: targetMealId,
+        name: mealData.name,
+        time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
+        kcal: mealData.kcal,
+        p: mealData.p,
+        f: mealData.f,
+        c: mealData.c,
+        ingredients: mealData.ingredients || []
+      };
+
+      try {
+        await saveMealToCloud(newMeal);
+        showToast(`「${mealName}」を過去の履歴から今日に追加登録しました！`);
+      } catch (err) {
+        console.error(err);
+        alert("履歴からの追加に失敗しました。");
+      }
+    };
+
     function renderClientApp() {
       if (!currentClientId) return;
 
@@ -1226,6 +1339,9 @@
       document.getElementById('input-weight').placeholder = clientState.weight ? clientState.weight.toFixed(1) : "55.0";
       document.getElementById('input-fat').placeholder = clientState.fatRate ? clientState.fatRate.toFixed(1) : "15.0";
 
+      // 🕒 履歴スライダーの再描画
+      renderMealsHistory();
+
       const timelineContainer = document.getElementById('meal-timeline-container');
       timelineContainer.innerHTML = "";
       if (meals.length === 0) {
@@ -1269,7 +1385,7 @@
               </div>
               
               <button onclick="event.stopPropagation(); event.preventDefault(); window.deleteMeal('${m.id}')" class="text-brand-muted hover:text-rose-500 p-2 hover:bg-rose-50 rounded-xl transition-all">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                <i data-lucide="trash-2" class="w-4.5 h-4.5"></i>
               </button>
             </div>
           `;
@@ -1480,7 +1596,7 @@
         throw new Error("API_KEY_MISSING");
       }
 
-      // ★ 解決：プレビュー環境と製品環境のモデル制限404バグを永久絶滅させる、製品版モデルへのフォールバック機構
+      // プレビュー環境と製品環境のモデル制限404バグを永久絶滅させる、製品版モデルへのフォールバック機構
       const models = [
         "gemini-2.5-flash",
         "gemini-1.5-flash",
@@ -1538,7 +1654,6 @@
 
         let rawIngredients = parsed.ingredients || parsed.ingredientsList || parsed.components || parsed.items || [];
         
-        // サラダチキンやごはんのような単一おやつの際、ingredients配列が空または未定義だった場合、自動で自己補完を合成
         if (!Array.isArray(rawIngredients) || rawIngredients.length === 0) {
           rawIngredients = [{
             name: normalized.name,
@@ -1551,7 +1666,7 @@
         }
 
         normalized.ingredients = rawIngredients.map(ing => ({
-          name: ing.name || ing.material || ing.ingredient || "食材",
+          name: ing.name || ing.material || ing.ingredient || "追加食材",
           weight: safeFloat(ing.weight || ing.amount || ing.quantity || 100),
           kcal: safeFloat(ing.kcal || ing.calories || ing.energy),
           p: safeFloat(ing.p || ing.protein),
@@ -1822,9 +1937,8 @@
         const row = document.createElement('div');
         row.className = "bg-white rounded-2xl p-4 border border-brand-border/60 flex flex-col gap-2.5 text-xs text-brand-text mb-1 shrink-0 shadow-sm relative";
         
-        // ★ 解決：AI自動推定ボタンがスマホ右側にはみ出ないよう、食材名インプットをflex-1 min-w-0にし、その真真横（隣）にピタッと合体！
         row.innerHTML = `
-          <!-- 上段: 食材名（追加食材に変更）、AI自動推定ボタン、削除ボタン -->
+          <!-- 上段: 食材名、AI自動推定ボタン、削除ボタン -->
           <div class="flex items-center gap-2.5 w-full">
             <input type="text" value="${ing.name}" class="bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-black flex-1 min-w-0 focus:outline-none focus:border-brand-primary transition-colors" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
             
@@ -1877,7 +1991,6 @@
       const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
       const currentScale = currentSliderValue / 100;
 
-      // ★ 解決：オリーブオイル追加時のバグを完全に予防するため、初期名前は指示通り「追加食材」へ変更！
       const newIng = {
         name: "追加食材",
         weight: 100 * currentScale,
@@ -1962,7 +2075,7 @@
       recalculateTotalsInEditor();
     };
 
-    // ★ 個別追加した食材名と重量(g)から、100%正確なPFC・カロリーをAIが裏側で自動計算して自動記入するAPI機能
+    // 個別追加した食材名と重量(g)から、100%正確なPFC・カロリーをAIが裏側で自動計算して自動記入するAPI機能
     window.estimateIngredientPFC = async function(index) {
       const ing = editingMealObject.ingredients[index];
       if (!ing) return;
@@ -2284,7 +2397,7 @@
 {
   "menus": [
     {
-      "timing": "breakfast / lunch / dinner / snack (選択された食事キーのいずれか)",
+      "timing": "breakfast / lunch / dinner / snack (選択された食事キー of the timing Selected)",
       "name": "【店名や調達先】具体的なメニュー名・レシピ名(例: 【大戸屋】ばくだん丼（ご飯少なめ）)",
       "kcal": カロリー(数値),
       "p": たんぱく質g(数値),
