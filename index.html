@@ -14,21 +14,21 @@
         extend: {
           colors: {
             brand: {
-              bg: '#F5F7FA',
+              bg: '#F8FAFC',
               card: '#FFFFFF',
               primary: '#0052CC',
               primaryHover: '#0043a4',
               secondary: '#4A90E2',
-              accent: '#E6F0FA',
-              accentGreen: '#E6F4EA',
-              text: '#1E293B',
+              accent: '#F1F5F9',
+              accentGreen: '#E2F0D9',
+              text: '#0F172A',
               muted: '#64748B',
               border: '#E2E8F0'
             }
           },
           boxShadow: {
-            premium: '0 10px 30px -5px rgba(0, 82, 204, 0.08), 0 4px 12px -2px rgba(0, 82, 204, 0.03)',
-            cardShadow: '0 4px 20px -2px rgba(100, 116, 139, 0.06)'
+            premium: '0 20px 40px -15px rgba(0, 82, 204, 0.07), 0 8px 20px -6px rgba(0, 82, 204, 0.03)',
+            cardShadow: '0 10px 30px -5px rgba(148, 163, 184, 0.12)'
           }
         }
       }
@@ -40,7 +40,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
     body {
       font-family: 'Noto Sans JP', sans-serif;
-      background: linear-gradient(135deg, #F5F7FA 0%, #E6EEF8 100%);
+      background: linear-gradient(135deg, #F8FAFC 0%, #E2EAF4 100%);
     }
     .font-logo {
       font-family: 'Montserrat', sans-serif;
@@ -53,7 +53,7 @@
       scrollbar-width: none;
     }
     .slide-up {
-      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     @keyframes slideUp {
       from { transform: translateY(100%); }
@@ -63,10 +63,10 @@
 </head>
 <body class="text-brand-text min-h-screen pb-24 antialiased">
 
-  <!-- ヘッダー -->
-  <header class="bg-brand-card/90 backdrop-blur-md border-b border-brand-border/80 sticky top-0 z-50 shadow-sm px-4 py-3.5 flex justify-between items-center transition-all">
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-primary to-brand-secondary flex items-center justify-center shadow-md">
+  <!-- 高級フラットヘッダー -->
+  <header class="bg-brand-card/95 backdrop-blur-md border-b border-brand-border/60 sticky top-0 z-50 shadow-sm px-5 py-4 flex justify-between items-center transition-all">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8.5 h-8.5 rounded-xl bg-gradient-to-tr from-brand-primary to-brand-secondary flex items-center justify-center shadow-md">
         <span class="font-logo font-black text-white text-base">C</span>
       </div>
       <div>
@@ -74,7 +74,7 @@
         <span class="text-[8px] font-bold text-brand-muted tracking-widest block mt-0.5 uppercase">Premium Health Management</span>
       </div>
     </div>
-    <div id="connection-status" class="text-[9px] px-3 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
+    <div id="connection-status" class="text-[9px] px-3 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
       <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
       未連携
     </div>
@@ -94,18 +94,18 @@
         <div class="absolute top-0 right-0 w-24 h-24 bg-brand-accent/30 rounded-full blur-2xl -mr-6 -mt-6"></div>
         
         <div class="flex items-center gap-2 relative z-10">
-          <div class="w-8 h-8 rounded-xl bg-brand-accent flex items-center justify-center text-brand-primary">
+          <div class="w-8 h-8 rounded-xl bg-brand-accent flex items-center justify-center text-brand-primary shadow-sm">
             <i data-lucide="key-round" class="w-4.5 h-4.5"></i>
           </div>
           <h2 class="text-sm font-black text-brand-text">クライアントIDを連携</h2>
         </div>
 
-        <p class="text-xs text-brand-muted leading-relaxed relative z-10">
+        <p class="text-xs text-brand-muted leading-relaxed relative z-10 font-medium">
           担当トレーナーから発行された、あなた専用の「CRT-XXXXXX」を入力してください。一瞬で目標のPFC設定と、リアルタイムのカルテ共有が完了します。
         </p>
 
         <div class="space-y-3 relative z-10">
-          <input type="text" id="client-id-input" class="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3.5 text-center font-mono font-black text-sm text-brand-text uppercase focus:outline-none focus:ring-2 focus:ring-brand-primary transition-all shadow-inner" placeholder="CRT-XXXXXX">
+          <input type="text" id="client-id-input" class="w-full bg-brand-bg border border-brand-border rounded-2xl px-4 py-3.5 text-center font-mono font-black text-sm text-brand-text uppercase focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition-all shadow-inner" placeholder="CRT-XXXXXX">
           
           <button onclick="window.connectWithClientId()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-4 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-2">
             <i data-lucide="shield-check" class="w-4 h-4"></i>
@@ -131,18 +131,18 @@
             <span id="active-id-text" class="font-mono text-xs font-black text-brand-primary">CRT-XXXXXX</span>
           </div>
         </div>
-        <button onclick="window.disconnectClientId()" class="text-[9px] text-rose-500 font-extrabold hover:bg-rose-50 px-2.5 py-1.5 rounded-xl transition border border-rose-100">
+        <button onclick="window.disconnectClientId()" class="text-[9px] text-rose-500 font-extrabold hover:bg-rose-50 px-3 py-2 rounded-xl transition border border-rose-100">
           連携解除
         </button>
       </div>
 
       <!-- プレミアム2タブバー -->
       <div class="grid grid-cols-2 gap-2 p-1 bg-brand-border/50 rounded-2xl border border-brand-border shadow-inner">
-        <button id="tab-btn-home" onclick="window.switchTab('home')" class="py-2.5 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 bg-brand-primary text-white shadow-md">
+        <button id="tab-btn-home" onclick="window.switchTab('home')" class="py-3 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 bg-brand-primary text-white shadow-md">
           <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
           今日の記録
         </button>
-        <button id="tab-btn-ai-menu" onclick="window.switchTab('ai-menu')" class="py-2.5 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 text-brand-muted hover:text-brand-primary">
+        <button id="tab-btn-ai-menu" onclick="window.switchTab('ai-menu')" class="py-3 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 text-brand-muted hover:text-brand-primary">
           <i data-lucide="wand-2" class="w-4 h-4"></i>
           逆算献立AI提案
         </button>
@@ -152,9 +152,9 @@
       <div id="tab-content-home" class="space-y-4 transition-all">
         
         <!-- カレンダー & クイック曜日切り替え -->
-        <div class="bg-brand-card border border-brand-border/60 p-3 rounded-3xl shadow-cardShadow text-left space-y-2">
+        <div class="bg-brand-card border border-brand-border/60 p-3.5 rounded-3xl shadow-cardShadow text-left space-y-2">
           <div class="flex justify-between items-center px-1">
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-1.5">
               <i data-lucide="calendar" class="w-4 h-4 text-brand-primary"></i>
               <span id="display-date-text" class="font-mono font-black text-sm tracking-wider text-brand-text">2026-07-10</span>
             </div>
@@ -171,7 +171,7 @@
         <div class="bg-brand-card rounded-[32px] p-6 border border-brand-border/60 shadow-premium text-left space-y-4 relative overflow-hidden">
           <div class="absolute bottom-0 right-0 w-32 h-32 bg-brand-accent/20 rounded-full blur-3xl -mb-10 -mr-10"></div>
           
-          <div class="flex justify-between items-center border-b border-brand-border/50 pb-3 relative z-10">
+          <div class="flex justify-between items-center border-b border-brand-border/50 pb-3.5 relative z-10">
             <div>
               <h3 class="text-xs font-extrabold text-brand-text flex items-center gap-1.5">
                 <i data-lucide="activity" class="w-4.5 h-4.5 text-brand-primary"></i>
@@ -213,7 +213,7 @@
             </div>
             <div class="flex gap-2">
               <button onclick="window.toggleTargetEditPanel()" class="flex-1 bg-brand-border hover:bg-brand-border/80 text-brand-muted py-2 rounded-xl text-[10px] font-bold">キャンセル</button>
-              <button onclick="window.saveHandmadeTargets()" class="flex-2 bg-brand-primary hover:bg-brand-primaryHover text-white py-2 px-4 rounded-xl text-[10px] font-bold shadow">適用して保存</button>
+              <button onclick="window.saveHandmadeTargets()" class="flex-2 bg-brand-primary hover:bg-brand-primaryHover text-white py-2 px-4 rounded-xl text-[10px] font-bold shadow animate-pulse">適用して保存</button>
             </div>
           </div>
 
@@ -230,8 +230,8 @@
                 </defs>
               </svg>
               <div class="absolute text-center">
-                <span id="summary-cur-cal" class="text-xl font-black tracking-tighter text-brand-text block">0</span>
-                <span class="text-[8px] text-brand-muted block uppercase tracking-wider">/ <span id="summary-tar-cal">1800</span> kcal</span>
+                <span id="summary-cur-cal" class="text-xl font-black tracking-tighter text-brand-text block font-mono">0</span>
+                <span class="text-[8px] text-brand-muted block uppercase tracking-wider font-bold">/ <span id="summary-tar-cal">1800</span> kcal</span>
               </div>
             </div>
             
@@ -240,39 +240,39 @@
               <div class="space-y-0.5">
                 <div class="flex justify-between items-baseline">
                   <span class="text-sky-600 text-[11px] font-black flex items-center gap-1">
-                    <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+                    <span class="w-2 h-2 rounded-full bg-sky-500"></span>
                     P たんぱく質
                   </span>
-                  <span class="font-sans text-sm"><span id="summary-cur-p" class="font-black text-base text-sky-700">0</span> / <span id="summary-tar-p" class="text-brand-text font-black text-base">120</span>g</span>
+                  <span class="font-sans text-xs text-brand-muted font-bold"><span id="summary-cur-p" class="font-black text-sm text-sky-700">0</span> / <span id="summary-tar-p" class="text-brand-text font-black text-xs">120</span>g</span>
                 </div>
-                <div class="w-full h-2.5 bg-sky-50 rounded-full overflow-hidden border border-sky-100">
-                  <div id="bar-p" class="h-full bg-gradient-to-r from-sky-400 to-sky-500 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                <div class="w-full h-2.5 bg-sky-50 rounded-full overflow-hidden border border-sky-100 shadow-inner">
+                  <div id="bar-p" class="h-full bg-gradient-to-r from-sky-400 to-sky-500 rounded-full transition-all duration-700 ease-out shadow-sm" style="width: 0%"></div>
                 </div>
               </div>
 
               <div class="space-y-0.5">
                 <div class="flex justify-between items-baseline">
                   <span class="text-emerald-600 text-[11px] font-black flex items-center gap-1">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                     F 脂質
                   </span>
-                  <span class="font-sans text-sm"><span id="summary-cur-f" class="font-black text-base text-emerald-700">0</span> / <span id="summary-tar-f" class="text-brand-text font-black text-base">45</span>g</span>
+                  <span class="font-sans text-xs text-brand-muted font-bold"><span id="summary-cur-f" class="font-black text-sm text-emerald-700">0</span> / <span id="summary-tar-f" class="text-brand-text font-black text-xs">45</span>g</span>
                 </div>
-                <div class="w-full h-2.5 bg-emerald-50 rounded-full overflow-hidden border border-emerald-100">
-                  <div id="bar-f" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                <div class="w-full h-2.5 bg-emerald-50 rounded-full overflow-hidden border border-emerald-100 shadow-inner">
+                  <div id="bar-f" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all duration-700 ease-out shadow-sm" style="width: 0%"></div>
                 </div>
               </div>
 
               <div class="space-y-0.5">
                 <div class="flex justify-between items-baseline">
                   <span class="text-amber-600 text-[11px] font-black flex items-center gap-1">
-                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
                     C 炭水化物
                   </span>
-                  <span class="font-sans text-sm"><span id="summary-cur-c" class="font-black text-base text-amber-700">0</span> / <span id="summary-tar-c" class="text-brand-text font-black text-base">230</span>g</span>
+                  <span class="font-sans text-xs text-brand-muted font-bold"><span id="summary-cur-c" class="font-black text-sm text-amber-700">0</span> / <span id="summary-tar-c" class="text-brand-text font-black text-xs">230</span>g</span>
                 </div>
-                <div class="w-full h-2.5 bg-amber-50 rounded-full overflow-hidden border border-amber-100">
-                  <div id="bar-c" class="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                <div class="w-full h-2.5 bg-amber-50 rounded-full overflow-hidden border border-amber-100 shadow-inner">
+                  <div id="bar-c" class="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-700 ease-out shadow-sm" style="width: 0%"></div>
                 </div>
               </div>
             </div>
@@ -284,18 +284,18 @@
           <div class="absolute top-0 left-0 w-2 h-full bg-emerald-500" id="recovery-bar-color"></div>
           <div class="pl-2">
             <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-              <i data-lucide="sparkles" class="w-4.5 h-4.5 text-emerald-600"></i>
+              <i data-lucide="sparkles" class="w-4 h-4 text-emerald-600 animate-pulse"></i>
               カロリーオートリカバリー貯金箱
             </h4>
-            <p class="text-[9px] text-brand-muted mt-0.5" id="recovery-sub-info">昨日食べすぎたエネルギーを、自動で今日の目標から引いて相殺しています。</p>
+            <p class="text-[10px] text-brand-muted mt-0.5" id="recovery-sub-info">昨日食べすぎたエネルギーを、自動で今日の目標から引いて相殺しています。</p>
             
-            <div class="grid grid-cols-2 gap-2 pt-2">
+            <div class="grid grid-cols-2 gap-3 pt-2">
               <div class="bg-brand-bg rounded-2xl p-3 border border-brand-border/50 text-center">
-                <span class="text-[8px] text-brand-muted font-bold block mb-0.5">昨日の超過カロリー</span>
+                <span class="text-[8px] text-brand-muted font-bold block mb-0.5 uppercase tracking-wider">昨日の超過カロリー</span>
                 <span id="yesterday-over-kcal" class="font-sans font-black text-sm block text-rose-500">0 kcal</span>
               </div>
               <div class="bg-emerald-50/50 rounded-2xl p-3 border border-emerald-100 text-center">
-                <span class="text-[8px] text-emerald-700 font-bold block mb-0.5">今日の自動調整リセット</span>
+                <span class="text-[8px] text-emerald-700 font-bold block mb-0.5 uppercase tracking-wider">今日の自動調整リセット</span>
                 <span id="today-adjusted-kcal" class="font-sans font-black text-sm block text-emerald-600">-0 kcal</span>
               </div>
             </div>
@@ -307,26 +307,26 @@
           <div class="absolute top-0 left-0 w-2 h-full bg-brand-primary" id="balance-bar-color"></div>
           <div class="pl-2">
             <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-              <i data-lucide="scale" class="w-4.5 h-4.5 text-brand-primary"></i>
+              <i data-lucide="scale" class="w-4 h-4 text-brand-primary"></i>
               直近1週間の帳じり合わせ状況
             </h4>
-            <p class="text-[9px] text-brand-muted mt-0.5">選択日を含む過去7日間の目標総計に対する過不足（おトク枠）を判定します。</p>
+            <p class="text-[10px] text-brand-muted mt-0.5">選択日を含む過去7日間の目標総計に対する過不足（おトク枠）を判定します。</p>
             
             <div class="grid grid-cols-4 gap-2 pt-3 text-center">
-              <div class="bg-brand-bg p-2 rounded-2xl border border-brand-border/50">
-                <span class="text-[8px] text-brand-text font-bold block mb-0.5">カロリー</span>
+              <div class="bg-brand-bg p-2 rounded-2xl border border-brand-border/50 shadow-inner">
+                <span class="text-[8px] text-brand-text font-bold block mb-0.5 uppercase">カロリー</span>
                 <span id="balance-kcal" class="font-sans font-black text-xs block">0</span>
               </div>
-              <div class="bg-brand-bg p-2 rounded-2xl border border-brand-border/50">
-                <span class="text-[8px] text-sky-600 font-bold block mb-0.5">P (g)</span>
+              <div class="bg-brand-bg p-2 rounded-2xl border border-brand-border/50 shadow-inner">
+                <span class="text-[8px] text-sky-600 font-bold block mb-0.5 uppercase">P (g)</span>
                 <span id="balance-p" class="font-sans font-black text-xs block">0</span>
               </div>
-              <div class="bg-brand-bg p-2 rounded-2xl border border-brand-border/50">
-                <span class="text-[8px] text-emerald-600 font-bold block mb-0.5">F (g)</span>
+              <div class="bg-brand-bg p-2 rounded-2xl border border-brand-border/50 shadow-inner">
+                <span class="text-[8px] text-emerald-600 font-bold block mb-0.5 uppercase">F (g)</span>
                 <span id="balance-f" class="font-sans font-black text-xs block">0</span>
               </div>
-              <div class="bg-brand-bg p-2 rounded-2xl border border-brand-border/50">
-                <span class="text-[8px] text-amber-600 font-bold block mb-0.5">C (g)</span>
+              <div class="bg-brand-bg p-2 rounded-2xl border border-brand-border/50 shadow-inner">
+                <span class="text-[8px] text-amber-600 font-bold block mb-0.5 uppercase">C (g)</span>
                 <span id="balance-c" class="font-sans font-black text-xs block">0</span>
               </div>
             </div>
@@ -335,12 +335,12 @@
 
         <!-- AI食事スキャン -->
         <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-4">
-          <div class="border-b border-brand-border/50 pb-2 flex justify-between items-center">
+          <div class="border-b border-brand-border/50 pb-2.5 flex justify-between items-center">
             <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-              <i data-lucide="sparkles" class="w-4.5 h-4.5 text-brand-primary"></i>
+              <i data-lucide="sparkles" class="w-4.5 h-4.5 text-brand-primary animate-pulse"></i>
               AI食事解析スキャナー
             </h3>
-            <span class="text-[8px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg font-bold animate-pulse">即時記録</span>
+            <span class="text-[8px] text-brand-primary bg-brand-accent px-2.5 py-0.5 rounded-lg font-bold animate-pulse">即時記録</span>
           </div>
           
           <div class="grid grid-cols-2 gap-3">
@@ -363,14 +363,14 @@
             </button>
           </div>
 
-          <button onclick="window.openManualInputModal()" class="w-full py-3 text-xs text-brand-primary font-bold hover:bg-brand-accent transition-colors border border-dashed border-brand-primary/30 rounded-2xl flex items-center justify-center gap-1.5">
+          <button onclick="window.openManualInputModal()" class="w-full py-3.5 text-xs text-brand-primary font-bold hover:bg-brand-accent transition-colors border border-dashed border-brand-primary/30 rounded-2xl flex items-center justify-center gap-1.5 shadow-sm">
             <i data-lucide="edit-3" class="w-4 h-4"></i>
             数値を手動で直接入力して追加する
           </button>
         </div>
 
         <!-- 本日の食事ログ一覧 -->
-        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-cardShadow text-left space-y-3">
+        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-cardShadow text-left space-y-3.5">
           <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
             <i data-lucide="utensils-crossaxes" class="w-4.5 h-4.5 text-brand-primary"></i>
             本日の食事ログ一覧
@@ -396,7 +396,7 @@
               <input type="number" step="0.1" id="input-fat" class="w-full bg-transparent border-none font-sans font-black text-sm text-brand-text focus:outline-none p-0 text-center" placeholder="15.0">
             </div>
           </div>
-          <button onclick="window.saveBodyData()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-2xl text-xs font-bold transition shadow-md">
+          <button onclick="window.saveBodyData()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3.5 rounded-2xl text-xs font-bold transition shadow-md">
             体重・体脂肪率データを保存する
           </button>
         </div>
@@ -422,15 +422,15 @@
       <div id="tab-content-ai-menu" class="hidden space-y-4 transition-all slide-up">
         
         <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-4">
-          <div class="border-b border-brand-border/50 pb-2 flex justify-between items-center">
+          <div class="border-b border-brand-border/50 pb-2.5 flex justify-between items-center">
             <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-              <i data-lucide="wand-2" class="w-4.5 h-4.5 text-brand-primary"></i>
+              <i data-lucide="wand-2" class="w-4.5 h-4.5 text-brand-primary animate-pulse"></i>
               残りの目標から逆算：献立提案AI
             </h3>
-            <span class="text-[8px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg font-bold">複数食等分逆算</span>
+            <span class="text-[8px] text-brand-primary bg-brand-accent px-2.5 py-0.5 rounded-lg font-bold">複数食等分逆算</span>
           </div>
           
-          <p class="text-[10px] text-brand-muted leading-relaxed">
+          <p class="text-[10px] text-brand-muted leading-relaxed font-medium">
             今日の目標残りの栄養にピタッと合わせ、g数まで計算して献立を立てます。
             カテゴリーと、食べたい時間帯<b>（朝・昼・夜・おやつから複数選択可能）</b>を選択してください。
             選択されたお食事で残りの栄養が「均等」になるように、AIが同時に何件でも組み立てます。
@@ -478,7 +478,7 @@
           </div>
 
           <button onclick="window.generateAIPendingMenu()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3.5 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-1.5">
-            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <i data-lucide="sparkles" class="w-4 h-4 animate-spin"></i>
             選択した設定で一括AI逆算提案をスタート
           </button>
 
@@ -596,13 +596,13 @@
     </div>
   </div>
 
-  <!-- ★ 微調整・編集モーダル ★ -->
+  <!-- ★ 微調整・編集モーダル（画面崩れなし・AI自動推定横マウント設計） ★ -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-6 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
+    <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-5 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
       
       <div class="flex justify-between items-center border-b border-brand-border/50 pb-3">
         <div>
-          <h4 class="text-xs font-black text-brand-text flex items-center gap-1">
+          <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
             <i data-lucide="sliders" class="w-4.5 h-4.5 text-brand-primary"></i>
             食事・食材の極微細調整
           </h4>
@@ -623,7 +623,7 @@
       <div class="bg-brand-primary/5 border border-brand-primary/10 rounded-2xl p-3 text-[10px] text-brand-primary font-bold flex items-center gap-2">
         <i data-lucide="info" class="w-4.5 h-4.5 text-brand-primary shrink-0"></i>
         <div class="flex-1">
-          <span class="block text-[8px] text-brand-muted uppercase tracking-wider">💡 栄養密度換算（100gあたり）</span>
+          <span class="block text-[8px] text-brand-muted uppercase tracking-wider font-bold">💡 栄養密度換算（100gあたり）</span>
           <span id="edit-meal-100g-density-info" class="font-sans text-brand-text font-black block mt-0.5">計算中...</span>
         </div>
       </div>
@@ -670,7 +670,7 @@
 
         <!-- アコーディオン展開エリア -->
         <div id="ingredients-collapse-area" class="hidden space-y-3 bg-brand-bg/30 p-3 rounded-3xl border border-brand-border/40 slide-up">
-          <div id="ingredients-editor-container" class="space-y-2 max-h-[220px] overflow-y-auto pr-1 no-scrollbar flex flex-col gap-2">
+          <div id="ingredients-editor-container" class="space-y-3 max-h-[260px] overflow-y-auto pr-1 no-scrollbar flex flex-col gap-3">
             <!-- 食材行がJSで並びます -->
           </div>
           
@@ -980,6 +980,7 @@
     };
 
     function renderWeeklyCalendarGrid() {
+      // ★ 追加：初期起動の未連携DOM崩れを完全に予防する防衛バリア
       if (!currentClientId) return;
 
       const container = document.getElementById('weekly-calendar-grid');
@@ -1237,7 +1238,7 @@
       } else {
         meals.forEach((m) => {
           const item = document.createElement('div');
-          item.className = "bg-brand-card hover:bg-brand-accent/40 p-4 rounded-2xl border border-brand-border flex justify-between items-center text-xs transition-all duration-200 cursor-pointer shadow-sm relative overflow-hidden group";
+          item.className = "bg-brand-card hover:bg-brand-accent/40 p-4.5 rounded-2xl border border-brand-border flex justify-between items-center text-xs transition-all duration-200 cursor-pointer shadow-cardShadow relative overflow-hidden group";
           
           item.onclick = (e) => {
             if (e.target.closest('button')) return;
@@ -1252,10 +1253,10 @@
           item.innerHTML = `
             <div>
               <div class="flex items-center gap-2">
-                <span class="bg-brand-primary text-white font-mono font-black text-[8px] px-2 py-0.5 rounded-lg">${m.time || '--:--'}</span>
+                <span class="bg-brand-primary text-white font-mono font-black text-[8px] px-2.5 py-0.5 rounded-lg">${m.time || '--:--'}</span>
                 <span class="font-bold text-brand-text text-sm group-hover:text-brand-primary transition-colors">${m.name}</span>
               </div>
-              <div class="text-[9px] text-brand-muted mt-1.5 font-bold flex gap-3">
+              <div class="text-[9px] text-brand-muted mt-2 font-bold flex gap-3">
                 <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> P: ${pVal.toFixed(1)}g</span>
                 <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> F: ${fVal.toFixed(1)}g</span>
                 <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> C: ${cVal.toFixed(1)}g</span>
@@ -1264,7 +1265,7 @@
             <div class="text-right flex items-center gap-4 relative z-10">
               <div>
                 <span class="font-black text-base text-brand-text font-mono">${kcalVal}</span>
-                <span class="text-[9px] text-brand-muted font-bold">kcal</span>
+                <span class="text-[9px] text-brand-muted font-bold block mt-0.5">kcal</span>
               </div>
               
               <button onclick="event.stopPropagation(); event.preventDefault(); window.deleteMeal('${m.id}')" class="text-brand-muted hover:text-rose-500 p-2 hover:bg-rose-50 rounded-xl transition-all">
@@ -1468,6 +1469,7 @@
     // =======================================================
 
     async function fetchGeminiForClient(payload) {
+      // 1. ローカルメモリ、2. LocalStorage の優先順位で最速取得
       let key = clientState.sharedGeminiKey || localStorage.getItem(`carat_shared_gemini_key_${appId}`) || "";
       if (!key) {
         const trainerKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
@@ -1478,6 +1480,7 @@
         throw new Error("API_KEY_MISSING");
       }
 
+      // ★ 解決：プレビュー環境と製品環境のモデル制限404バグを永久絶滅させる、製品版モデルへのフォールバック機構
       const models = [
         "gemini-2.5-flash",
         "gemini-1.5-flash",
@@ -1514,6 +1517,8 @@
     function parseGeminiJSON(text) {
       try {
         const cleaned = text.trim();
+        
+        // どれほど前後に日本語のおしゃべりやマークダウン記号が含まれていても、最外周のブラケットだけを引きずり出す
         const start = cleaned.indexOf('{');
         const end = cleaned.lastIndexOf('}');
         if (start === -1 || end === -1) {
@@ -1533,6 +1538,7 @@
 
         let rawIngredients = parsed.ingredients || parsed.ingredientsList || parsed.components || parsed.items || [];
         
+        // サラダチキンやごはんのような単一おやつの際、ingredients配列が空または未定義だった場合、自動で自己補完を合成
         if (!Array.isArray(rawIngredients) || rawIngredients.length === 0) {
           rawIngredients = [{
             name: normalized.name,
@@ -1814,19 +1820,20 @@
 
       editingMealObject.ingredients.forEach((ing, i) => {
         const row = document.createElement('div');
-        row.className = "bg-white rounded-2xl p-4 border border-brand-border flex flex-col gap-2.5 text-xs text-brand-text mb-1 shrink-0 shadow-sm relative";
+        row.className = "bg-white rounded-2xl p-4 border border-brand-border/60 flex flex-col gap-2.5 text-xs text-brand-text mb-1 shrink-0 shadow-sm relative";
+        
+        // ★ 解決：AI自動推定ボタンがスマホ右側にはみ出ないよう、食材名インプットをflex-1 min-w-0にし、その真真横（隣）にピタッと合体！
         row.innerHTML = `
-          <!-- 上段: 食材名、AI自動推定ボタン、削除ボタン -->
-          <div class="flex items-center gap-2">
-            <input type="text" value="${ing.name}" class="bg-brand-bg border border-brand-border rounded-xl px-2.5 py-1.5 text-xs font-bold flex-1 focus:outline-none focus:border-brand-primary" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
+          <!-- 上段: 食材名（追加食材に変更）、AI自動推定ボタン、削除ボタン -->
+          <div class="flex items-center gap-2.5 w-full">
+            <input type="text" value="${ing.name}" class="bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-black flex-1 min-w-0 focus:outline-none focus:border-brand-primary transition-colors" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
             
-            <!-- ★ 新設: 個別食材・AI栄養素自動スキャンボタン（g数を変えて1タップするだけでAIが正確なPFCを予測書き戻し！） -->
-            <button type="button" onclick="window.estimateIngredientPFC(${i})" class="bg-brand-accent hover:bg-brand-primary hover:text-white text-brand-primary text-[9px] font-black px-2.5 py-1.5 rounded-xl transition flex items-center gap-1 border border-brand-primary/10 shrink-0">
-              <i data-lucide="sparkles" class="w-3 h-3"></i> AI自動推定
+            <button type="button" onclick="window.estimateIngredientPFC(${i})" class="bg-brand-primary hover:bg-brand-primaryHover text-white text-[10px] font-bold px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-1 shrink-0 shadow-sm">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> AI推定
             </button>
 
             <button onclick="window.removeIngredientRow(${i})" class="text-brand-muted hover:text-rose-500 p-1 rounded-lg transition shrink-0">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
+              <i data-lucide="trash-2" class="w-4.5 h-4.5"></i>
             </button>
           </div>
           <!-- 下段: 重量、およびPFC・カロリーの手動微調整フィールド -->
@@ -1862,7 +1869,7 @@
 
     window.updateIngredientName = function(index, value) {
       if (editingMealObject && editingMealObject.ingredients[index]) {
-        editingMealObject.ingredients[index].name = value.trim() || "食材";
+        editingMealObject.ingredients[index].name = value.trim() || "追加食材";
       }
     };
 
@@ -1870,15 +1877,15 @@
       const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
       const currentScale = currentSliderValue / 100;
 
-      // ★ 解決：オリーブオイル追加時のバグを完全に予防するため、初期PFC/カロリーはダミーを使わず、空に近い0ベースで綺麗にセット
+      // ★ 解決：オリーブオイル追加時のバグを完全に予防するため、初期名前は指示通り「追加食材」へ変更！
       const newIng = {
-        name: "オリーブオイル",
-        weight: 10 * currentScale,
+        name: "追加食材",
+        weight: 100 * currentScale,
         kcal: 0,
         p: 0,
         f: 0,
         c: 0,
-        originalWeight: 10,
+        originalWeight: 100,
         originalKcal: 0,
         originalP: 0,
         originalF: 0,
@@ -1955,7 +1962,7 @@
       recalculateTotalsInEditor();
     };
 
-    // ★ 新設: 個別追加した食材名と重量(g)から、100%正確なPFC・カロリーをAIが裏側で自動計算して自動記入するAPI機能
+    // ★ 個別追加した食材名と重量(g)から、100%正確なPFC・カロリーをAIが裏側で自動計算して自動記入するAPI機能
     window.estimateIngredientPFC = async function(index) {
       const ing = editingMealObject.ingredients[index];
       if (!ing) return;
@@ -1963,13 +1970,13 @@
       const ingName = ing.name.trim();
       const ingWeight = safeFloat(ing.weight) || 100;
 
-      if (!ingName) {
-        alert("食材名を入力してから自動推定ボタンを押してください。");
+      if (!ingName || ingName === "追加食材") {
+        alert("食材名に入力してから自動推定ボタンを押してください。\n例: 「オリーブオイル」「ごはん」など");
         return;
       }
 
       const toast = document.createElement('div');
-      toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[300] flex items-center gap-2 animate-bounce";
+      toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-5 py-3 rounded-full text-xs font-bold shadow-md z-[300] flex items-center gap-2 animate-bounce";
       toast.innerHTML = `<i data-lucide="brain-circuit" class="w-4 h-4 animate-spin"></i> AIが「${ingName} ${ingWeight}g」の栄養を正確に調査中...`;
       document.body.appendChild(toast);
       lucide.createIcons();
@@ -2127,15 +2134,15 @@
       const aiMenuContent = document.getElementById('tab-content-ai-menu');
 
       if (tabName === 'home') {
-        homeBtn.className = "py-2.5 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 bg-brand-primary text-white shadow-md";
-        aiMenuBtn.className = "py-2.5 text-xs font-black rounded-xl transition-all text-brand-muted hover:text-brand-primary";
+        homeBtn.className = "py-3 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 bg-brand-primary text-white shadow-md";
+        aiMenuBtn.className = "py-3 text-xs font-black rounded-xl transition-all text-brand-muted hover:text-brand-primary";
         
         homeContent.classList.remove('hidden');
         aiMenuContent.classList.add('hidden');
         renderClientApp();
       } else {
-        homeBtn.className = "py-2.5 text-xs font-black rounded-xl transition-all text-brand-muted hover:text-brand-primary";
-        aiMenuBtn.className = "py-2.5 text-xs font-black rounded-xl transition-all bg-brand-primary text-white shadow-md";
+        homeBtn.className = "py-3 text-xs font-black rounded-xl transition-all text-brand-muted hover:text-brand-primary";
+        aiMenuBtn.className = "py-3 text-xs font-black rounded-xl transition-all bg-brand-primary text-white shadow-md";
         
         homeContent.classList.add('hidden');
         aiMenuContent.className = "space-y-4 transition-all slide-up";
@@ -2327,29 +2334,29 @@
             mealCard.innerHTML = `
               <div class="flex justify-between items-start">
                 <div class="flex-1 space-y-1 pr-2">
-                  <span class="inline-block text-[8px] bg-brand-primary text-white px-2 py-0.5 rounded font-black uppercase tracking-wider">
+                  <span class="inline-block text-[8px] bg-brand-primary text-white px-2.5 py-0.5 rounded font-black uppercase tracking-wider">
                     ${timingsLabelMap[menu.timing] || 'お食事'}
                   </span>
                   <h5 class="text-xs font-black text-brand-text leading-snug">${menu.name}</h5>
                 </div>
-                <span class="text-[10px] font-mono font-black text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg border border-brand-border shrink-0">
+                <span class="text-[10px] font-mono font-black text-brand-primary bg-brand-accent px-2.5 py-0.5 rounded-lg border border-brand-border shrink-0 font-bold">
                   ${Math.round(safeFloat(menu.kcal))} kcal
                 </span>
               </div>
 
               <!-- PFC -->
               <div class="grid grid-cols-3 gap-1.5 text-center text-[9px] font-bold">
-                <div class="bg-brand-bg/50 p-1 rounded-lg border border-brand-border/30">
-                  <span class="text-[6px] text-sky-600 block">P</span>
-                  <span class="font-mono">${safeFloat(menu.p).toFixed(1)}</span>g
+                <div class="bg-brand-bg/50 p-1.5 rounded-xl border border-brand-border/30">
+                  <span class="text-[6px] text-sky-600 block uppercase">P</span>
+                  <span class="font-mono font-bold">${safeFloat(menu.p).toFixed(1)}</span>g
                 </div>
-                <div class="bg-brand-bg/50 p-1 rounded-lg border border-brand-border/30">
-                  <span class="text-[6px] text-emerald-600 block">F</span>
-                  <span class="font-mono">${safeFloat(menu.f).toFixed(1)}</span>g
+                <div class="bg-brand-bg/50 p-1.5 rounded-xl border border-brand-border/30">
+                  <span class="text-[6px] text-emerald-600 block uppercase">F</span>
+                  <span class="font-mono font-bold">${safeFloat(menu.f).toFixed(1)}</span>g
                 </div>
-                <div class="bg-brand-bg/50 p-1 rounded-lg border border-brand-border/30">
-                  <span class="text-[6px] text-amber-600 block">C</span>
-                  <span class="font-mono">${safeFloat(menu.c).toFixed(1)}</span>g
+                <div class="bg-brand-bg/50 p-1.5 rounded-xl border border-brand-border/30">
+                  <span class="text-[6px] text-amber-600 block uppercase">C</span>
+                  <span class="font-mono font-bold">${safeFloat(menu.c).toFixed(1)}</span>g
                 </div>
               </div>
 
@@ -2360,7 +2367,7 @@
               </div>
 
               <!-- Advice -->
-              <div class="bg-brand-bg/40 p-2.5 rounded-xl text-[9px] text-brand-muted leading-relaxed font-medium border border-brand-border/30">
+              <div class="bg-brand-bg/40 p-2.5 rounded-xl text-[9px] text-brand-muted leading-relaxed font-medium border border-brand-border/30 animate-pulse">
                 <span class="font-black text-emerald-600 block text-[8px] mb-0.5">💡 女性専門チーフアドバイス:</span>
                 ${menu.advice}
               </div>
@@ -2407,7 +2414,7 @@
         f: safeFloat(menu.f),
         c: safeFloat(menu.c),
         ingredients: (menu.ingredientsList || []).map(ing => ({
-          name: ing.name || "食材",
+          name: ing.name || "追加食材",
           weight: safeFloat(ing.weight),
           kcal: safeFloat(ing.kcal),
           p: safeFloat(ing.p),
@@ -2444,7 +2451,7 @@
             f: safeFloat(menu.f),
             c: safeFloat(menu.c),
             ingredients: (menu.ingredientsList || []).map(ing => ({
-              name: ing.name || "食材",
+              name: ing.name || "追加食材",
               weight: safeFloat(ing.weight),
               kcal: safeFloat(ing.kcal),
               p: safeFloat(ing.p),
