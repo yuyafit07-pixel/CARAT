@@ -20,7 +20,7 @@
               primaryHover: '#0043a4',
               secondary: '#4A90E2',
               accent: '#E6F0FA',
-              accentGreen: '#E2F0D9',
+              accentGreen: '#E6F4EA',
               text: '#1E293B',
               muted: '#64748B',
               border: '#E2E8F0'
@@ -57,7 +57,7 @@
 <body class="bg-brand-bg text-brand-text min-h-screen pb-12 antialiased">
 
   <!-- ヘッダー -->
-  <header class="bg-brand-card/90 backdrop-blur-md border-b border-brand-border sticky top-0 z-50 shadow-sm px-6 py-4 flex justify-between items-center transition-all">
+  <header class="bg-brand-card border-b border-brand-border sticky top-0 z-50 shadow-sm px-6 py-4 flex justify-between items-center">
     <div class="flex items-center gap-2.5">
       <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-primary to-brand-secondary flex items-center justify-center shadow-md">
         <span class="font-logo font-black text-white text-lg">C</span>
@@ -67,7 +67,7 @@
         <span class="text-[9px] font-bold text-brand-muted tracking-widest block mt-0.5 uppercase">TRAINER INTERACTIVE PORTAL</span>
       </div>
     </div>
-    <div id="sync-status" class="text-[10px] px-3 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
+    <div id="sync-status" class="text-[10px] px-2.5 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
       <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
       Connecting...
     </div>
@@ -229,7 +229,7 @@
             <!-- 計測値 & 栄養摂取 -->
             <div class="grid grid-cols-2 gap-4">
               <!-- 体重測定値表示 (最新体重単体モデル) -->
-              <div class="bg-brand-bg/50 p-3.5 rounded-2xl border border-brand-border flex flex-col justify-center text-left">
+              <div class="bg-brand-bg/50 p-3.5 rounded-2xl border border-brand-border flex flex-col justify-center text-left shadow-inner">
                 <span class="text-[9px] text-brand-muted font-bold block mb-1">最新の測定体重 (kg)</span>
                 <div class="flex items-baseline gap-1.5 mt-0.5">
                   <span id="client-weight" class="text-2xl font-black text-brand-primary tracking-tight">--</span>
@@ -237,7 +237,7 @@
                 </div>
               </div>
               
-              <div class="bg-brand-bg/50 p-3.5 rounded-2xl border border-brand-border flex flex-col justify-center text-left">
+              <div class="bg-brand-bg/50 p-3.5 rounded-2xl border border-brand-border flex flex-col justify-center text-left shadow-inner">
                 <span class="text-[9px] text-brand-muted font-bold block mb-1" id="energy-section-title">総摂取エネルギー</span>
                 <div class="flex items-baseline gap-1.5 mt-0.5">
                   <span id="client-cur-cal" class="text-2xl font-black text-brand-primary tracking-tight">0</span>
@@ -246,11 +246,11 @@
               </div>
             </div>
 
-            <!-- PFC 実績 -->
+            <!-- PFC 実績 (目標値) -->
             <div class="space-y-2">
               <span class="text-[10px] text-brand-muted font-bold block flex items-center gap-1">
                 <i data-lucide="activity" class="w-4 h-4 text-brand-primary"></i>
-                参照日のPFC摂取バランス (目標値)
+                参照日のPFC摂取バランス (現在の目標値)
               </span>
               <div class="grid grid-cols-3 gap-2.5 text-center text-xs">
                 <div class="bg-sky-50 border border-sky-100 p-3 rounded-2xl shadow-sm">
@@ -273,7 +273,53 @@
 
           </div>
 
-          <!-- ★ 新設：体重推移4大スタッツ（体脂肪率を撤廃し、グラフレスで数字のみで見やすく！） ★ -->
+          <!-- ★ ご指示に基づく超重要移設：登録食事明細を参照日PFCバランスのすぐ真下に配置！ ★ -->
+          <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-cardShadow text-left space-y-3.5">
+            <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5 border-b border-brand-border pb-2.5" id="timeline-section-title">
+              <i data-lucide="utensils" class="w-4.5 h-4.5 text-brand-primary"></i>
+              参照日の登録食事明細
+            </h4>
+            <div id="client-meal-timeline" class="max-h-[340px] overflow-y-auto space-y-2 no-scrollbar pr-1">
+              <!-- タイムラインがここに表示されます -->
+            </div>
+          </div>
+
+          <!-- ★ 新設：既存クライアント用「目標カロリー・PFC同期更新ボード」 ★ -->
+          <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-4">
+            <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5 border-b border-brand-border pb-2.5">
+              <i data-lucide="settings-2" class="w-4.5 h-4.5 text-brand-primary"></i>
+              クライアントの食事目標値（カロリー・PFC）を更新・同期
+            </h4>
+            <p class="text-[10px] text-brand-muted leading-relaxed font-medium">
+              セッション時の体脂肪変化やカウンセリングに基づき、クライアントの目標値を上書き変更します。保存を押した瞬間に、会員アプリ（index.html）へ即時プッシュ同期されます。
+            </p>
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="text-[10px] text-brand-muted block font-bold mb-1">目標カロリー (kcal)</label>
+                <input type="number" id="edit-client-tar-kcal" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3 py-2.5 font-mono font-bold text-center text-brand-text focus:outline-none focus:border-brand-primary">
+              </div>
+              <div>
+                <label class="text-[10px] text-sky-600 block font-bold mb-1">目標 P (g)</label>
+                <input type="number" id="edit-client-tar-p" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3 py-2.5 font-mono font-bold text-center text-brand-text focus:outline-none focus:border-brand-primary">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="text-[10px] text-emerald-600 block font-bold mb-1">目標 F (g)</label>
+                <input type="number" id="edit-client-tar-f" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3 py-2.5 font-mono font-bold text-center text-brand-text focus:outline-none focus:border-brand-primary">
+              </div>
+              <div>
+                <label class="text-[10px] text-amber-600 block font-bold mb-1">目標 C (g)</label>
+                <input type="number" id="edit-client-tar-c" class="w-full bg-brand-bg border border-brand-border rounded-xl px-3 py-2.5 font-mono font-bold text-center text-brand-text focus:outline-none focus:border-brand-primary">
+              </div>
+            </div>
+            <button onclick="window.updateClientTargets()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3.5 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-1.5">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              変更した目標設定を適用して会員へ同期
+            </button>
+          </div>
+
+          <!-- 体重推移4大スタッツ -->
           <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-4">
             <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5 border-b border-brand-border pb-2.5">
               <i class="text-brand-primary" data-lucide="trending-down"></i>
@@ -281,28 +327,62 @@
             </h4>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-              <!-- 初期体重 -->
-              <div class="bg-brand-bg/50 border border-brand-border/60 p-3.5 rounded-2xl">
+              <div class="bg-brand-bg/50 border border-brand-border/60 p-3.5 rounded-2xl shadow-inner">
                 <span class="text-[8px] text-brand-muted font-black block uppercase tracking-wider">① 初期登録体重</span>
-                <span id="stats-initial-weight" class="font-mono text-lg font-black text-brand-text block mt-1">-- kg</span>
+                <span id="stats-initial-weight" class="font-mono text-base font-black text-brand-text block mt-1">-- kg</span>
               </div>
               
-              <!-- 全期間最低体重 -->
-              <div class="bg-brand-bg/50 border border-brand-border/60 p-3.5 rounded-2xl">
+              <div class="bg-brand-bg/50 border border-brand-border/60 p-3.5 rounded-2xl shadow-inner">
                 <span class="text-[8px] text-brand-muted font-black block uppercase tracking-wider">② 全期間の最低体重</span>
-                <span id="stats-min-weight-all" class="font-mono text-lg font-black text-brand-text block mt-1">-- kg</span>
+                <span id="stats-min-weight-all" class="font-mono text-base font-black text-brand-text block mt-1">-- kg</span>
               </div>
               
-              <!-- 初期vs全期間最低の差 (±) -->
-              <div class="bg-brand-bg/50 border border-brand-border/60 p-3.5 rounded-2xl">
+              <div class="bg-brand-bg/50 border border-brand-border/60 p-3.5 rounded-2xl shadow-inner">
                 <span class="text-[8px] text-brand-muted font-black block uppercase tracking-wider">③ 初回からの総減量幅</span>
-                <span id="stats-diff-initial-min" class="font-mono text-lg font-black text-sky-600 block mt-1">-- kg</span>
+                <span id="stats-diff-initial-min" class="font-mono text-base font-black text-sky-600 block mt-1">-- kg</span>
               </div>
               
-              <!-- 今週最低vs先週最低の差 (±) -->
-              <div class="bg-brand-bg/50 border border-brand-border/60 p-3.5 rounded-2xl">
+              <div class="bg-brand-bg/50 border border-brand-border/60 p-3.5 rounded-2xl shadow-inner">
                 <span class="text-[8px] text-brand-muted font-black block uppercase tracking-wider">④ 直近の減量ペース (週次)</span>
-                <span id="stats-diff-weekly-min" class="font-mono text-lg font-black text-emerald-600 block mt-1">-- kg</span>
+                <span id="stats-diff-weekly-min" class="font-mono text-base font-black text-emerald-600 block mt-1">-- kg</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1週間のカロリー調整状況 (曜日別の実績) -->
+          <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-3">
+            <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5 border-b border-brand-border/50 pb-2">
+              <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-primary"></i>
+              日別の摂取カロリー実績サマリー
+            </h4>
+            <div class="grid grid-cols-7 gap-1.5 text-center font-sans">
+              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">月</span>
+                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Mon">-</span>
+              </div>
+              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">火</span>
+                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Tue">-</span>
+              </div>
+              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">水</span>
+                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Wed">-</span>
+              </div>
+              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">木</span>
+                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Thu">-</span>
+              </div>
+              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">金</span>
+                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Fri">-</span>
+              </div>
+              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">土</span>
+                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Sat">-</span>
+              </div>
+              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
+                <span class="text-[9px] text-brand-muted font-bold block mb-1">日</span>
+                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Sun">-</span>
               </div>
             </div>
           </div>
@@ -343,55 +423,6 @@
             </div>
           </div>
 
-          <!-- 日別の摂取カロリー実績サマリー -->
-          <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm text-left space-y-2.5">
-            <h4 class="text-xs font-bold text-brand-text flex items-center gap-1.5">
-              <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-primary"></i>
-              日別の摂取カロリー実績サマリー
-            </h4>
-            <div class="grid grid-cols-7 gap-1.5 text-center font-sans">
-              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
-                <span class="text-[9px] text-brand-muted font-bold block mb-1">月</span>
-                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Mon">-</span>
-              </div>
-              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
-                <span class="text-[9px] text-brand-muted font-bold block mb-1">火</span>
-                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Tue">-</span>
-              </div>
-              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
-                <span class="text-[9px] text-brand-muted font-bold block mb-1">水</span>
-                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Wed">-</span>
-              </div>
-              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
-                <span class="text-[9px] text-brand-muted font-bold block mb-1">木</span>
-                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Thu">-</span>
-              </div>
-              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
-                <span class="text-[9px] text-brand-muted font-bold block mb-1">金</span>
-                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Fri">-</span>
-              </div>
-              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
-                <span class="text-[9px] text-brand-muted font-bold block mb-1">土</span>
-                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Sat">-</span>
-              </div>
-              <div class="bg-brand-bg/40 p-2 rounded-xl border border-brand-border/40">
-                <span class="text-[9px] text-brand-muted font-bold block mb-1">日</span>
-                <span class="text-[10px] font-bold text-brand-text block" id="weekly-cal-Sun">-</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 参照日食事ログ -->
-          <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm text-left space-y-2.5">
-            <h4 class="text-xs font-bold text-brand-text flex items-center gap-1.5 border-b border-brand-border pb-2.5" id="timeline-section-title">
-              <i data-lucide="utensils" class="w-4 h-4 text-brand-primary"></i>
-              参照日の登録食事明細
-            </h4>
-            <div id="client-meal-timeline" class="max-h-[300px] overflow-y-auto space-y-2 no-scrollbar pr-1">
-              <!-- タイムラインがここに表示されます -->
-            </div>
-          </div>
-
           <!-- 来店時食事AI総括アナライザー -->
           <div class="bg-brand-card rounded-2xl p-4 border border-brand-border/60 shadow-sm text-left space-y-3.5">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 border-b border-brand-border pb-3">
@@ -401,7 +432,7 @@
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </span>
-                  来店時専用：直近1週間の食事・PFC自動AI総括
+                  来店時専用：直近1週間の食事・PFC自動AI総括 (完全修復)
                 </h4>
                 <p class="text-[9px] text-brand-muted mt-1 leading-normal">
                   セッション来店時などにこの1週間の食事・体重データをAIが一括スキャン。女性特有の体質リズム・スポーツ栄養学に基づき、優しい1週間の総評レポートを瞬時に作成します。
@@ -477,6 +508,7 @@
 
     const firebaseConfig = {
       apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
+      textFormat: "HTML",
       authDomain: "carat-d3b01.firebaseapp.com",
       projectId: "carat-d3b01",
       storageBucket: "carat-d3b01.firebasestorage.app",
@@ -494,7 +526,7 @@
 
     function showToast(message) {
       const toast = document.createElement('div');
-      toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-5 py-3 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
+      toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-2.5 rounded-full text-xs font-bold shadow-md z-[200] transition-opacity duration-300 flex items-center gap-1.5";
       toast.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i> ${message}`;
       document.body.appendChild(toast);
       lucide.createIcons();
@@ -510,7 +542,6 @@
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
 
-    // 文字列を安全にNumber型にするキャスト
     function safeFloat(val) {
       if (val === null || val === undefined) return 0;
       if (typeof val === 'string') {
@@ -651,8 +682,8 @@
         meals: [],
         mealsByDate: {},
         weight: weight,
-        initialWeight: weight, // 新規作成時初期体重
-        weightHistory: { [getTodayDateString()]: weight }, // 履歴セット
+        initialWeight: weight, 
+        weightHistory: { [getTodayDateString()]: weight }, 
         weeklyLogs: {
           Mon: { kcal: 0, p: 0, f: 0, c: 0 },
           Tue: { kcal: 0, p: 0, f: 0, c: 0 },
@@ -675,7 +706,6 @@
 
         addBookmark(newId, nickname);
 
-        // IDコピー
         const dummy = document.createElement("textarea");
         document.body.appendChild(dummy);
         dummy.value = newId;
@@ -743,7 +773,6 @@
       return { cal: Math.round(cal), p, f, c, meals };
     }
 
-    // 過去1週間(過去7日間)の累積「帳じり合わせ」±合計値のリアルタイム集計機能
     function calculateWeeklySummaryAndDiff(data) {
       const baseDate = new Date(selectedDateString);
       let cumulativeKcalDiff = 0;
@@ -751,22 +780,18 @@
       let cumulativeFDiff = 0;
       let cumulativeCDiff = 0;
 
-      // 目標設定のベース
       const targetCal = safeFloat(data.targetCalories) || 1800;
       const targetP = safeFloat(data.targetP) || 120;
       const targetF = safeFloat(data.targetF) || 45;
       const targetC = safeFloat(data.targetC) || 230;
 
-      // 過去7日間をループ計算
       for (let i = 0; i < 7; i++) {
         const d = new Date(baseDate);
         d.setDate(baseDate.getDate() - i);
         const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         
-        // オートリカバリー調整を考慮した当日の正確なスライド目標値を再計算
         const dayTotals = calculateTotalsForDate(data, dStr);
         
-        // 昨日(d-1)の超過分を計算
         const yesterdayDate = new Date(d);
         yesterdayDate.setDate(d.getDate() - 1);
         const yesterdayStr = `${yesterdayDate.getFullYear()}-${String(yesterdayDate.getMonth() + 1).padStart(2, '0')}-${String(yesterdayDate.getDate()).padStart(2, '0')}`;
@@ -774,21 +799,18 @@
         const yesterdayOverKcal = Math.max(0, yesterdayTotals.cal - targetCal);
         const dailyRecoveryKcal = Math.min(200, yesterdayOverKcal);
 
-        // 調整後の目標値
         const adjustedTargetCal = Math.max(1000, targetCal - dailyRecoveryKcal);
         const scaleRatio = adjustedTargetCal / targetCal;
         const adjustedTargetP = targetP * scaleRatio;
         const adjustedTargetF = targetF * scaleRatio;
         const adjustedTargetC = targetC * scaleRatio;
 
-        // 目標に対する過不足を算出
         cumulativeKcalDiff += (dayTotals.cal - adjustedTargetCal);
         cumulativePDiff += (dayTotals.p - adjustedTargetP);
         cumulativeFDiff += (dayTotals.f - adjustedTargetF);
         cumulativeCDiff += (dayTotals.c - adjustedTargetC);
       }
 
-      // 符号付きフォーマッターバッジの更新
       const formatDiffKcal = (num) => {
         const rounded = Math.round(num);
         if (rounded > 0) return `+${rounded.toLocaleString()} kcal`;
@@ -808,34 +830,29 @@
       document.getElementById('balance-total-c').innerText = formatDiffPFC(cumulativeCDiff);
     }
 
-    // ★ 解決：体重履歴（weightHistory）からグラフを使わずに4大スタッツのみを美しく集計表示する機能 ★
     function calculateWeightStatsOnly(data) {
       const history = data.weightHistory || {};
       const dates = Object.keys(history).sort();
 
       const initialWeight = safeFloat(data.initialWeight) || (dates.length > 0 ? history[dates[0]] : safeFloat(data.weight)) || 55.0;
       
-      // 全期間の最低体重
       let minWeightAllTime = initialWeight;
       dates.forEach(d => {
         const w = history[d];
         if (w > 0 && w < minWeightAllTime) minWeightAllTime = w;
       });
 
-      // スタッツ表示
       document.getElementById('stats-initial-weight').innerText = `${initialWeight.toFixed(1)} kg`;
       document.getElementById('stats-min-weight-all').innerText = `${minWeightAllTime.toFixed(1)} kg`;
 
-      // 1. 初期体重 vs 最低体重 の±差
       const initialVsMinDiff = minWeightAllTime - initialWeight;
       const diffInitText = initialVsMinDiff === 0 ? "±0.0 kg" : `${initialVsMinDiff > 0 ? '+' : ''}${initialVsMinDiff.toFixed(1)} kg`;
       const diffInitEl = document.getElementById('stats-diff-initial-min');
       if (diffInitEl) {
         diffInitEl.innerText = diffInitText;
-        diffInitEl.className = initialVsMinDiff < 0 ? "font-mono text-lg font-black text-sky-600 block mt-1" : "font-mono text-lg font-black text-brand-text block mt-1";
+        diffInitEl.className = initialVsMinDiff < 0 ? "font-mono text-base font-black text-sky-600 block mt-1" : "font-mono text-base font-black text-brand-text block mt-1";
       }
 
-      // 2. 今週最低体重 vs 先週最低体重 の±差
       const refDate = new Date(selectedDateString);
       const getMinInDateRange = (daysStartOffset, daysEndOffset) => {
         let minW = null;
@@ -859,7 +876,7 @@
         if (thisWeekMin !== null && lastWeekMin !== null) {
           const weeklyDiff = thisWeekMin - lastWeekMin;
           diffWeeklyEl.innerText = `${weeklyDiff > 0 ? '+' : ''}${weeklyDiff.toFixed(1)} kg`;
-          diffWeeklyEl.className = weeklyDiff < 0 ? "font-mono text-lg font-black text-emerald-600 block mt-1" : "font-mono text-lg font-black text-brand-text block mt-1";
+          diffWeeklyEl.className = weeklyDiff < 0 ? "font-mono text-base font-black text-emerald-600 block mt-1" : "font-mono text-base font-black text-brand-text block mt-1";
         } else {
           diffWeeklyEl.innerText = "データ不足";
           diffWeeklyEl.className = "font-mono text-sm font-black text-brand-muted block mt-1";
@@ -889,7 +906,14 @@
             globalClientData = data; 
             
             renderClientDashboard(data);
-            window.renderBookmarks(); // アクティブバッジ更新用
+            
+            // ★目標値を手動上書きするためのインプット欄へ最新数値を強制流し込み
+            document.getElementById('edit-client-tar-kcal').value = data.targetCalories || 1800;
+            document.getElementById('edit-client-tar-p').value = data.targetP || 120;
+            document.getElementById('edit-client-tar-f').value = data.targetF || 45;
+            document.getElementById('edit-client-tar-c').value = data.targetC || 230;
+
+            window.renderBookmarks(); 
             
             document.getElementById('client-placeholder').classList.add('hidden');
             document.getElementById('client-data-container').classList.remove('hidden');
@@ -959,7 +983,6 @@
           const row = document.createElement('div');
           row.className = "flex flex-col sm:flex-row sm:justify-between sm:items-center bg-brand-bg rounded-2xl p-4.5 text-[11px] border border-brand-border mb-2.5 relative overflow-hidden group hover:border-brand-primary/20 hover:bg-brand-accent/5 transition-all";
           
-          // PFC特徴検出によるスマートハイライトバッジ
           let featureTags = "";
           if (safeFloat(m.p) >= 20) {
             featureTags += `<span class="bg-sky-100 text-sky-700 text-[8px] font-black px-2 py-0.5 rounded-md border border-sky-200 uppercase">高タンパク P:${safeFloat(m.p).toFixed(1)}g</span>`;
@@ -997,7 +1020,7 @@
       lucide.createIcons();
     }
 
-    // 店舗Gemini APIキーを共有設定（SETTINGS）とロード中のクライアント双方へ即時配信
+    // ★ 解決：店舗Geminiキー保存時に、SETTINGSドメインへも同期自動配信するアクティブ配信ロジック
     window.saveTrainerGeminiKey = async function() {
       const key = document.getElementById('trainer-gemini-key').value.trim();
       if (!key) {
@@ -1012,11 +1035,9 @@
           await signInAnonymously(auth);
         }
 
-        // 1. 特異ドキュメント SETTINGS へ即時書き込み
         const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
         await setDoc(settingsDocRef, { geminiApiKey: key }, { merge: true });
 
-        // 2. 現在開いているカルテのお客様側ドキュメントへもバックアップ同期
         if (currentTargetClientId) {
           const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
           await updateDoc(clientDocRef, { sharedGeminiKey: key });
@@ -1029,7 +1050,39 @@
       }
     };
 
-    // --- Gemini API連携 (製品版最新モデルに完全統一・ preview は一切使用しない！) ---
+    // ★ 新設：手動変更された既存顧客の目標値（カロリー・PFC）を上書き更新してFirestoreに保存する同期トリガー
+    window.updateClientTargets = async function() {
+      if (!currentTargetClientId) {
+        alert("クライアントを先にロードして選択してください。");
+        return;
+      }
+
+      const kcal = parseInt(document.getElementById('edit-client-tar-kcal').value);
+      const p = parseInt(document.getElementById('edit-client-tar-p').value);
+      const f = parseInt(document.getElementById('edit-client-tar-f').value);
+      const c = parseInt(document.getElementById('edit-client-tar-c').value);
+
+      if (isNaN(kcal) || isNaN(p) || isNaN(f) || isNaN(c)) {
+        alert("目標値には正しい数値を入力してください。");
+        return;
+      }
+
+      try {
+        const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
+        await updateDoc(clientDocRef, {
+          targetCalories: kcal,
+          targetP: p,
+          targetF: f,
+          targetC: c
+        });
+        showToast("目標設定（カロリー・PFCバランス）を正常に更新・会員スマホへ即時同期しました！");
+      } catch (err) {
+        console.error("Failed to update targets:", err);
+        alert("目標設定の更新・同期に失敗しました。");
+      }
+    };
+
+    // --- Gemini API連携 ---
     async function fetchGeminiWithFallback(payload) {
       const key = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
       if (!key) {
