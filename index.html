@@ -74,7 +74,7 @@
         <span class="text-[8px] font-bold text-brand-muted tracking-widest block mt-0.5 uppercase">Premium Health Management</span>
       </div>
     </div>
-    <div id="connection-status" class="text-[9px] px-3 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
+    <div id="connection-status" class="text-[9px] px-3 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
       <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
       未連携
     </div>
@@ -152,9 +152,9 @@
       <div id="tab-content-home" class="space-y-4 transition-all">
         
         <!-- カレンダー & クイック曜日切り替え -->
-        <div class="bg-brand-card border border-brand-border/60 p-3 rounded-3xl shadow-cardShadow text-left space-y-2">
+        <div class="bg-brand-card border border-brand-border/60 p-3.5 rounded-3xl shadow-cardShadow text-left space-y-2">
           <div class="flex justify-between items-center px-1">
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-1.5">
               <i data-lucide="calendar" class="w-4 h-4 text-brand-primary"></i>
               <span id="display-date-text" class="font-mono font-black text-sm tracking-wider text-brand-text">2026-07-10</span>
             </div>
@@ -369,25 +369,25 @@
           </button>
         </div>
 
-        <!-- ★ 完全復活・大復活：食事履歴からクイック記録システム ★ -->
-        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-3.5">
+        <!-- ★ 履歴からワンタップ登録スライダー ★ -->
+        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-premium text-left space-y-3.5 animate-fade-in">
           <div class="flex justify-between items-center border-b border-brand-border/50 pb-2.5">
             <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
-              <i data-lucide="history" class="w-4.5 h-4.5 text-brand-primary animate-pulse"></i>
+              <i data-lucide="history" class="w-4.5 h-4.5 text-brand-primary"></i>
               🕒 過去の履歴からワンタップ登録
             </h3>
             <span class="text-[8px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-lg font-bold">複製記録</span>
           </div>
           <p class="text-[9px] text-brand-muted font-medium leading-relaxed">
-            これまでの全日程から食べたメニューを自動抽出！食材データや比率バランスを完璧に引き継ぎ、現在の時間で今日の記録にそのまま一瞬でコピーできます。
+            これまでのすべての食事実績から自動で重複排除してリストアップ。タップするだけで今の時間の食事ログとして一撃コピー追加できます。
           </p>
           <div id="meals-history-container" class="flex gap-3 overflow-x-auto py-1.5 no-scrollbar">
-            <!-- JavaScriptでスライドカードが横スクロール配置されます -->
+            <!-- JSで動的に追加 -->
           </div>
         </div>
 
         <!-- 本日の食事ログ一覧 -->
-        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-cardShadow text-left space-y-3.5">
+        <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-cardShadow text-left space-y-3">
           <h3 class="text-xs font-black text-brand-text flex items-center gap-1.5">
             <i data-lucide="utensils-crossaxes" class="w-4.5 h-4.5 text-brand-primary"></i>
             本日の食事ログ一覧
@@ -508,7 +508,7 @@
                 <h4 class="text-xs font-black text-brand-text" id="ai-suggestion-summary-title">複数食の均等分割プラン</h4>
               </div>
               <!-- まとめて一括追加ボタン -->
-              <button onclick="window.registerAllSuggestedMenus()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[9px] py-1.5 px-3 rounded-lg shadow-sm transition flex items-center gap-1 shrink-0">
+              <button onclick="window.registerAllSuggestedMenus()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[9px] py-1.5 px-3 rounded-lg shadow-sm transition flex items-center justify-center gap-1 shrink-0">
                 <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
                 すべて一括で追加
               </button>
@@ -613,13 +613,13 @@
     </div>
   </div>
 
-  <!-- ★ 微調整・編集モーダル（食材追加時のカロリー・PFC手動入力を完全サポート！） ★ -->
+  <!-- ★ 微調整・編集モーダル（画面崩れを完全解消・AI自動推定マウント済） ★ -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-black/60 z-[250] hidden items-center justify-center p-4 backdrop-blur-sm">
     <div class="bg-brand-card w-full max-w-sm rounded-[36px] p-5 border border-brand-border shadow-xl space-y-4 text-left max-h-[90vh] overflow-y-auto no-scrollbar slide-up">
       
       <div class="flex justify-between items-center border-b border-brand-border/50 pb-3">
         <div>
-          <h4 class="text-xs font-black text-brand-text flex items-center gap-1">
+          <h4 class="text-xs font-black text-brand-text flex items-center gap-1.5">
             <i data-lucide="sliders" class="w-4.5 h-4.5 text-brand-primary"></i>
             食事・食材の極微細調整
           </h4>
@@ -654,10 +654,10 @@
         
         <!-- 割合選択トグルグリッド -->
         <div class="grid grid-cols-4 gap-1.5 p-1 bg-brand-bg rounded-xl border border-brand-border/40">
-          <button id="scale-btn-10" onclick="window.setQuickScale(10)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">10</button>
-          <button id="scale-btn-50" onclick="window.setQuickScale(50)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary font-extrabold text-brand-primary">50</button>
-          <button id="scale-btn-100" onclick="window.setQuickScale(100)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">100</button>
-          <button id="scale-btn-custom" onclick="window.setQuickScale('custom')" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:text-brand-primary">カスタム</button>
+          <button id="scale-btn-10" onclick="window.setQuickScale(10)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:bg-white/40">10</button>
+          <button id="scale-btn-50" onclick="window.setQuickScale(50)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:bg-white/40 font-extrabold text-brand-primary">50</button>
+          <button id="scale-btn-100" onclick="window.setQuickScale(100)" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:bg-white/40">100</button>
+          <button id="scale-btn-custom" onclick="window.setQuickScale('custom')" class="py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:bg-white/40">カスタム</button>
         </div>
 
         <!-- カスタム設定時のスライダーエリア -->
@@ -705,19 +705,19 @@
         <div class="grid grid-cols-4 gap-2 text-center">
           <div class="bg-white border border-brand-border/60 p-2 rounded-xl shadow-sm">
             <span class="text-[7px] text-sky-600 font-extrabold block uppercase">P (プロ)</span>
-            <span id="preview-total-p" class="font-mono font-black text-xs">0</span><span class="text-[7px]">g</span>
+            <span id="preview-total-p" class="font-mono font-black text-xs font-bold">0</span><span class="text-[7px]">g</span>
           </div>
           <div class="bg-white border border-brand-border/60 p-2 rounded-xl shadow-sm">
             <span class="text-[7px] text-emerald-600 font-extrabold block uppercase">F (ファット)</span>
-            <span id="preview-total-f" class="font-mono font-black text-xs">0</span><span class="text-[7px]">g</span>
+            <span id="preview-total-f" class="font-mono font-black text-xs font-bold">0</span><span class="text-[7px]">g</span>
           </div>
           <div class="bg-white border border-brand-border/60 p-2 rounded-xl shadow-sm">
             <span class="text-[7px] text-amber-600 font-extrabold block uppercase">C (カーボ)</span>
-            <span id="preview-total-c" class="font-mono font-black text-xs">0</span><span class="text-[7px]">g</span>
+            <span id="preview-total-c" class="font-mono font-black text-xs font-bold">0</span><span class="text-[7px]">g</span>
           </div>
           <div class="bg-white border border-brand-border/60 p-2 rounded-xl shadow-sm">
             <span class="text-[7px] text-brand-text font-extrabold block uppercase">Calories</span>
-            <span id="preview-total-kcal" class="font-mono font-black text-xs">0</span><span class="text-[7px] font-sans">kcal</span>
+            <span id="preview-total-kcal" class="font-mono font-black text-xs font-bold">0</span><span class="text-[7px] font-sans">kcal</span>
           </div>
         </div>
       </div>
@@ -749,6 +749,7 @@
 
     const firebaseConfig = {
       apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
+      text: "",
       authDomain: "carat-d3b01.firebaseapp.com",
       projectId: "carat-d3b01",
       storageBucket: "carat-d3b01.firebasestorage.app",
@@ -865,7 +866,7 @@
     function showToast(message) {
       const toast = document.createElement('div');
       toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-text text-white px-5 py-3 rounded-full text-xs font-bold shadow-premium z-[300] transition-opacity duration-300 flex items-center gap-2";
-      toast.innerHTML = `<i data-lucide="check" class="w-4.5 h-4.5 text-brand-secondary animate-bounce"></i> ${message}`;
+      toast.innerHTML = `<i data-lucide="check" class="w-4.5 h-4.5 text-brand-secondary animate-bounce"></i> ` + message;
       document.body.appendChild(toast);
       lucide.createIcons();
       setTimeout(() => {
@@ -877,7 +878,7 @@
 
     function getTodayDateString() {
       const d = new Date();
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
     }
 
     function getDefaultMealCategory() {
@@ -932,7 +933,7 @@
               const settingsData = snap.data();
               if (settingsData && settingsData.geminiApiKey) {
                 clientState.sharedGeminiKey = settingsData.geminiApiKey;
-                localStorage.setItem(`carat_shared_gemini_key_${appId}`, settingsData.geminiApiKey);
+                localStorage.setItem("carat_shared_gemini_key_" + appId, settingsData.geminiApiKey);
               }
             }
           }, (err) => {
@@ -940,7 +941,7 @@
           });
 
           // ロード処理
-          const savedId = localStorage.getItem(`carat_client_connected_id_${appId}`);
+          const savedId = localStorage.getItem("carat_client_connected_id_" + appId);
           if (savedId) {
             currentClientId = savedId;
             document.getElementById('client-id-input').value = savedId;
@@ -979,7 +980,7 @@
           document.getElementById('active-id-text').innerText = clientId;
 
           const conLabel = document.getElementById('connection-status');
-          conLabel.className = "text-[9px] px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold animate-pulse";
+          conLabel.className = "text-[9px] px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold animate-pulse";
           conLabel.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 同期中`;
 
           syncMealTimingUI();
@@ -994,7 +995,7 @@
     }
 
     window.disconnectClientId = function() {
-      localStorage.removeItem(`carat_client_connected_id_${appId}`);
+      localStorage.removeItem("carat_client_connected_id_" + appId);
       if (unsubscribeClientListener) unsubscribeClientListener();
       currentClientId = null;
 
@@ -1003,7 +1004,7 @@
       document.getElementById('client-id-input').value = "";
 
       const conLabel = document.getElementById('connection-status');
-      conLabel.className = "text-[9px] px-3 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold";
+      conLabel.className = "text-[9px] px-3 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold";
       conLabel.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> 未連携`;
 
       showToast("データ連携を解除しました。");
@@ -1016,12 +1017,11 @@
         return;
       }
       currentClientId = inputId;
-      localStorage.setItem(`carat_client_connected_id_${appId}`, inputId);
+      localStorage.setItem("carat_client_connected_id_" + appId, inputId);
       startClientRealtimeSync(inputId);
     };
 
     function renderWeeklyCalendarGrid() {
-      // ★ 追加：初期起動の未連携DOM崩れを完全に予防する防衛バリア
       if (!currentClientId) return;
 
       const container = document.getElementById('weekly-calendar-grid');
@@ -1034,7 +1034,7 @@
       for (let i = -3; i <= 3; i++) {
         const d = new Date(baseDate);
         d.setDate(baseDate.getDate() + i);
-        const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        const dStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
         days.push(dStr);
       }
 
@@ -1061,11 +1061,9 @@
           bgClass = "bg-brand-primary text-white border-brand-primary shadow-md";
         }
 
-        cell.className = `flex flex-col items-center justify-center p-2 rounded-2xl border transition-all duration-300 shrink-0 ${bgClass}`;
-        cell.innerHTML = `
-          <span class="text-[9px] font-bold ${isSelected ? 'text-white/80' : 'text-brand-muted'} block leading-none mb-1">${dayOfWeek}</span>
-          <span class="text-xs font-black block leading-none font-sans">${dateNum}</span>
-        `;
+        cell.className = "flex flex-col items-center justify-center p-2 rounded-2xl border transition-all duration-300 shrink-0 " + bgClass;
+        const colClass = isSelected ? 'text-white/80' : 'text-brand-muted';
+        cell.innerHTML = '<span class="text-[9px] font-bold ' + colClass + ' block leading-none mb-1">' + dayOfWeek + '</span><span class="text-xs font-black block leading-none font-sans">' + dateNum + '</span>';
         container.appendChild(cell);
       });
     }
@@ -1118,7 +1116,7 @@
       const current = new Date(selectedDateString);
       const yesterday = new Date(current);
       yesterday.setDate(current.getDate() - 1);
-      const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+      const yesterdayStr = yesterday.getFullYear() + "-" + String(yesterday.getMonth() + 1).padStart(2, '0') + "-" + String(yesterday.getDate()).padStart(2, '0');
 
       const yesterdayMeals = clientState.mealsByDate?.[yesterdayStr] || [];
       let yesterdayTotalKcal = 0;
@@ -1143,7 +1141,7 @@
       for (let i = 0; i < 7; i++) {
         const d = new Date(baseDate);
         d.setDate(baseDate.getDate() - i);
-        const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        const dStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
         
         const meals = clientState.mealsByDate?.[dStr] || [];
         meals.forEach(m => {
@@ -1167,7 +1165,7 @@
       };
     }
 
-    // ★ 解決：大復活した履歴スライダーを描画するエンジンを組み込み ★
+    // ★ 食事履歴スライダー描画エンジン ★
     function renderMealsHistory() {
       const container = document.getElementById('meals-history-container');
       if (!container) return;
@@ -1175,41 +1173,22 @@
 
       const history = getMealsHistory();
       if (history.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-6 w-full bg-brand-bg/50 rounded-2xl border border-dashed border-brand-border/60 flex flex-col items-center justify-center">
-            <span class="text-[10px] text-brand-muted font-bold block">食事の記録を増やすと、ここに履歴が出現します</span>
-          </div>
-        `;
+        container.innerHTML = '<div class="text-center py-6 w-full bg-brand-bg/50 rounded-2xl border border-dashed border-brand-border/60 flex flex-col items-center justify-center"><span class="text-[10px] text-brand-muted font-bold block">食事の記録を増やすと、ここに履歴が出現します</span></div>';
         return;
       }
 
       history.forEach((h) => {
         const card = document.createElement('div');
         card.className = "bg-brand-bg hover:bg-brand-accent/40 border border-brand-border/60 p-3.5 rounded-2xl shrink-0 w-[150px] text-left flex flex-col justify-between transition-all shadow-sm group cursor-pointer relative overflow-hidden";
-        // カード全体のクリック時にもクイック複製追加される快適仕様
         card.onclick = () => window.quickAddMealFromHistory(h.name);
 
-        card.innerHTML = `
-          <div class="space-y-1">
-            <span class="text-xs font-black text-brand-text block truncate group-hover:text-brand-primary transition-colors">${h.name}</span>
-            <span class="font-sans font-black text-xs text-brand-primary block">${Math.round(h.kcal)} <span class="text-[8px] text-brand-muted font-bold">kcal</span></span>
-            
-            <div class="grid grid-cols-3 gap-0.5 text-center text-[8px] font-bold text-brand-muted pt-1">
-              <div class="bg-white/80 rounded border border-brand-border/30 py-0.5">P:${Math.round(h.p)}</div>
-              <div class="bg-white/80 rounded border border-brand-border/30 py-0.5">F:${Math.round(h.f)}</div>
-              <div class="bg-white/80 rounded border border-brand-border/30 py-0.5">C:${Math.round(h.c)}</div>
-            </div>
-          </div>
-          <button type="button" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-bold text-[9px] py-1.5 rounded-xl transition-all flex items-center justify-center gap-1 shadow-sm mt-2.5 shrink-0">
-            <i data-lucide="plus" class="w-2.5 h-2.5"></i> 今日に登録
-          </button>
-        `;
+        card.innerHTML = '<div class="space-y-1"><span class="text-xs font-black text-brand-text block truncate group-hover:text-brand-primary transition-colors">' + h.name + '</span><span class="font-sans font-black text-xs text-brand-primary block">' + Math.round(h.kcal) + ' <span class="text-[8px] text-brand-muted font-bold">kcal</span></span><div class="grid grid-cols-3 gap-0.5 text-center text-[8px] font-bold text-brand-muted pt-1"><div class="bg-white/80 rounded border border-brand-border/30 py-0.5">P:' + Math.round(h.p) + '</div><div class="bg-white/80 rounded border border-brand-border/30 py-0.5">F:' + Math.round(h.f) + '</div><div class="bg-white/80 rounded border border-brand-border/30 py-0.5">C:' + Math.round(h.c) + '</div></div></div><button type="button" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-bold text-[9px] py-1.5 rounded-xl transition-all flex items-center justify-center gap-1 shadow-sm mt-2.5 shrink-0"><i data-lucide="plus" class="w-2.5 h-2.5"></i>今日に登録</button>';
         container.appendChild(card);
       });
       lucide.createIcons();
     }
 
-    // ★ 解決：履歴からワンタップで今日の食事ログに完全複製追加するアクション ★
+    // ★ 食事履歴からのクイック複製追加アクション ★
     window.quickAddMealFromHistory = async function(mealName) {
       const history = getMealsHistory();
       const mealData = history.find(h => h.name === mealName);
@@ -1218,11 +1197,10 @@
       const now = new Date();
       const targetMealId = 'M-' + Date.now() + Math.floor(Math.random() * 100);
 
-      // 食材配列（ingredients）を含む完全なデータを現在の記録時間で複製
       const newMeal = {
         id: targetMealId,
         name: mealData.name,
-        time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
+        time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
         kcal: mealData.kcal,
         p: mealData.p,
         f: mealData.f,
@@ -1232,7 +1210,7 @@
 
       try {
         await saveMealToCloud(newMeal);
-        showToast(`「${mealName}」を過去の履歴から今日に追加登録しました！`);
+        showToast("「" + mealName + "」を履歴から登録しました！");
       } catch (err) {
         console.error(err);
         alert("履歴からの追加に失敗しました。");
@@ -1280,9 +1258,9 @@
         badge.classList.remove('hidden');
         badge.classList.add('inline-flex');
         card.classList.remove('hidden');
-        document.getElementById('yesterday-over-kcal').innerText = `${recovery.overKcal} kcal`;
-        document.getElementById('today-adjusted-kcal').innerText = `-${recovery.adjustedKcal} kcal`;
-        document.getElementById('recovery-sub-info').innerHTML = `昨日<b>${recovery.overKcal}kcal</b>オーバーしたため、今日の目標を自動で<b>-${recovery.adjustedKcal}kcal</b>調整しました。`;
+        document.getElementById('yesterday-over-kcal').innerText = recovery.overKcal + " kcal";
+        document.getElementById('today-adjusted-kcal').innerText = "-" + recovery.adjustedKcal + " kcal";
+        document.getElementById('recovery-sub-info').innerHTML = "昨日<b>" + recovery.overKcal + "kcal</b>オーバーしたため、今日の目標を自動で<b>-" + recovery.adjustedKcal + "kcal</b>調整しました。";
       } else {
         badge.classList.add('hidden');
         badge.classList.remove('inline-flex');
@@ -1298,28 +1276,28 @@
 
       document.getElementById('summary-cur-p').innerText = curP.toFixed(1);
       document.getElementById('summary-tar-p').innerText = tarP;
-      document.getElementById('bar-p').style.width = `${Math.min(100, (curP / tarP) * 100)}%`;
+      document.getElementById('bar-p').style.width = Math.min(100, (curP / tarP) * 100) + "%";
 
       document.getElementById('summary-cur-f').innerText = curF.toFixed(1);
       document.getElementById('summary-tar-f').innerText = tarF;
-      document.getElementById('bar-f').style.width = `${Math.min(100, (curF / tarF) * 100)}%`;
+      document.getElementById('bar-f').style.width = Math.min(100, (curF / tarF) * 100) + "%";
 
       document.getElementById('summary-cur-c').innerText = curC.toFixed(1);
       document.getElementById('summary-tar-c').innerText = tarC;
-      document.getElementById('bar-c').style.width = `${Math.min(100, (curC / tarC) * 100)}%`;
+      document.getElementById('bar-c').style.width = Math.min(100, (curC / tarC) * 100) + "%";
 
       const weeklyDiff = getWeeklyDiffSummary();
 
       const formatDiffNum = (num, unit) => {
-        if (num > 0) return `<span class="text-rose-600 font-extrabold">+${num.toFixed(1)}${unit}</span>`;
-        if (num === 0) return `<span class="text-brand-text">±0${unit}</span>`;
-        return `<span class="text-sky-600 font-extrabold">${num.toFixed(1)}${unit}</span>`;
+        if (num > 0) return '<span class="text-rose-600 font-extrabold">+' + num.toFixed(1) + unit + '</span>';
+        if (num === 0) return '<span class="text-brand-text">±0' + unit + '</span>';
+        return '<span class="text-sky-600 font-extrabold">' + num.toFixed(1) + unit + '</span>';
       };
 
       const formatDiffCal = (num) => {
-        if (num > 0) return `<span class="text-rose-600 font-extrabold">+${Math.round(num).toLocaleString()}kcal</span>`;
-        if (num === 0) return `<span class="text-brand-text">±0kcal</span>`;
-        return `<span class="text-sky-600 font-extrabold">${Math.round(num).toLocaleString()}kcal</span>`;
+        if (num > 0) return '<span class="text-rose-600 font-extrabold">+' + Math.round(num).toLocaleString() + 'kcal</span>';
+        if (num === 0) return '<span class="text-brand-text">±0kcal</span>';
+        return '<span class="text-sky-600 font-extrabold">' + Math.round(num).toLocaleString() + 'kcal</span>';
       };
 
       document.getElementById('balance-kcal').innerHTML = formatDiffCal(weeklyDiff.kcalDiff);
@@ -1339,7 +1317,7 @@
       document.getElementById('input-weight').placeholder = clientState.weight ? clientState.weight.toFixed(1) : "55.0";
       document.getElementById('input-fat').placeholder = clientState.fatRate ? clientState.fatRate.toFixed(1) : "15.0";
 
-      // 🕒 履歴スライダーの再描画
+      // 🕒 履歴スライダー表示をアップデート
       renderMealsHistory();
 
       const timelineContainer = document.getElementById('meal-timeline-container');
@@ -1411,7 +1389,7 @@
       } else if (direction === 'next') {
         d.setDate(d.getDate() + 1);
       }
-      selectedDateString = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      selectedDateString = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
       renderClientApp();
     };
 
@@ -1433,7 +1411,7 @@
 
     window.openManualInputModal = function() {
       const now = new Date();
-      document.getElementById('manual-time').value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      document.getElementById('manual-time').value = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
       window.toggleModal('manual-meal-modal', true);
     };
 
@@ -1585,10 +1563,9 @@
     // =======================================================
 
     async function fetchGeminiForClient(payload) {
-      // 1. ローカルメモリ、2. LocalStorage の優先順位で最速取得
-      let key = clientState.sharedGeminiKey || localStorage.getItem(`carat_shared_gemini_key_${appId}`) || "";
+      let key = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
       if (!key) {
-        const trainerKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
+        const trainerKey = localStorage.getItem("carat_trainer_gemini_key_" + appId) || "";
         if (trainerKey) key = trainerKey;
       }
       
@@ -1596,7 +1573,6 @@
         throw new Error("API_KEY_MISSING");
       }
 
-      // プレビュー環境と製品環境のモデル制限404バグを永久絶滅させる、製品版モデルへのフォールバック機構
       const models = [
         "gemini-2.5-flash",
         "gemini-1.5-flash",
@@ -1607,7 +1583,7 @@
       let lastStatus = null;
 
       for (const modelName of models) {
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
+        const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + modelName + ":generateContent?key=" + key;
         try {
           const response = await fetch(endpoint, {
             method: 'POST',
@@ -1619,22 +1595,20 @@
             return await response.json();
           } else {
             const errText = await response.text();
-            lastError = `Model ${modelName} status ${response.status}: ${errText}`;
+            lastError = "Model " + modelName + " status " + response.status + ": " + errText;
           }
         } catch (e) {
           lastError = e.message || e;
         }
       }
 
-      throw new Error(`API_ERROR_STATUS_${lastStatus || 'UNKNOWN'}_DETAILS_${lastError}`);
+      throw new Error("API_ERROR_STATUS_" + (lastStatus || 'UNKNOWN') + "_DETAILS_" + lastError);
     }
 
     // ★ 最外周の中括弧 { ... } のみを完全自動抽出してデコードする最強パーサー ★
     function parseGeminiJSON(text) {
       try {
         const cleaned = text.trim();
-        
-        // どれほど前後に日本語のおしゃべりやマークダウン記号が含まれていても、最外周のブラケットだけを引きずり出す
         const start = cleaned.indexOf('{');
         const end = cleaned.lastIndexOf('}');
         if (start === -1 || end === -1) {
@@ -1734,7 +1708,7 @@
           const newMeal = {
             id: targetMealId,
             name: parsed.name,
-            time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
+            time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
             kcal: parsed.kcal,
             p: parsed.p,
             f: parsed.f,
@@ -1743,7 +1717,7 @@
           };
 
           await saveMealToCloud(newMeal);
-          showToast(`「${parsed.name}」をAI自動記録しました！編集はカードをタップ。`);
+          showToast("「" + parsed.name + "」をAI自動記録しました！編集はカードをタップ。");
         } else {
           throw new Error("フォーマットが不正です。");
         }
@@ -1817,7 +1791,7 @@
           const newMeal = {
             id: targetMealId,
             name: parsed.name,
-            time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
+            time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
             kcal: parsed.kcal,
             p: parsed.p,
             f: parsed.f,
@@ -1900,7 +1874,7 @@
     window.setQuickScale = function(scaleType) {
       const btns = ['10', '50', '100', 'custom'];
       btns.forEach(b => {
-        const el = document.getElementById(`scale-btn-${b}`);
+        const el = document.getElementById("scale-btn-" + b);
         el.className = "py-2 text-[10px] font-black rounded-lg transition-all text-brand-muted hover:bg-white/40";
       });
 
@@ -1912,7 +1886,7 @@
         const val = document.getElementById('edit-meal-scale-slider').value;
         window.changeMealScale(val);
       } else {
-        document.getElementById(`scale-btn-${scaleType}`).className = "py-2 text-[10px] font-black rounded-lg transition-all bg-white text-brand-primary shadow-sm border border-brand-border/50";
+        document.getElementById("scale-btn-" + scaleType).className = "py-2 text-[10px] font-black rounded-lg transition-all bg-white text-brand-primary shadow-sm border border-brand-border/50";
         sliderArea.classList.add('hidden');
         document.getElementById('edit-meal-scale-slider').value = scaleType;
         window.changeMealScale(scaleType);
@@ -1935,42 +1909,42 @@
 
       editingMealObject.ingredients.forEach((ing, i) => {
         const row = document.createElement('div');
-        row.className = "bg-white rounded-2xl p-4 border border-brand-border/60 flex flex-col gap-2.5 text-xs text-brand-text mb-1 shrink-0 shadow-sm relative";
+        row.className = "bg-white rounded-2xl p-4 border border-brand-border/60 shadow-sm relative";
         
         row.innerHTML = `
-          <!-- 上段: 食材名、AI自動推定ボタン、削除ボタン -->
+          <!-- 上段: 食材名（追加食材）、AI自動推定ボタン、削除ボタン -->
           <div class="flex items-center gap-2.5 w-full">
-            <input type="text" value="${ing.name}" class="bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-black flex-1 min-w-0 focus:outline-none focus:border-brand-primary transition-colors" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
+            <input type="text" value="` + ing.name + `" class="bg-brand-bg border border-brand-border rounded-xl px-3 py-2 text-xs font-black flex-1 min-w-0 focus:outline-none focus:border-brand-primary transition-colors" onchange="window.updateIngredientName(` + i + `, this.value)" placeholder="食材名">
             
-            <button type="button" onclick="window.estimateIngredientPFC(${i})" class="bg-brand-primary hover:bg-brand-primaryHover text-white text-[10px] font-bold px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-1 shrink-0 shadow-sm">
+            <button type="button" onclick="window.estimateIngredientPFC(` + i + `)" class="bg-brand-primary hover:bg-brand-primaryHover text-white text-[10px] font-bold px-3.5 py-2.5 rounded-xl transition-all flex items-center gap-1 shrink-0 shadow-sm">
               <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> AI推定
             </button>
 
-            <button onclick="window.removeIngredientRow(${i})" class="text-brand-muted hover:text-rose-500 p-1 rounded-lg transition shrink-0">
+            <button onclick="window.removeIngredientRow(` + i + `)" class="text-brand-muted hover:text-rose-500 p-1 rounded-lg transition shrink-0">
               <i data-lucide="trash-2" class="w-4.5 h-4.5"></i>
             </button>
           </div>
           <!-- 下段: 重量、およびPFC・カロリーの手動微調整フィールド -->
-          <div class="grid grid-cols-5 gap-1.5 text-center">
+          <div class="grid grid-cols-5 gap-1.5 text-center mt-2">
             <div>
               <label class="text-[8px] text-brand-muted block font-bold mb-0.5">重量(g)</label>
-              <input type="number" value="${Math.round(safeFloat(ing.weight))}" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientWeight(${i}, this.value)">
+              <input type="number" value="` + Math.round(safeFloat(ing.weight)) + `" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientWeight(` + i + `, this.value)">
             </div>
             <div>
               <label class="text-[8px] text-sky-600 block font-bold mb-0.5">P(g)</label>
-              <input type="number" step="0.1" value="${safeFloat(ing.p).toFixed(1)}" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientPFC(${i}, 'p', this.value)">
+              <input type="number" step="0.1" value="` + safeFloat(ing.p).toFixed(1) + `" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientPFC(` + i + `, 'p', this.value)">
             </div>
             <div>
               <label class="text-[8px] text-emerald-600 block font-bold mb-0.5">F(g)</label>
-              <input type="number" step="0.1" value="${safeFloat(ing.f).toFixed(1)}" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientPFC(${i}, 'f', this.value)">
+              <input type="number" step="0.1" value="` + safeFloat(ing.f).toFixed(1) + `" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientPFC(` + i + `, 'f', this.value)">
             </div>
             <div>
               <label class="text-[8px] text-amber-600 block font-bold mb-0.5">C(g)</label>
-              <input type="number" step="0.1" value="${safeFloat(ing.c).toFixed(1)}" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientPFC(${i}, 'c', this.value)">
+              <input type="number" step="0.1" value="` + safeFloat(ing.c).toFixed(1) + `" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientPFC(` + i + `, 'c', this.value)">
             </div>
             <div>
               <label class="text-[8px] text-brand-text block font-bold mb-0.5">kcal</label>
-              <input type="number" value="${Math.round(safeFloat(ing.kcal))}" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientPFC(${i}, 'kcal', this.value)">
+              <input type="number" value="` + Math.round(safeFloat(ing.kcal)) + `" class="w-full bg-brand-bg border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none focus:border-brand-primary" onchange="window.changeIngredientPFC(` + i + `, 'kcal', this.value)">
             </div>
           </div>
         `;
@@ -2013,7 +1987,6 @@
       renderIngredientsInEditor();
     };
 
-    // 食材変更時の1gあたり比率を書き換え前の「オリジナル基準値」から安全取得して計算し直すバグ駆逐ロジック
     window.changeIngredientWeight = function(index, newWeight) {
       const w = safeFloat(newWeight);
       if (w < 0) return;
@@ -2049,7 +2022,6 @@
       renderIngredientsInEditor();
     };
 
-    // 手動追加・既存食材のP, F, C, kcal を直接変更した際の同期書き換えハンドラー
     window.changeIngredientPFC = function(index, type, val) {
       const v = safeFloat(val);
       if (v < 0) return;
@@ -2075,7 +2047,7 @@
       recalculateTotalsInEditor();
     };
 
-    // 個別追加した食材名と重量(g)から、100%正確なPFC・カロリーをAIが裏側で自動計算して自動記入するAPI機能
+    // ★ 個別追加した食材名と重量(g)から、100%正確なPFC・カロリーをAIが自動計算・代入するロジック ★
     window.estimateIngredientPFC = async function(index) {
       const ing = editingMealObject.ingredients[index];
       if (!ing) return;
@@ -2090,7 +2062,7 @@
 
       const toast = document.createElement('div');
       toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-5 py-3 rounded-full text-xs font-bold shadow-md z-[300] flex items-center gap-2 animate-bounce";
-      toast.innerHTML = `<i data-lucide="brain-circuit" class="w-4 h-4 animate-spin"></i> AIが「${ingName} ${ingWeight}g」の栄養を正確に調査中...`;
+      toast.innerHTML = '<i data-lucide="brain-circuit" class="w-4 h-4 animate-spin"></i> AIが「' + ingName + ' ' + ingWeight + 'g」の栄養を正確に調査中...';
       document.body.appendChild(toast);
       lucide.createIcons();
 
@@ -2116,7 +2088,6 @@
         const res = await fetchGeminiForClient(payload);
         let rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
         
-        // 最外周の中括弧を抽出
         const start = rawText.indexOf('{');
         const end = rawText.lastIndexOf('}');
         if (start === -1 || end === -1) {
@@ -2127,7 +2098,6 @@
         const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
         const currentScale = currentSliderValue / 100;
 
-        // 計算結果を安全代入
         ing.p = safeFloat(parsed.p);
         ing.f = safeFloat(parsed.f);
         ing.c = safeFloat(parsed.c);
@@ -2139,9 +2109,8 @@
         ing.originalKcal = ing.kcal / (currentScale || 1);
         ing.originalWeight = ingWeight / (currentScale || 1);
 
-        // UIのエディター要素をリロード・再描画
         renderIngredientsInEditor();
-        showToast(`AIが「${ingName}」の栄養価を自動適用しました！`);
+        showToast("AIが「" + ingName + "」の栄養価を自動適用しました！");
 
       } catch (err) {
         console.error("Ingredient AI Estimation Error:", err);
@@ -2153,7 +2122,7 @@
 
     window.changeMealScale = function(scalePercent) {
       const scale = parseFloat(scalePercent) / 100;
-      document.getElementById('scale-percentage-text').innerText = `${scalePercent} %`;
+      document.getElementById('scale-percentage-text').innerText = scalePercent + " %";
 
       editingMealObject.ingredients.forEach(ing => {
         ing.weight = safeFloat(ing.originalWeight) * scale;
@@ -2172,7 +2141,6 @@
           if (numInput) {
             numInput.value = Math.round(safeFloat(ing.weight));
           }
-          // PFC、Kcalインプットの表示値をスライダー連動で動的に書き換える
           const inputs = row.querySelectorAll('input[type="number"]');
           if (inputs.length >= 5) {
             inputs[1].value = safeFloat(ing.p).toFixed(1); // P
@@ -2247,15 +2215,15 @@
       const aiMenuContent = document.getElementById('tab-content-ai-menu');
 
       if (tabName === 'home') {
-        homeBtn.className = "py-3 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 bg-brand-primary text-white shadow-md";
-        aiMenuBtn.className = "py-3 text-xs font-black rounded-xl transition-all text-brand-muted hover:text-brand-primary";
+        homeBtn.className = "py-2.5 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 bg-brand-primary text-white shadow-md";
+        aiMenuBtn.className = "py-2.5 text-xs font-black rounded-xl transition-all text-brand-muted hover:text-brand-primary";
         
         homeContent.classList.remove('hidden');
         aiMenuContent.classList.add('hidden');
         renderClientApp();
       } else {
-        homeBtn.className = "py-3 text-xs font-black rounded-xl transition-all text-brand-muted hover:text-brand-primary";
-        aiMenuBtn.className = "py-3 text-xs font-black rounded-xl transition-all bg-brand-primary text-white shadow-md";
+        homeBtn.className = "py-2.5 text-xs font-black rounded-xl transition-all text-brand-muted hover:text-brand-primary";
+        aiMenuBtn.className = "py-2.5 text-xs font-black rounded-xl transition-all bg-brand-primary text-white shadow-md";
         
         homeContent.classList.add('hidden');
         aiMenuContent.className = "space-y-4 transition-all slide-up";
@@ -2274,7 +2242,7 @@
       selectedMenuCategory = cat;
       const types = ['home', 'convenience', 'restaurant'];
       types.forEach(t => {
-        const el = document.getElementById(`menu-cat-${t}`);
+        const el = document.getElementById("menu-cat-" + t);
         if (t === cat) {
           el.className = "py-2.5 text-[10px] font-bold rounded-lg transition-all bg-white text-brand-primary shadow-sm border border-brand-border/50";
         } else {
@@ -2301,7 +2269,7 @@
     function syncMealTimingUI() {
       const timings = ['breakfast', 'lunch', 'dinner', 'snack'];
       timings.forEach(t => {
-        const el = document.getElementById(`meal-timing-${t}`);
+        const el = document.getElementById("meal-timing-" + t);
         if (selectedMealTimings.includes(t)) {
           el.className = "py-2.5 text-[9px] font-black rounded-lg transition-all bg-brand-primary text-white shadow-sm border border-brand-primary";
         } else {
@@ -2319,7 +2287,7 @@
 
       const loading = document.getElementById('loading-overlay');
       document.getElementById('loading-main-text').innerText = "本日の残りPFCを等分逆算中...";
-      document.getElementById('loading-sub-text').innerText = `${selectedMealTimings.length}食分に等しく振り分けた最適なメニューを構築中。`;
+      document.getElementById('loading-sub-text').innerText = selectedMealTimings.length + "食分に等しく振り分けた最適なメニューを構築中。";
       loading.classList.remove('hidden');
       loading.classList.add('flex');
 
@@ -2360,7 +2328,7 @@
         if (selectedMenuCategory === 'convenience') catJp = "コンビニ商品（セブンイレブン、ファミリーマート、ローソン等で実際に売っている定番の高PFC商品名）";
         
         if (selectedMenuCategory === 'restaurant') {
-          catJp = `外食フランチャイズ店名指定（日本の大手チェーン店である【大戸屋】【やよい軒】【スシロー】【くら寿司】【ガスト】【サイゼリヤ】【ココス】【吉野家】等の具体的な「実店舗名」を明確に冠したうえで、そのお店の実在メニュー、または非常に再現性の高い定番PFCメニュー名）`;
+          catJp = "外食フランチャイズ店名指定（日本の大手チェーン店である【大戸屋】【やよい軒】【スシロー】【くら寿司】【ガスト】【サイゼリヤ】【ココス】【吉野家】等の具体的な「実店舗名」を明確に冠したうえで、そのお店の実在メニュー、または非常に再現性の高い定番PFCメニュー名）";
         }
 
         const timingsLabelMap = { 'breakfast': '朝食', 'lunch': '昼食', 'dinner': '夕食', 'snack': '間食' };
@@ -2385,7 +2353,7 @@
 - 1食あたり目標炭水化物(C): ${targetCPerMeal.toFixed(1)} g
 
 【重要な外食・店舗名提案ルール】
-調達カテゴリが「外食・レストラン」の場合、メニュー名のテキストに、必ず「大戸屋」「やよい軒」「スシロー」「くら寿司」「ガスト」「サイゼリヤ」などの大手有名フランチャイズ店名を【店名】として冠したメニュー名にしてください。
+調達カテゴリが「外食・レストラン」の場合、メニュー名のテキストに、必ず「大戸屋」「やよい軒」「スシロー】【くら寿司】【ガスト】【サイゼリヤ」などの大手有名フランチャイズ店名を【店名】として冠したメニュー名にしてください。
 例: 【やよい軒】しまほっけ定食（もち麦ご飯・普通盛）、【大戸屋】鶏と野菜の黒酢あん定食（五穀ご飯少なめ）、【スシロー】まぐろ2皿・えびアボカド1皿・茶碗蒸し、【サイゼリヤ】若鶏のディアボラ風＋スモールライス
 
 【時間帯別の逆算ルール】
@@ -2439,7 +2407,7 @@
           const gridContainer = document.getElementById('ai-suggested-meals-grid');
           gridContainer.innerHTML = "";
 
-          document.getElementById('ai-suggestion-summary-title').innerText = `${selectedMealTimings.length}食の等分逆算プラン (${Math.round(targetKcalPerMeal)}kcal/食)`;
+          document.getElementById('ai-suggestion-summary-title').innerText = selectedMealTimings.length + "食の等分逆算プラン (" + Math.round(targetKcalPerMeal) + "kcal/食)";
 
           parsed.menus.forEach((menu, index) => {
             const mealCard = document.createElement('div');
@@ -2448,12 +2416,12 @@
               <div class="flex justify-between items-start">
                 <div class="flex-1 space-y-1 pr-2">
                   <span class="inline-block text-[8px] bg-brand-primary text-white px-2.5 py-0.5 rounded font-black uppercase tracking-wider">
-                    ${timingsLabelMap[menu.timing] || 'お食事'}
+                    ` + (timingsLabelMap[menu.timing] || 'お食事') + `
                   </span>
-                  <h5 class="text-xs font-black text-brand-text leading-snug">${menu.name}</h5>
+                  <h5 class="text-xs font-black text-brand-text leading-snug">` + menu.name + `</h5>
                 </div>
                 <span class="text-[10px] font-mono font-black text-brand-primary bg-brand-accent px-2.5 py-0.5 rounded-lg border border-brand-border shrink-0 font-bold">
-                  ${Math.round(safeFloat(menu.kcal))} kcal
+                  ` + Math.round(safeFloat(menu.kcal)) + ` kcal
                 </span>
               </div>
 
@@ -2461,32 +2429,32 @@
               <div class="grid grid-cols-3 gap-1.5 text-center text-[9px] font-bold">
                 <div class="bg-brand-bg/50 p-1.5 rounded-xl border border-brand-border/30">
                   <span class="text-[6px] text-sky-600 block uppercase">P</span>
-                  <span class="font-mono font-bold">${safeFloat(menu.p).toFixed(1)}</span>g
+                  <span class="font-mono font-bold">` + safeFloat(menu.p).toFixed(1) + `</span>g
                 </div>
                 <div class="bg-brand-bg/50 p-1.5 rounded-xl border border-brand-border/30">
                   <span class="text-[6px] text-emerald-600 block uppercase">F</span>
-                  <span class="font-mono font-bold">${safeFloat(menu.f).toFixed(1)}</span>g
+                  <span class="font-mono font-bold">` + safeFloat(menu.f).toFixed(1) + `</span>g
                 </div>
                 <div class="bg-brand-bg/50 p-1.5 rounded-xl border border-brand-border/30">
                   <span class="text-[6px] text-amber-600 block uppercase">C</span>
-                  <span class="font-mono font-bold">${safeFloat(menu.c).toFixed(1)}</span>g
+                  <span class="font-mono font-bold">` + safeFloat(menu.c).toFixed(1) + `</span>g
                 </div>
               </div>
 
               <!-- Ingredients -->
               <div class="bg-brand-bg/40 p-2.5 rounded-xl text-[9px] text-brand-muted leading-relaxed whitespace-pre-line font-medium border border-brand-border/30">
                 <span class="font-black text-brand-primary block text-[8px] mb-0.5">🍳 構成・単品と詳細グラム数:</span>
-                ${menu.ingredientsText}
+                ` + menu.ingredientsText + `
               </div>
 
               <!-- Advice -->
               <div class="bg-brand-bg/40 p-2.5 rounded-xl text-[9px] text-brand-muted leading-relaxed font-medium border border-brand-border/30 animate-pulse">
                 <span class="font-black text-emerald-600 block text-[8px] mb-0.5">💡 女性専門チーフアドバイス:</span>
-                ${menu.advice}
+                ` + menu.advice + `
               </div>
 
               <!-- 個別登録ボタン -->
-              <button onclick="window.registerSingleSuggestedMenu(${index})" class="w-full bg-brand-accent hover:bg-brand-primary hover:text-white text-brand-primary font-bold text-[10px] py-2.5 rounded-xl transition-all flex items-center justify-center gap-1 border border-brand-primary/10">
+              <button onclick="window.registerSingleSuggestedMenu(` + index + `)" class="w-full bg-brand-accent hover:bg-brand-primary hover:text-white text-brand-primary font-bold text-[10px] py-2.5 rounded-xl transition-all flex items-center justify-center gap-1 border border-brand-primary/10">
                 <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
                 この提案を今日の食事に登録する
               </button>
@@ -2520,8 +2488,8 @@
 
       const newMeal = {
         id: targetMealId,
-        name: `${menu.name}`,
-        time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
+        name: menu.name,
+        time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
         kcal: safeFloat(menu.kcal),
         p: safeFloat(menu.p),
         f: safeFloat(menu.f),
@@ -2538,7 +2506,7 @@
 
       try {
         await saveMealToCloud(newMeal);
-        showToast(`「${menu.name}」を登録しました！`);
+        showToast("「" + menu.name + "」を登録しました！");
       } catch (e) {
         console.error(e);
         alert("登録に失敗しました。");
@@ -2557,8 +2525,8 @@
 
           const newMeal = {
             id: targetMealId,
-            name: `${menu.name}`,
-            time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
+            name: menu.name,
+            time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
             kcal: safeFloat(menu.kcal),
             p: safeFloat(menu.p),
             f: safeFloat(menu.f),
