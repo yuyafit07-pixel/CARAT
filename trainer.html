@@ -67,13 +67,13 @@
         <span class="text-[9px] font-bold text-brand-muted tracking-widest block mt-0.5 uppercase">TRAINER INTERACTIVE PORTAL</span>
       </div>
     </div>
-    <div id="sync-status" class="text-[10px] px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
+    <div id="sync-status" class="text-[10px] px-2.5 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold transition-all">
       <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
       Connecting...
     </div>
   </header>
 
-  <main class="max-w-6xl mx-auto px-4 mt-6 space-y-4 animate-fade-in">
+  <main class="max-w-4xl mx-auto px-4 mt-6 space-y-4 animate-fade-in">
 
     <!-- 店舗Gemini APIキー設定（中央金庫の自動配信対応） -->
     <details class="bg-brand-card rounded-[24px] border border-brand-border/60 overflow-hidden shadow-cardShadow transition-all duration-300">
@@ -90,7 +90,7 @@
           <span class="block">GitHub上のソースコード内にAPIキーを「直接」書き込んでコミットすると、Googleの監視AIが検知して数秒でキーを無効化（凍結）してしまいます。必ず、以下の入力欄から手動で貼り付けて「全ユーザーへ配信」を行ってください。コード内直書きは厳禁です。</span>
         </div>
         <p class="text-[10px] text-brand-muted leading-relaxed">
-          Google AI Studioで新しく作ったAPIキー（AIzaSy...）を入力して保存すると、Firestore中央金庫（SETTINGS）へマッピングされ、会員のスマホアプリ（index.html）へ自動適用されます。
+          Google AI Studioで新しく作ったAPIキー（AIzaSy...から始まる文字列）を入力して保存すると、Firestore中央金庫（SETTINGS）へマッピングされ、会員のスマホアプリ（index.html）へ自動適用されます。
         </p>
         <div class="flex gap-2">
           <input type="password" id="trainer-gemini-key" class="flex-1 bg-brand-card border border-brand-border rounded-xl px-4 py-2.5 text-xs font-mono text-brand-text focus:outline-none focus:border-brand-primary transition-all" placeholder="AIzaSy...">
@@ -102,10 +102,10 @@
     </details>
 
     <!-- メイングリッド (左: 顧客リスト ＆ 右: リアルタイムカルテ) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
 
       <!-- 左側: クライアント管理 -->
-      <div class="lg:col-span-4 space-y-4">
+      <div class="md:col-span-5 space-y-4">
         
         <!-- 新規登録 -->
         <div class="bg-brand-card rounded-3xl p-5 border border-brand-border/60 shadow-cardShadow space-y-4 text-left">
@@ -186,7 +186,7 @@
       </div>
 
       <!-- 右カラム: クライアントリアルタイム食事カルテ -->
-      <div class="lg:col-span-8 space-y-4">
+      <div class="md:col-span-7 space-y-4">
         
         <div id="client-data-container" class="hidden space-y-4">
 
@@ -370,7 +370,7 @@
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </span>
-                  来店時専用：直近1週間の食事・PFC自動AI総括 (完全修復)
+                  来店時専用：直近1週間の食事・PFC自動AI総括
                 </h4>
                 <p class="text-[9px] text-brand-muted mt-1 leading-normal">
                   セッション来店時などにこの1週間の食事・体重データをAIが一括スキャン。女性特有の体質リズム・スポーツ栄養学に基づき、優しい1週間の総評レポートを瞬時に作成します。
@@ -384,7 +384,7 @@
 
             <!-- 出力と編集・送信フォーム -->
             <div class="space-y-3">
-              <!-- 指導お役立ちテンプレートパレット（世界一トレーナーが使いやすい機能！） -->
+              <!-- 指導お役立ちテンプレートパレット -->
               <div class="space-y-1">
                 <span class="text-[8px] text-brand-muted font-bold uppercase tracking-wider block">💬 クイック下書き定型文テンプレート (1タップでセット)</span>
                 <div class="flex flex-wrap gap-1.5">
@@ -943,7 +943,7 @@
         throw new Error("店舗Gemini API Keyが設定されていません。最上部の設定に入力してください。");
       }
 
-      // ★ 解決：製品版かつGCPで404にならない最も安定する最新モデルを指定 ★
+      // 製品版稼働率No.1モデルをローテーション
       const models = [
         "gemini-2.5-flash",
         "gemini-1.5-flash",
@@ -1110,7 +1110,7 @@ ${weeklyMealsSummaryText}
       showToast("アドバイスコメントをコピーしました！");
     };
 
-    // ★ 新設：世界一使いやすいクイック下書きテンプレート選択パレット ★
+    // クイック下書きテンプレート選択パレット
     window.applyCommentTemplate = function(templateType) {
       const textarea = document.getElementById('weekly-feedback-textarea');
       const nickname = globalClientData ? globalClientData.nickname : "クライアント";
