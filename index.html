@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CARAT Meal Planner - Premium</title>
+    <title>CARAT Meal Planner - Premium Lounge</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -17,7 +17,7 @@
                 extend: {
                     colors: {
                         brand: {
-                            bg: '#F3F6FC',
+                            bg: '#F4F7FC',
                             card: '#FFFFFF',
                             primary: '#0B47A6', // 深みのあるプレミアムクラシックブルー
                             primaryHover: '#073280',
@@ -33,7 +33,8 @@
                     boxShadow: {
                         premium: '0 24px 50px -10px rgba(11, 71, 166, 0.08), 0 12px 24px -10px rgba(11, 71, 166, 0.03)',
                         cardShadow: '0 16px 36px -4px rgba(92, 109, 133, 0.08)',
-                        softShadow: '0 8px 24px -2px rgba(15, 26, 48, 0.03)'
+                        softShadow: '0 8px 24px -2px rgba(15, 26, 48, 0.03)',
+                        glow: '0 0 20px rgba(11, 71, 166, 0.08)'
                     }
                 }
             }
@@ -43,7 +44,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background: radial-gradient(circle at top right, #F9FBFC 0%, #E8EEF8 100%);
+            background: radial-gradient(circle at top right, #FAFCFD 0%, #E9EFF8 100%);
             -webkit-tap-highlight-color: transparent;
         }
         .font-logo {
@@ -63,10 +64,6 @@
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
         }
-        /* インプット等のスタイリング微調整 */
-        input, button, select, textarea {
-            font-family: inherit;
-        }
         .glass-panel {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px);
@@ -78,13 +75,13 @@
 <body class="text-brand-text min-h-screen pb-28">
 
     <!-- ヘッダー -->
-    <header class="bg-white/85 backdrop-blur-md sticky top-0 z-50 border-b border-brand-border/50 px-5 py-4 flex justify-between items-center shadow-sm">
-        <div class="flex items-center gap-2.5">
+    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-brand-border/40 px-5 py-3.5 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-3">
             <span class="font-logo font-black text-xl tracking-widest text-brand-primary">CARAT</span>
-            <span class="text-[9px] bg-brand-primary text-white font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Premium Health</span>
+            <span class="text-[8px] bg-brand-primary/10 text-brand-primary font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Premium Health Lounge</span>
         </div>
         <div>
-            <div id="connection-status" class="text-[10px] px-3.5 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-2 font-black transition-all">
+            <div id="connection-status" class="text-[9.5px] px-3.5 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100/60 flex items-center gap-2 font-black transition-all">
                 <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span> 未連携
             </div>
         </div>
@@ -94,7 +91,7 @@
     <main class="max-w-md mx-auto px-4 pt-5 space-y-5">
 
         <!-- ★ 初期ログイン・連携画面 -->
-        <div id="login-screen" class="bg-white rounded-[2.5rem] p-8 shadow-premium border border-brand-border/60 text-center space-y-6">
+        <div id="login-screen" class="bg-white rounded-[2.5rem] p-8 shadow-premium border border-brand-border/50 text-center space-y-6">
             <div class="space-y-2">
                 <h2 class="font-logo font-black text-3xl tracking-widest text-brand-primary">CARAT</h2>
                 <p class="text-xs text-brand-muted font-bold">パーソナルジムCARAT 専用食事管理ポータル</p>
@@ -111,10 +108,10 @@
         <div id="main-dashboard" class="hidden space-y-5">
 
             <!-- クライアント連携情報パネル -->
-            <div id="id-active-panel" class="hidden bg-white/90 backdrop-blur rounded-2xl px-4 py-3.5 border border-brand-border/50 flex justify-between items-center shadow-softShadow">
-                <div class="flex items-center gap-2.5">
+            <div id="id-active-panel" class="hidden bg-white/95 backdrop-blur rounded-2xl px-4.5 py-3 border border-brand-border/40 flex justify-between items-center shadow-softShadow">
+                <div class="flex items-center gap-3">
                     <span class="text-[9px] text-brand-muted font-bold block uppercase tracking-wider">CARAT ID</span>
-                    <span id="active-id-text" class="font-mono text-xs font-black text-brand-primary">CRT-XXXXXX</span>
+                    <span id="active-id-text" class="font-mono text-xs font-black text-brand-primary tracking-wider">CRT-XXXXXX</span>
                 </div>
                 <button onclick="window.disconnectClientId()" class="text-[9px] text-rose-500 font-black hover:bg-rose-50/50 px-3 py-2 rounded-xl transition border border-rose-100/50">連携解除</button>
             </div>
@@ -124,35 +121,36 @@
 
                 <!-- 日付選択カレンダーヘッダー -->
                 <div class="bg-white rounded-[2rem] p-4.5 border border-brand-border/40 flex justify-between items-center shadow-cardShadow">
-                    <button onclick="window.changeDay('prev')" class="p-3 hover:bg-brand-accent rounded-2xl transition-all text-brand-primary active:scale-90">
+                    <button onclick="window.changeDay('prev')" class="p-3 hover:bg-brand-accent rounded-2xl transition-all text-brand-primary active:scale-90 flex items-center justify-center">
                         <i data-lucide="chevron-left" class="w-5 h-5"></i>
                     </button>
                     <div class="text-center flex flex-col items-center">
                         <span id="display-date-text" class="font-mono font-black text-sm tracking-widest text-brand-text">2026-07-10</span>
-                        <button id="btn-today-badge" onclick="window.resetToToday()" class="hidden text-[9px] text-brand-primary bg-brand-accent px-3 py-1 rounded-full font-black transition-all mt-1 shadow-sm">今日に戻る</button>
+                        <button id="btn-today-badge" onclick="window.resetToToday()" class="hidden text-[9px] text-brand-primary bg-brand-accent px-3.5 py-1 rounded-full font-black transition-all mt-1.5 shadow-sm">今日に戻る</button>
                     </div>
-                    <button onclick="window.changeDay('next')" class="p-3 hover:bg-brand-accent rounded-2xl transition-all text-brand-primary active:scale-90">
+                    <button onclick="window.changeDay('next')" class="p-3 hover:bg-brand-accent rounded-2xl transition-all text-brand-primary active:scale-90 flex items-center justify-center">
                         <i data-lucide="chevron-right" class="w-5 h-5"></i>
                     </button>
                 </div>
 
                 <!-- 今日の目標 & 摂取状況メインカード -->
-                <div class="bg-white rounded-[2.5rem] p-6 border border-brand-border/50 shadow-premium text-center relative overflow-hidden space-y-5">
+                <div class="bg-white rounded-[2.5rem] p-6 border border-brand-border/50 shadow-premium text-center relative overflow-hidden space-y-6">
                     <div class="flex justify-between items-center">
                         <span class="text-[10px] text-brand-muted font-black block uppercase tracking-wider">TODAY'S SUMMARY</span>
                         <span id="auto-recovery-status-badge" class="hidden text-[9px] bg-amber-500 text-white font-extrabold px-3 py-1 rounded-full animate-pulse">昨日超過分を自動調整中</span>
                         <!-- 手動目標調整トリガーボタン -->
-                        <button onclick="window.openTargetAdjustmentModal()" class="text-[10px] text-brand-primary font-black hover:underline flex items-center gap-1">
+                        <button onclick="window.openTargetAdjustmentModal()" class="text-[10px] text-brand-primary font-black hover:underline flex items-center gap-1.5">
                             <i data-lucide="sliders" class="w-3.5 h-3.5"></i> 目標調整
                         </button>
                     </div>
 
                     <!-- メインカロリーメーター -->
                     <div class="flex justify-center items-center gap-6 py-1">
-                        <div class="relative w-32 h-32 shrink-0">
-                            <svg class="w-full h-full transform -rotate-90">
-                                <circle cx="64" cy="56" r="48" stroke="#F1F5F9" stroke-width="8" fill="transparent" />
-                                <circle id="calorie-progress-bar" cx="64" cy="56" r="48" stroke="url(#premium-gradient)" stroke-width="10" stroke-dasharray="301" stroke-dashoffset="301" stroke-linecap="round" fill="transparent" class="transition-all duration-700 ease-out" />
+                        <!-- カロリーサークル -->
+                        <div class="relative w-32 h-32 shrink-0 flex items-center justify-center">
+                            <svg class="absolute inset-0 w-full h-full transform -rotate-90">
+                                <circle cx="64" cy="64" r="50" stroke="#F1F5F9" stroke-width="8" fill="transparent" />
+                                <circle id="calorie-progress-bar" cx="64" cy="64" r="50" stroke="url(#premium-gradient)" stroke-width="10" stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round" fill="transparent" class="transition-all duration-700 ease-out" />
                                 <defs>
                                     <linearGradient id="premium-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" stop-color="#0B47A6" />
@@ -160,38 +158,44 @@
                                     </linearGradient>
                                 </defs>
                             </svg>
-                            <div class="absolute inset-0 flex flex-col justify-center items-center -mt-3">
-                                <span id="summary-cur-cal" class="text-2xl font-logo font-black tracking-tight text-brand-text block">0</span>
-                                <span class="text-[9px] text-brand-muted block font-extrabold uppercase tracking-widest mt-0.5">/ <span id="summary-tar-cal">1800</span> kcal</span>
+                            <div class="relative flex flex-col justify-center items-center text-center">
+                                <span id="summary-cur-cal" class="text-2xl font-logo font-black tracking-tight text-brand-text block leading-none">0</span>
+                                <span class="text-[9px] text-brand-muted block font-extrabold uppercase tracking-widest mt-1.5">/ <span id="summary-tar-cal">1800</span> kcal</span>
                             </div>
                         </div>
 
                         <!-- PFC簡易バー -->
-                        <div class="flex-1 space-y-3.5 text-left">
+                        <div class="flex-1 space-y-3 text-left">
                             <div class="space-y-1">
-                                <div class="flex justify-between text-[10px] font-black">
-                                    <span class="text-[#2C6CB0]">Protein たんぱく質</span>
-                                    <span class="text-brand-muted"><span id="summary-cur-p">0</span> / <span id="summary-tar-p">120</span>g</span>
+                                <div class="flex justify-between text-[10px] font-black items-center">
+                                    <span class="text-[#2C6CB0] flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Protein
+                                    </span>
+                                    <span class="text-brand-muted font-mono"><span id="summary-cur-p">0</span>/<span id="summary-tar-p">120</span>g</span>
                                 </div>
-                                <div class="w-full bg-[#EDF3FA] h-2.5 rounded-full overflow-hidden">
+                                <div class="w-full bg-[#EDF3FA] h-2 rounded-full overflow-hidden">
                                     <div id="bar-p" class="h-full bg-gradient-to-r from-sky-500 to-sky-400 rounded-full transition-all duration-700 ease-out shadow-sm" style="width: 0%"></div>
                                 </div>
                             </div>
                             <div class="space-y-1">
-                                <div class="flex justify-between text-[10px] font-black">
-                                    <span class="text-emerald-700">Fat 脂質</span>
-                                    <span class="text-brand-muted"><span id="summary-cur-f">0</span> / <span id="summary-tar-f">45</span>g</span>
+                                <div class="flex justify-between text-[10px] font-black items-center">
+                                    <span class="text-emerald-700 flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Fat
+                                    </span>
+                                    <span class="text-brand-muted font-mono"><span id="summary-cur-f">0</span>/<span id="summary-tar-f">45</span>g</span>
                                 </div>
-                                <div class="w-full bg-[#EDF3FA] h-2.5 rounded-full overflow-hidden">
+                                <div class="w-full bg-[#EDF3FA] h-2 rounded-full overflow-hidden">
                                     <div id="bar-f" class="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-700 ease-out shadow-sm" style="width: 0%"></div>
                                 </div>
                             </div>
                             <div class="space-y-1">
-                                <div class="flex justify-between text-[10px] font-black">
-                                    <span class="text-amber-700">Carbs 炭水化物</span>
-                                    <span class="text-brand-muted"><span id="summary-cur-c">0</span> / <span id="summary-tar-c">230</span>g</span>
+                                <div class="flex justify-between text-[10px] font-black items-center">
+                                    <span class="text-amber-700 flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Carbs
+                                    </span>
+                                    <span class="text-brand-muted font-mono"><span id="summary-cur-c">0</span>/<span id="summary-tar-c">230</span>g</span>
                                 </div>
-                                <div class="w-full bg-[#EDF3FA] h-2.5 rounded-full overflow-hidden">
+                                <div class="w-full bg-[#EDF3FA] h-2 rounded-full overflow-hidden">
                                     <div id="bar-c" class="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-700 ease-out shadow-sm" style="width: 0%"></div>
                                 </div>
                             </div>
@@ -200,34 +204,34 @@
                 </div>
 
                 <!-- カロリーオートリカバリー貯金箱インジケータ -->
-                <div id="recovery-indicator-card" class="hidden bg-gradient-to-br from-[#0B47A6] to-[#4A7BB0] text-white rounded-[2rem] p-5 shadow-premium text-left space-y-2 relative overflow-hidden">
+                <div id="recovery-indicator-card" class="hidden bg-gradient-to-br from-[#0B47A6] to-[#4A7BB0] text-white rounded-[2rem] p-5.5 shadow-premium text-left space-y-2.5 relative overflow-hidden">
                     <div class="flex justify-between items-center">
-                        <span class="text-[10px] text-white/90 font-black uppercase tracking-widest flex items-center gap-1.5">
-                            <i data-lucide="sparkles" class="w-4.5 h-4.5 text-white animate-pulse"></i> カロリーオートリカバリー
+                        <span class="text-[10px] text-white/95 font-black uppercase tracking-widest flex items-center gap-2">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-white animate-pulse"></i> カロリーオートリカバリー
                         </span>
                     </div>
                     <p class="text-[10px] text-white/80 leading-relaxed font-medium">昨日食べすぎた分は、自動で今日の目標から引いて賢く相殺されています。</p>
-                    <div class="grid grid-cols-2 gap-3 pt-2.5 border-t border-white/10">
+                    <div class="grid grid-cols-2 gap-4 pt-3 border-t border-white/10 text-center">
                         <div>
-                            <span class="text-[8px] text-white/60 block uppercase font-bold text-center">昨日の超過カロリー</span>
-                            <span id="yesterday-over-kcal" class="font-logo font-black text-sm block text-center">0 kcal</span>
+                            <span class="text-[8px] text-white/60 block uppercase font-bold tracking-wider mb-0.5">昨日の超過カロリー</span>
+                            <span id="yesterday-over-kcal" class="font-logo font-black text-sm block">0 kcal</span>
                         </div>
                         <div>
-                            <span class="text-[8px] text-white/60 block uppercase font-bold text-center">本日の目標自動調整</span>
-                            <span id="today-adjusted-kcal" class="font-logo font-black text-sm block text-center">-0 kcal</span>
+                            <span class="text-[8px] text-white/60 block uppercase font-bold tracking-wider mb-0.5">本日の目標自動調整</span>
+                            <span id="today-adjusted-kcal" class="font-logo font-black text-sm block text-amber-200">-0 kcal</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- 直近1週間の帳じり合わせ進捗バー -->
-                <div class="bg-white rounded-[2rem] p-5 border border-brand-border/40 shadow-premium text-left space-y-4 relative overflow-hidden">
+                <div class="bg-white rounded-[2rem] p-5.5 border border-brand-border/40 shadow-premium text-left space-y-4 relative overflow-hidden">
                     <div id="balance-bar-color" class="absolute top-0 left-0 w-2.5 h-full bg-emerald-500"></div>
-                    <div class="flex justify-between items-center pl-1.5">
+                    <div class="flex justify-between items-center pl-2">
                         <span class="text-[10px] text-brand-muted font-black block uppercase tracking-wider">WEEKLY STATUS</span>
                         <span class="text-[9px] bg-brand-accent text-brand-primary font-black px-2.5 py-0.5 rounded-full border border-brand-primary/5">直近1週間過不足</span>
                     </div>
-                    <p class="text-[10px] text-brand-muted leading-relaxed font-medium pl-1.5">月曜日を起点とし、今日食べた総量と目標基準の差（おトク枠）を判定します。</p>
-                    <div class="grid grid-cols-4 gap-2.5 pl-1.5 text-center">
+                    <p class="text-[10px] text-brand-muted leading-relaxed font-medium pl-2">月曜日を起点とし、今日食べた総量と目標基準の差（おトク枠）を判定します。</p>
+                    <div class="grid grid-cols-4 gap-2.5 pl-2 text-center">
                         <div class="bg-brand-bg rounded-2xl p-2.5 border border-brand-border/40 shadow-inner">
                             <span class="text-[8px] text-brand-muted block uppercase font-black mb-0.5">カロリー</span>
                             <span id="balance-kcal" class="font-logo text-xs font-black text-brand-text">0</span>
@@ -257,18 +261,18 @@
 
                     <div class="grid grid-cols-3 gap-3">
                         <label class="bg-brand-bg hover:bg-brand-accent/50 border border-brand-border/50 rounded-2xl p-4 text-center flex flex-col items-center justify-center gap-2 cursor-pointer shadow-sm transition-all active:scale-95">
-                            <i data-lucide="camera" class="w-7 h-7 text-brand-primary"></i>
+                            <i data-lucide="camera" class="w-6.5 h-6.5 text-brand-primary mb-0.5"></i>
                             <span class="text-[10.5px] font-black text-brand-text block">写真スキャン</span>
                             <span class="text-[8px] text-brand-muted block leading-none">撮影して一撃解析</span>
                             <input type="file" id="ai-image-input" accept="image/*" class="hidden">
                         </label>
                         <button onclick="window.openTextModal()" class="bg-brand-bg hover:bg-brand-accent/50 border border-brand-border/50 rounded-2xl p-4 text-center flex flex-col items-center justify-center gap-2 shadow-sm transition-all active:scale-95">
-                            <i data-lucide="pencil-line" class="w-7 h-7 text-brand-primary"></i>
+                            <i data-lucide="pencil-line" class="w-6.5 h-6.5 text-brand-primary mb-0.5"></i>
                             <span class="text-[10.5px] font-black text-brand-text block">テキスト解析</span>
                             <span class="text-[8px] text-brand-muted block leading-none">文章で自由に入力</span>
                         </button>
                         <button onclick="window.openManualInputModal()" class="bg-brand-bg hover:bg-brand-accent/50 border border-brand-border/50 rounded-2xl p-4 text-center flex flex-col items-center justify-center gap-2 shadow-sm transition-all active:scale-95">
-                            <i data-lucide="keyboard" class="w-7 h-7 text-brand-primary"></i>
+                            <i data-lucide="keyboard" class="w-6.5 h-6.5 text-brand-primary mb-0.5"></i>
                             <span class="text-[10.5px] font-black text-brand-text block">数値手動入力</span>
                             <span class="text-[8px] text-brand-muted block leading-none">直接数値を登録</span>
                         </button>
@@ -280,9 +284,9 @@
                     <div class="flex items-center gap-1.5 border-b border-brand-border/30 pb-3">
                         <i data-lucide="history" class="w-4.5 h-4.5 text-brand-primary"></i>
                         <span class="text-[10px] text-brand-muted font-black block uppercase tracking-wider">RECENT HISTORY</span>
-                        <span class="text-[9px] text-brand-primary bg-brand-accent px-2.5 py-0.5 rounded-full font-black">過去の履歴から一撃追加</span>
+                        <span class="text-[9px] text-brand-primary bg-brand-accent px-2.5 py-0.5 rounded-full font-black ml-auto">複製記録</span>
                     </div>
-                    <p class="text-[10px] text-brand-muted leading-relaxed font-medium">これまでに記録したお食事を重複なく表示。タップするだけで今の一撃コピー追加が可能です。</p>
+                    <p class="text-[10px] text-brand-muted leading-relaxed font-medium">これまでに記録したお食事を重複なく表示。タップするだけで今の時間に一撃コピー追加できます。</p>
                     <div id="meals-history-container" class="flex gap-3 overflow-x-auto py-2 no-scrollbar">
                         <!-- 動的に履歴がマウントされます -->
                     </div>
@@ -290,7 +294,7 @@
 
                 <!-- 本日の食事ログ一覧タイムライン -->
                 <div class="space-y-3">
-                    <div class="flex items-center gap-1.5 px-1.5">
+                    <div class="flex items-center gap-2 px-1">
                         <i data-lucide="clipboard-list" class="w-4.5 h-4.5 text-brand-primary"></i>
                         <span class="text-[10px] text-brand-muted font-black uppercase tracking-wider">TODAY'S FOOD LOG</span>
                     </div>
@@ -308,7 +312,7 @@
                     <div class="flex items-center justify-between bg-brand-bg rounded-2xl p-4.5 border border-brand-border/50">
                         <label class="text-[11px] text-brand-muted font-black uppercase tracking-wider">本日の体重 (kg)</label>
                         <div class="flex items-center gap-2">
-                            <input type="number" step="0.1" id="input-weight" class="bg-white border border-brand-border rounded-xl px-4 py-2.5 w-24 text-center font-mono font-black text-sm text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/20" placeholder="55.0">
+                            <input type="number" step="0.1" id="input-weight" class="bg-white border border-brand-border rounded-xl px-4 py-2.5 w-24 text-center font-mono font-black text-sm text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/20 shadow-inner" placeholder="55.0">
                             <span class="text-xs font-black text-brand-muted">kg</span>
                         </div>
                     </div>
@@ -324,7 +328,7 @@
                     <p class="text-[10px] text-brand-muted leading-relaxed font-medium pl-2">お食事を記録すると、トレーナーから1週間の体質リズム・栄養レポートが届きます。</p>
                     <div id="trainer-feedback-box" class="bg-brand-bg rounded-2xl p-5 border border-brand-border/30 shadow-inner mt-2 ml-2">
                         <p id="trainer-feedback-text" class="text-xs leading-relaxed font-bold text-brand-text whitespace-pre-wrap">まだアドバイスは届いていません。今日食べたものを記録してみましょう！</p>
-                        <span id="trainer-feedback-time" class="text-[9px] text-brand-muted font-mono block mt-4.5 text-right font-black"></span>
+                        <span id="trainer-feedback-time" class="text-[9px] text-brand-muted font-mono block mt-4 text-right font-black"></span>
                     </div>
                 </div>
 
@@ -374,7 +378,7 @@
                     <div id="ai-suggested-meals-grid" class="space-y-4.5">
                         <!-- AIの提案カードが動的に挿入されます -->
                     </div>
-                    <button onclick="window.registerAllSuggestedMenus()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs py-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-1.5 active:scale-95">
+                    <button onclick="window.registerAllSuggestedMenus()" class="w-full bg-[#10B981] hover:bg-emerald-600 text-white font-black text-xs py-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-1.5 active:scale-95">
                         <i data-lucide="check-check" class="w-4.5 h-4.5"></i>すべて一括で今日のログに登録
                     </button>
                 </div>
@@ -390,14 +394,14 @@
 
                     <div class="grid grid-cols-2 gap-3.5">
                         <div class="bg-brand-bg rounded-2xl p-4 border border-brand-border/40 shadow-inner text-center">
-                            <span class="text-[9px] text-brand-muted block uppercase font-black">初期比（生涯最低 vs 初期）</span>
+                            <span class="text-[9px] text-brand-muted block uppercase font-black mb-0.5">初期比（最低 vs 初期）</span>
                             <span id="milestone-initial-diff" class="font-logo font-black text-xl block text-brand-text">-- kg</span>
-                            <span class="text-[8px] text-brand-muted block mt-1 font-bold">初期: <span id="val-initial-weight">--</span>kg→最低: <span id="val-lowest-weight">--</span>kg</span>
+                            <span class="text-[8px] text-brand-muted block mt-1.5 font-bold">初期: <span id="val-initial-weight">--</span>kg→最低: <span id="val-lowest-weight">--</span>kg</span>
                         </div>
                         <div class="bg-brand-bg rounded-2xl p-4 border border-brand-border/40 shadow-inner text-center">
-                            <span class="text-[9px] text-brand-muted block uppercase font-black">週次比（今週最低 vs 先週最低）</span>
+                            <span class="text-[9px] text-brand-muted block uppercase font-black mb-0.5">週次比（今週最低 vs 先週）</span>
                             <span id="milestone-weekly-diff" class="font-logo font-black text-xl block text-brand-text">-- kg</span>
-                            <span class="text-[8px] text-brand-muted block mt-1 font-bold">先週: <span id="val-prev-lowest">--</span>kg→今週: <span id="val-curr-lowest">--</span>kg</span>
+                            <span class="text-[8px] text-brand-muted block mt-1.5 font-bold">先週: <span id="val-prev-lowest">--</span>kg→今週: <span id="val-curr-lowest">--</span>kg</span>
                         </div>
                     </div>
                 </div>
@@ -424,18 +428,18 @@
 
     <!-- 固定ボトムナビゲーション -->
     <div class="fixed bottom-0 left-0 right-0 z-[100] p-4 max-w-md mx-auto">
-        <div class="bg-white/95 backdrop-blur-lg border border-brand-border/60 shadow-premium rounded-[2rem] p-2 flex justify-around items-center">
-            <button id="nav-btn-home" onclick="window.switchTab('home')" class="flex flex-col items-center gap-1 py-2 px-4 rounded-2xl transition-all text-brand-primary font-black">
-                <i data-lucide="utensils" class="w-5 h-5"></i>
-                <span class="text-[9px] uppercase tracking-wider">記録</span>
+        <div class="bg-white/95 backdrop-blur-lg border border-brand-border/60 shadow-premium rounded-[2.2rem] p-1.5 flex justify-around items-center">
+            <button id="nav-btn-home" onclick="window.switchTab('home')" class="flex flex-col items-center gap-1 py-2 px-5 rounded-2xl transition-all text-brand-primary font-black active:scale-95">
+                <i data-lucide="utensils" class="w-5.5 h-5.5"></i>
+                <span class="text-[9px] uppercase tracking-widest font-black">記録</span>
             </button>
-            <button id="nav-btn-ai-menu" onclick="window.switchTab('ai-menu')" class="flex flex-col items-center gap-1 py-2 px-4 rounded-2xl transition-all text-brand-muted hover:text-brand-primary font-black">
-                <i data-lucide="sparkles" class="w-5 h-5"></i>
-                <span class="text-[9px] uppercase tracking-wider">逆算</span>
+            <button id="nav-btn-ai-menu" onclick="window.switchTab('ai-menu')" class="flex flex-col items-center gap-1 py-2 px-5 rounded-2xl transition-all text-brand-muted hover:text-brand-primary font-black active:scale-95">
+                <i data-lucide="sparkles" class="w-5.5 h-5.5"></i>
+                <span class="text-[9px] uppercase tracking-widest font-black">逆算</span>
             </button>
-            <button id="nav-btn-weight-trend" onclick="window.switchTab('weight-trend')" class="flex flex-col items-center gap-1 py-2 px-4 rounded-2xl transition-all text-brand-muted hover:text-brand-primary font-black">
-                <i data-lucide="trending-up" class="w-5 h-5"></i>
-                <span class="text-[9px] uppercase tracking-wider">体重</span>
+            <button id="nav-btn-weight-trend" onclick="window.switchTab('weight-trend')" class="flex flex-col items-center gap-1 py-2 px-5 rounded-2xl transition-all text-brand-muted hover:text-brand-primary font-black active:scale-95">
+                <i data-lucide="trending-up" class="w-5.5 h-5.5"></i>
+                <span class="text-[9px] uppercase tracking-widest font-black">体重</span>
             </button>
         </div>
     </div>
@@ -447,35 +451,35 @@
         <div class="bg-white w-full sm:max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-7 space-y-5 shadow-premium slide-up max-h-[90vh] overflow-y-auto border border-brand-border/40">
             <div class="flex justify-between items-center border-b border-brand-border/30 pb-3">
                 <span class="text-xs font-black text-brand-text">手動でお食事を登録する</span>
-                <button onclick="window.toggleModal('manual-meal-modal', false)" class="text-brand-muted hover:text-brand-text p-1">
+                <button onclick="window.toggleModal('manual-meal-modal', false)" class="text-brand-muted hover:text-brand-text p-1.5 hover:bg-brand-bg rounded-full transition-all">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             <form onsubmit="window.handleManualMealSubmit(event)" class="space-y-4 text-left">
                 <div>
-                    <label class="text-[9px] text-brand-muted font-black block mb-1">メニュー・食べたもの</label>
-                    <input type="text" id="manual-name" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs text-brand-text font-bold focus:outline-none focus:ring-2 focus:ring-brand-primary/20" placeholder="例: 牛牛肉ステーキ、玄米ごはん">
+                    <label class="text-[10px] text-brand-muted font-black block mb-1">メニュー・食べたもの</label>
+                    <input type="text" id="manual-name" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs text-brand-text font-bold focus:outline-none focus:ring-2 focus:ring-brand-primary/20 shadow-inner" placeholder="例: 牛肉ステーキ、玄米ごはん">
                 </div>
                 <div>
-                    <label class="text-[9px] text-brand-muted font-black block mb-1">食事時間</label>
-                    <input type="time" id="manual-time" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs text-brand-text font-mono font-bold focus:outline-none focus:ring-2 focus:ring-brand-primary/20">
+                    <label class="text-[10px] text-brand-muted font-black block mb-1">食事時間</label>
+                    <input type="time" id="manual-time" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs text-brand-text font-mono font-bold focus:outline-none focus:ring-2 focus:ring-brand-primary/20 shadow-inner">
                 </div>
                 <div class="grid grid-cols-4 gap-2">
                     <div>
-                        <label class="text-[8px] text-sky-600 font-black block text-center mb-1">P(g)</label>
-                        <input type="number" step="0.1" id="manual-p" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-mono font-black text-center text-brand-text focus:outline-none" value="0">
+                        <label class="text-[8.5px] text-sky-600 font-black block text-center mb-1">P(g)</label>
+                        <input type="number" step="0.1" id="manual-p" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-mono font-black text-center text-brand-text focus:outline-none shadow-inner" value="0">
                     </div>
                     <div>
-                        <label class="text-[8px] text-emerald-600 font-black block text-center mb-1">F(g)</label>
-                        <input type="number" step="0.1" id="manual-f" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-mono font-black text-center text-brand-text focus:outline-none" value="0">
+                        <label class="text-[8.5px] text-emerald-600 font-black block text-center mb-1">F(g)</label>
+                        <input type="number" step="0.1" id="manual-f" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-mono font-black text-center text-brand-text focus:outline-none shadow-inner" value="0">
                     </div>
                     <div>
-                        <label class="text-[8px] text-amber-600 font-black block text-center mb-1">C(g)</label>
-                        <input type="number" step="0.1" id="manual-c" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-mono font-black text-center text-brand-text focus:outline-none" value="0">
+                        <label class="text-[8.5px] text-amber-600 font-black block text-center mb-1">C(g)</label>
+                        <input type="number" step="0.1" id="manual-c" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-mono font-black text-center text-brand-text focus:outline-none shadow-inner" value="0">
                     </div>
                     <div>
-                        <label class="text-[8px] text-brand-muted font-black block text-center mb-1">kcal</label>
-                        <input type="number" id="manual-kcal" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-mono font-black text-center text-brand-text focus:outline-none" value="0">
+                        <label class="text-[8.5px] text-brand-muted font-black block text-center mb-1">kcal</label>
+                        <input type="number" id="manual-kcal" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-mono font-black text-center text-brand-text focus:outline-none shadow-inner" value="0">
                     </div>
                 </div>
                 <button type="submit" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-4 rounded-2xl text-xs font-black transition-all shadow-lg active:scale-95">記録を保存</button>
@@ -488,13 +492,13 @@
         <div class="bg-white w-full sm:max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-7 space-y-5 shadow-premium slide-up max-h-[90vh] overflow-y-auto border border-brand-border/40">
             <div class="flex justify-between items-center border-b border-brand-border/30 pb-3">
                 <span class="text-xs font-black text-brand-text">テキストから食事をAI解析</span>
-                <button onclick="window.toggleModal('text-analyze-modal', false)" class="text-brand-muted hover:text-brand-text p-1">
+                <button onclick="window.toggleModal('text-analyze-modal', false)" class="text-brand-muted hover:text-brand-text p-1.5 hover:bg-brand-bg rounded-full transition-all">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             <div class="space-y-4 text-left">
                 <p class="text-[10px] text-brand-muted font-bold leading-relaxed">自由に入力してください。AIが食材と量を推測して自動計算します。</p>
-                <textarea id="text-analyze-input" class="w-full bg-brand-bg border border-brand-border rounded-2xl p-4 text-xs font-bold text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition-all" rows="4" placeholder="例: お昼ごはんにファミリーマートのサラダチキン1個と白米200gを食べました。"></textarea>
+                <textarea id="text-analyze-input" class="w-full bg-brand-bg border border-brand-border rounded-2xl p-4 text-xs font-bold text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition-all shadow-inner" rows="4" placeholder="例: お昼ごはんにファミリーマートのサラダチキン1個と白米200gを食べました。"></textarea>
                 <button onclick="window.analyzeMealText()" id="btn-text-submit" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-4 rounded-2xl text-xs font-black transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95">
                     <i data-lucide="sparkles" class="w-4 h-4"></i>解析して自動記録
                 </button>
@@ -509,27 +513,27 @@
                 <span class="text-xs font-black text-brand-text flex items-center gap-1.5">
                     <i data-lucide="sliders" class="w-4 h-4 text-brand-primary"></i> PFC目標の調整
                 </span>
-                <button onclick="window.toggleModal('target-modal', false)" class="text-brand-muted hover:text-brand-text p-1">
+                <button onclick="window.toggleModal('target-modal', false)" class="text-brand-muted hover:text-brand-text p-1.5 hover:bg-brand-bg rounded-full transition-all">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             <form onsubmit="window.handleTargetSubmit(event)" class="space-y-4 text-left">
                 <div>
-                    <label class="text-[9px] text-brand-muted font-black block mb-1">目標カロリー (kcal)</label>
-                    <input type="number" id="target-input-kcal" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs font-mono font-black text-center text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/20" value="1800">
+                    <label class="text-[10px] text-brand-muted font-black block mb-1">目標カロリー (kcal)</label>
+                    <input type="number" id="target-input-kcal" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs font-mono font-black text-center text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/20 shadow-inner" value="1800">
                 </div>
                 <div class="grid grid-cols-3 gap-2">
                     <div>
-                        <label class="text-[8px] text-sky-600 font-black block text-center mb-1">目標 P (g)</label>
-                        <input type="number" id="target-input-p" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-mono font-black text-center text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/20" value="120">
+                        <label class="text-[8.5px] text-sky-600 font-black block text-center mb-1">目標 P (g)</label>
+                        <input type="number" id="target-input-p" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-mono font-black text-center text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/20 shadow-inner" value="120">
                     </div>
                     <div>
-                        <label class="text-[8px] text-emerald-600 font-black block text-center mb-1">目標 F (g)</label>
-                        <input type="number" id="target-input-f" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-mono font-black text-center text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/20" value="45">
+                        <label class="text-[8.5px] text-emerald-600 font-black block text-center mb-1">目標 F (g)</label>
+                        <input type="number" id="target-input-f" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-mono font-black text-center text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/20 shadow-inner" value="45">
                     </div>
                     <div>
-                        <label class="text-[8px] text-amber-600 font-black block text-center mb-1">目標 C (g)</label>
-                        <input type="number" id="target-input-c" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-mono font-black text-center text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/20" value="230">
+                        <label class="text-[8.5px] text-amber-600 font-black block text-center mb-1">目標 C (g)</label>
+                        <input type="number" id="target-input-c" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-mono font-black text-center text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/20 shadow-inner" value="230">
                     </div>
                 </div>
                 <button type="submit" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-4 rounded-2xl text-xs font-black transition-all shadow-lg active:scale-95">設定を保存して適用</button>
@@ -542,14 +546,14 @@
         <div class="bg-white w-full sm:max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-7 space-y-5 shadow-premium slide-up max-h-[90vh] overflow-y-auto border border-brand-border/40">
             <div class="flex justify-between items-center border-b border-brand-border/30 pb-3">
                 <span class="text-xs font-black text-brand-text">食事の食材＆構成調整</span>
-                <button onclick="window.closeEditMealModal()" class="text-brand-muted hover:text-brand-text p-1">
+                <button onclick="window.closeEditMealModal()" class="text-brand-muted hover:text-brand-text p-1.5 hover:bg-brand-bg rounded-full transition-all">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
             <div class="space-y-4 text-left">
                 <div>
-                    <label class="text-[9px] text-brand-muted font-black block mb-1">メニュー全体の名称</label>
-                    <input type="text" id="edit-meal-name" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs text-brand-text font-black focus:outline-none focus:ring-2 focus:ring-brand-primary/20" placeholder="料理名">
+                    <label class="text-[10px] text-brand-muted font-black block mb-1">メニュー全体の名称</label>
+                    <input type="text" id="edit-meal-name" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs text-brand-text font-black focus:outline-none focus:ring-2 focus:ring-brand-primary/20 shadow-inner" placeholder="料理名">
                 </div>
 
                 <!-- 100g栄養密度表示（備考欄） -->
@@ -561,12 +565,12 @@
                 </div>
 
                 <!-- 割合選択コントローラ -->
-                <div class="bg-brand-bg rounded-2xl p-5 border border-brand-border space-y-3.5">
+                <div class="bg-brand-bg rounded-2xl p-5 border border-brand-border space-y-3.5 shadow-inner">
                     <div class="flex justify-between items-center">
                         <span class="text-[10.5px] text-brand-text font-black flex items-center gap-1.5">
-                            <i data-lucide="scale" class="w-4 h-4 text-brand-primary"></i> 食べる割合(全体を連動スケール)
+                            <i data-lucide="scale" class="w-4 h-4 text-brand-primary"></i> 食べる割合 (全体を連動スケール)
                         </span>
-                        <span id="scale-percentage-text" class="font-mono text-sm font-black text-brand-primary bg-white px-2.5 py-1 rounded-lg border border-brand-border">100%</span>
+                        <span id="scale-percentage-text" class="font-mono text-xs font-black text-brand-primary bg-white px-2.5 py-1 rounded-xl border border-brand-border/50 shadow-sm">100%</span>
                     </div>
                     <div class="grid grid-cols-4 gap-1.5 bg-white p-1 rounded-2xl border border-brand-border/60">
                         <button id="scale-btn-10" onclick="window.setQuickScale('10')" class="py-2.5 text-[10px] font-black rounded-xl transition-all text-brand-muted hover:bg-brand-bg">10%</button>
@@ -576,7 +580,7 @@
                     </div>
 
                     <!-- カスタム調整領域 (双方向スライダー＆数値インプット) -->
-                    <div id="custom-scale-slider-area" class="hidden space-y-3 pt-2.5 border-t border-brand-border/50">
+                    <div id="custom-scale-slider-area" class="hidden space-y-3 pt-3 border-t border-brand-border/50">
                         <div class="flex items-center gap-3.5">
                             <input type="range" id="edit-meal-scale-slider" min="10" max="200" step="5" value="100" class="w-full accent-brand-primary cursor-pointer" oninput="window.changeMealScale(this.value, 'slider')">
                             <!-- 手動数値入力欄 -->
@@ -600,7 +604,7 @@
                         <i id="ingredients-accordion-arrow" data-lucide="chevron-down" class="w-4 h-4 text-brand-muted transition-transform duration-200"></i>
                     </button>
                     <div id="ingredients-collapse-area" class="hidden space-y-3">
-                        <div id="ingredients-editor-container" class="max-h-[190px] overflow-y-auto space-y-2 pr-1">
+                        <div id="ingredients-editor-container" class="max-h-[190px] overflow-y-auto space-y-2 pr-1 no-scrollbar">
                             <!-- 各食材リストが並びます -->
                         </div>
                         <button type="button" onclick="window.addIngredientRow()" class="w-full bg-white hover:bg-brand-accent text-brand-primary border border-brand-border border-dashed py-3 rounded-2xl text-[11px] font-black transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-98">
@@ -631,7 +635,7 @@
 
                 <!-- ボタン -->
                 <div class="grid grid-cols-2 gap-3 pt-2">
-                    <button onclick="window.closeEditMealModal()" class="bg-brand-bg hover:bg-brand-accent text-brand-muted py-3.5 rounded-2xl text-xs font-black transition-all">キャンセル</button>
+                    <button onclick="window.closeEditMealModal()" class="bg-brand-bg hover:bg-brand-accent text-brand-muted py-3.5 rounded-2xl text-xs font-black transition-all active:scale-95">キャンセル</button>
                     <button onclick="window.saveEditedMeal()" class="bg-brand-primary hover:bg-brand-primaryHover text-white py-3.5 rounded-2xl text-xs font-black transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95">
                         <i data-lucide="check" class="w-4.5 h-4.5"></i>微調整を確定保存
                     </button>
@@ -772,7 +776,7 @@
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-text text-white px-5 py-3 rounded-full text-xs font-bold shadow-premium z-[300] transition-opacity duration-300 flex items-center gap-2";
-            toast.innerHTML = `<i data-lucide="check" class="w-4.5 h-4.5 text-brand-secondary animate-bounce"></i>` + message;
+            toast.innerHTML = `<i data-lucide="check" class="w-4.5 h-4.5 text-[#34D399] animate-bounce"></i>` + message;
             document.body.appendChild(toast);
             lucide.createIcons();
             setTimeout(() => {
@@ -873,7 +877,7 @@
                     document.getElementById('active-id-text').innerText = clientId;
 
                     const conLabel = document.getElementById('connection-status');
-                    conLabel.className = "text-[10px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold animate-pulse";
+                    conLabel.className = "text-[9.5px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold animate-pulse";
                     conLabel.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 同期中`;
 
                     syncMealTimingUI();
@@ -896,7 +900,7 @@
             document.getElementById('client-id-input').value = "";
 
             const conLabel = document.getElementById('connection-status');
-            conLabel.className = "text-[10px] px-3.5 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold";
+            conLabel.className = "text-[9.5px] px-3.5 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-bold";
             conLabel.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> 未連携`;
             showToast("データ連携を解除しました。");
         };
@@ -911,10 +915,6 @@
             localStorage.setItem("carat_client_connected_id_" + appId, inputId);
             startClientRealtimeSync(inputId);
         };
-
-        function renderWeeklyCalendarGrid() {
-            // 現在のカレンダーは上部の矢印選択（カレンダーカード）のみで使用
-        }
 
         function renderMealsHistory() {
             const container = document.getElementById('meals-history-container');
@@ -934,12 +934,12 @@
                 card.onclick = () => window.quickAddMealFromHistory(h.name);
                 card.innerHTML = `
                     <span class="font-black text-brand-text text-[11px] truncate block w-full group-hover:text-brand-primary transition-colors">${h.name}</span>
-                    <div class="mt-2 space-y-0.5">
+                    <div class="mt-2 space-y-1">
                         <span class="font-logo font-black text-xs block text-brand-primary">${Math.round(h.kcal)} kcal</span>
                         <div class="flex gap-1.5 text-[8px] font-black text-brand-muted">
-                            <span>P:${Math.round(h.p)}</span>
-                            <span>F:${Math.round(h.f)}</span>
-                            <span>C:${Math.round(h.c)}</span>
+                            <span class="flex items-center gap-0.5"><span class="w-1 h-1 rounded-full bg-sky-400"></span>P:${Math.round(h.p)}</span>
+                            <span class="flex items-center gap-0.5"><span class="w-1 h-1 rounded-full bg-emerald-400"></span>F:${Math.round(h.f)}</span>
+                            <span class="flex items-center gap-0.5"><span class="w-1 h-1 rounded-full bg-amber-400"></span>C:${Math.round(h.c)}</span>
                         </div>
                     </div>
                 `;
@@ -1179,7 +1179,6 @@
 
         function renderClientApp() {
             if (!currentClientId) return;
-            renderWeeklyCalendarGrid();
 
             document.getElementById('display-date-text').innerText = selectedDateString;
             const todayStr = getTodayDateString();
@@ -1227,7 +1226,7 @@
             }
 
             const pct = Math.min(100, (curKcal / tarCal) * 100);
-            const strokeOffset = 301 - (301 * pct) / 100;
+            const strokeOffset = 314 - (314 * pct) / 100;
             document.getElementById('calorie-progress-bar').style.strokeDashoffset = strokeOffset;
 
             document.getElementById('summary-cur-cal').innerText = Math.round(curKcal).toLocaleString();
@@ -1307,9 +1306,9 @@
                             <span class="bg-brand-primary/10 text-brand-primary font-mono font-black text-[9px] px-3 py-1 rounded-full w-max tracking-wider">${m.time || '--:--'}</span>
                             <span class="font-black text-brand-text text-sm group-hover:text-brand-primary transition-colors">${m.name}</span>
                             <div class="flex items-center gap-3 text-[10px] font-black text-brand-muted">
-                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-400"></span>P: ${pVal.toFixed(1)}g</span>
-                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span>F: ${fVal.toFixed(1)}g</span>
-                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400"></span>C: ${cVal.toFixed(1)}g</span>
+                                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse"></span>P: ${pVal.toFixed(1)}g</span>
+                                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>F: ${fVal.toFixed(1)}g</span>
+                                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>C: ${cVal.toFixed(1)}g</span>
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
@@ -1730,7 +1729,6 @@
                     await saveMealToCloud(newMeal);
                     showToast("食事写真を自動記録しました！ 編集はカードをタップ。");
                 } else {
-                    // 以前のような例外スローをさせず、穏やかにエラー処理へ進む
                     throw new Error("FORMAT_INVALID");
                 }
             } catch (err) {
@@ -1744,9 +1742,9 @@
         };
 
         function handleAiError(err) {
-            let displayErrorMsg = "解析に失敗しました。通信環境の良い場所で再度お試しください。";
+            let displayErrorMsg = "解析に失敗しました。通信環境が良い場所で再度お試しください。";
             if (err.message && err.message.includes("FILE_READ_TIMEOUT")) {
-                displayErrorMsg = "画像ファイルの読み込み中にタイムアウトしました。容量が大きすぎる可能性があります。";
+                displayErrorMsg = "画像ファイルの読み込み中にタイムアウトしました。画像容量が大きすぎる可能性があります。";
             } else if (err.message && err.message.includes("API_KEY_MISSING")) {
                 displayErrorMsg = "店舗用のAIキーが設定されていません。トレーナーポータルでAPIキーを同期してください。";
             } else if (err.message && err.message.includes("429")) {
@@ -1840,34 +1838,34 @@
 
             editingMealObject.ingredients.forEach((ing, i) => {
                 const row = document.createElement('div');
-                row.className = "bg-brand-bg rounded-2xl p-3.5 border border-brand-border/50 flex flex-col gap-2.5 text-xs text-brand-text mb-1 shrink-0 animate-fade-in";
+                row.className = "bg-brand-bg rounded-2xl p-4 border border-brand-border/50 flex flex-col gap-2.5 text-xs text-brand-text mb-1 shrink-0 animate-fade-in";
                 row.innerHTML = `
                     <div class="flex gap-2 items-center">
-                        <input type="text" value="${ing.name}" class="bg-white border border-brand-border rounded-xl px-3 py-2 text-xs font-black flex-1 min-w-0 focus:outline-none focus:border-brand-primary transition-colors" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
-                        <button type="button" onclick="window.estimateIngredientPFC(${i})" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-3 py-2 rounded-xl text-[9px] font-black transition shrink-0 flex items-center gap-1 shadow">
+                        <input type="text" value="${ing.name}" class="bg-white border border-brand-border rounded-xl px-3.5 py-2 text-xs font-black flex-1 min-w-0 focus:outline-none focus:border-brand-primary transition-colors shadow-inner" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
+                        <button type="button" onclick="window.estimateIngredientPFC(${i})" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-3.5 py-2 rounded-xl text-[9px] font-black transition shrink-0 flex items-center gap-1 shadow">
                             <i data-lucide="sparkles" class="w-3 h-3"></i>AI推定
                         </button>
                     </div>
-                    <div class="grid grid-cols-5 gap-1 text-center">
+                    <div class="grid grid-cols-5 gap-1.5 text-center">
                         <div>
                             <label class="text-[8px] text-brand-muted font-bold block mb-0.5">重量(g)</label>
-                            <input type="number" value="${Math.round(safeFloat(ing.weight))}" class="w-full bg-white border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none" onchange="window.changeIngredientWeight(${i}, this.value)">
+                            <input type="number" value="${Math.round(safeFloat(ing.weight))}" class="w-full bg-white border border-brand-border rounded-lg p-1.5 text-center font-mono font-black text-[10px] focus:outline-none shadow-inner" onchange="window.changeIngredientWeight(${i}, this.value)">
                         </div>
                         <div>
                             <label class="text-[8px] text-sky-600 font-bold block mb-0.5">P(g)</label>
-                            <input type="number" step="0.1" value="${safeFloat(ing.p).toFixed(1)}" class="w-full bg-white border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none" onchange="window.changeIngredientPFC(${i}, 'p', this.value)">
+                            <input type="number" step="0.1" value="${safeFloat(ing.p).toFixed(1)}" class="w-full bg-white border border-brand-border rounded-lg p-1.5 text-center font-mono font-black text-[10px] focus:outline-none shadow-inner" onchange="window.changeIngredientPFC(${i}, 'p', this.value)">
                         </div>
                         <div>
                             <label class="text-[8px] text-emerald-600 font-bold block mb-0.5">F(g)</label>
-                            <input type="number" step="0.1" value="${safeFloat(ing.f).toFixed(1)}" class="w-full bg-white border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none" onchange="window.changeIngredientPFC(${i}, 'f', this.value)">
+                            <input type="number" step="0.1" value="${safeFloat(ing.f).toFixed(1)}" class="w-full bg-white border border-brand-border rounded-lg p-1.5 text-center font-mono font-black text-[10px] focus:outline-none shadow-inner" onchange="window.changeIngredientPFC(${i}, 'f', this.value)">
                         </div>
                         <div>
                             <label class="text-[8px] text-amber-600 font-bold block mb-0.5">C(g)</label>
-                            <input type="number" step="0.1" value="${safeFloat(ing.c).toFixed(1)}" class="w-full bg-white border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none" onchange="window.changeIngredientPFC(${i}, 'c', this.value)">
+                            <input type="number" step="0.1" value="${safeFloat(ing.c).toFixed(1)}" class="w-full bg-white border border-brand-border rounded-lg p-1.5 text-center font-mono font-black text-[10px] focus:outline-none shadow-inner" onchange="window.changeIngredientPFC(${i}, 'c', this.value)">
                         </div>
                         <div>
                             <label class="text-[8px] text-brand-muted font-bold block mb-0.5">kcal</label>
-                            <input type="number" value="${Math.round(safeFloat(ing.kcal))}" class="w-full bg-white border border-brand-border rounded-lg p-1 text-center font-mono font-black text-[10px] focus:outline-none" onchange="window.changeIngredientPFC(${i}, 'kcal', this.value)">
+                            <input type="number" value="${Math.round(safeFloat(ing.kcal))}" class="w-full bg-white border border-brand-border rounded-lg p-1.5 text-center font-mono font-black text-[10px] focus:outline-none shadow-inner" onchange="window.changeIngredientPFC(${i}, 'kcal', this.value)">
                         </div>
                     </div>
                 `;
@@ -2109,10 +2107,10 @@
                 const btn = document.getElementById('nav-btn-' + t);
                 const content = document.getElementById('tab-content-' + t);
                 if (t === tabName) {
-                    btn.className = "flex flex-col items-center gap-1 py-2 px-4 rounded-2xl transition-all text-brand-primary font-black bg-brand-accent/60 shadow-sm";
+                    btn.className = "flex flex-col items-center gap-1.5 py-2 px-5 rounded-2xl transition-all text-brand-primary font-black bg-brand-accent/60 shadow-sm border border-brand-primary/5";
                     content.classList.remove('hidden');
                 } else {
-                    btn.className = "flex flex-col items-center gap-1 py-2 px-4 rounded-2xl transition-all text-brand-muted hover:text-brand-primary font-black";
+                    btn.className = "flex flex-col items-center gap-1.5 py-2 px-5 rounded-2xl transition-all text-brand-muted hover:text-brand-primary font-black";
                     content.classList.add('hidden');
                 }
             });
@@ -2351,13 +2349,13 @@
                         f: safeFloat(menu.f),
                         c: safeFloat(menu.c),
                         ingredients: (menu.ingredientsList || []).map(ing => ({
-                    name: ing.name || "追加食材",
-                    weight: safeFloat(ing.weight),
-                    kcal: safeFloat(ing.kcal),
-                    p: safeFloat(ing.p),
-                    f: safeFloat(ing.f),
-                    c: safeFloat(ing.c)
-                }))
+                            name: ing.name || "追加食材",
+                            weight: safeFloat(ing.weight),
+                            kcal: safeFloat(ing.kcal),
+                            p: safeFloat(ing.p),
+                            f: safeFloat(ing.f),
+                            c: safeFloat(ing.c)
+                        }))
                     };
                     await saveMealToCloud(newMeal);
                 }
