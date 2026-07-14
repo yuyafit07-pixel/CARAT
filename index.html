@@ -12,25 +12,26 @@
                 extend: {
                     colors: {
                         brand: {
-                            primary: '#1D3557',       /* ロイヤルアッシュサックス（深く澄んだ青） */
-                            primaryHover: '#11223B',  /* ミッドナイトサックス */
-                            secondary: '#5C7699',     /* シアーミスティブルー */
-                            accent: '#EBF2FA',        /* シフォンアクア（透明感のある極薄ブルー） */
+                            primary: '#1A335E',       /* ロイヤルサックスブルー（深みと気品のある紺青） */
+                            primaryHover: '#112242',  /* ディープナイトサックス */
+                            secondary: '#51749E',     /* ミスティサックス（女性らしい上質なくすみブルー） */
+                            accent: '#EBF2FA',        /* シフォンアクア（透明感あふれる極薄サックス） */
                             gold: '#C5A059',          /* シャンパンゴールド（美しく煌めくゴールド） */
                             goldLight: '#FAF4E3',     /* プレシャスベージュ */
-                            bg: '#FFFFFF',            /* ピュアホワイト */
-                            text: '#1E2C44',          /* スレートブルー */
+                            bg: '#FFFFFF',            /* ピュアシルクホワイト */
+                            text: '#1E2C44',          /* リッチスレートアッシュ */
                             muted: '#7A8FA5',         /* フレンチアッシュグレー */
-                            border: '#D3E1EE',        /* ジュエリーブルー境界線 */
-                            rose: '#E28E82',          /* ピーチローズ（女性らしい温かみ） */
-                            roseLight: '#FDF3F1'      /* 超薄ピンク */
+                            border: '#D0DFEC',        /* ジュエリーサックス境界線 */
+                            rose: '#E28E82',          /* ピーチローズ（優しいアクセント色） */
+                            roseLight: '#FDF3F1'      /* 超薄ローズピンク */
                         }
                     },
                     boxShadow: {
-                        premium: '0 24px 50px -12px rgba(29, 53, 87, 0.2), 0 8px 24px -4px rgba(29, 53, 87, 0.08)',
-                        cardShadow: '0 16px 40px rgba(92, 118, 153, 0.12)',
-                        softShadow: '0 12px 30px rgba(30, 44, 68, 0.04)',
-                        glow: '0 0 25px rgba(197, 160, 89, 0.45)',
+                        premium: '0 24px 50px -12px rgba(26, 51, 94, 0.2), 0 8px 24px -4px rgba(26, 51, 94, 0.08)',
+                        cardShadow: '0 16px 40px rgba(81, 116, 158, 0.12)',
+                        softShadow: '0 12px 30px rgba(32, 49, 76, 0.04)',
+                        glow: '0 0 25px rgba(197, 160, 89, 0.4)',
+                        blueGlow: '0 0 20px rgba(26, 51, 94, 0.25)',
                         innerGlow: 'inset 0 2px 6px rgba(255, 255, 255, 0.9)'
                     }
                 }
@@ -39,7 +40,7 @@
     </script>
     <!-- Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin crossspace>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,800;1,300&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <!-- Icons (Lucide) -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -48,11 +49,11 @@
     <style>
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            /* 濃さと透明感を完璧に両立し、ホワイトグラスが最高に映えるアッシュブルー背景 */
-            background-color: #A3BACF;
-            background-image: radial-gradient(at 0% 0%, hsla(210, 48%, 78%, 1) 0, transparent 55%),
-                              radial-gradient(at 100% 0%, hsla(214, 45%, 68%, 1) 0, transparent 65%),
-                              radial-gradient(at 50% 100%, hsla(220, 40%, 62%, 1) 0, transparent 60%);
+            /* 薄すぎず、ホワイトグラスパネルが鏡面のように映えわたる「クラシックサックスアッシュブルー」 */
+            background-color: #AEC1D4;
+            background-image: radial-gradient(at 0% 0%, hsla(215, 45%, 82%, 1) 0, transparent 55%),
+                              radial-gradient(at 100% 0%, hsla(212, 42%, 72%, 1) 0, transparent 65%),
+                              radial-gradient(at 50% 100%, hsla(220, 38%, 68%, 1) 0, transparent 60%);
             background-attachment: fixed;
             color: #1E2C44;
             letter-spacing: 0.02em;
@@ -69,13 +70,13 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        /* コスメボトルのような、隙間のないシームレスなホワイトグラスパレット構造 */
+        /* コスメパレットを想起させる、シームレスな一体型グラスモルフィズムコンテナ */
         .glass-container {
             background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
             border: 1.5px solid rgba(255, 255, 255, 0.95);
-            box-shadow: 0 30px 60px -15px rgba(29, 53, 87, 0.18);
+            box-shadow: 0 30px 60px -15px rgba(26, 51, 94, 0.15);
         }
         /* インプットのスピンボタン非表示 */
         input[type="number"]::-webkit-outer-spin-button,
@@ -86,9 +87,9 @@
         input[type="number"] {
             -moz-appearance: textfield;
         }
-        /* アニメーション */
+        /* 上品なフェードインアニメーション */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(14px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-in {
@@ -136,7 +137,7 @@
         </div>
     </div>
 
-    <!-- 2. メインダッシュボード (1つの超大型グラスパネルに統合) -->
+    <!-- 2. メインダッシュボード (1つの大型グラスパネルに完全シームレス統合) -->
     <div id="main-dashboard" class="max-w-md mx-auto hidden animate-fade-in space-y-4">
         
         <!-- ヘッダーエリア -->
@@ -146,8 +147,8 @@
                 <span class="text-[9px] text-brand-secondary font-bold tracking-widest uppercase">Premium Suite</span>
             </div>
             <div id="id-active-panel" class="hidden flex items-center gap-2">
-                <div id="connection-status" class="text-[8px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1 font-bold shadow-sm">
-                    <span class="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></span>
+                <div id="connection-status" class="text-[8px] px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold shadow-sm">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     同期中
                 </div>
                 <div class="flex items-center gap-1 bg-white border border-brand-border rounded-full py-0.5 pl-2.5 pr-1 shadow-softShadow">
@@ -158,10 +159,10 @@
         </header>
 
         <!-- 統合された1つの極上グラスパレット -->
-        <div class="glass-container rounded-[2.5rem] overflow-hidden shadow-premium flex flex-col">
+        <div class="glass-container rounded-[2.5rem] overflow-hidden flex flex-col">
             
-            <!-- A. ヘッダー内臓型スライドタブスイッチ (親指1本でスマートに切り替え) -->
-            <div class="bg-white/40 border-b border-white/60 p-2 flex justify-between items-center gap-1.5">
+            <!-- A. ヘッダー内蔵型スライドタブスイッチ (フッター廃止し極上のヘッダー内タブ切り替え) -->
+            <div class="bg-white/40 border-b border-brand-border/40 p-2 flex justify-between items-center gap-1.5">
                 <button id="nav-btn-home" onclick="window.switchTab('home')" 
                         class="flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-brand-primary bg-white shadow-sm border border-brand-border/40 flex items-center justify-center gap-1.5 active:scale-98">
                     <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
@@ -194,13 +195,13 @@
                 </button>
             </div>
 
-            <!-- メインコンテンツ領域 (スクロール時にも一体感を保つ) -->
+            <!-- メインコンテンツ領域 -->
             <div class="p-5 space-y-6">
 
                 <!-- 🔵 タブ 1: 食事記録 (HOME) -->
                 <div id="tab-content-home" class="space-y-6">
                     
-                    <!-- カロリー＆PFCサークル -->
+                    <!-- カロリー＆PFCダッシュボード -->
                     <div class="space-y-5">
                         <div class="flex justify-between items-center">
                             <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase">TODAY'S SUMMARY</span>
@@ -213,7 +214,7 @@
                         </div>
 
                         <div class="grid grid-cols-12 gap-4 items-center">
-                            <!-- 進捗サークル (完璧なSVGクリーンアップ) -->
+                            <!-- 進捗サークル (不要なOCR崩れや属性バグを完全クリーンアップ) -->
                             <div class="col-span-5 flex justify-center relative">
                                 <svg class="w-28 h-28 transform -rotate-90">
                                     <circle cx="56" cy="54" r="46" stroke="#F1F5F9" stroke-width="5" fill="transparent" />
@@ -240,7 +241,7 @@
                                         <span class="text-brand-secondary flex items-center gap-1">P たんぱく質</span>
                                         <span class="font-logo text-brand-text"><span id="summary-cur-p" class="font-bold">0</span> / <span id="summary-tar-p">120</span>g</span>
                                     </div>
-                                    <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
+                                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                                         <div id="bar-p" class="bg-gradient-to-r from-brand-secondary to-brand-primary h-full rounded-full transition-all duration-500" style="width: 0%"></div>
                                     </div>
                                 </div>
@@ -249,7 +250,7 @@
                                         <span class="text-brand-gold flex items-center gap-1">F 脂質</span>
                                         <span class="font-logo text-brand-text"><span id="summary-cur-f" class="font-bold">0</span> / <span id="summary-tar-f">45</span>g</span>
                                     </div>
-                                    <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
+                                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                                         <div id="bar-f" class="bg-brand-gold h-full rounded-full transition-all duration-500" style="width: 0%"></div>
                                     </div>
                                 </div>
@@ -258,7 +259,7 @@
                                         <span class="text-emerald-600 flex items-center gap-1">C 炭水化物</span>
                                         <span class="font-logo text-brand-text"><span id="summary-cur-c" class="font-bold">0</span> / <span id="summary-tar-c">230</span>g</span>
                                     </div>
-                                    <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
+                                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                                         <div id="bar-c" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
                                     </div>
                                 </div>
@@ -268,7 +269,7 @@
                         <!-- オートリカバリーインジケーター -->
                         <div id="recovery-indicator-card" class="hidden bg-gradient-to-r from-brand-primary to-brand-secondary p-4.5 rounded-2xl text-white text-xs space-y-2 animate-fade-in shadow-premium">
                             <span class="text-[9px] text-white/95 font-bold uppercase tracking-widest flex items-center gap-1.5">
-                                <i data-lucide="sparkles" class="w-3 h-3 text-brand-gold"></i> オートリカバリー調整中
+                                <i data-lucide="sparkles" class="w-3 h-3 text-brand-gold animate-pulse"></i> オートリカバリー作動中
                             </span>
                             <div class="grid grid-cols-2 gap-3 text-center">
                                 <div class="bg-white/10 rounded-xl p-2">
@@ -283,13 +284,14 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-brand-border/40 my-2"></div>
+                    <!-- 区切り横線をすべて青系のわかりやすいデザインへ統一 -->
+                    <div class="border-t border-brand-secondary/30 my-2"></div>
 
                     <!-- 貯金状況＆週次目標 -->
                     <div class="space-y-3">
                         <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase">WEEKLY STATUS</span>
                         <div class="relative bg-white border border-brand-border/60 p-3.5 rounded-2xl flex flex-col gap-2 overflow-hidden shadow-softShadow">
-                            <div id="balance-bar-color" class="absolute top-0 left-0 w-1 h-full bg-emerald-400"></div>
+                            <div id="balance-bar-color" class="absolute top-0 left-0 w-1.5 h-full bg-emerald-400"></div>
                             <div class="grid grid-cols-2 gap-2 pl-1.5">
                                 <div class="bg-brand-bg px-2.5 py-1.5 rounded-xl border border-brand-border/40 flex items-center justify-between min-w-0">
                                     <span class="text-[8.5px] text-brand-muted font-bold shrink-0">総カロリー</span>
@@ -311,51 +313,56 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-brand-border/40 my-2"></div>
+                    <!-- 区切り横線をすべて青系のわかりやすいデザインへ統一 -->
+                    <div class="border-t border-brand-secondary/30 my-2"></div>
 
-                    <!-- AI食事入力スキャナー (カメラボタンがジュエルトーンで劇的に目立つ) -->
+                    <!-- AI食事入力スキャナー (カメラ解析が青系ゴールド調で劇的に目立つデザイン) -->
                     <div class="space-y-3">
                         <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase block text-left">AI MEAL SCANNER</span>
                         <div class="grid grid-cols-3 gap-3">
-                            <!-- 【特別改良】女性ウケの非常に高い、最も目立って美しいローズゴールドカメラボタン -->
+                            <!-- 【特別改良】カメラを青系グラデーション（ロイヤルブルーからサックスブルー）×ゴールド枠で最高に引き立たせたデザイン -->
                             <button onclick="document.getElementById('ai-image-input').click()" 
-                                    class="bg-gradient-to-br from-rose-400 via-amber-300 to-brand-gold hover:opacity-90 text-white rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-glow group active:scale-95 border border-white/20">
-                                <i data-lucide="camera" class="w-6 h-6 text-white group-hover:scale-110 transition-transform drop-shadow-sm"></i>
-                                <span class="text-[10.5px] font-extrabold tracking-wide mt-1 drop-shadow-sm">写真から解析</span>
-                                <span class="text-[7.5px] text-white/80 block leading-none drop-shadow-sm">カメラ・画像</span>
+                                    class="bg-gradient-to-r from-brand-primary via-brand-secondary to-indigo-400 hover:opacity-95 text-white rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-blueGlow group active:scale-95 border-2 border-brand-gold/60">
+                                <i data-lucide="camera" class="w-6 h-6 text-brand-goldLight group-hover:scale-110 transition-transform drop-shadow-sm"></i>
+                                <span class="text-[10px] font-extrabold tracking-wide mt-1 drop-shadow-sm">写真から解析</span>
+                                <span class="text-[7.5px] text-white/90 block leading-none">カメラ・画像</span>
                             </button>
                             <input type="file" id="ai-image-input" accept="image/*" class="hidden">
 
+                            <!-- テキスト解析は落ち着いた、でもオシャレなくすみ青系にリファイン -->
                             <button onclick="window.openTextModal()" 
-                                    class="bg-white/80 hover:bg-white border border-brand-border rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-softShadow group active:scale-95">
+                                    class="bg-brand-accent/50 hover:bg-brand-accent border border-brand-border rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-softShadow group active:scale-95">
                                 <i data-lucide="file-text" class="w-5 h-5 text-brand-secondary group-hover:scale-110 transition-transform"></i>
-                                <span class="text-[10px] text-brand-primary font-bold mt-1">テキスト解析</span>
-                                <span class="text-[7.5px] text-brand-muted block leading-none mt-0.5">文章で入力</span>
+                                <span class="text-[9.5px] text-brand-primary font-bold mt-1">テキスト解析</span>
+                                <span class="text-[7.5px] text-brand-muted block leading-none">文章で入力</span>
                             </button>
 
+                            <!-- 手動登録もスマートに調和 -->
                             <button onclick="window.openManualInputModal()" 
-                                    class="bg-white/80 hover:bg-white border border-brand-border rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-softShadow group active:scale-95">
+                                    class="bg-brand-accent/50 hover:bg-brand-accent border border-brand-border rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-softShadow group active:scale-95">
                                 <i data-lucide="edit-3" class="w-5 h-5 text-brand-secondary group-hover:scale-110 transition-transform"></i>
-                                <span class="text-[10px] text-brand-primary font-bold mt-1">手動で入力</span>
-                                <span class="text-[7.5px] text-brand-muted block leading-none mt-0.5">数値を登録</span>
+                                <span class="text-[9.5px] text-brand-primary font-bold mt-1">手動で入力</span>
+                                <span class="text-[7.5px] text-brand-muted block leading-none">数値を登録</span>
                             </button>
                         </div>
                     </div>
 
-                    <div class="border-t border-brand-border/40 my-2"></div>
+                    <!-- 区切り横線をすべて青系のわかりやすいデザインへ統一 -->
+                    <div class="border-t border-brand-secondary/30 my-2"></div>
 
                     <!-- よく使う履歴 -->
                     <div class="space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase">RECENT HISTORY</span>
-                            <span class="text-[7.5px] text-brand-gold bg-brand-goldLight px-2.5 py-0.5 rounded-full font-bold">ワンタップ複製</span>
+                            <span class="text-[8px] text-brand-gold bg-brand-goldLight px-2.5 py-0.5 rounded-full font-bold">履歴複製</span>
                         </div>
                         <div id="meals-history-container" class="flex gap-2.5 overflow-x-auto pb-1.5 no-scrollbar px-0.5">
                             <!-- JSで追加 -->
                         </div>
                     </div>
 
-                    <div class="border-t border-brand-border/40 my-2"></div>
+                    <!-- 区切り横線をすべて青系のわかりやすいデザインへ統一 -->
+                    <div class="border-t border-brand-secondary/30 my-2"></div>
 
                     <!-- 本日の食事ログ -->
                     <div class="space-y-3">
@@ -365,10 +372,11 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-brand-border/40 my-2"></div>
+                    <!-- 区切り横線をすべて青系のわかりやすいデザインへ統一 -->
+                    <div class="border-t border-brand-secondary/30 my-2"></div>
 
                     <!-- 体重簡易入力 -->
-                    <div class="flex items-center justify-between gap-3 bg-white/40 p-3 rounded-2xl border border-brand-border/50">
+                    <div class="flex items-center justify-between gap-3 bg-white/40 p-3 rounded-2xl border border-brand-border/50 shadow-softShadow">
                         <div class="flex items-center gap-2">
                             <i data-lucide="activity" class="w-4 h-4 text-brand-secondary animate-pulse"></i>
                             <span class="text-[10.5px] text-brand-primary font-bold">本日の体重</span>
@@ -388,7 +396,7 @@
                     <div class="bg-gradient-to-r from-brand-primary/5 to-brand-secondary/5 p-4 rounded-2xl border border-brand-border/60 relative overflow-hidden space-y-2 text-left">
                         <div class="flex justify-between items-center pb-1.5 border-b border-brand-border/40">
                             <span class="text-[9.5px] text-brand-secondary font-bold tracking-wider uppercase flex items-center gap-1">
-                                <i data-lucide="award" class="w-3.5 h-3.5 text-brand-gold animate-bounce"></i> TRAINER'S REPORT
+                                <i data-lucide="award" class="w-3.5 h-3.5 text-brand-gold animate-bounce"></i> TRAINER'S WEEKLY REPORT
                             </span>
                             <span id="trainer-feedback-time" class="text-[8px] text-brand-muted font-mono block"></span>
                         </div>
@@ -402,7 +410,7 @@
                     <div class="space-y-3.5">
                         <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase block text-left font-logo">AI MULTI-MEAL PLANNER</span>
                         <p class="text-[10.5px] text-brand-muted leading-relaxed text-left">
-                            今日の残りの目標PFCを「均等分配」した、あなたに最適のメニュー案をAIが即時に逆引きスキャニング設計します。
+                            今日の残りの目標PFCを「均等分配」した、あなたに最適のメニュー案をAIが即時に逆引き設計します。
                         </p>
                         
                         <div class="space-y-4 pt-2 text-left">
@@ -469,7 +477,7 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-brand-border/40 my-2"></div>
+                    <div class="border-t border-brand-secondary/30 my-2"></div>
 
                     <!-- グラフ -->
                     <div class="space-y-3">
@@ -488,7 +496,7 @@
     </div>
 
     <!-- モーダル A: 目標設定調整 -->
-    <div id="target-modal" class="fixed inset-0 bg-brand-primary/45 backdrop-blur-sm z-[100] hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
+    <div id="target-modal" class="fixed inset-0 bg-brand-primary/30 backdrop-blur-sm z-[100] hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
         <div class="bg-white w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 space-y-5 shadow-premium border border-brand-border">
             <div class="flex justify-between items-center pb-3 border-b border-brand-border">
                 <span class="text-xs font-bold text-brand-primary flex items-center gap-1.5">
@@ -525,7 +533,7 @@
     </div>
 
     <!-- モーダル B: 手動数値入力 -->
-    <div id="manual-meal-modal" class="fixed inset-0 bg-brand-primary/45 backdrop-blur-sm z-[100] hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
+    <div id="manual-meal-modal" class="fixed inset-0 bg-brand-primary/30 backdrop-blur-sm z-[100] hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
         <div class="bg-white w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 space-y-5 shadow-premium border border-brand-border">
             <div class="flex justify-between items-center pb-3 border-b border-brand-border">
                 <span class="text-xs font-bold text-brand-primary flex items-center gap-1.5">
@@ -572,7 +580,7 @@
     </div>
 
     <!-- モーダル C: テキスト解析入力 -->
-    <div id="text-analyze-modal" class="fixed inset-0 bg-brand-primary/45 backdrop-blur-sm z-[100] hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
+    <div id="text-analyze-modal" class="fixed inset-0 bg-brand-primary/30 backdrop-blur-sm z-[100] hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
         <div class="bg-white w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 space-y-5 shadow-premium border border-brand-border">
             <div class="flex justify-between items-center pb-3 border-b border-brand-border">
                 <span class="text-xs font-bold text-brand-primary flex items-center gap-1.5">
@@ -597,7 +605,7 @@
     </div>
 
     <!-- モーダル D: 食事構成微調整エディター (スマホに完璧に最適化された2行縦積みエディター) -->
-    <div id="edit-meal-modal" class="fixed inset-0 bg-brand-primary/45 backdrop-blur-sm z-[100] hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
+    <div id="edit-meal-modal" class="fixed inset-0 bg-brand-primary/30 backdrop-blur-sm z-[100] hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
         <div class="bg-white w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 space-y-5 shadow-premium border border-brand-border max-h-[90vh] overflow-y-auto no-scrollbar">
             <div class="flex justify-between items-center pb-3 border-b border-brand-border">
                 <span class="text-xs font-bold text-brand-primary flex items-center gap-1.5">
@@ -992,7 +1000,7 @@
                     document.getElementById('active-id-text').innerText = clientId;
                     
                     const conLabel = document.getElementById('connection-status');
-                    conLabel.className = "text-[9.5px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100/50 flex items-center gap-1.5 font-bold animate-pulse";
+                    conLabel.className = "text-[9.5px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold animate-pulse shadow-sm";
                     conLabel.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>同期中`;
                     
                     syncMealTimingUI();
@@ -1180,10 +1188,10 @@
                         datasets: [{
                             label: '体重 (kg)',
                             data: weights,
-                            borderColor: '#5C7699',
-                            backgroundColor: 'rgba(92, 118, 153, 0.08)',
+                            borderColor: '#51749E',
+                            backgroundColor: 'rgba(81, 117, 158, 0.08)',
                             borderWidth: 2.5,
-                            pointBackgroundColor: '#1D3557',
+                            pointBackgroundColor: '#1A335E',
                             pointBorderColor: '#FFFFFF',
                             pointBorderWidth: 2,
                             pointRadius: 4,
@@ -1201,14 +1209,14 @@
                             y: {
                                 grid: { color: 'rgba(255, 255, 255, 0.35)' },
                                 ticks: {
-                                    color: '#1D3557',
+                                    color: '#1A335E',
                                     font: { size: 9, weight: '600' }
                                 }
                             },
                             x: {
                                 grid: { display: false },
                                 ticks: {
-                                    color: '#1D3557',
+                                    color: '#1A335E',
                                     font: { size: 9, weight: '600' }
                                 }
                             }
@@ -1504,7 +1512,7 @@
                     alert("目標の同期に失敗しました。");
                 }
             } else {
-                showToast("ゲスト用: 目獲設定を調整しました。");
+                showToast("ゲスト用: 目標設定を調整しました。");
             }
             window.toggleModal('target-modal', false);
             renderClientApp();
@@ -1858,20 +1866,6 @@
             }
         };
 
-        function handleAiError(err) {
-            let displayErrorMsg = "解析に失敗しました。通信環境が良い場所で再度お試しください。";
-            if (err.message && err.message.includes("FILE_READ_TIMEOUT")) {
-                displayErrorMsg = "画像ファイルの読み込み中にタイムアウトしました。画像容量が大きすぎる可能性があります。";
-            } else if (err.message && err.message.includes("API_KEY_MISSING")) {
-                displayErrorMsg = "店舗用のAIキーが設定されていません。トレーナーポータルでAPIキーを同期してください。";
-            } else if (err.message && err.message.includes("429")) {
-                displayErrorMsg = "AI利用制限に一時的に達しました。お手数ですが1分ほど待ってからもう一度お試しください。";
-            } else if (err.message && (err.message.includes("400") || err.message.includes("403"))) {
-                displayErrorMsg = "設定された店舗APIキーが無効、またはGoogleから制限されています。再設定を確認してください。";
-            }
-            alert(displayErrorMsg);
-        }
-
         window.openEditMealModal = function(mealId) {
             const meals = clientState.mealsByDate?.[selectedDateString] || [];
             const meal = meals.find(m => m.id === mealId);
@@ -1942,6 +1936,7 @@
             }
         };
 
+        /* 【食材構成の縦積みエディタ】横幅はみ出しバグを完全解決する極上エディタ */
         function renderIngredientsInEditor() {
             const container = document.getElementById('ingredients-editor-container');
             container.innerHTML = "";
@@ -2203,7 +2198,7 @@
                 showToast("食事を保存しました！");
             } catch (err) {
                 console.error("Save Edited Meal Error:", err);
-                alert("食事の微調整保存に失敗しました。");
+                alert("食事の微調整保存に失敗しました。接続状態をご確認ください。");
             }
         };
 
@@ -2317,7 +2312,7 @@
                 
                 let catJp = "自炊レシピ(自宅で手軽に作れる健康的・高PFCな料理)";
                 if (selectedMenuCategory === 'convenience') catJp = "コンビニ商品(セブンイレブン、ファミリーマート、ローソン等で売っている高PFC定番商品名)";
-                if (selectedMenuCategory === 'restaurant') catJp = "外食店名指定(大戸屋、やよい軒、スシロー、ガスト、サイゼリヤ等の店舗名つき実在メニュー)";
+                if (selectedMenuCategory === 'restaurant') catJp = "外食店名指定(【大戸屋】 【やよい軒】 【スシロー】 【くら寿司】 【ガスト】 【サイゼリヤ】 【ココス】 【吉野家】等の具体的な「実店舗名」を冠した実在メニューまたは定番PFCメニュー名)";
                 
                 const timingsLabelMap = { 'breakfast': '朝食', 'lunch': '昼食', 'dinner': '夕食', 'snack': '間食' };
                 const timingSelectedJpNames = selectedMealTimings.map(t => timingsLabelMap[t]).join('、');
