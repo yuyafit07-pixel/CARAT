@@ -12,24 +12,24 @@
                 extend: {
                     colors: {
                         brand: {
-                            primary: '#1E355E',       /* ロイヤルサックスブルー（上品で深みのあるアッシュブルー） */
-                            primaryHover: '#132342',  /* ミッドナイトサックス */
-                            secondary: '#51749E',     /* シルキーアッシュ（透明感のあるくすみブルー） */
-                            accent: '#E3ECF5',        /* シフォンペールアクア（明るく心地よい薄青） */
-                            gold: '#C5A059',          /* シャンパンゴールド（ジュエリーのように煌めくゴールド） */
-                            goldLight: '#FAF4E3',     /* プレシャスゴールドベージュ */
-                            bg: '#FFFFFF',            /* シルキーピュアホワイト */
-                            text: '#22324D',          /* リッチスレートブルー（柔らかく知的な黒） */
-                            muted: '#7A8FA5',         /* フレンチアッシュグレー（洗練されたグレー） */
-                            border: '#D0DFEC',        /* ジュエリーブルー境界線 */
-                            rose: '#E28E82',          /* ピーチローズ（女性らしい柔らかい警告・アクセント色） */
-                            roseLight: '#FDF3F1'      /* 超薄ローズピンク */
+                            primary: '#1A335E',       /* ロイヤルアッシュブルー（気品ある濃い青） */
+                            primaryHover: '#112543',  /* ダークアッシュ */
+                            secondary: '#51759E',     /* ミスティサックス（女性らしい絶妙なくすみ青） */
+                            accent: '#EAF1F9',        /* シフォンアクア（透明感抜群のペールブルー） */
+                            gold: '#C5A059',          /* シャンパンゴールド（華やかで繊細な金色） */
+                            goldLight: '#FAF4E3',     /* プレシャスベージュ */
+                            bg: '#FFFFFF',            /* ピュアホワイト */
+                            text: '#20314C',          /* ディープスレートアッシュ */
+                            muted: '#7A8FA5',         /* フレンチアッシュグレー */
+                            border: '#D3E1EE',        /* ジュエリーブルーボーダー */
+                            rose: '#E28E82',          /* ピーチローズ（女性らしい血色アクセント） */
+                            roseLight: '#FDF3F1'      /* 超薄ピンク */
                         }
                     },
                     boxShadow: {
-                        premium: '0 24px 50px -12px rgba(30, 53, 94, 0.15), 0 8px 24px -4px rgba(30, 53, 94, 0.05)',
-                        cardShadow: '0 16px 36px rgba(81, 116, 158, 0.12)',
-                        softShadow: '0 10px 30px rgba(34, 50, 77, 0.03)',
+                        premium: '0 24px 50px -12px rgba(26, 51, 94, 0.16), 0 8px 24px -4px rgba(26, 51, 94, 0.06)',
+                        cardShadow: '0 16px 40px rgba(81, 117, 158, 0.12)',
+                        softShadow: '0 12px 30px rgba(32, 49, 76, 0.04)',
                         glow: '0 0 25px rgba(197, 160, 89, 0.35)',
                         innerGlow: 'inset 0 2px 6px rgba(255, 255, 255, 0.9)'
                     }
@@ -48,13 +48,13 @@
     <style>
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            /* 贅沢でしっかりと深い青みを感じる、完璧なクラシックサックスアッシュブルーグラデーション */
-            background-color: #B9CAD9;
-            background-image: radial-gradient(at 0% 0%, hsla(215, 48%, 82%, 1) 0, transparent 55%),
-                              radial-gradient(at 100% 0%, hsla(212, 45%, 72%, 1) 0, transparent 65%),
-                              radial-gradient(at 50% 100%, hsla(220, 40%, 68%, 1) 0, transparent 60%);
+            /* 濃すぎず、うすすぎず、白とゴールドが最も気高く際立つ「クラシックサックスアッシュブルー」 */
+            background-color: #B2C5D6;
+            background-image: radial-gradient(at 0% 0%, hsla(215, 45%, 80%, 1) 0, transparent 55%),
+                              radial-gradient(at 100% 0%, hsla(212, 42%, 70%, 1) 0, transparent 65%),
+                              radial-gradient(at 50% 100%, hsla(220, 38%, 66%, 1) 0, transparent 60%);
             background-attachment: fixed;
-            color: #22324D;
+            color: #20314C;
             letter-spacing: 0.02em;
             -webkit-tap-highlight-color: transparent;
         }
@@ -69,19 +69,19 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        /* コスメボトルのような、擦りガラス調の極上のホワイトグラスモルフィズム */
+        /* クリスタルボトルを想起させる、極細ボーダーと高精度ぼかしを効かせたシルキーグラス */
         .glass-panel {
             background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 24px 50px -10px rgba(30, 53, 94, 0.1);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 24px 50px -10px rgba(26, 51, 94, 0.12);
         }
         .glass-panel-gold {
             background: rgba(250, 244, 227, 0.92);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(197, 160, 89, 0.25);
+            border: 1.5px solid rgba(197, 160, 89, 0.25);
         }
         /* インプットのスピンボタン非表示 */
         input[type="number"]::-webkit-outer-spin-button,
@@ -92,7 +92,7 @@
         input[type="number"] {
             -moz-appearance: textfield;
         }
-        /* 上品なフェードインアニメーション */
+        /* フェードインアニメーション */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: translateY(0); }
@@ -102,7 +102,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen pb-32">
+<body class="min-h-screen pb-32 animate-fade-in">
 
     <!-- 1. ログイン/同期キー入力画面 -->
     <div id="login-screen" class="max-w-md mx-auto min-h-screen flex flex-col justify-center px-6 py-12 animate-fade-in">
@@ -112,11 +112,11 @@
             <div class="w-8 h-[2px] bg-gradient-to-r from-brand-secondary to-brand-gold mx-auto rounded-full"></div>
         </div>
 
-        <div class="glass-panel p-8 rounded-[2.5rem] shadow-premium space-y-7 text-center">
+        <div class="glass-panel p-8 rounded-[2.5rem] space-y-7 text-center">
             <div class="space-y-2">
                 <h2 class="text-base font-bold text-brand-primary tracking-wide">トレーナー連携同期</h2>
                 <p class="text-[11px] text-brand-muted leading-relaxed">
-                    CARATトレーナーから発行された「連携ID」を入力して<br>あなた専用に設計されたPFCプログラムを開始します。
+                    CARATトレーナーから発行された「連携ID」を入力して<br>あなた専用の美肌・ボディメイク食事プログラムを開始します。
                 </p>
             </div>
             
@@ -195,7 +195,7 @@
                 </div>
 
                 <div class="grid grid-cols-12 gap-6 items-center">
-                    <!-- 進捗サークル (不要記号を完全排除した純粋なサークルSVG) -->
+                    <!-- 進捗サークル (不要記号を完全にクリーンアップ) -->
                     <div class="col-span-5 flex justify-center relative">
                         <svg class="w-32 h-32 transform -rotate-90">
                             <!-- 背景円 -->
@@ -206,8 +206,8 @@
                                     class="transition-all duration-700 ease-out" />
                             <defs>
                                 <linearGradient id="premium-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#1E355E" />
-                                    <stop offset="50%" stop-color="#51749E" />
+                                    <stop offset="0%" stop-color="#1A335E" />
+                                    <stop offset="50%" stop-color="#51759E" />
                                     <stop offset="100%" stop-color="#C5A059" />
                                 </linearGradient>
                             </defs>
@@ -507,7 +507,7 @@
     </div>
 
     <!-- 3. 固定下部ナビゲーションバー -->
-    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-lg border-t border-brand-border/80 p-3 flex justify-around items-center z-50 rounded-t-[2.2rem] shadow-[0_-12px_40px_rgba(30,53,94,0.06)]">
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-lg border-t border-brand-border/80 p-3 flex justify-around items-center z-50 rounded-t-[2.2rem] shadow-[0_-12px_40px_rgba(26,51,94,0.06)]">
         <button id="nav-btn-home" onclick="window.switchTab('home')" 
                 class="flex flex-col items-center gap-1 py-2 px-5 rounded-3xl transition-all text-brand-primary font-bold bg-brand-accent shadow-sm border border-brand-primary/5 active:scale-95">
             <i data-lucide="utensils" class="w-5 h-5"></i>
@@ -636,7 +636,7 @@
         </div>
     </div>
 
-    <!-- モーダル D: 食事構成微調整エディター (スマホに完璧に最適化された2行折り返しエディター) -->
+    <!-- モーダル D: 食事構成微調整エディター (スマホに最適化されたスマート2行縦積みエディター) -->
     <div id="edit-meal-modal" class="fixed inset-0 bg-brand-primary/30 backdrop-blur-sm z-[100] hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
         <div class="bg-white w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 space-y-5 shadow-premium border border-brand-border max-h-[90vh] overflow-y-auto no-scrollbar">
             <div class="flex justify-between items-center pb-3 border-b border-brand-border">
@@ -706,12 +706,12 @@
                     <i id="ingredients-accordion-arrow" data-lucide="chevron-down" class="w-4 h-4 text-brand-muted transition-transform duration-200"></i>
                 </button>
 
-                <!-- アコーディオンコンテンツ -->
+                <!-- アコーディオンコンテンツ (横幅を完璧に維持する2行縦積みエディタ) -->
                 <div id="ingredients-collapse-area" class="hidden space-y-3 pt-1 border-t border-brand-border/50">
                     <div id="ingredients-editor-container" class="space-y-3">
                         <!-- 食材行がJavaScriptで追加されます -->
                     </div>
-                    <button onclick="window.addIngredientRow()" 
+                    <button type="button" onclick="window.addIngredientRow()" 
                             class="w-full bg-slate-100 hover:bg-slate-200 text-brand-text border border-brand-border py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 active:scale-95">
                         <i data-lucide="plus" class="w-4 h-4"></i> 食材を新しく追加
                     </button>
@@ -730,8 +730,8 @@
                             <span id="preview-total-f" class="font-logo text-xs font-bold text-brand-gold">0g</span>
                         </div>
                         <div class="bg-white p-2 rounded-xl border border-brand-border shadow-sm">
-                            <span class="text-[8px] text-brand-muted font-bold block uppercase">C</span>
-                            <span id="preview-total-c" class="font-logo text-xs font-bold text-brand-primary">0g</span>
+                            <span class="text-[8px] text-emerald-600 font-bold block">C</span>
+                            <span id="preview-total-c" class="font-logo text-xs font-bold text-emerald-600">0g</span>
                         </div>
                         <div class="bg-white p-2 rounded-xl border border-brand-border shadow-sm">
                             <span class="text-[8px] text-brand-muted font-bold block uppercase">Kcal</span>
@@ -741,10 +741,10 @@
                 </div>
 
                 <div class="grid grid-cols-12 gap-3 pt-2">
-                    <button onclick="window.deleteMeal(window.editingMealId)" class="col-span-4 bg-brand-roseLight hover:bg-brand-rose/10 text-brand-rose border border-brand-rose/20 py-4 rounded-2xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-1">
+                    <button type="button" onclick="window.deleteMeal(window.editingMealId)" class="col-span-4 bg-brand-roseLight hover:bg-brand-rose/10 text-brand-rose border border-brand-rose/20 py-4 rounded-2xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-1">
                         削除
                     </button>
-                    <button onclick="window.saveEditedMeal()" class="col-span-8 bg-brand-primary hover:bg-brand-primaryHover text-white py-4 rounded-2xl text-xs font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5 tracking-wider">
+                    <button type="button" onclick="window.saveEditedMeal()" class="col-span-8 bg-brand-primary hover:bg-brand-primaryHover text-white py-4 rounded-2xl text-xs font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5 tracking-wider">
                         微調整を確定保存
                     </button>
                 </div>
@@ -1032,7 +1032,7 @@
                     document.getElementById('active-id-text').innerText = clientId;
                     
                     const conLabel = document.getElementById('connection-status');
-                    conLabel.className = "text-[9.5px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100/50 flex items-center gap-1.5 font-bold animate-pulse shadow-sm";
+                    conLabel.className = "text-[9.5px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100/50 flex items-center gap-1.5 font-bold animate-pulse";
                     conLabel.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>同期中`;
                     
                     syncMealTimingUI();
@@ -1203,7 +1203,7 @@
                 document.getElementById('val-curr-lowest').innerText = currLowest !== null ? currLowest.toFixed(1) : "--";
             }
             
-            // Chart.js 描画
+            // Chart.js グラフ
             if (canvas) {
                 const ctx = canvas.getContext('2d');
                 if (weightChartInstance) {
@@ -1220,10 +1220,10 @@
                         datasets: [{
                             label: '体重 (kg)',
                             data: weights,
-                            borderColor: '#51749E',
-                            backgroundColor: 'rgba(81, 116, 158, 0.08)',
+                            borderColor: '#51759E',
+                            backgroundColor: 'rgba(81, 117, 158, 0.08)',
                             borderWidth: 2.5,
-                            pointBackgroundColor: '#1E355E',
+                            pointBackgroundColor: '#1A335E',
                             pointBorderColor: '#FFFFFF',
                             pointBorderWidth: 2,
                             pointRadius: 4.5,
@@ -1241,14 +1241,14 @@
                             y: {
                                 grid: { color: 'rgba(255, 255, 255, 0.3)' },
                                 ticks: {
-                                    color: '#1E355E',
+                                    color: '#1A335E',
                                     font: { size: 9, weight: '600' }
                                 }
                             },
                             x: {
                                 grid: { display: false },
                                 ticks: {
-                                    color: '#1E355E',
+                                    color: '#1A335E',
                                     font: { size: 9, weight: '600' }
                                 }
                             }
@@ -1988,7 +1988,7 @@
             }
         };
 
-        /* 【究極の縦積み・2行折り返しエディター】スマホで完全に崩れない、絶対にはみ出さない設計 */
+        /* 【究極の2行縦積み型食材エディタ】スマホで絶対に横揺れ・はみ出しをしない完全構造 */
         function renderIngredientsInEditor() {
             const container = document.getElementById('ingredients-editor-container');
             container.innerHTML = "";
@@ -2005,7 +2005,7 @@
                 row.innerHTML = `
                     <div class="flex items-center gap-2">
                         <input type="text" value="${ing.name}" class="bg-white border border-brand-border rounded-xl px-3 py-2 text-xs font-bold flex-1 min-w-0 focus:outline-none focus:border-brand-primary transition-colors shadow-sm" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
-                        <button onclick="window.estimateIngredientPFC(${i})" class="bg-brand-primary text-white hover:bg-brand-primaryHover px-3 py-2.5 rounded-xl text-[9px] font-bold tracking-wider shrink-0 transition flex items-center gap-1">
+                        <button type="button" onclick="window.estimateIngredientPFC(${i})" class="bg-brand-primary text-white hover:bg-brand-primaryHover px-3 py-2.5 rounded-xl text-[9px] font-bold tracking-wider shrink-0 transition flex items-center gap-1 shadow-sm">
                             <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-gold animate-pulse"></i> AI自動推定
                         </button>
                     </div>
@@ -2436,7 +2436,7 @@
                                 <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>C: ${safeFloat(menu.c).toFixed(1)}g</span>
                             </div>
                             <p class="text-[9.5px] text-brand-muted bg-white p-2.5 rounded-xl border border-brand-border/40 leading-relaxed font-medium">Advice: ${menu.advice}</p>
-                            <button onclick="window.registerSingleSuggestedMenu(${index})" class="w-full bg-white hover:bg-brand-accent text-brand-primary border border-brand-primary/20 hover:border-brand-primary py-2.5 rounded-xl text-[9.5px] font-bold tracking-wider transition-all shadow-sm">
+                            <button type="button" onclick="window.registerSingleSuggestedMenu(${index})" class="w-full bg-white hover:bg-brand-accent text-brand-primary border border-brand-primary/20 hover:border-brand-primary py-2.5 rounded-xl text-[9.5px] font-bold tracking-wider transition-all shadow-sm">
                                 この提案を登録する
                             </button>
                         `;
