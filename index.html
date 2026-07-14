@@ -12,13 +12,13 @@
                 extend: {
                     colors: {
                         brand: {
-                            primary: '#1A335E',       /* ロイヤルサックスブルー（深みと気品のある紺青） */
-                            primaryHover: '#112242',  /* ディープナイトサックス */
+                            primary: '#1A335E',       /* ロイヤルサックスブルー（深みと気品のあるメインカラー） */
+                            primaryHover: '#112242',  /* ミッドナイトサックス */
                             secondary: '#51749E',     /* ミスティサックス（女性らしい上質なくすみブルー） */
                             accent: '#EBF2FA',        /* シフォンアクア（透明感あふれる極薄サックス） */
                             gold: '#C5A059',          /* シャンパンゴールド（美しく煌めくゴールド） */
                             goldLight: '#FAF4E3',     /* プレシャスベージュ */
-                            bg: '#FFFFFF',            /* ピュアシルクホワイト */
+                            bg: '#FFFFFF',            /* ピュアホワイト */
                             text: '#1E2C44',          /* リッチスレートアッシュ */
                             muted: '#7A8FA5',         /* フレンチアッシュグレー */
                             border: '#D0DFEC',        /* ジュエリーサックス境界線 */
@@ -27,11 +27,11 @@
                         }
                     },
                     boxShadow: {
-                        premium: '0 24px 50px -12px rgba(26, 51, 94, 0.2), 0 8px 24px -4px rgba(26, 51, 94, 0.08)',
+                        premium: '0 24px 50px -12px rgba(26, 51, 94, 0.2), 0 8px 24px -4px rgba(26, 51, 94, 0.06)',
                         cardShadow: '0 16px 40px rgba(81, 116, 158, 0.12)',
                         softShadow: '0 12px 30px rgba(32, 49, 76, 0.04)',
                         glow: '0 0 25px rgba(197, 160, 89, 0.4)',
-                        blueGlow: '0 0 20px rgba(26, 51, 94, 0.25)',
+                        blueGlow: '0 0 25px rgba(26, 51, 94, 0.3)',
                         innerGlow: 'inset 0 2px 6px rgba(255, 255, 255, 0.9)'
                     }
                 }
@@ -49,7 +49,7 @@
     <style>
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            /* 薄すぎず、ホワイトグラスパネルが鏡面のように映えわたる「クラシックサックスアッシュブルー」 */
+            /* ホワイトグラスパネルが美しく鏡面のように映えわたる「クラシックサックスアッシュブルー」背景 */
             background-color: #AEC1D4;
             background-image: radial-gradient(at 0% 0%, hsla(215, 45%, 82%, 1) 0, transparent 55%),
                               radial-gradient(at 100% 0%, hsla(212, 42%, 72%, 1) 0, transparent 65%),
@@ -87,7 +87,7 @@
         input[type="number"] {
             -moz-appearance: textfield;
         }
-        /* 上品なフェードインアニメーション */
+        /* 滑らかなフェードインアニメーション */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
@@ -161,10 +161,10 @@
         <!-- 統合された1つの極上グラスパレット -->
         <div class="glass-container rounded-[2.5rem] overflow-hidden flex flex-col">
             
-            <!-- A. ヘッダー内蔵型スライドタブスイッチ (フッター廃止し極上のヘッダー内タブ切り替え) -->
-            <div class="bg-white/40 border-b border-brand-border/40 p-2 flex justify-between items-center gap-1.5">
+            <!-- A. ヘッダー内臓型スライドタブスイッチ (選択中のタブを高級感あふれる青系のグラデーションに変更) -->
+            <div class="bg-white/40 border-b border-brand-border/40 p-2.5 flex justify-between items-center gap-2">
                 <button id="nav-btn-home" onclick="window.switchTab('home')" 
-                        class="flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-brand-primary bg-white shadow-sm border border-brand-border/40 flex items-center justify-center gap-1.5 active:scale-98">
+                        class="flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-white bg-gradient-to-r from-brand-primary to-brand-secondary shadow-blueGlow border border-white/20 flex items-center justify-center gap-1.5 active:scale-98">
                     <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
                     <span>食事記録</span>
                 </button>
@@ -316,11 +316,11 @@
                     <!-- 区切り横線をすべて青系のわかりやすいデザインへ統一 -->
                     <div class="border-t border-brand-secondary/30 my-2"></div>
 
-                    <!-- AI食事入力スキャナー (カメラ解析が青系ゴールド調で劇的に目立つデザイン) -->
+                    <!-- AI食事入力スキャナー (カメラ解析・テキスト解析が青系ジュエルトーンで劇的に目立つデザイン) -->
                     <div class="space-y-3">
                         <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase block text-left">AI MEAL SCANNER</span>
                         <div class="grid grid-cols-3 gap-3">
-                            <!-- 【特別改良】カメラを青系グラデーション（ロイヤルブルーからサックスブルー）×ゴールド枠で最高に引き立たせたデザイン -->
+                            <!-- カメラ解析：ロイヤルブルーからサックスブルーへの上品なグラデーション×ゴールドフレーム -->
                             <button onclick="document.getElementById('ai-image-input').click()" 
                                     class="bg-gradient-to-r from-brand-primary via-brand-secondary to-indigo-400 hover:opacity-95 text-white rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-blueGlow group active:scale-95 border-2 border-brand-gold/60">
                                 <i data-lucide="camera" class="w-6 h-6 text-brand-goldLight group-hover:scale-110 transition-transform drop-shadow-sm"></i>
@@ -329,17 +329,17 @@
                             </button>
                             <input type="file" id="ai-image-input" accept="image/*" class="hidden">
 
-                            <!-- テキスト解析は落ち着いた、でもオシャレなくすみ青系にリファイン -->
+                            <!-- テキスト解析：シアーサックスブルーにダイヤモンドホワイト極細枠 -->
                             <button onclick="window.openTextModal()" 
-                                    class="bg-brand-accent/50 hover:bg-brand-accent border border-brand-border rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-softShadow group active:scale-95">
-                                <i data-lucide="file-text" class="w-5 h-5 text-brand-secondary group-hover:scale-110 transition-transform"></i>
-                                <span class="text-[9.5px] text-brand-primary font-bold mt-1">テキスト解析</span>
-                                <span class="text-[7.5px] text-brand-muted block leading-none">文章で入力</span>
+                                    class="bg-gradient-to-br from-[#E2EDF8] to-[#C9DCED] hover:opacity-95 border border-white/60 rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-softShadow group active:scale-95">
+                                <i data-lucide="file-text" class="w-5 h-5 text-brand-primary group-hover:scale-110 transition-transform"></i>
+                                <span class="text-[9.5px] text-brand-primary font-extrabold mt-1">テキスト解析</span>
+                                <span class="text-[7.5px] text-brand-secondary block leading-none">文章で入力</span>
                             </button>
 
                             <!-- 手動登録もスマートに調和 -->
                             <button onclick="window.openManualInputModal()" 
-                                    class="bg-brand-accent/50 hover:bg-brand-accent border border-brand-border rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-softShadow group active:scale-95">
+                                    class="bg-white/80 hover:bg-white border border-brand-border rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-softShadow group active:scale-95">
                                 <i data-lucide="edit-3" class="w-5 h-5 text-brand-secondary group-hover:scale-110 transition-transform"></i>
                                 <span class="text-[9.5px] text-brand-primary font-bold mt-1">手動で入力</span>
                                 <span class="text-[7.5px] text-brand-muted block leading-none">数値を登録</span>
@@ -1059,7 +1059,7 @@
                         <div class="flex gap-1.5 text-[7.5px] font-bold text-brand-muted mt-1.5 border-t border-brand-border/40 pt-1">
                             <span class="flex items-center gap-0.5"><span class="w-1 h-1 rounded-full bg-brand-secondary"></span>P:${Math.round(h.p)}</span>
                             <span class="flex items-center gap-0.5"><span class="w-1 h-1 rounded-full bg-brand-gold"></span>F:${Math.round(h.f)}</span>
-                            <span class="flex items-center gap-0.5"><span class="w-1 h-1 rounded-full bg-emerald-500"></span>C:${Math.round(h.c)}</span>
+                            <span class="flex items-center gap-0.5"><span class="w-1 h-1 rounded-full bg-[#10B981]"></span>C:${Math.round(h.c)}</span>
                         </div>
                     </div>
                 `;
@@ -1188,7 +1188,7 @@
                         datasets: [{
                             label: '体重 (kg)',
                             data: weights,
-                            borderColor: '#51749E',
+                            borderColor: '#5C7699',
                             backgroundColor: 'rgba(81, 117, 158, 0.08)',
                             borderWidth: 2.5,
                             pointBackgroundColor: '#1A335E',
@@ -1385,7 +1385,7 @@
             } else if (weeklyDiff.kcalDiff < -300) {
                 balanceBar.className = "absolute top-0 left-0 w-1.5 h-full bg-brand-secondary";
             } else {
-                balanceBar.className = "absolute top-0 left-0 w-1.5 h-full bg-emerald-400";
+                balanceBar.className = "absolute top-0 left-0 w-1.5 h-full bg-[#10B981]";
             }
             
             const todayWeight = clientState.weightHistory?.[selectedDateString] || clientState.weight || 55.0;
@@ -1426,7 +1426,7 @@
                             <div class="flex items-center gap-2.5 text-[8.5px] font-bold text-brand-muted">
                                 <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-brand-secondary"></span>P: ${pVal.toFixed(1)}g</span>
                                 <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>F: ${fVal.toFixed(1)}g</span>
-                                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>C: ${cVal.toFixed(1)}g</span>
+                                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>C: ${cVal.toFixed(1)}g</span>
                             </div>
                         </div>
                         <div class="text-right">
@@ -1936,7 +1936,7 @@
             }
         };
 
-        /* 【食材構成の縦積みエディタ】横幅はみ出しバグを完全解決する極上エディタ */
+        /* 【食材構成の縦積みエディタ】横幅はみ出しバグを完全解決するエディタ */
         function renderIngredientsInEditor() {
             const container = document.getElementById('ingredients-editor-container');
             container.innerHTML = "";
@@ -2202,15 +2202,18 @@
             }
         };
 
+        /* 【ヘッダー内スライドタブ切り替え処理の最適化】選択したタブへ極上の青系ネオングラデーションを動的付与 */
         window.switchTab = function(tabName) {
             const tabs = ['home', 'ai-menu', 'weight-trend'];
             tabs.forEach(t => {
                 const btn = document.getElementById('nav-btn-' + t);
                 const content = document.getElementById('tab-content-' + t);
                 if (t === tabName) {
-                    btn.className = "flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-brand-primary bg-white shadow-sm border border-brand-border/40 flex items-center justify-center gap-1.5 active:scale-98";
+                    /* アッシュブルーベースの高級感溢れるグラデーションに変更 */
+                    btn.className = "flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-white bg-gradient-to-r from-brand-primary to-brand-secondary shadow-blueGlow border border-white/20 flex items-center justify-center gap-1.5 active:scale-98";
                     content.classList.remove('hidden');
                 } else {
+                    /* 非アクティブ時はシフォンサックス系の擦りガラス調 */
                     btn.className = "flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-brand-muted hover:text-brand-primary flex items-center justify-center gap-1.5 active:scale-98";
                     content.classList.add('hidden');
                 }
@@ -2382,7 +2385,7 @@
                             <div class="flex gap-2.5 text-[8.5px] font-bold text-brand-muted">
                                 <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-brand-secondary"></span>P: ${safeFloat(menu.p).toFixed(1)}g</span>
                                 <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>F: ${safeFloat(menu.f).toFixed(1)}g</span>
-                                <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>C: ${safeFloat(menu.c).toFixed(1)}g</span>
+                                <span class="flex items-center gap-0.5"><span class="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>C: ${safeFloat(menu.c).toFixed(1)}g</span>
                             </div>
                             <p class="text-[9.5px] text-brand-muted bg-white p-2.5 rounded-xl border border-brand-border/40 leading-relaxed font-medium">Advice: ${menu.advice}</p>
                             <button type="button" onclick="window.registerSingleSuggestedMenu(${index})" class="w-full bg-white hover:bg-brand-accent text-brand-primary border border-brand-primary/20 hover:border-brand-primary py-2.5 rounded-xl text-[9.5px] font-bold tracking-wider transition-all shadow-sm">
