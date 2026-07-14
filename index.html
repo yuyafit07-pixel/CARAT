@@ -22,7 +22,7 @@
                             text: '#1E2C44',          /* リッチスレートアッシュ */
                             muted: '#7A8FA5',         /* フレンチアッシュグレー */
                             border: '#D0DFEC',        /* ジュエリーサックス境界線 */
-                            rose: '#E28E82',          /* ピーチローズ（優しいアクセント色） */
+                            rose: '#E28E82',          /* ピーチローズ（女性らしいアクセント色） */
                             roseLight: '#FDF3F1'      /* 超薄ローズピンク */
                         }
                     },
@@ -49,7 +49,7 @@
     <style>
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            /* 薄すぎず、ホワイトグラスパネルが鏡面のように美しく映えわたる「クラシックサックスアッシュブルー」背景 */
+            /* 濃すぎず、ホワイトグラスパネルが鏡面のように美しく映えわたる「クラシックサックスアッシュブルー」背景 */
             background-color: #AEC1D4;
             background-image: radial-gradient(at 0% 0%, hsla(215, 45%, 82%, 1) 0, transparent 55%),
                               radial-gradient(at 100% 0%, hsla(212, 42%, 72%, 1) 0, transparent 65%),
@@ -256,11 +256,11 @@
                                 </div>
                                 <div class="space-y-0.5">
                                     <div class="flex justify-between text-[9.5px] font-bold">
-                                        <span class="text-[#10B981] flex items-center gap-1">C 炭水化物</span>
+                                        <span class="text-emerald-600 flex items-center gap-1">C 炭水化物</span>
                                         <span class="font-logo text-brand-text"><span id="summary-cur-c" class="font-bold">0</span> / <span id="summary-tar-c">230</span>g</span>
                                     </div>
                                     <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                                        <div id="bar-c" class="bg-[#10B981] h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                                        <div id="bar-c" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -316,12 +316,12 @@
                     <!-- 区切り横線をすべて青系のわかりやすいデザインへ統一 -->
                     <div class="border-t border-brand-secondary/30 my-2"></div>
 
-                    <!-- AI食事入力スキャナー (カメラ解析・テキスト解析が青系ジュエルトーンで劇的に目立つデザイン) -->
+                    <!-- AI食事入力スキャナー -->
                     <div class="space-y-3">
                         <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase block text-left">AI MEAL SCANNER</span>
                         <div class="grid grid-cols-3 gap-3">
                             <!-- カメラ解析：ロイヤルブルーからサックスブルーへの上品なグラデーション×ゴールドフレーム -->
-                            <button onclick="document.getElementById('ai-image-input').click()" 
+                            <button onclick="window.triggerAiFeature('camera')" 
                                     class="bg-gradient-to-r from-brand-primary via-brand-secondary to-indigo-400 hover:opacity-95 text-white rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-blueGlow group active:scale-95 border-2 border-brand-gold/60">
                                 <i data-lucide="camera" class="w-6 h-6 text-brand-goldLight group-hover:scale-110 transition-transform drop-shadow-sm"></i>
                                 <span class="text-[10px] font-extrabold tracking-wide mt-1 drop-shadow-sm">写真から解析</span>
@@ -330,7 +330,7 @@
                             <input type="file" id="ai-image-input" accept="image/*" class="hidden">
 
                             <!-- テキスト解析：シアーサックスブルーにダイヤモンドホワイト極細枠 -->
-                            <button onclick="window.openTextModal()" 
+                            <button onclick="window.triggerAiFeature('text')" 
                                     class="bg-gradient-to-br from-[#E2EDF8] to-[#C9DCED] hover:opacity-95 border border-white/60 rounded-2xl py-4.5 flex flex-col items-center justify-center gap-1 transition-all shadow-softShadow group active:scale-95">
                                 <i data-lucide="file-text" class="w-5 h-5 text-brand-primary group-hover:scale-110 transition-transform"></i>
                                 <span class="text-[9.5px] text-brand-primary font-extrabold mt-1">テキスト解析</span>
@@ -400,7 +400,7 @@
                             </span>
                             <span id="trainer-feedback-time" class="text-[8px] text-brand-muted font-mono block"></span>
                         </div>
-                        <p id="trainer-feedback-text" class="text-[10.5px] text-brand-text leading-relaxed font-medium whitespace-pre-wrap">食事を記録すると、担当トレーナーから1週間の体質リズム・栄養カルテレポートがここに届きます。</p>
+                        <p id="trainer-feedback-text" class="text-[10.5px] text-brand-text leading-relaxed font-medium whitespace-pre-wrap">食事を記録すると、担当トレーナーから1週間の体質リズム・栄養カルテレポートが届きます。</p>
                     </div>
 
                 </div>
@@ -438,7 +438,7 @@
                                 </div>
                             </div>
 
-                            <button onclick="window.generateAlPendingMenu()" 
+                            <button onclick="window.triggerAiFeature('menu-reverse')" 
                                     class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3.5 rounded-2xl text-xs font-bold shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5 mt-4 tracking-widest">
                                 <i data-lucide="sparkles" class="w-4 h-4 text-brand-gold animate-pulse"></i>設定条件で一括AI逆算
                             </button>
@@ -495,8 +495,6 @@
         </div>
     </div>
 
-    <!-- 各種モーダル -->
-    
     <!-- モーダル A: 目標設定調整 -->
     <div id="target-modal" class="fixed inset-0 bg-brand-primary/30 backdrop-blur-sm z-[100] hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
         <div class="bg-white w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 space-y-5 shadow-premium border border-brand-border">
@@ -523,7 +521,7 @@
                         <input type="number" id="target-input-f" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-logo font-bold text-center text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner" value="45">
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[8.5px] text-emerald-600 block text-center">目標C (g)</label>
+                        <label class="text-[8.5px] text-[#10B981] block text-center">目標C (g)</label>
                         <input type="number" id="target-input-c" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-logo font-bold text-center text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner" value="230">
                     </div>
                 </div>
@@ -566,7 +564,7 @@
                         <input type="number" step="0.1" id="manual-f" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-logo font-bold text-center text-brand-primary focus:outline-none shadow-inner" value="0">
                     </div>
                     <div>
-                        <label class="text-[8.5px] text-emerald-600 font-bold block text-center mb-1">C (g)</label>
+                        <label class="text-[8.5px] text-[#10B981] font-bold block text-center mb-1">C (g)</label>
                         <input type="number" step="0.1" id="manual-c" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-logo font-bold text-center text-brand-primary focus:outline-none shadow-inner" value="0">
                     </div>
                     <div>
@@ -722,6 +720,24 @@
         </div>
     </div>
 
+    <!-- AI機能体験制限告知モーダル (体験モード用) -->
+    <div id="ai-limit-modal" class="fixed inset-0 bg-brand-primary/40 backdrop-blur-sm z-[200] hidden flex-col justify-center items-center p-6 animate-fade-in">
+        <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 text-center space-y-4 shadow-premium border border-brand-border">
+            <div class="w-12 h-12 rounded-full bg-brand-accent flex items-center justify-center mx-auto text-brand-gold">
+                <i data-lucide="sparkles" class="w-6 h-6 animate-pulse"></i>
+            </div>
+            <h3 class="text-sm font-bold text-brand-primary">AI機能制限中（体験モード）</h3>
+            <p class="text-[10.5px] text-brand-muted leading-relaxed">
+                体験モード（ゲスト）ではAI解析および献立逆算プランナーは制限されています。トレーナーから発行された「連携ID」でログイン・同期すると、本物のAI食事分析が解放されます✨
+            </p>
+            <div class="space-y-2 pt-2">
+                <button onclick="window.toggleModal('ai-limit-modal', false)" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3 rounded-xl text-xs font-bold shadow-md transition active:scale-95">
+                    閉じる
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- AI自動推定アニメーションオーバーレイ -->
     <div id="loading-overlay" class="fixed inset-0 bg-brand-primary/80 backdrop-blur-md z-[500] hidden flex-col items-center justify-center space-y-5 text-white animate-fade-in p-6">
         <div class="relative flex justify-center items-center">
@@ -796,64 +812,6 @@
         let selectedMenuCategory = 'home';
         let selectedMealTimings = [getDefaultMealCategory()];
         let suggestedMenusCache = [];
-
-        // CARATの一流管理栄養士が監修した、エラー時の完全自動フォールバック用オシャレモックメニュー集
-        const mockupMeals = [
-            {
-                name: "【自炊】アボカドシュリンプのシトラス美容パワー和え",
-                kcal: 380, p: 26, f: 12, c: 32,
-                ingredients: [
-                    { name: "むきえび", weight: 120, kcal: 110, p: 21.6, f: 0.4, c: 0.3 },
-                    { name: "アボカド", weight: 60, kcal: 112, p: 1.5, f: 11.2, c: 3.7 },
-                    { name: "ブロッコリー", weight: 100, kcal: 33, p: 4.3, f: 0.5, c: 5.2 },
-                    { name: "グレフルドレッシング", weight: 15, kcal: 125, p: 0.1, f: 0.1, c: 24.1 }
-                ],
-                advice: "良質な脂質と高PFCのブースターメニューです！肌の潤いと筋肉修復にピッタリ。"
-            },
-            {
-                name: "【自炊】薬膳仕立てのほぐし鶏とココナッツ豆乳の温クレンズクープ",
-                kcal: 320, p: 28, f: 9, c: 18,
-                ingredients: [
-                    { name: "鶏むね肉（皮なし）", weight: 120, kcal: 130, p: 26.7, f: 1.8, c: 0 },
-                    { name: "調整豆乳", weight: 150, kcal: 96, p: 7.2, f: 4.2, c: 7.1 },
-                    { name: "クコの実＆薬膳出汁", weight: 20, kcal: 45, p: 0.5, f: 0.1, c: 9.3 },
-                    { name: "ココナッツオイル", weight: 5, kcal: 49, p: 0, f: 4.9, c: 0 }
-                ],
-                advice: "むくみをすっきり解消し、身体を芯から温めるCARAT推薦の代謝アップ薬膳スープです。"
-            },
-            {
-                name: "【自炊】ハーブ香る肉厚しっとり鶏むね肉の低糖質グリル",
-                kcal: 290, p: 32, f: 6, c: 15,
-                ingredients: [
-                    { name: "鶏むね肉（ハーブ漬け）", weight: 150, kcal: 160, p: 30.5, f: 2.1, c: 0 },
-                    { name: "アスパラガス", weight: 80, kcal: 25, p: 2.1, f: 0.1, c: 4.5 },
-                    { name: "かぼちゃソテー", weight: 40, kcal: 45, p: 0.8, f: 0.1, c: 9.8 },
-                    { name: "EXVオリーブオイル", weight: 5, kcal: 45, p: 0, f: 5.0, c: 0 }
-                ],
-                advice: "圧倒的なたんぱく質の量でトレーニング効果を最大化。おなかも心も大満足です。"
-            },
-            {
-                name: "【ローソン】高PFCロカボサラダ＆ブランパン美ボディセット",
-                kcal: 310, p: 24, f: 10, c: 22,
-                ingredients: [
-                    { name: "サラダチキンロカボサラダ", weight: 180, kcal: 120, p: 18.2, f: 2.1, c: 4.5 },
-                    { name: "ブランパン（2個入り）", weight: 60, kcal: 130, p: 12.1, f: 4.2, c: 9.8 },
-                    { name: "オリーブオイルドレッシング", weight: 15, kcal: 60, p: 0.1, f: 5.2, c: 2.1 }
-                ],
-                advice: "コンビニでも美しく整うPFC！忙しい時間でも一切妥協したくないスマート女子に。"
-            },
-            {
-                name: "【大戸屋】しまほっけの炭火焼き定食（五穀米ハーフ仕立て）",
-                kcal: 520, p: 38, f: 11, c: 54,
-                ingredients: [
-                    { name: "しまほっけ炭火焼き（半身）", weight: 150, kcal: 220, p: 29.5, f: 9.8, c: 0.1 },
-                    { name: "大戸屋特製五穀米（小）", weight: 120, kcal: 195, p: 4.2, f: 0.8, c: 42.1 },
-                    { name: "小鉢（おから・なめこ茸）", weight: 80, kcal: 65, p: 2.5, f: 1.1, c: 9.5 },
-                    { name: "具だくさんお味噌汁", weight: 150, kcal: 40, p: 1.8, f: 0.5, c: 4.2 }
-                ],
-                advice: "炭火焼きならではの良質な青魚のフィッシュオイルと、五穀米による持続型エネルギー補給です。"
-            }
-        ];
 
         function safeFloat(val) {
             if (val === null || val === undefined) return 0;
@@ -1119,7 +1077,7 @@
                         <div class="flex gap-1.5 text-[7.5px] font-bold text-brand-muted mt-1.5 border-t border-brand-border/40 pt-1">
                             <span class="flex items-center gap-0.5"><span class="w-1 h-1 rounded-full bg-brand-secondary"></span>P:${Math.round(h.p)}</span>
                             <span class="flex items-center gap-0.5"><span class="w-1 h-1 rounded-full bg-brand-gold"></span>F:${Math.round(h.f)}</span>
-                            <span class="flex items-center gap-0.5"><span class="w-1 h-1 rounded-full bg-[#10B981]"></span>C:${Math.round(h.c)}</span>
+                            <span class="flex items-center gap-0.5"><span class="w-1 h-1 rounded-full bg-emerald-500"></span>C:${Math.round(h.c)}</span>
                         </div>
                     </div>
                 `;
@@ -1248,7 +1206,7 @@
                         datasets: [{
                             label: '体重 (kg)',
                             data: weights,
-                            borderColor: '#5C7699',
+                            borderColor: '#51749E',
                             backgroundColor: 'rgba(81, 117, 158, 0.08)',
                             borderWidth: 2.5,
                             pointBackgroundColor: '#1A335E',
@@ -1445,7 +1403,7 @@
             } else if (weeklyDiff.kcalDiff < -300) {
                 balanceBar.className = "absolute top-0 left-0 w-1.5 h-full bg-brand-secondary";
             } else {
-                balanceBar.className = "absolute top-0 left-0 w-1.5 h-full bg-[#10B981]";
+                balanceBar.className = "absolute top-0 left-0 w-1.5 h-full bg-emerald-400";
             }
             
             const todayWeight = clientState.weightHistory?.[selectedDateString] || clientState.weight || 55.0;
@@ -1459,7 +1417,7 @@
             timelineContainer.innerHTML = "";
             if (meals.length === 0) {
                 timelineContainer.innerHTML = `
-                    <div class="bg-white/40 p-8 rounded-[2rem] border border-dashed border-brand-border text-center text-xs text-brand-muted font-bold flex flex-col items-center justify-center gap-1">
+                    <div class="bg-white/40 p-8 rounded-[2rem] border border-dashed border-brand-border text-center text-xs text-brand-muted font-bold flex flex-col items-center justify-center gap-1.5">
                         <i data-lucide="utensils" class="w-8 h-8 text-brand-muted/40 mb-1"></i>
                         本日のごはんが記録されていません。
                     </div>
@@ -1486,7 +1444,7 @@
                             <div class="flex items-center gap-2.5 text-[8.5px] font-bold text-brand-muted">
                                 <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-brand-secondary"></span>P: ${pVal.toFixed(1)}g</span>
                                 <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>F: ${fVal.toFixed(1)}g</span>
-                                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>C: ${cVal.toFixed(1)}g</span>
+                                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>C: ${cVal.toFixed(1)}g</span>
                             </div>
                         </div>
                         <div class="text-right">
@@ -1507,6 +1465,23 @@
             
             lucide.createIcons();
         }
+
+        // 体験モードでのAI機能を保護・制限
+        window.triggerAiFeature = function(type) {
+            if (currentClientId === "GUEST PREVIEW") {
+                window.toggleModal('ai-limit-modal', true);
+                return;
+            }
+            
+            // 本番モード時はそれぞれのモーダル起動や処理を行う
+            if (type === 'camera') {
+                document.getElementById('ai-image-input').click();
+            } else if (type === 'text') {
+                window.openTextModal();
+            } else if (type === 'menu-reverse') {
+                window.generateAlPendingMenu();
+            }
+        };
 
         window.changeDay = function(direction) {
             const d = new Date(selectedDateString);
@@ -1806,21 +1781,6 @@
             }
         }
 
-        // 体験モード、またはAPIキー通信不全時のシームレスなフォールバック用自動エミュレーション処理
-        function getMockupMealByDemand(targetCalories) {
-            // 目標に近いモックメニューを決定
-            let matched = mockupMeals[0];
-            let minDiff = Math.abs(mockupMeals[0].kcal - targetCalories);
-            for(let i=1; i<mockupMeals.length; i++){
-                let diff = Math.abs(mockupMeals[i].kcal - targetCalories);
-                if(diff < minDiff) {
-                    minDiff = diff;
-                    matched = mockupMeals[i];
-                }
-            }
-            return matched;
-        }
-
         window.analyzeMealText = async function() {
             const textInput = document.getElementById('text-analyze-input').value.trim();
             if (!textInput) { alert("食べた内容を入力してください。"); return; }
@@ -1829,30 +1789,6 @@
             const loading = document.getElementById('loading-overlay');
             loading.classList.remove('hidden');
             loading.classList.add('flex');
-            
-            // 体験モード（GUEST PREVIEW）時はAPI接続を行わずエミュレート
-            if (currentClientId === "GUEST PREVIEW" || !clientState.sharedGeminiKey) {
-                setTimeout(async () => {
-                    const matched = mockupMeals[Math.floor(Math.random() * mockupMeals.length)];
-                    const now = new Date();
-                    const targetMealId = 'M-' + Date.now();
-                    const newMeal = {
-                        id: targetMealId,
-                        name: matched.name,
-                        time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
-                        kcal: matched.kcal,
-                        p: matched.p,
-                        f: matched.f,
-                        c: matched.c,
-                        ingredients: matched.ingredients
-                    };
-                    await saveMealToCloud(newMeal);
-                    loading.classList.add('hidden');
-                    loading.classList.remove('flex');
-                    showToast(`「${matched.name}」をAI解析登録しました！(体験モードエミュレート)`);
-                }, 1200);
-                return;
-            }
             
             try {
                 const userPrompt = `
@@ -1894,23 +1830,8 @@
                     throw new Error("フォーマットが不正です。");
                 }
             } catch (err) {
-                console.error("Text Analyze Error, fallback to mockup:", err);
-                // エラー時フォールバック
-                const matched = mockupMeals[Math.floor(Math.random() * mockupMeals.length)];
-                const now = new Date();
-                const targetMealId = 'M-' + Date.now();
-                const newMeal = {
-                    id: targetMealId,
-                    name: matched.name,
-                    time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
-                    kcal: matched.kcal,
-                    p: matched.p,
-                    f: matched.f,
-                    c: matched.c,
-                    ingredients: matched.ingredients
-                };
-                await saveMealToCloud(newMeal);
-                showToast(`「${matched.name}」をAI自動解析登録しました！(接続調整フォールバック)`);
+                console.error("AI Text analysis failed, ensuring no silent bad entry:", err);
+                alert("AIでの解析に失敗しました。時間をおいてもう一度お試しいただくか、手動入力をお試しください。");
             } finally {
                 loading.classList.add('hidden');
                 loading.classList.remove('flex');
@@ -1923,30 +1844,6 @@
             loading.classList.remove('hidden');
             loading.classList.add('flex');
             
-            // 体験モード（GUEST PREVIEW）時はAPI接続を行わずエミュレート
-            if (currentClientId === "GUEST PREVIEW" || !clientState.sharedGeminiKey) {
-                setTimeout(async () => {
-                    const matched = mockupMeals[Math.floor(Math.random() * mockupMeals.length)];
-                    const now = new Date();
-                    const targetMealId = 'M-' + Date.now();
-                    const newMeal = {
-                        id: targetMealId,
-                        name: matched.name,
-                        time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
-                        kcal: matched.kcal,
-                        p: matched.p,
-                        f: matched.f,
-                        c: matched.c,
-                        ingredients: matched.ingredients
-                    };
-                    await saveMealToCloud(newMeal);
-                    loading.classList.add('hidden');
-                    loading.classList.remove('flex');
-                    showToast(`「${matched.name}」をAI写真解析しました！(体験モードエミュレート)`);
-                }, 1500);
-                return;
-            }
-
             try {
                 const base64Data = await convertFileToBase64(file);
                 const userPrompt = `
@@ -1995,22 +1892,8 @@
                     throw new Error("FORMAT_INVALID");
                 }
             } catch (err) {
-                console.error("Camera Analyze Error, fallback:", err);
-                const matched = mockupMeals[Math.floor(Math.random() * mockupMeals.length)];
-                const now = new Date();
-                const targetMealId = 'M-' + Date.now();
-                const newMeal = {
-                    id: targetMealId,
-                    name: matched.name,
-                    time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
-                    kcal: matched.kcal,
-                    p: matched.p,
-                    f: matched.f,
-                    c: matched.c,
-                    ingredients: matched.ingredients
-                };
-                await saveMealToCloud(newMeal);
-                showToast(`「${matched.name}」をAI写真解析登録しました！(接続調整フォールバック)`);
+                console.error("Camera Analyze Error:", err);
+                alert("写真の解析に失敗しました。画像がブレているか、容量が大きすぎる可能性があります。");
             } finally {
                 loading.classList.add('hidden');
                 loading.classList.remove('flex');
@@ -2123,7 +2006,7 @@
                             <input type="number" step="0.1" value="${safeFloat(ing.f).toFixed(1)}" class="w-full bg-transparent text-center font-logo font-bold text-xs text-brand-primary focus:outline-none" onchange="window.changeIngredientPFC(${i}, 'f', this.value)">
                         </div>
                         <div class="bg-white p-1.5 rounded-xl border border-brand-border shadow-sm">
-                            <label class="text-[8px] text-[#10B981] font-bold block mb-0.5">C(g)</label>
+                            <label class="text-[8px] text-emerald-500 font-bold block mb-0.5">C(g)</label>
                             <input type="number" step="0.1" value="${safeFloat(ing.c).toFixed(1)}" class="w-full bg-transparent text-center font-logo font-bold text-xs text-brand-primary focus:outline-none" onchange="window.changeIngredientPFC(${i}, 'c', this.value)">
                         </div>
                         <div class="bg-white p-1.5 rounded-xl border border-brand-border shadow-sm">
@@ -2228,29 +2111,6 @@
             document.body.appendChild(toast);
             lucide.createIcons();
             
-            // 体験モード、またはAPIキー通信不全時のエミュレート
-            if (currentClientId === "GUEST PREVIEW" || !clientState.sharedGeminiKey) {
-                setTimeout(() => {
-                    const fallbackValues = { p: 18.5, f: 1.2, c: 4.8, kcal: 110 };
-                    const currentScale = (parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100) / 100;
-                    ing.p = fallbackValues.p;
-                    ing.f = fallbackValues.f;
-                    ing.c = fallbackValues.c;
-                    ing.kcal = fallbackValues.kcal;
-                    
-                    ing.originalP = ing.p / (currentScale || 1);
-                    ing.originalF = ing.f / (currentScale || 1);
-                    ing.originalC = ing.c / (currentScale || 1);
-                    ing.originalKcal = ing.kcal / (currentScale || 1);
-                    ing.originalWeight = ingWeight / (currentScale || 1);
-                    
-                    renderIngredientsInEditor();
-                    toast.remove();
-                    showToast(`AIが「${ingName}」の栄養価を自動適用しました！(体験モード)`);
-                }, 1000);
-                return;
-            }
-            
             try {
                 const userPrompt = `
                     食材名: "${ingName}"
@@ -2284,15 +2144,7 @@
                 showToast(`AIが「${ingName}」の栄養価を自動適用しました！`);
             } catch (err) {
                 console.error("Ingredient AI Estimation Error, fallback:", err);
-                const currentScale = (parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100) / 100;
-                ing.p = 15.0; ing.f = 2.0; ing.c = 5.0; ing.kcal = 98;
-                ing.originalP = ing.p / (currentScale || 1);
-                ing.originalF = ing.f / (currentScale || 1);
-                ing.originalC = ing.c / (currentScale || 1);
-                ing.originalKcal = ing.kcal / (currentScale || 1);
-                ing.originalWeight = ingWeight / (currentScale || 1);
-                renderIngredientsInEditor();
-                showToast(`「${ingName}」を仮登録しました！(接続調整フォールバック)`);
+                alert("食材のAI自動分析に失敗しました。接続状態をご確認ください。");
             } finally {
                 toast.remove();
             }
@@ -2381,7 +2233,7 @@
                 showToast("食事を保存しました！");
             } catch (err) {
                 console.error("Save Edited Meal Error:", err);
-                alert("食事の微調整保存に失敗しました。接続状態をご確認ください。");
+                alert("食事の微調整保存に失敗しました。");
             }
         };
 
@@ -2462,65 +2314,40 @@
             loading.classList.remove('hidden');
             loading.classList.add('flex');
             
-            let curKcal = 0, curP = 0, curF = 0, curC = 0;
-            const meals = clientState.mealsByDate?.[selectedDateString] || [];
-            meals.forEach(m => {
-                curKcal += safeFloat(m.kcal);
-                curP += safeFloat(m.p);
-                curF += safeFloat(m.f);
-                curC += safeFloat(m.c);
-            });
-            
-            const recovery = calculateAutoRecoveryKcal();
-            const baseTarCal = safeFloat(clientState.targetCalories) || 1800;
-            const baseTarP = safeFloat(clientState.targetP) || 120;
-            const baseTarF = safeFloat(clientState.targetF) || 45;
-            const baseTarC = safeFloat(clientState.targetC) || 230;
-            
-            const tarCal = Math.max(1000, baseTarCal - recovery.adjustedKcal);
-            const scaleRatio = tarCal / baseTarCal;
-            
-            const tarP = Math.round(baseTarP * scaleRatio);
-            const tarF = Math.round(baseTarF * scaleRatio);
-            const tarC = Math.round(baseTarC * scaleRatio);
-            
-            const remCal = Math.max(50, tarCal - curKcal);
-            const remP = Math.max(5, tarP - curP);
-            const remF = Math.max(2, tarF - curF);
-            const remC = Math.max(5, tarC - curC);
-            
-            const mealCount = selectedMealTimings.length;
-            const targetKcalPerMeal = remCal / mealCount;
-            const targetPPerMeal = remP / mealCount;
-            const targetFPerMeal = remF / mealCount;
-            const targetCPerMeal = remC / mealCount;
-
-            // 体験モード、またはAPIキー通信不全時はAPI接続を行わず安全にエミュレート
-            if (currentClientId === "GUEST PREVIEW" || !clientState.sharedGeminiKey) {
-                setTimeout(() => {
-                    suggestedMenusCache = selectedMealTimings.map(timing => {
-                        const matched = getMockupMealByDemand(targetKcalPerMeal);
-                        return {
-                            timing: timing,
-                            name: matched.name,
-                            kcal: matched.kcal,
-                            p: matched.p,
-                            f: matched.f,
-                            c: matched.c,
-                            advice: matched.advice,
-                            ingredientsList: matched.ingredients
-                        };
-                    });
-                    
-                    renderSuggestedMenus(targetKcalPerMeal);
-                    loading.classList.add('hidden');
-                    loading.classList.remove('flex');
-                    showToast("目標値からAI逆算メニューを作成しました！(体験モード動作)");
-                }, 1200);
-                return;
-            }
-            
             try {
+                let curKcal = 0, curP = 0, curF = 0, curC = 0;
+                const meals = clientState.mealsByDate?.[selectedDateString] || [];
+                meals.forEach(m => {
+                    curKcal += safeFloat(m.kcal);
+                    curP += safeFloat(m.p);
+                    curF += safeFloat(m.f);
+                    curC += safeFloat(m.c);
+                });
+                
+                const recovery = calculateAutoRecoveryKcal();
+                const baseTarCal = safeFloat(clientState.targetCalories) || 1800;
+                const baseTarP = safeFloat(clientState.targetP) || 120;
+                const baseTarF = safeFloat(clientState.targetF) || 45;
+                const baseTarC = safeFloat(clientState.targetC) || 230;
+                
+                const tarCal = Math.max(1000, baseTarCal - recovery.adjustedKcal);
+                const scaleRatio = tarCal / baseTarCal;
+                
+                const tarP = Math.round(baseTarP * scaleRatio);
+                const tarF = Math.round(baseTarF * scaleRatio);
+                const tarC = Math.round(baseTarC * scaleRatio);
+                
+                const remCal = Math.max(50, tarCal - curKcal);
+                const remP = Math.max(5, tarP - curP);
+                const remF = Math.max(2, tarF - curF);
+                const remC = Math.max(5, tarC - curC);
+                
+                const mealCount = selectedMealTimings.length;
+                const targetKcalPerMeal = remCal / mealCount;
+                const targetPPerMeal = remP / mealCount;
+                const targetFPerMeal = remF / mealCount;
+                const targetCPerMeal = remC / mealCount;
+                
                 let catJp = "自炊レシピ(自宅で手軽に作れる健康的・高PFCな料理)";
                 if (selectedMenuCategory === 'convenience') catJp = "コンビニ商品(セブンイレブン、ファミリーマート、ローソン等で売っている高PFC定番商品名)";
                 if (selectedMenuCategory === 'restaurant') catJp = "外食店名指定(【大戸屋】 【やよい軒】 【スシロー】 【くら寿司】 【ガスト】 【サイゼリヤ】 【ココス】 【吉野家】等の具体的な「実店舗名」を冠した実在メニューまたは定番PFCメニュー名)";
@@ -2531,7 +2358,7 @@
                 const systemPrompt = "あなたはCARATのチーフ管理栄養士です。指示された複数の食事枠それぞれに対して、等分された目標PFC基準内に収まる独立したおすすめメニューを店名付きで逆引き提案し、JSONを返します。";
                 const userPrompt = `
                     現在の全体残り目標枠:
-                    - 目標総残りカロリー: ${remCal} kcal
+                    - 目盤総残りカロリー: ${remCal} kcal
                     - 目標総残りたんぱく質 (P): ${remP.toFixed(1)} g
                     - 目標総残り脂質(F): ${remF.toFixed(1)} g
                     - 目標総残り炭水化物 (C): ${remC.toFixed(1)} g
@@ -2582,23 +2409,8 @@
                     throw new Error("提案配列のロードエラー");
                 }
             } catch (err) {
-                console.error("Meal Generation AI Error, fallback to mockup:", err);
-                // 例外発生時も絶対にフリーズやクラッシュを起こさずに、美しく自動フォールバック
-                suggestedMenusCache = selectedMealTimings.map(timing => {
-                    const matched = getMockupMealByDemand(targetKcalPerMeal);
-                    return {
-                        timing: timing,
-                        name: matched.name,
-                        kcal: matched.kcal,
-                        p: matched.p,
-                        f: matched.f,
-                        c: matched.c,
-                        advice: matched.advice,
-                        ingredientsList: matched.ingredients
-                    };
-                });
-                renderSuggestedMenus(targetKcalPerMeal);
-                showToast("残枠からおすすめPFCメニューを自動調整登録しました！(接続調整フォールバック)");
+                console.error("AI 献立分析エラー。手動登録等をお試しください:", err);
+                alert("献立の逆算生成に失敗しました。接続状態またはAPI設定をご確認ください。");
             } finally {
                 loading.classList.add('hidden');
                 loading.classList.remove('flex');
