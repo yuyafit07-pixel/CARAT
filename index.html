@@ -12,26 +12,26 @@
                 extend: {
                     colors: {
                         brand: {
-                            primary: '#2A4B7C',       /* ロイヤルアッシュブルー（気品あるディープブルー） */
-                            primaryHover: '#1B3152',  /* ダークアッシュブルー */
-                            secondary: '#5B7B9C',     /* くすみシルキーブルー（大人可愛いニュアンス） */
-                            accent: '#EDF3FC',        /* シフォンアクア（透明感のある極薄ブルー） */
-                            gold: '#D4AF37',          /* シャンパンゴールド（煌めくアクセントゴールド） */
-                            goldLight: '#FBF5DF',     /* プレシャスベージュ */
-                            bg: '#FAFCFF',            /* クリーンホワイト */
-                            text: '#2C3E50',          /* スレートアッシュ */
-                            muted: '#8A99AD',         /* ミスティグレー */
-                            border: '#E3EAF5',        /* シルキー境界線 */
-                            rose: '#E28F83',          /* ヌードピーチローズ */
-                            roseLight: '#FDF4F2'      /* 超薄ローズ */
+                            primary: '#1F3A60',       /* ディープクラシックサックスブルー（上品で深みのあるメインカラー） */
+                            primaryHover: '#132543',  /* ミッドナイトサックス */
+                            secondary: '#56759E',     /* シルキーアッシュブルー（大人っぽいくすみブルー） */
+                            accent: '#E6EEF8',        /* シフォンペールアクア（明るく透明感のある薄い青） */
+                            gold: '#D4AF37',          /* シャンパンゴールド（煌びやかなゴールドアクセント） */
+                            goldLight: '#FCF7E6',     /* プレシャスベージュ */
+                            bg: '#FFFFFF',            /* クリーンホワイト */
+                            text: '#22334C',          /* ダークスレートブルー */
+                            muted: '#7A8FA5',         /* フレンチアッシュグレー */
+                            border: '#D0DFEC',        /* ジュエリーブルーボーダー */
+                            rose: '#E28E82',          /* ピーチローズ（優しいコーラル系の警告色） */
+                            roseLight: '#FDF3F1'      /* 超薄ローズピンク */
                         }
                     },
                     boxShadow: {
-                        premium: '0 20px 40px -12px rgba(42, 75, 124, 0.08), 0 8px 24px -4px rgba(42, 75, 124, 0.03)',
-                        cardShadow: '0 16px 36px rgba(91, 123, 156, 0.08)',
-                        softShadow: '0 8px 24px rgba(44, 62, 80, 0.02)',
-                        glow: '0 0 25px rgba(212, 175, 55, 0.25)',
-                        innerGlow: 'inset 0 2px 4px rgba(255,255,255,0.8)'
+                        premium: '0 24px 50px -12px rgba(31, 58, 96, 0.12), 0 8px 24px -4px rgba(31, 58, 96, 0.04)',
+                        cardShadow: '0 16px 36px rgba(86, 117, 158, 0.1)',
+                        softShadow: '0 10px 30px rgba(34, 51, 76, 0.03)',
+                        glow: '0 0 25px rgba(212, 175, 55, 0.3)',
+                        innerGlow: 'inset 0 2px 6px rgba(255, 255, 255, 0.9)'
                     }
                 }
             }
@@ -48,18 +48,19 @@
     <style>
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background-color: #F4F7FB;
-            background-image: radial-gradient(at 0% 0%, hsla(212,40%,93%,1) 0, transparent 50%),
-                              radial-gradient(at 100% 0%, hsla(38,45%,96%,1) 0, transparent 50%),
-                              radial-gradient(at 50% 100%, hsla(216,40%,94%,1) 0, transparent 50%);
+            /* ユーザーの要望に合わせて背景の青みを美しく、しっかりと引き立てる極上アッシュブルーグラデーション */
+            background-color: #C6D5E5;
+            background-image: radial-gradient(at 0% 0%, hsla(215, 45%, 85%, 1) 0, transparent 55%),
+                              radial-gradient(at 100% 0%, hsla(212, 42%, 78%, 1) 0, transparent 65%),
+                              radial-gradient(at 50% 100%, hsla(220, 38%, 74%, 1) 0, transparent 60%);
             background-attachment: fixed;
-            color: #2C3E50;
+            color: #22334C;
             letter-spacing: 0.02em;
             -webkit-tap-highlight-color: transparent;
         }
         .font-logo {
             font-family: 'Montserrat', sans-serif;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.16em;
         }
         .no-scrollbar::-webkit-scrollbar {
             display: none;
@@ -68,17 +69,19 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        /* コスメボトルのような透明感を高めるホワイトグラスモルフィズム */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.82);
+            background: rgba(255, 255, 255, 0.86);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 20px 48px -10px rgba(31, 58, 96, 0.08);
         }
         .glass-panel-gold {
-            background: rgba(253, 248, 236, 0.85);
+            background: rgba(252, 247, 230, 0.9);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.25);
         }
         /* インプットのスピンボタン非表示 */
         input[type="number"]::-webkit-outer-spin-button,
@@ -89,9 +92,9 @@
         input[type="number"] {
             -moz-appearance: textfield;
         }
-        /* アニメーション */
+        /* 滑らかなフェードインアニメーション */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
+            from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-in {
@@ -105,21 +108,21 @@
     <div id="login-screen" class="max-w-md mx-auto min-h-screen flex flex-col justify-center px-6 py-12 animate-fade-in">
         <div class="text-center space-y-4 mb-12">
             <h1 class="font-logo text-4xl font-extrabold tracking-widest text-brand-primary">CARAT</h1>
-            <p class="text-[10px] tracking-widest text-brand-secondary font-semibold uppercase">Premium Personal Diet</p>
+            <p class="text-[10px] tracking-widest text-brand-secondary font-semibold uppercase">Premium Personal Diet Suite</p>
             <div class="w-8 h-[2px] bg-gradient-to-r from-brand-secondary to-brand-gold mx-auto rounded-full"></div>
         </div>
 
-        <div class="glass-panel p-8 rounded-[2.5rem] shadow-premium border border-white/90 space-y-7 text-center">
+        <div class="glass-panel p-8 rounded-[2.5rem] shadow-premium space-y-7 text-center">
             <div class="space-y-2">
                 <h2 class="text-base font-bold text-brand-primary tracking-wide">トレーナー連携同期</h2>
                 <p class="text-[11px] text-brand-muted leading-relaxed">
-                    CARATトレーナーから発行された「連携ID」を入力して<br>あなたに最適化されたPFCプランを読み込みます。
+                    CARATトレーナーから発行された「連携ID」を入力して<br>あなたに最適化されたプレミアム食事プログラムを開始します。
                 </p>
             </div>
             
             <div class="space-y-4">
                 <input type="text" id="client-id-input" placeholder="CRT-XXXXXX" 
-                       class="w-full bg-white/90 border border-brand-border rounded-2xl px-5 py-4 text-center font-mono font-bold tracking-widest text-brand-primary placeholder-brand-muted/40 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 transition-all text-sm uppercase shadow-inner">
+                       class="w-full bg-white/95 border border-brand-border rounded-2xl px-5 py-4 text-center font-mono font-bold tracking-widest text-brand-primary placeholder-brand-muted/40 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 transition-all text-sm uppercase shadow-inner">
                 <button onclick="window.connectWithClientId()" 
                         class="w-full bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-brand-primaryHover hover:to-brand-primary text-white py-4 rounded-2xl text-xs font-bold shadow-md transition-all active:scale-98 tracking-widest">
                     同期を開始する
@@ -139,7 +142,7 @@
         </div>
     </div>
 
-    <!-- 2. メインダッシュボード (ログイン後に表示) -->
+    <!-- 2. メインダッシュボード -->
     <div id="main-dashboard" class="max-w-md mx-auto px-4 pt-6 space-y-6 hidden animate-fade-in">
         
         <!-- ヘッダーエリア -->
@@ -149,11 +152,11 @@
                 <span class="text-[9px] text-brand-secondary font-bold tracking-widest uppercase">Premium Suite</span>
             </div>
             <div id="id-active-panel" class="hidden flex items-center gap-2">
-                <div id="connection-status" class="text-[9px] px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100/50 flex items-center gap-1 font-bold">
+                <div id="connection-status" class="text-[9px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1 font-bold shadow-sm">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     同期中
                 </div>
-                <div class="flex items-center gap-1 bg-white/80 border border-brand-border rounded-full py-0.5 pl-3 pr-1 shadow-softShadow">
+                <div class="flex items-center gap-1 bg-white border border-brand-border rounded-full py-0.5 pl-3 pr-1 shadow-softShadow">
                     <span id="active-id-text" class="text-[9px] text-brand-muted font-mono font-bold">CRT-XXXXXX</span>
                     <button onclick="window.disconnectClientId()" class="text-[9px] text-brand-rose font-bold hover:bg-brand-roseLight px-2 py-1 rounded-full transition">解除</button>
                 </div>
@@ -161,7 +164,7 @@
         </header>
 
         <!-- 日付選択コントローラー -->
-        <div class="flex items-center justify-between bg-white/80 border border-brand-border/80 rounded-[2rem] p-2 shadow-softShadow">
+        <div class="flex items-center justify-between bg-white border border-brand-border/80 rounded-[2rem] p-2 shadow-softShadow">
             <button onclick="window.changeDay('prev')" class="p-2.5 hover:bg-brand-accent rounded-full transition-all text-brand-muted hover:text-brand-primary active:scale-90">
                 <i data-lucide="chevron-left" class="w-5 h-5"></i>
             </button>
@@ -179,7 +182,7 @@
         <div id="tab-content-home" class="space-y-6">
             
             <!-- カロリー＆PFCダッシュボード -->
-            <div class="glass-panel rounded-[2.5rem] p-6 shadow-premium border border-white/90 relative overflow-hidden space-y-6">
+            <div class="glass-panel rounded-[2.5rem] p-6 relative overflow-hidden space-y-6">
                 <div class="flex justify-between items-center pb-2 border-b border-brand-border/50">
                     <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase">TODAY'S SUMMARY</span>
                     <!-- オートリカバリー状態バッジ -->
@@ -203,8 +206,8 @@
                                     class="transition-all duration-700 ease-out" />
                             <defs>
                                 <linearGradient id="premium-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#2A4B7C" />
-                                    <stop offset="50%" stop-color="#5B7B9C" />
+                                    <stop offset="0%" stop-color="#1F3A60" />
+                                    <stop offset="50%" stop-color="#56759E" />
                                     <stop offset="100%" stop-color="#D4AF37" />
                                 </linearGradient>
                             </defs>
@@ -278,7 +281,7 @@
             </div>
 
             <!-- 週間貯金ステータス (WEEKLY STATUS) -->
-            <div class="glass-panel rounded-[2.5rem] p-6 shadow-premium border border-white/90 space-y-4">
+            <div class="glass-panel rounded-[2.5rem] p-6 space-y-4">
                 <div class="flex flex-col gap-1">
                     <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase">WEEKLY STATUS</span>
                     <p class="text-[10px] text-brand-muted leading-relaxed">月曜日を起点とし、今日食べた総量と目標基準の差（おトク枠）を判定します。</p>
@@ -310,7 +313,7 @@
             </div>
 
             <!-- AI食事入力スキャナー -->
-            <div class="glass-panel rounded-[2.5rem] p-6 shadow-premium border border-white/90 text-center space-y-4">
+            <div class="glass-panel rounded-[2.5rem] p-6 text-center space-y-4">
                 <div class="flex items-center gap-1.5 pb-2 border-b border-brand-border/50">
                     <i data-lucide="sparkles" class="w-4.5 h-4.5 text-brand-gold animate-pulse"></i>
                     <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase">AI MEAL SCANNER</span>
@@ -343,8 +346,10 @@
             <!-- よく使う履歴 (RECENT HISTORY) -->
             <div class="space-y-3.5">
                 <div class="flex items-center justify-between px-2">
-                    <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase">RECENT HISTORY</span>
-                    <span class="text-[8px] text-brand-primary bg-white border border-brand-border/85 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider shadow-sm">履歴複製</span>
+                    <span class="text-[10px] text-brand-primary bg-white/70 border border-brand-border/60 px-3 py-1 rounded-full font-bold uppercase tracking-wider shadow-sm">RECENT HISTORY</span>
+                    <span class="text-[8px] text-brand-gold bg-white border border-brand-gold/30 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider shadow-sm flex items-center gap-1">
+                        <i data-lucide="copy" class="w-3 h-3"></i>ワンタップ複製
+                    </span>
                 </div>
                 <div id="meals-history-container" class="flex gap-3 overflow-x-auto pb-2 no-scrollbar px-1">
                     <!-- JavaScriptで履歴表示 -->
@@ -354,14 +359,14 @@
 
             <!-- 本日の食事ログ (TODAY'S FOOD LOG) -->
             <div class="space-y-3.5">
-                <span class="text-[10px] text-brand-secondary font-bold uppercase tracking-wider pl-2">TODAY'S FOOD LOG</span>
+                <span class="text-[10px] text-brand-primary bg-white/70 border border-brand-border/60 px-3 py-1 rounded-full font-bold uppercase tracking-wider shadow-sm">TODAY'S FOOD LOG</span>
                 <div id="meal-timeline-container" class="space-y-3">
                     <!-- JavaScriptで食事ログ追加 -->
                 </div>
             </div>
 
             <!-- 体重の簡易入力エリア -->
-            <div class="glass-panel rounded-[2.5rem] p-5 shadow-premium border border-white/90 space-y-4">
+            <div class="glass-panel rounded-[2.5rem] p-5 space-y-4">
                 <div class="flex items-center gap-1.5 pb-2 border-b border-brand-border/50">
                     <i data-lucide="activity" class="w-4.5 h-4.5 text-brand-secondary animate-pulse"></i>
                     <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase">DAILY WEIGHT LOG</span>
@@ -381,13 +386,13 @@
             </div>
 
             <!-- トレーナーからの週間フィードバック (TRAINER'S REPORT) -->
-            <div class="glass-panel rounded-[2.5rem] p-6 shadow-premium border border-white/90 space-y-3.5 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-brand-gold/5 rounded-full blur-2xl"></div>
+            <div class="glass-panel rounded-[2.5rem] p-6 relative overflow-hidden space-y-3.5">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-brand-gold/10 rounded-full blur-2xl"></div>
                 <div class="flex justify-between items-center pb-2 border-b border-brand-border/50">
                     <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase">TRAINER'S WEEKLY REPORT</span>
                     <i data-lucide="award" class="w-4.5 h-4.5 text-brand-gold animate-bounce"></i>
                 </div>
-                <div class="bg-brand-bg p-5 rounded-2xl border border-brand-border/40 relative">
+                <div class="bg-brand-bg p-5 rounded-2xl border border-brand-border/40 relative shadow-inner">
                     <p id="trainer-feedback-text" class="text-xs text-brand-text leading-relaxed font-medium whitespace-pre-wrap">お食事を記録すると、トレーナーから1週間の体質リズム・栄養レポートが届きます。</p>
                 </div>
                 <span id="trainer-feedback-time" class="text-[9px] text-brand-muted font-mono block text-right font-bold"></span>
@@ -397,7 +402,7 @@
 
         <!-- タブコンテンツ 2: AI献立逆算 (AI MENU) -->
         <div id="tab-content-ai-menu" class="hidden space-y-6">
-            <div class="glass-panel rounded-[2.5rem] p-6 shadow-premium border border-white/90 space-y-4">
+            <div class="glass-panel rounded-[2.5rem] p-6 space-y-4">
                 <div class="flex items-center gap-1.5 pb-2 border-b border-brand-border/50">
                     <i data-lucide="sparkles" class="w-4.5 h-4.5 text-brand-gold animate-pulse"></i>
                     <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase">AI MULTI-MEAL PLANNER</span>
@@ -464,7 +469,7 @@
         <div id="tab-content-weight-trend" class="hidden space-y-6">
             
             <!-- 体重のマイルストーンスタッツ -->
-            <div class="glass-panel rounded-[2.5rem] p-6 shadow-premium border border-white/90 space-y-4">
+            <div class="glass-panel rounded-[2.5rem] p-6 space-y-4">
                 <div class="flex items-center justify-between pb-2 border-b border-brand-border/50">
                     <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase">WEIGHT MILESTONES</span>
                     <span class="text-[8px] bg-brand-accent text-brand-primary font-bold px-2.5 py-0.5 rounded-full border border-brand-primary/5">自動スタッツ</span>
@@ -485,7 +490,7 @@
             </div>
 
             <!-- グラフカード -->
-            <div class="glass-panel rounded-[2.5rem] p-6 shadow-premium border border-white/90 space-y-4">
+            <div class="glass-panel rounded-[2.5rem] p-6 space-y-4">
                 <div class="flex items-center gap-1.5 pb-2 border-b border-brand-border/50">
                     <i data-lucide="trending-up" class="w-4.5 h-4.5 text-brand-primary"></i>
                     <span class="text-[10px] text-brand-secondary font-bold tracking-wider uppercase">WEIGHT TREND (PAST 30 LOGS)</span>
@@ -502,7 +507,7 @@
     </div>
 
     <!-- 3. 固定下部ナビゲーションバー -->
-    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-lg border-t border-brand-border/80 p-3 flex justify-around items-center z-50 rounded-t-[2.2rem] shadow-[0_-12px_40px_rgba(42,75,124,0.05)]">
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-lg border-t border-brand-border/80 p-3 flex justify-around items-center z-50 rounded-t-[2.2rem] shadow-[0_-12px_40px_rgba(31,58,96,0.06)]">
         <button id="nav-btn-home" onclick="window.switchTab('home')" 
                 class="flex flex-col items-center gap-1 py-2 px-5 rounded-3xl transition-all text-brand-primary font-bold bg-brand-accent shadow-sm border border-brand-primary/5 active:scale-95">
             <i data-lucide="utensils" class="w-5 h-5"></i>
@@ -574,7 +579,7 @@
                 <div class="grid grid-cols-12 gap-3 text-left">
                     <div class="col-span-8 space-y-1.5">
                         <label class="text-[9px] text-brand-muted block">メニュー・食べたもの</label>
-                        <input type="text" id="manual-name" required placeholder="例：シーフードサラダ" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner">
+                        <input type="text" id="manual-name" required placeholder="例：ヘルシーえびアボカドサラダ" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-xs text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner">
                     </div>
                     <div class="col-span-4 space-y-1.5">
                         <label class="text-[9px] text-brand-muted block">食事時間</label>
@@ -622,7 +627,7 @@
                     食べたメニューや分量を自由に入力してください。AIが自動的にカロリー・PFCバランスを計算して記録します。
                 </p>
                 <textarea id="text-analyze-input" class="w-full bg-brand-bg border border-brand-border rounded-2xl p-4 text-xs font-medium text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner" rows="4" 
-                          placeholder="例: お昼にサラダチキンとアボカド、玄米おにぎり1個を食べました。"></textarea>
+                          placeholder="例: お昼ご飯にサラダチキンとアボカド、玄米おにぎり1個を食べました。"></textarea>
                 <button onclick="window.analyzeMealText()" id="btn-text-submit" 
                         class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-4 rounded-2xl text-xs font-bold transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95 tracking-wider">
                     <i data-lucide="sparkles" class="w-4 h-4 text-brand-gold animate-pulse"></i>解析して自動記録
@@ -938,7 +943,7 @@
             try {
                 await initAuth();
             } catch(e) {
-                console.warn("Auth initialization, using local emulator fallback", e);
+                console.warn("Auth initialization fallback", e);
             }
 
             onAuthStateChanged(auth, async (user) => {
@@ -1008,7 +1013,7 @@
                     Sat: { kcal: 1520, p: 98, f: 38, c: 188 },
                     Sun: { kcal: 1550, p: 100, f: 39, c: 194 }
                 },
-                trainerFeedback: "全体的にとてもバランス良く調整ができていて素晴らしいですね！たんぱく質がしっかりとれているため、筋肉量を落とさずに代謝を高い状態でキープできます。来週もこのパーフェクトな食事リズムを一緒に続けていきましょう！",
+                trainerFeedback: "全体的にとてもバランス良く調整ができていて素晴らしいですね！たんばく質がしっかりとれているため、筋肉量を落とさずに代謝を高い状態でキープできます。来週もこのパーフェクトな食事リズムを一緒に続けていきましょう！",
                 trainerFeedbackAt: new Date().toISOString()
             };
         }
@@ -1027,7 +1032,7 @@
                     document.getElementById('active-id-text').innerText = clientId;
                     
                     const conLabel = document.getElementById('connection-status');
-                    conLabel.className = "text-[9.5px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100/50 flex items-center gap-1.5 font-bold animate-pulse";
+                    conLabel.className = "text-[9.5px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold animate-pulse shadow-sm";
                     conLabel.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>同期中`;
                     
                     syncMealTimingUI();
@@ -1215,10 +1220,10 @@
                         datasets: [{
                             label: '体重 (kg)',
                             data: weights,
-                            borderColor: '#5B7B9C',
-                            backgroundColor: 'rgba(91, 123, 156, 0.05)',
+                            borderColor: '#56759E',
+                            backgroundColor: 'rgba(86, 117, 158, 0.08)',
                             borderWidth: 2.5,
-                            pointBackgroundColor: '#2A4B7C',
+                            pointBackgroundColor: '#1F3A60',
                             pointBorderColor: '#FFFFFF',
                             pointBorderWidth: 2,
                             pointRadius: 4.5,
@@ -1234,17 +1239,17 @@
                         },
                         scales: {
                             y: {
-                                grid: { color: '#F1F5F9' },
+                                grid: { color: 'rgba(255, 255, 255, 0.3)' },
                                 ticks: {
-                                    color: '#8A99AD',
-                                    font: { size: 9, weight: '500' }
+                                    color: '#1F3A60',
+                                    font: { size: 9, weight: '600' }
                                 }
                             },
                             x: {
                                 grid: { display: false },
                                 ticks: {
-                                    color: '#8A99AD',
-                                    font: { size: 9, weight: '500' }
+                                    color: '#1F3A60',
+                                    font: { size: 9, weight: '600' }
                                 }
                             }
                         }
@@ -1774,7 +1779,7 @@
                 }));
                 return normalized;
             } catch (err) {
-                console.error("JSON Parse Fail. Text was:", text, err);
+                console.error("JSON Parse Fail:", text, err);
                 throw new Error("AIデータの解読に失敗しました。");
             }
         }
