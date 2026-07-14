@@ -17,24 +17,24 @@
                 extend: {
                     colors: {
                         brand: {
-                            bg: '#F4F7FC',
+                            bg: '#F5F7FA', // シルクのような高貴なライトグレー背景
                             card: '#FFFFFF',
-                            primary: '#0B47A6', // 深みのあるプレミアムクラシックブルー
+                            primary: '#0B47A6', // 深みのあるプレミアムウルトラマリンブルー
                             primaryHover: '#073280',
-                            secondary: '#6C94D1', // 洗練されたシェルブルー
-                            accent: '#EDF3FA', // 透明感のあるアイスブルー
-                            accentGreen: '#E2F2E7', // 優しく美味しそうなミント
-                            accentAmber: '#FCF3E5', // 上品なペールアプリコット
-                            text: '#0F1A30', // 高級感のあるダークネイビー
-                            muted: '#5C6D85', // 沈みすぎないグレー
-                            border: '#E3ECF5' // 非常にソフトな淡い境界線
+                            secondary: '#4A7BB0', // 澄んだラグジュアリーブルー
+                            accent: '#EDF4FC', // 透明感のあるアイスシェル
+                            accentGreen: '#EAF7EE', // 美味しそうなフレッシュミント
+                            accentAmber: '#FEF6EC', // 柔らかなペールアプリコット
+                            text: '#0D172A', // 高級感漂うアブソリュートダークネイビー
+                            muted: '#5A6E85', // 沈まないエレガントスレートグレー
+                            border: '#E2ECF5' // 視認性と美しさを両立する淡い境界線
                         }
                     },
                     boxShadow: {
-                        premium: '0 24px 50px -10px rgba(11, 71, 166, 0.08), 0 12px 24px -10px rgba(11, 71, 166, 0.03)',
-                        cardShadow: '0 16px 36px -4px rgba(92, 109, 133, 0.08)',
-                        softShadow: '0 8px 24px -2px rgba(15, 26, 48, 0.03)',
-                        glow: '0 0 20px rgba(11, 71, 166, 0.08)'
+                        premium: '0 25px 50px -12px rgba(11, 71, 166, 0.08), 0 12px 24px -10px rgba(11, 71, 166, 0.04)',
+                        cardShadow: '0 16px 32px -4px rgba(90, 110, 133, 0.06)',
+                        softShadow: '0 8px 24px -2px rgba(13, 23, 42, 0.02)',
+                        glow: '0 0 24px rgba(11, 71, 166, 0.06)'
                     }
                 }
             }
@@ -44,7 +44,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background: radial-gradient(circle at top right, #FAFCFD 0%, #E9EFF8 100%);
+            background: radial-gradient(circle at top right, #FCFDFE 0%, #E9EFF8 100%);
             -webkit-tap-highlight-color: transparent;
         }
         .font-logo {
@@ -65,17 +65,17 @@
             to { transform: translateY(0); }
         }
         .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(227, 236, 245, 0.6);
+            border: 1px solid rgba(226, 236, 245, 0.7);
         }
     </style>
 </head>
 <body class="text-brand-text min-h-screen pb-28">
 
     <!-- ヘッダー -->
-    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-brand-border/40 px-5 py-3.5 flex justify-between items-center shadow-sm">
+    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-brand-border/50 px-5 py-4 flex justify-between items-center shadow-sm">
         <div class="flex items-center gap-3">
             <span class="font-logo font-black text-xl tracking-widest text-brand-primary">CARAT</span>
             <span class="text-[8px] bg-brand-primary/10 text-brand-primary font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Premium Health Lounge</span>
@@ -116,41 +116,39 @@
                 <button onclick="window.disconnectClientId()" class="text-[9px] text-rose-500 font-black hover:bg-rose-50/50 px-3 py-2 rounded-xl transition border border-rose-100/50">連携解除</button>
             </div>
 
-            <!-- ==== タブ1: 食事記録 & 今日のダッシュボード ==== -->
+            <!-- ==== タブ1: 食事記録 ==== -->
             <div id="tab-content-home" class="space-y-5">
 
                 <!-- 日付選択カレンダーヘッダー -->
-                <div class="bg-white rounded-[2rem] p-4.5 border border-brand-border/40 flex justify-between items-center shadow-cardShadow">
+                <div class="bg-white rounded-[2rem] p-4 border border-brand-border/40 flex justify-between items-center shadow-cardShadow">
                     <button onclick="window.changeDay('prev')" class="p-3 hover:bg-brand-accent rounded-2xl transition-all text-brand-primary active:scale-90 flex items-center justify-center">
                         <i data-lucide="chevron-left" class="w-5 h-5"></i>
                     </button>
                     <div class="text-center flex flex-col items-center">
                         <span id="display-date-text" class="font-mono font-black text-sm tracking-widest text-brand-text">2026-07-10</span>
-                        <button id="btn-today-badge" onclick="window.resetToToday()" class="hidden text-[9px] text-brand-primary bg-brand-accent px-3.5 py-1 rounded-full font-black transition-all mt-1.5 shadow-sm">今日に戻る</button>
+                        <button id="btn-today-badge" onclick="window.resetToToday()" class="hidden text-[9px] text-brand-primary bg-brand-accent px-3.5 py-1 rounded-full font-black transition-all mt-1 shadow-sm">今日に戻る</button>
                     </div>
                     <button onclick="window.changeDay('next')" class="p-3 hover:bg-brand-accent rounded-2xl transition-all text-brand-primary active:scale-90 flex items-center justify-center">
                         <i data-lucide="chevron-right" class="w-5 h-5"></i>
                     </button>
                 </div>
 
-                <!-- 今日の目標 & 摂取状況メインカード -->
-                <div class="bg-white rounded-[2.5rem] p-6 border border-brand-border/50 shadow-premium text-center relative overflow-hidden space-y-6">
+                <!-- 【世界一のデザイン改善：縦型統治エレガントダッシュボード】 -->
+                <div class="bg-white rounded-[2.5rem] p-6 border border-brand-border/50 shadow-premium relative overflow-hidden space-y-6">
                     <div class="flex justify-between items-center">
                         <span class="text-[10px] text-brand-muted font-black block uppercase tracking-wider">TODAY'S SUMMARY</span>
                         <span id="auto-recovery-status-badge" class="hidden text-[9px] bg-amber-500 text-white font-extrabold px-3 py-1 rounded-full animate-pulse">昨日超過分を自動調整中</span>
-                        <!-- 手動目標調整トリガーボタン -->
-                        <button onclick="window.openTargetAdjustmentModal()" class="text-[10px] text-brand-primary font-black hover:underline flex items-center gap-1.5">
+                        <button onclick="window.openTargetAdjustmentModal()" class="text-[10.5px] text-brand-primary font-black hover:underline flex items-center gap-1">
                             <i data-lucide="sliders" class="w-3.5 h-3.5"></i> 目標調整
                         </button>
                     </div>
 
-                    <!-- メインカロリーメーター -->
-                    <div class="flex justify-center items-center gap-6 py-1">
-                        <!-- カロリーサークル -->
-                        <div class="relative w-32 h-32 shrink-0 flex items-center justify-center">
+                    <!-- 美しき大型コックピットサークル -->
+                    <div class="flex flex-col items-center justify-center py-2 relative">
+                        <div class="relative w-36 h-36 flex items-center justify-center">
                             <svg class="absolute inset-0 w-full h-full transform -rotate-90">
-                                <circle cx="64" cy="64" r="50" stroke="#F1F5F9" stroke-width="8" fill="transparent" />
-                                <circle id="calorie-progress-bar" cx="64" cy="64" r="50" stroke="url(#premium-gradient)" stroke-width="10" stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round" fill="transparent" class="transition-all duration-700 ease-out" />
+                                <circle cx="72" cy="72" r="52" stroke="#F1F5F9" stroke-width="8" fill="transparent" />
+                                <circle id="calorie-progress-bar" cx="72" cy="72" r="52" stroke="url(#premium-gradient)" stroke-width="11" stroke-dasharray="327" stroke-dashoffset="327" stroke-linecap="round" fill="transparent" class="transition-all duration-700 ease-out" />
                                 <defs>
                                     <linearGradient id="premium-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" stop-color="#0B47A6" />
@@ -159,93 +157,104 @@
                                 </defs>
                             </svg>
                             <div class="relative flex flex-col justify-center items-center text-center">
-                                <span id="summary-cur-cal" class="text-2xl font-logo font-black tracking-tight text-brand-text block leading-none">0</span>
-                                <span class="text-[9px] text-brand-muted block font-extrabold uppercase tracking-widest mt-1.5">/ <span id="summary-tar-cal">1800</span> kcal</span>
+                                <span id="summary-cur-cal" class="text-3xl font-logo font-black tracking-tight text-brand-text block leading-none">0</span>
+                                <span class="text-[10px] text-brand-muted block font-extrabold uppercase tracking-widest mt-2">/ <span id="summary-tar-cal">1800</span> kcal</span>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- PFC簡易バー -->
-                        <div class="flex-1 space-y-3 text-left">
-                            <div class="space-y-1">
-                                <div class="flex justify-between text-[10px] font-black items-center">
-                                    <span class="text-[#2C6CB0] flex items-center gap-1">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Protein
-                                    </span>
-                                    <span class="text-brand-muted font-mono"><span id="summary-cur-p">0</span>/<span id="summary-tar-p">120</span>g</span>
-                                </div>
-                                <div class="w-full bg-[#EDF3FA] h-2 rounded-full overflow-hidden">
-                                    <div id="bar-p" class="h-full bg-gradient-to-r from-sky-500 to-sky-400 rounded-full transition-all duration-700 ease-out shadow-sm" style="width: 0%"></div>
-                                </div>
+                    <!-- 横幅に一切干渉されない余裕ある3連PFCスタック -->
+                    <div class="grid grid-cols-3 gap-3 pt-2 border-t border-brand-border/30">
+                        <!-- Protein Card -->
+                        <div class="bg-brand-bg/50 rounded-2xl p-3 text-left space-y-1.5 border border-brand-border/30">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+                                <span class="text-[9.5px] font-black text-brand-muted">Protein</span>
                             </div>
-                            <div class="space-y-1">
-                                <div class="flex justify-between text-[10px] font-black items-center">
-                                    <span class="text-emerald-700 flex items-center gap-1">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Fat
-                                    </span>
-                                    <span class="text-brand-muted font-mono"><span id="summary-cur-f">0</span>/<span id="summary-tar-f">45</span>g</span>
-                                </div>
-                                <div class="w-full bg-[#EDF3FA] h-2 rounded-full overflow-hidden">
-                                    <div id="bar-f" class="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-700 ease-out shadow-sm" style="width: 0%"></div>
-                                </div>
+                            <div class="font-logo font-black text-xs text-brand-text truncate">
+                                <span id="summary-cur-p" class="text-sm">0</span> <span class="text-[9px] text-brand-muted font-bold">/ <span id="summary-tar-p">120</span>g</span>
                             </div>
-                            <div class="space-y-1">
-                                <div class="flex justify-between text-[10px] font-black items-center">
-                                    <span class="text-amber-700 flex items-center gap-1">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Carbs
-                                    </span>
-                                    <span class="text-brand-muted font-mono"><span id="summary-cur-c">0</span>/<span id="summary-tar-c">230</span>g</span>
-                                </div>
-                                <div class="w-full bg-[#EDF3FA] h-2 rounded-full overflow-hidden">
-                                    <div id="bar-c" class="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-700 ease-out shadow-sm" style="width: 0%"></div>
-                                </div>
+                            <div class="w-full bg-[#EDF3FA] h-1.5 rounded-full overflow-hidden">
+                                <div id="bar-p" class="h-full bg-sky-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <!-- Fat Card -->
+                        <div class="bg-brand-bg/50 rounded-2xl p-3 text-left space-y-1.5 border border-brand-border/30">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <span class="text-[9.5px] font-black text-brand-muted">Fat</span>
+                            </div>
+                            <div class="font-logo font-black text-xs text-brand-text truncate">
+                                <span id="summary-cur-f" class="text-sm">0</span> <span class="text-[9px] text-brand-muted font-bold">/ <span id="summary-tar-f">45</span>g</span>
+                            </div>
+                            <div class="w-full bg-[#EDF3FA] h-1.5 rounded-full overflow-hidden">
+                                <div id="bar-f" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <!-- Carbs Card -->
+                        <div class="bg-brand-bg/50 rounded-2xl p-3 text-left space-y-1.5 border border-brand-border/30">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                <span class="text-[9.5px] font-black text-brand-muted">Carbs</span>
+                            </div>
+                            <div class="font-logo font-black text-xs text-brand-text truncate">
+                                <span id="summary-cur-c" class="text-sm">0</span> <span class="text-[9px] text-brand-muted font-bold">/ <span id="summary-tar-c">230</span>g</span>
+                            </div>
+                            <div class="w-full bg-[#EDF3FA] h-1.5 rounded-full overflow-hidden">
+                                <div id="bar-c" class="h-full bg-amber-500 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- カロリーオートリカバリー貯金箱インジケータ -->
-                <div id="recovery-indicator-card" class="hidden bg-gradient-to-br from-[#0B47A6] to-[#4A7BB0] text-white rounded-[2rem] p-5.5 shadow-premium text-left space-y-2.5 relative overflow-hidden">
+                <div id="recovery-indicator-card" class="hidden bg-gradient-to-br from-[#0B47A6] to-[#4A7BB0] text-white rounded-[2rem] p-5 shadow-premium text-left space-y-2.5 relative overflow-hidden">
                     <div class="flex justify-between items-center">
                         <span class="text-[10px] text-white/95 font-black uppercase tracking-widest flex items-center gap-2">
                             <i data-lucide="sparkles" class="w-4 h-4 text-white animate-pulse"></i> カロリーオートリカバリー
                         </span>
                     </div>
-                    <p class="text-[10px] text-white/80 leading-relaxed font-medium">昨日食べすぎた分は、自動で今日の目標から引いて賢く相殺されています。</p>
+                    <p class="text-[10px] text-white/85 leading-relaxed font-medium">昨日食べすぎた分は、自動で今日の目標から引いて賢く相殺されています。</p>
                     <div class="grid grid-cols-2 gap-4 pt-3 border-t border-white/10 text-center">
                         <div>
-                            <span class="text-[8px] text-white/60 block uppercase font-bold tracking-wider mb-0.5">昨日の超過カロリー</span>
+                            <span class="text-[8.5px] text-white/60 block uppercase font-bold tracking-wider mb-1">昨日の超過カロリー</span>
                             <span id="yesterday-over-kcal" class="font-logo font-black text-sm block">0 kcal</span>
                         </div>
                         <div>
-                            <span class="text-[8px] text-white/60 block uppercase font-bold tracking-wider mb-0.5">本日の目標自動調整</span>
+                            <span class="text-[8.5px] text-white/60 block uppercase font-bold tracking-wider mb-1">本日の目標自動調整</span>
                             <span id="today-adjusted-kcal" class="font-logo font-black text-sm block text-amber-200">-0 kcal</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 直近1週間の帳じり合わせ進捗バー -->
+                <!-- 【世界一のデザイン改善：絶対に重ならないダブルカラム帳じり合わせカード】 -->
                 <div class="bg-white rounded-[2rem] p-5.5 border border-brand-border/40 shadow-premium text-left space-y-4 relative overflow-hidden">
                     <div id="balance-bar-color" class="absolute top-0 left-0 w-2.5 h-full bg-emerald-500"></div>
                     <div class="flex justify-between items-center pl-2">
-                        <span class="text-[10px] text-brand-muted font-black block uppercase tracking-wider">WEEKLY STATUS</span>
+                        <span class="text-[10px] text-brand-muted font-black block uppercase tracking-wider">WEEKLY BALANCE</span>
                         <span class="text-[9px] bg-brand-accent text-brand-primary font-black px-2.5 py-0.5 rounded-full border border-brand-primary/5">直近1週間過不足</span>
                     </div>
                     <p class="text-[10px] text-brand-muted leading-relaxed font-medium pl-2">月曜日を起点とし、今日食べた総量と目標基準の差（おトク枠）を判定します。</p>
-                    <div class="grid grid-cols-4 gap-2.5 pl-2 text-center">
-                        <div class="bg-brand-bg rounded-2xl p-2.5 border border-brand-border/40 shadow-inner">
-                            <span class="text-[8px] text-brand-muted block uppercase font-black mb-0.5">カロリー</span>
+                    
+                    <div class="grid grid-cols-2 gap-3 pl-2">
+                        <!-- Calorie Balance -->
+                        <div class="bg-brand-bg rounded-2xl p-3 border border-brand-border/30 flex items-center justify-between shadow-inner">
+                            <span class="text-[9px] text-brand-muted font-black uppercase">Calories</span>
                             <span id="balance-kcal" class="font-logo text-xs font-black text-brand-text">0</span>
                         </div>
-                        <div class="bg-brand-bg rounded-2xl p-2.5 border border-brand-border/40 shadow-inner">
-                            <span class="text-[8px] text-brand-muted block uppercase font-black mb-0.5">P (g)</span>
+                        <!-- P Balance -->
+                        <div class="bg-brand-bg rounded-2xl p-3 border border-brand-border/30 flex items-center justify-between shadow-inner">
+                            <span class="text-[9px] text-[#2C6CB0] font-black uppercase">Protein</span>
                             <span id="balance-p" class="font-logo text-xs font-black text-brand-text">0</span>
                         </div>
-                        <div class="bg-brand-bg rounded-2xl p-2.5 border border-brand-border/40 shadow-inner">
-                            <span class="text-[8px] text-brand-muted block uppercase font-black mb-0.5">F (g)</span>
+                        <!-- F Balance -->
+                        <div class="bg-brand-bg rounded-2xl p-3 border border-brand-border/30 flex items-center justify-between shadow-inner">
+                            <span class="text-[9px] text-emerald-700 font-black uppercase">Fat</span>
                             <span id="balance-f" class="font-logo text-xs font-black text-brand-text">0</span>
                         </div>
-                        <div class="bg-brand-bg rounded-2xl p-2.5 border border-brand-border/40 shadow-inner">
-                            <span class="text-[8px] text-brand-muted block uppercase font-black mb-0.5">C (g)</span>
+                        <!-- C Balance -->
+                        <div class="bg-brand-bg rounded-2xl p-3 border border-brand-border/30 flex items-center justify-between shadow-inner">
+                            <span class="text-[9px] text-amber-700 font-black uppercase">Carbs</span>
                             <span id="balance-c" class="font-logo text-xs font-black text-brand-text">0</span>
                         </div>
                     </div>
@@ -260,20 +269,20 @@
                     </div>
 
                     <div class="grid grid-cols-3 gap-3">
-                        <label class="bg-brand-bg hover:bg-brand-accent/50 border border-brand-border/50 rounded-2xl p-4 text-center flex flex-col items-center justify-center gap-2 cursor-pointer shadow-sm transition-all active:scale-95">
-                            <i data-lucide="camera" class="w-6.5 h-6.5 text-brand-primary mb-0.5"></i>
-                            <span class="text-[10.5px] font-black text-brand-text block">写真スキャン</span>
+                        <label class="bg-brand-bg hover:bg-brand-accent/50 border border-brand-border/50 rounded-2xl p-4 text-center flex flex-col items-center justify-center gap-2.5 cursor-pointer shadow-sm transition-all active:scale-95">
+                            <i data-lucide="camera" class="w-6.5 h-6.5 text-brand-primary"></i>
+                            <span class="text-[11px] font-black text-brand-text block">写真スキャン</span>
                             <span class="text-[8px] text-brand-muted block leading-none">撮影して一撃解析</span>
                             <input type="file" id="ai-image-input" accept="image/*" class="hidden">
                         </label>
-                        <button onclick="window.openTextModal()" class="bg-brand-bg hover:bg-brand-accent/50 border border-brand-border/50 rounded-2xl p-4 text-center flex flex-col items-center justify-center gap-2 shadow-sm transition-all active:scale-95">
-                            <i data-lucide="pencil-line" class="w-6.5 h-6.5 text-brand-primary mb-0.5"></i>
-                            <span class="text-[10.5px] font-black text-brand-text block">テキスト解析</span>
+                        <button onclick="window.openTextModal()" class="bg-brand-bg hover:bg-brand-accent/50 border border-brand-border/50 rounded-2xl p-4 text-center flex flex-col items-center justify-center gap-2.5 shadow-sm transition-all active:scale-95">
+                            <i data-lucide="pencil-line" class="w-6.5 h-6.5 text-brand-primary"></i>
+                            <span class="text-[11px] font-black text-brand-text block">テキスト解析</span>
                             <span class="text-[8px] text-brand-muted block leading-none">文章で自由に入力</span>
                         </button>
-                        <button onclick="window.openManualInputModal()" class="bg-brand-bg hover:bg-brand-accent/50 border border-brand-border/50 rounded-2xl p-4 text-center flex flex-col items-center justify-center gap-2 shadow-sm transition-all active:scale-95">
-                            <i data-lucide="keyboard" class="w-6.5 h-6.5 text-brand-primary mb-0.5"></i>
-                            <span class="text-[10.5px] font-black text-brand-text block">数値手動入力</span>
+                        <button onclick="window.openManualInputModal()" class="bg-brand-bg hover:bg-brand-accent/50 border border-brand-border/50 rounded-2xl p-4 text-center flex flex-col items-center justify-center gap-2.5 shadow-sm transition-all active:scale-95">
+                            <i data-lucide="keyboard" class="w-6.5 h-6.5 text-brand-primary"></i>
+                            <span class="text-[11px] font-black text-brand-text block">数値手動入力</span>
                             <span class="text-[8px] text-brand-muted block leading-none">直接数値を登録</span>
                         </button>
                     </div>
@@ -378,7 +387,7 @@
                     <div id="ai-suggested-meals-grid" class="space-y-4.5">
                         <!-- AIの提案カードが動的に挿入されます -->
                     </div>
-                    <button onclick="window.registerAllSuggestedMenus()" class="w-full bg-[#10B981] hover:bg-emerald-600 text-white font-black text-xs py-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-1.5 active:scale-95">
+                    <button onclick="window.registerAllSuggestedMenus()" class="w-full bg-[#10B981] hover:bg-[#059669] text-white font-black text-xs py-4 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-1.5 active:scale-95">
                         <i data-lucide="check-check" class="w-4.5 h-4.5"></i>すべて一括で今日のログに登録
                     </button>
                 </div>
@@ -429,17 +438,17 @@
     <!-- 固定ボトムナビゲーション -->
     <div class="fixed bottom-0 left-0 right-0 z-[100] p-4 max-w-md mx-auto">
         <div class="bg-white/95 backdrop-blur-lg border border-brand-border/60 shadow-premium rounded-[2.2rem] p-1.5 flex justify-around items-center">
-            <button id="nav-btn-home" onclick="window.switchTab('home')" class="flex flex-col items-center gap-1 py-2 px-5 rounded-2xl transition-all text-brand-primary font-black active:scale-95">
+            <button id="nav-btn-home" onclick="window.switchTab('home')" class="flex flex-col items-center gap-1.5 py-2 px-5 rounded-2xl transition-all text-brand-primary font-black active:scale-95">
                 <i data-lucide="utensils" class="w-5.5 h-5.5"></i>
-                <span class="text-[9px] uppercase tracking-widest font-black">記録</span>
+                <span class="text-[9.5px] uppercase tracking-widest font-black">記録</span>
             </button>
-            <button id="nav-btn-ai-menu" onclick="window.switchTab('ai-menu')" class="flex flex-col items-center gap-1 py-2 px-5 rounded-2xl transition-all text-brand-muted hover:text-brand-primary font-black active:scale-95">
+            <button id="nav-btn-ai-menu" onclick="window.switchTab('ai-menu')" class="flex flex-col items-center gap-1.5 py-2 px-5 rounded-2xl transition-all text-brand-muted hover:text-brand-primary font-black active:scale-95">
                 <i data-lucide="sparkles" class="w-5.5 h-5.5"></i>
-                <span class="text-[9px] uppercase tracking-widest font-black">逆算</span>
+                <span class="text-[9.5px] uppercase tracking-widest font-black">逆算</span>
             </button>
-            <button id="nav-btn-weight-trend" onclick="window.switchTab('weight-trend')" class="flex flex-col items-center gap-1 py-2 px-5 rounded-2xl transition-all text-brand-muted hover:text-brand-primary font-black active:scale-95">
+            <button id="nav-btn-weight-trend" onclick="window.switchTab('weight-trend')" class="flex flex-col items-center gap-1.5 py-2 px-5 rounded-2xl transition-all text-brand-muted hover:text-brand-primary font-black active:scale-95">
                 <i data-lucide="trending-up" class="w-5.5 h-5.5"></i>
-                <span class="text-[9px] uppercase tracking-widest font-black">体重</span>
+                <span class="text-[9.5px] uppercase tracking-widest font-black">体重</span>
             </button>
         </div>
     </div>
@@ -775,7 +784,7 @@
 
         function showToast(message) {
             const toast = document.createElement('div');
-            toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-text text-white px-5 py-3 rounded-full text-xs font-bold shadow-premium z-[300] transition-opacity duration-300 flex items-center gap-2";
+            toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-[#0F1A30] text-white px-5 py-3 rounded-full text-xs font-bold shadow-premium z-[300] transition-opacity duration-300 flex items-center gap-2";
             toast.innerHTML = `<i data-lucide="check" class="w-4.5 h-4.5 text-[#34D399] animate-bounce"></i>` + message;
             document.body.appendChild(toast);
             lucide.createIcons();
@@ -1226,11 +1235,13 @@
             }
 
             const pct = Math.min(100, (curKcal / tarCal) * 100);
-            const strokeOffset = 314 - (314 * pct) / 100;
+            const strokeOffset = 327 - (327 * pct) / 100;
             document.getElementById('calorie-progress-bar').style.strokeDashoffset = strokeOffset;
 
             document.getElementById('summary-cur-cal').innerText = Math.round(curKcal).toLocaleString();
             document.getElementById('summary-tar-cal').innerText = tarCal.toLocaleString();
+            
+            // PFC Cards updates
             document.getElementById('summary-cur-p').innerText = curP.toFixed(1);
             document.getElementById('summary-tar-p').innerText = tarP;
             document.getElementById('bar-p').style.width = Math.min(100, (curP / tarP) * 100) + "%";
@@ -1267,7 +1278,7 @@
             } else if (weeklyDiff.kcalDiff < -500) {
                 balanceBar.className = "absolute top-0 left-0 w-2.5 h-full bg-[#0B47A6]";
             } else {
-                balanceBar.className = "absolute top-0 left-0 w-2.5 h-full bg-emerald-500";
+                balanceBar.className = "absolute top-0 left-0 w-2.5 h-full bg-[#10B981]";
             }
 
             const todayWeight = clientState.weightHistory?.[selectedDateString] || clientState.weight || 55.0;
@@ -1396,7 +1407,7 @@
                     alert("目標の同期に失敗しました。");
                 }
             } else {
-                showToast("ゲスト用: 目標設定を仮保存しました！");
+                showToast("ゲスト用: 目難設定を仮保存しました！");
             }
             window.toggleModal('target-modal', false);
             renderClientApp();
