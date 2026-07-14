@@ -12,22 +12,22 @@
                 extend: {
                     colors: {
                         brand: {
-                            primary: '#1A335E',       /* ロイヤルアッシュブルー（気品ある濃い青） */
-                            primaryHover: '#112543',  /* ダークアッシュ */
-                            secondary: '#51759E',     /* ミスティサックス（女性らしい絶妙なくすみ青） */
-                            accent: '#EAF1F9',        /* シフォンアクア（透明感抜群のペールブルー） */
-                            gold: '#C5A059',          /* シャンパンゴールド（華やかで繊細な金色） */
+                            primary: '#1A335E',       /* ロイヤルサックスブルー（気品ある深み） */
+                            primaryHover: '#112543',  /* ダークサックス */
+                            secondary: '#51759E',     /* ミスティサックス（女性らしい絶妙なくすみサックス） */
+                            accent: '#EAF1F9',        /* シフォンアクア（透明感のある極薄ブルー） */
+                            gold: '#C5A059',          /* シャンパンゴールド（華やかで繊細な煌めき） */
                             goldLight: '#FAF4E3',     /* プレシャスベージュ */
-                            bg: '#FFFFFF',            /* ピュアホワイト */
-                            text: '#20314C',          /* ディープスレートアッシュ */
+                            bg: '#FFFFFF',            /* シルキーピュアホワイト */
+                            text: '#20314C',          /* ディープスレートアッシュ（柔らかく知的な黒） */
                             muted: '#7A8FA5',         /* フレンチアッシュグレー */
-                            border: '#D3E1EE',        /* ジュエリーブルーボーダー */
-                            rose: '#E28E82',          /* ピーチローズ（女性らしい血色アクセント） */
-                            roseLight: '#FDF3F1'      /* 超薄ピンク */
+                            border: '#D3E1EE',        /* ジュエリーブルー境界線 */
+                            rose: '#E28E82',          /* ピーチローズ（女性らしい血色カラー） */
+                            roseLight: '#FDF3F1'      /* 超薄ローズピンク */
                         }
                     },
                     boxShadow: {
-                        premium: '0 24px 50px -12px rgba(26, 51, 94, 0.16), 0 8px 24px -4px rgba(26, 51, 94, 0.06)',
+                        premium: '0 24px 50px -12px rgba(26, 51, 94, 0.18), 0 8px 24px -4px rgba(26, 51, 94, 0.06)',
                         cardShadow: '0 16px 40px rgba(81, 117, 158, 0.12)',
                         softShadow: '0 12px 30px rgba(32, 49, 76, 0.04)',
                         glow: '0 0 25px rgba(197, 160, 89, 0.35)',
@@ -48,11 +48,11 @@
     <style>
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            /* 濃すぎず、うすすぎず、白とゴールドが最も気高く際立つ「クラシックサックスアッシュブルー」 */
+            /* 濃すぎず、極上のサックスブルーの世界に没入できる「アッシュペールサックス」グラデーション */
             background-color: #B2C5D6;
-            background-image: radial-gradient(at 0% 0%, hsla(215, 45%, 80%, 1) 0, transparent 55%),
-                              radial-gradient(at 100% 0%, hsla(212, 42%, 70%, 1) 0, transparent 65%),
-                              radial-gradient(at 50% 100%, hsla(220, 38%, 66%, 1) 0, transparent 60%);
+            background-image: radial-gradient(at 0% 0%, hsla(215, 45%, 83%, 1) 0, transparent 55%),
+                              radial-gradient(at 100% 0%, hsla(212, 42%, 73%, 1) 0, transparent 65%),
+                              radial-gradient(at 50% 100%, hsla(220, 38%, 68%, 1) 0, transparent 60%);
             background-attachment: fixed;
             color: #20314C;
             letter-spacing: 0.02em;
@@ -92,7 +92,7 @@
         input[type="number"] {
             -moz-appearance: textfield;
         }
-        /* フェードインアニメーション */
+        /* 上品なフェードインアニメーション */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: translateY(0); }
@@ -102,7 +102,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen pb-32 animate-fade-in">
+<body class="min-h-screen pb-32">
 
     <!-- 1. ログイン/同期キー入力画面 -->
     <div id="login-screen" class="max-w-md mx-auto min-h-screen flex flex-col justify-center px-6 py-12 animate-fade-in">
@@ -116,7 +116,7 @@
             <div class="space-y-2">
                 <h2 class="text-base font-bold text-brand-primary tracking-wide">トレーナー連携同期</h2>
                 <p class="text-[11px] text-brand-muted leading-relaxed">
-                    CARATトレーナーから発行された「連携ID」を入力して<br>あなた専用の美肌・ボディメイク食事プログラムを開始します。
+                    CARATトレーナーから発行された「連携ID」を入力して<br>あなた専用に最適化されたPFCプログラムを開始します。
                 </p>
             </div>
             
@@ -142,7 +142,7 @@
         </div>
     </div>
 
-    <!-- 2. メインダッシュボード -->
+    <!-- 2. メインダッシュボード (ログイン後に表示) -->
     <div id="main-dashboard" class="max-w-md mx-auto px-4 pt-6 space-y-6 hidden animate-fade-in">
         
         <!-- ヘッダーエリア -->
@@ -636,7 +636,7 @@
         </div>
     </div>
 
-    <!-- モーダル D: 食事構成微調整エディター (スマホに最適化されたスマート2行縦積みエディター) -->
+    <!-- モーダル D: 食事構成微調整エディター (スマホに完璧に最適化された2行縦積みエディター) -->
     <div id="edit-meal-modal" class="fixed inset-0 bg-brand-primary/30 backdrop-blur-sm z-[100] hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
         <div class="bg-white w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 space-y-5 shadow-premium border border-brand-border max-h-[90vh] overflow-y-auto no-scrollbar">
             <div class="flex justify-between items-center pb-3 border-b border-brand-border">
@@ -670,7 +670,7 @@
                         <span class="text-[10px] text-brand-text font-bold flex items-center gap-1.5">
                             <i data-lucide="scale" class="w-3.5 h-3.5 text-brand-secondary"></i> 食べる割合(全体を連動スケール)
                         </span>
-                        <span id="scale-percentage-text" class="font-logo text-xs font-bold text-brand-primary bg-white px-2.5 py-1 rounded-xl border border-brand-border shadow-sm">100%</span>
+                        <span id="scale-percentage-text" class="font-mono text-xs font-bold text-brand-primary bg-white px-2.5 py-1 rounded-xl border border-brand-border shadow-sm">100%</span>
                     </div>
 
                     <!-- クイック割合切り替えボタン -->
@@ -688,7 +688,7 @@
                                    class="w-full accent-brand-primary cursor-pointer" oninput="window.changeMealScale(this.value, 'slider')">
                             <div class="flex items-center gap-1 bg-white px-2 py-1 rounded-xl border border-brand-border shadow-sm">
                                 <input type="number" id="edit-meal-scale-input" min="10" max="500" value="100" 
-                                       class="w-10 bg-transparent text-center font-logo font-bold text-xs text-brand-primary focus:outline-none" oninput="window.changeMealScale(this.value, 'input')">
+                                       class="w-10 bg-transparent text-center font-mono font-bold text-xs text-brand-primary focus:outline-none" oninput="window.changeMealScale(this.value, 'input')">
                                 <span class="text-[10px] font-bold text-brand-muted">%</span>
                             </div>
                         </div>
@@ -730,8 +730,8 @@
                             <span id="preview-total-f" class="font-logo text-xs font-bold text-brand-gold">0g</span>
                         </div>
                         <div class="bg-white p-2 rounded-xl border border-brand-border shadow-sm">
-                            <span class="text-[8px] text-emerald-600 font-bold block">C</span>
-                            <span id="preview-total-c" class="font-logo text-xs font-bold text-emerald-600">0g</span>
+                            <span class="text-[8px] text-brand-muted font-bold block uppercase">C</span>
+                            <span id="preview-total-c" class="font-logo text-xs font-bold text-brand-primary">0g</span>
                         </div>
                         <div class="bg-white p-2 rounded-xl border border-brand-border shadow-sm">
                             <span class="text-[8px] text-brand-muted font-bold block uppercase">Kcal</span>
@@ -1032,7 +1032,7 @@
                     document.getElementById('active-id-text').innerText = clientId;
                     
                     const conLabel = document.getElementById('connection-status');
-                    conLabel.className = "text-[9.5px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100/50 flex items-center gap-1.5 font-bold animate-pulse";
+                    conLabel.className = "text-[9.5px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold animate-pulse shadow-sm";
                     conLabel.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>同期中`;
                     
                     syncMealTimingUI();
@@ -1313,7 +1313,7 @@
                 targetFSum += baseTarF * loopRatio;
                 targetCSum += baseTarC * loopRatio;
                 
-                const dayMeals = clientState.mealsByDate?.[loopStr] || [];
+                const dayMeals = clientState.mealsByDate?. [loopStr] || [];
                 dayMeals.forEach(m => {
                     totalKcal += safeFloat(m.kcal);
                     totalP += safeFloat(m.p);
@@ -1331,6 +1331,7 @@
         }
 
         function renderClientApp() {
+            if (!currentClientId) return;
             document.getElementById('display-date-text').innerText = selectedDateString;
             const todayStr = getTodayDateString();
             if (selectedDateString === todayStr) {
@@ -1634,7 +1635,7 @@
                     });
                     showToast("今日の体重を保存・クラウド同期しました！");
                 } catch (err) {
-                    console.error("Save Weight Error:", err);
+                    console.error("Save Weight History Error:", err);
                     alert("保存エラー。接続を確認してください。");
                 }
             } else {
@@ -1705,19 +1706,19 @@
         }
 
         async function fetchGeminiForClient(payload) {
-            const apiKey = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
-            if (!apiKey) {
-                throw new Error("API_KEY_MISSING");
+            let key = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
+            if (!key) {
+                const trainerKey = localStorage.getItem("carat_trainer_gemini_key_" + appId) || "";
+                if (trainerKey) key = trainerKey;
+                if (!key) throw new Error("API_KEY_MISSING");
             }
             
-            const modelName = "gemini-2.5-flash-preview-09-2025";
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-            
+            const models = ["gemini-2.5-flash-preview-09-2025"];
             let lastError = null;
             let lastStatus = null;
-            let delay = 1000;
             
-            for (let attempt = 1; attempt <= 5; attempt++) {
+            for (const modelName of models) {
+                const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + modelName + ":generateContent?key=" + key;
                 try {
                     const response = await fetch(endpoint, {
                         method: 'POST',
@@ -1725,21 +1726,14 @@
                         body: JSON.stringify(payload)
                     });
                     lastStatus = response.status;
-                    if (response.ok) {
-                        return await response.json();
-                    }
+                    if (response.ok) return await response.json();
                     const errText = await response.text();
-                    lastError = `Status ${response.status}: ${errText}`;
+                    lastError = "Model " + modelName + " status " + response.status + ":" + errText;
                 } catch (e) {
                     lastError = e.message || e;
                 }
-                
-                if (attempt < 5) {
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    delay *= 2;
-                }
             }
-            throw new Error(`API_ERROR_STATUS_${lastStatus || 'UNKNOWN'}: ${lastError}`);
+            throw new Error("API_ERROR_STATUS_" + (lastStatus || 'UNKNOWN') + "DETAILS" + lastError);
         }
 
         function parseGeminiJSON(text) {
@@ -1779,7 +1773,7 @@
                 }));
                 return normalized;
             } catch (err) {
-                console.error("JSON Parse Fail:", text, err);
+                console.error("JSON Parse Fail. Text was:", text, err);
                 throw new Error("AIデータの解読に失敗しました。");
             }
         }
@@ -2004,7 +1998,7 @@
                 row.className = "bg-brand-bg rounded-2xl p-4 border border-brand-border/80 flex flex-col gap-3 text-xs text-brand-text mb-2 shrink-0 animate-fade-in shadow-softShadow";
                 row.innerHTML = `
                     <div class="flex items-center gap-2">
-                        <input type="text" value="${ing.name}" class="bg-white border border-brand-border rounded-xl px-3 py-2 text-xs font-bold flex-1 min-w-0 focus:outline-none focus:border-brand-primary transition-colors shadow-sm" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
+                        <input type="text" value="${ing.name}" class="bg-white border border-brand-border rounded-xl px-3 py-2 text-xs font-bold flex-1 min-w-0 focus:outline-none focus:border-brand-primary transition-colors shadow-inner" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
                         <button type="button" onclick="window.estimateIngredientPFC(${i})" class="bg-brand-primary text-white hover:bg-brand-primaryHover px-3 py-2.5 rounded-xl text-[9px] font-bold tracking-wider shrink-0 transition flex items-center gap-1 shadow-sm">
                             <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-gold animate-pulse"></i> AI自動推定
                         </button>
@@ -2250,7 +2244,7 @@
                 showToast("食事を保存しました！");
             } catch (err) {
                 console.error("Save Edited Meal Error:", err);
-                alert("食事の微調整保存に失敗しました。");
+                alert("食事の微調整保存に失敗しました。接続状態を確認してください。");
             }
         };
 
@@ -2324,7 +2318,7 @@
             
             const loading = document.getElementById('loading-overlay');
             document.getElementById('loading-main-text').innerText = "本日の残りPFCを等分逆算中...";
-            document.getElementById('loading-sub-text').innerText = selectedMealTimings.length + "食分に均等に分配したAIメニュー案を算出しています。";
+            document.getElementById('loading-sub-text').innerText = selectedMealTimings.length + "食分に均等に分配したメニューを算出しています。";
             loading.classList.remove('hidden');
             loading.classList.add('flex');
             
@@ -2364,29 +2358,29 @@
                 
                 let catJp = "自炊レシピ(自宅で手軽に作れる健康的・高PFCな料理)";
                 if (selectedMenuCategory === 'convenience') catJp = "コンビニ商品(セブンイレブン、ファミリーマート、ローソン等で売っている高PFC定番商品名)";
-                if (selectedMenuCategory === 'restaurant') catJp = "外食店名指定(大戸屋、やよい軒、スシロー、ガスト、サイゼリヤ等の店舗名つき実在メニュー)";
+                if (selectedMenuCategory === 'restaurant') catJp = "外食店名指定(【大戸屋】 【やよい軒】 【スシロー】 【くら寿司】 【ガスト】 【サイゼリヤ】 【ココス】 【吉野家】等の具体的な「実店舗名」を冠した実在メニューまたは定番PFCメニュー名)";
                 
                 const timingsLabelMap = { 'breakfast': '朝食', 'lunch': '昼食', 'dinner': '夕食', 'snack': '間食' };
                 const timingSelectedJpNames = selectedMealTimings.map(t => timingsLabelMap[t]).join('、');
                 
-                const systemPrompt = "あなたはCARATのチーフ管理栄養士です。目標PFC基準を満たすおすすめメニューを提案して、JSON配列のみを返却します。";
+                const systemPrompt = "あなたはCARATのチーフ管理栄養士です。指示された複数の食事枠それぞれに対して、等分された目標PFC基準内に収まる独立したおすすめメニューを店名付きで逆引き提案し、JSONを返します。";
                 const userPrompt = `
-                    残り目標栄養価:
-                    - 総残りカロリー: ${remCal} kcal
-                    - たんぱく質 (P): ${remP.toFixed(1)} g
-                    - 脂質 (F): ${remF.toFixed(1)} g
-                    - 炭水化物 (C): ${remC.toFixed(1)} g
+                    現在の全体残り目標枠:
+                    - 目標総残りカロリー: ${remCal} kcal
+                    - 目標総残りたんぱく質 (P): ${remP.toFixed(1)} g
+                    - 目標総残り脂質(F): ${remF.toFixed(1)} g
+                    - 目標総残り炭水化物 (C): ${remC.toFixed(1)} g
                     
-                    等分食事数: 【${mealCount}食】(時間帯: ${timingSelectedJpNames})
+                    等分対象食事数: 【${mealCount}食】(時間帯: ${timingSelectedJpNames})
                     調達カテゴリ: 【${catJp}】
                     
                     【1食あたりの上限ターゲット】
                     - カロリー: ${targetKcalPerMeal.toFixed(1)} kcal
                     - たんぱく質 (P): ${targetPPerMeal.toFixed(1)} g
-                    - 脂質 (F): ${targetFPerMeal.toFixed(1)} g
-                    - 炭水化物 (C): ${targetCPerMeal.toFixed(1)} g
+                    - 脂質(F): ${targetFPerMeal.toFixed(1)} g
+                    - 炭水化物(C): ${targetCPerMeal.toFixed(1)} g
                     
-                    以下のJSONフォーマットのみを返却してください。余分な説明は厳禁です。
+                    不要な解説文は一切禁止。必ず次のJSONオブジェクト構造のみを出力してください。
                     {
                         "menus": [
                             {
@@ -2396,6 +2390,7 @@
                                 "p": たんぱく質g(数値),
                                 "f": 脂質g(数値),
                                 "c": 炭水化物g(数値),
+                                "ingredientsText": "構成食材や注文する単品名とグラム数",
                                 "advice": "女性に寄り添う親身なアドバイスコメント",
                                 "ingredientsList": [
                                     { "name": "食材名", "weight": グラム数(数値), "kcal": カロリー(数値), "p": たんぱく質g(数値), "f": 脂質g(数値), "c": 炭水化物g(数値) }
@@ -2444,14 +2439,14 @@
                     });
                     
                     document.getElementById('ai-menu-suggestion-box').classList.remove('hidden');
-                    showToast("残りの目標からAI逆算メニューを作成しました！");
+                    showToast("残枠から逆算したメニュー案を生成しました!");
                     lucide.createIcons();
                 } else {
                     throw new Error("提案配列のロードエラー");
                 }
             } catch (err) {
                 console.error(err);
-                alert("献立逆算AIの生成に失敗しました。APIキーまたは接続設定を確認してください。");
+                alert("献立逆算AIの生成に失敗しました。店舗キーを確認してください。");
             } finally {
                 loading.classList.add('hidden');
                 loading.classList.remove('flex');
@@ -2519,7 +2514,7 @@
                 }
                 document.getElementById('ai-menu-suggestion-box').classList.add('hidden');
                 suggestedMenusCache = [];
-                showToast("提案された食事をすべて登録しました！");
+                showToast("提案された食事をすべて一括登録しました！");
                 window.switchTab('home');
             } catch (e) {
                 console.error(e);
