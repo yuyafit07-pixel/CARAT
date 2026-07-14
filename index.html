@@ -12,25 +12,25 @@
                 extend: {
                     colors: {
                         brand: {
-                            primary: '#1F3A60',       /* ディープクラシックサックスブルー（上品で深みのあるメインカラー） */
-                            primaryHover: '#132543',  /* ミッドナイトサックス */
-                            secondary: '#56759E',     /* シルキーアッシュブルー（大人っぽいくすみブルー） */
-                            accent: '#E6EEF8',        /* シフォンペールアクア（明るく透明感のある薄い青） */
-                            gold: '#D4AF37',          /* シャンパンゴールド（煌びやかなゴールドアクセント） */
-                            goldLight: '#FCF7E6',     /* プレシャスベージュ */
-                            bg: '#FFFFFF',            /* クリーンホワイト */
-                            text: '#22334C',          /* ダークスレートブルー */
-                            muted: '#7A8FA5',         /* フレンチアッシュグレー */
-                            border: '#D0DFEC',        /* ジュエリーブルーボーダー */
-                            rose: '#E28E82',          /* ピーチローズ（優しいコーラル系の警告色） */
+                            primary: '#1E355E',       /* ロイヤルサックスブルー（上品で深みのあるアッシュブルー） */
+                            primaryHover: '#132342',  /* ミッドナイトサックス */
+                            secondary: '#51749E',     /* シルキーアッシュ（透明感のあるくすみブルー） */
+                            accent: '#E3ECF5',        /* シフォンペールアクア（明るく心地よい薄青） */
+                            gold: '#C5A059',          /* シャンパンゴールド（ジュエリーのように煌めくゴールド） */
+                            goldLight: '#FAF4E3',     /* プレシャスゴールドベージュ */
+                            bg: '#FFFFFF',            /* シルキーピュアホワイト */
+                            text: '#22324D',          /* リッチスレートブルー（柔らかく知的な黒） */
+                            muted: '#7A8FA5',         /* フレンチアッシュグレー（洗練されたグレー） */
+                            border: '#D0DFEC',        /* ジュエリーブルー境界線 */
+                            rose: '#E28E82',          /* ピーチローズ（女性らしい柔らかい警告・アクセント色） */
                             roseLight: '#FDF3F1'      /* 超薄ローズピンク */
                         }
                     },
                     boxShadow: {
-                        premium: '0 24px 50px -12px rgba(31, 58, 96, 0.12), 0 8px 24px -4px rgba(31, 58, 96, 0.04)',
-                        cardShadow: '0 16px 36px rgba(86, 117, 158, 0.1)',
-                        softShadow: '0 10px 30px rgba(34, 51, 76, 0.03)',
-                        glow: '0 0 25px rgba(212, 175, 55, 0.3)',
+                        premium: '0 24px 50px -12px rgba(30, 53, 94, 0.15), 0 8px 24px -4px rgba(30, 53, 94, 0.05)',
+                        cardShadow: '0 16px 36px rgba(81, 116, 158, 0.12)',
+                        softShadow: '0 10px 30px rgba(34, 50, 77, 0.03)',
+                        glow: '0 0 25px rgba(197, 160, 89, 0.35)',
                         innerGlow: 'inset 0 2px 6px rgba(255, 255, 255, 0.9)'
                     }
                 }
@@ -48,19 +48,19 @@
     <style>
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            /* ユーザーの要望に合わせて背景の青みを美しく、しっかりと引き立てる極上アッシュブルーグラデーション */
-            background-color: #C6D5E5;
-            background-image: radial-gradient(at 0% 0%, hsla(215, 45%, 85%, 1) 0, transparent 55%),
-                              radial-gradient(at 100% 0%, hsla(212, 42%, 78%, 1) 0, transparent 65%),
-                              radial-gradient(at 50% 100%, hsla(220, 38%, 74%, 1) 0, transparent 60%);
+            /* 贅沢でしっかりと深い青みを感じる、完璧なクラシックサックスアッシュブルーグラデーション */
+            background-color: #B9CAD9;
+            background-image: radial-gradient(at 0% 0%, hsla(215, 48%, 82%, 1) 0, transparent 55%),
+                              radial-gradient(at 100% 0%, hsla(212, 45%, 72%, 1) 0, transparent 65%),
+                              radial-gradient(at 50% 100%, hsla(220, 40%, 68%, 1) 0, transparent 60%);
             background-attachment: fixed;
-            color: #22334C;
+            color: #22324D;
             letter-spacing: 0.02em;
             -webkit-tap-highlight-color: transparent;
         }
         .font-logo {
             font-family: 'Montserrat', sans-serif;
-            letter-spacing: 0.16em;
+            letter-spacing: 0.18em;
         }
         .no-scrollbar::-webkit-scrollbar {
             display: none;
@@ -69,19 +69,19 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        /* コスメボトルのような透明感を高めるホワイトグラスモルフィズム */
+        /* コスメボトルのような、擦りガラス調の極上のホワイトグラスモルフィズム */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.86);
+            background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.85);
-            box-shadow: 0 20px 48px -10px rgba(31, 58, 96, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 24px 50px -10px rgba(30, 53, 94, 0.1);
         }
         .glass-panel-gold {
-            background: rgba(252, 247, 230, 0.9);
+            background: rgba(250, 244, 227, 0.92);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.25);
+            border: 1px solid rgba(197, 160, 89, 0.25);
         }
         /* インプットのスピンボタン非表示 */
         input[type="number"]::-webkit-outer-spin-button,
@@ -92,7 +92,7 @@
         input[type="number"] {
             -moz-appearance: textfield;
         }
-        /* 滑らかなフェードインアニメーション */
+        /* 上品なフェードインアニメーション */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: translateY(0); }
@@ -116,7 +116,7 @@
             <div class="space-y-2">
                 <h2 class="text-base font-bold text-brand-primary tracking-wide">トレーナー連携同期</h2>
                 <p class="text-[11px] text-brand-muted leading-relaxed">
-                    CARATトレーナーから発行された「連携ID」を入力して<br>あなたに最適化されたプレミアム食事プログラムを開始します。
+                    CARATトレーナーから発行された「連携ID」を入力して<br>あなた専用に設計されたPFCプログラムを開始します。
                 </p>
             </div>
             
@@ -152,7 +152,7 @@
                 <span class="text-[9px] text-brand-secondary font-bold tracking-widest uppercase">Premium Suite</span>
             </div>
             <div id="id-active-panel" class="hidden flex items-center gap-2">
-                <div id="connection-status" class="text-[9px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1 font-bold shadow-sm">
+                <div id="connection-status" class="text-[9px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100/50 flex items-center gap-1.5 font-bold shadow-sm">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     同期中
                 </div>
@@ -195,7 +195,7 @@
                 </div>
 
                 <div class="grid grid-cols-12 gap-6 items-center">
-                    <!-- 進捗サークル (SVGのバグを完全クリーン化) -->
+                    <!-- 進捗サークル (不要記号を完全排除した純粋なサークルSVG) -->
                     <div class="col-span-5 flex justify-center relative">
                         <svg class="w-32 h-32 transform -rotate-90">
                             <!-- 背景円 -->
@@ -206,9 +206,9 @@
                                     class="transition-all duration-700 ease-out" />
                             <defs>
                                 <linearGradient id="premium-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#1F3A60" />
-                                    <stop offset="50%" stop-color="#56759E" />
-                                    <stop offset="100%" stop-color="#D4AF37" />
+                                    <stop offset="0%" stop-color="#1E355E" />
+                                    <stop offset="50%" stop-color="#51749E" />
+                                    <stop offset="100%" stop-color="#C5A059" />
                                 </linearGradient>
                             </defs>
                         </svg>
@@ -507,7 +507,7 @@
     </div>
 
     <!-- 3. 固定下部ナビゲーションバー -->
-    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-lg border-t border-brand-border/80 p-3 flex justify-around items-center z-50 rounded-t-[2.2rem] shadow-[0_-12px_40px_rgba(31,58,96,0.06)]">
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-lg border-t border-brand-border/80 p-3 flex justify-around items-center z-50 rounded-t-[2.2rem] shadow-[0_-12px_40px_rgba(30,53,94,0.06)]">
         <button id="nav-btn-home" onclick="window.switchTab('home')" 
                 class="flex flex-col items-center gap-1 py-2 px-5 rounded-3xl transition-all text-brand-primary font-bold bg-brand-accent shadow-sm border border-brand-primary/5 active:scale-95">
             <i data-lucide="utensils" class="w-5 h-5"></i>
@@ -636,7 +636,7 @@
         </div>
     </div>
 
-    <!-- モーダル D: 食事構成微調整エディター -->
+    <!-- モーダル D: 食事構成微調整エディター (スマホに完璧に最適化された2行折り返しエディター) -->
     <div id="edit-meal-modal" class="fixed inset-0 bg-brand-primary/30 backdrop-blur-sm z-[100] hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
         <div class="bg-white w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 space-y-5 shadow-premium border border-brand-border max-h-[90vh] overflow-y-auto no-scrollbar">
             <div class="flex justify-between items-center pb-3 border-b border-brand-border">
@@ -730,11 +730,11 @@
                             <span id="preview-total-f" class="font-logo text-xs font-bold text-brand-gold">0g</span>
                         </div>
                         <div class="bg-white p-2 rounded-xl border border-brand-border shadow-sm">
-                            <span class="text-[8px] text-emerald-600 font-bold block">C</span>
-                            <span id="preview-total-c" class="font-logo text-xs font-bold text-emerald-600">0g</span>
+                            <span class="text-[8px] text-brand-muted font-bold block uppercase">C</span>
+                            <span id="preview-total-c" class="font-logo text-xs font-bold text-brand-primary">0g</span>
                         </div>
                         <div class="bg-white p-2 rounded-xl border border-brand-border shadow-sm">
-                            <span class="text-[8px] text-brand-muted font-bold block uppercase">Calories</span>
+                            <span class="text-[8px] text-brand-muted font-bold block uppercase">Kcal</span>
                             <span id="preview-total-kcal" class="font-logo text-xs font-bold text-brand-primary">0 kcal</span>
                         </div>
                     </div>
@@ -1013,7 +1013,7 @@
                     Sat: { kcal: 1520, p: 98, f: 38, c: 188 },
                     Sun: { kcal: 1550, p: 100, f: 39, c: 194 }
                 },
-                trainerFeedback: "全体的にとてもバランス良く調整ができていて素晴らしいですね！たんばく質がしっかりとれているため、筋肉量を落とさずに代謝を高い状態でキープできます。来週もこのパーフェクトな食事リズムを一緒に続けていきましょう！",
+                trainerFeedback: "全体的にとてもバランス良く調整ができていて素晴らしいですね！たんぱく質がしっかりとれているため、筋肉量を落とさずに代謝を高い状態でキープできます。来週もこのパーフェクトな食事リズムを一緒に続けていきましょう！",
                 trainerFeedbackAt: new Date().toISOString()
             };
         }
@@ -1032,7 +1032,7 @@
                     document.getElementById('active-id-text').innerText = clientId;
                     
                     const conLabel = document.getElementById('connection-status');
-                    conLabel.className = "text-[9.5px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-bold animate-pulse shadow-sm";
+                    conLabel.className = "text-[9.5px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100/50 flex items-center gap-1.5 font-bold animate-pulse shadow-sm";
                     conLabel.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>同期中`;
                     
                     syncMealTimingUI();
@@ -1220,10 +1220,10 @@
                         datasets: [{
                             label: '体重 (kg)',
                             data: weights,
-                            borderColor: '#56759E',
-                            backgroundColor: 'rgba(86, 117, 158, 0.08)',
+                            borderColor: '#51749E',
+                            backgroundColor: 'rgba(81, 116, 158, 0.08)',
                             borderWidth: 2.5,
-                            pointBackgroundColor: '#1F3A60',
+                            pointBackgroundColor: '#1E355E',
                             pointBorderColor: '#FFFFFF',
                             pointBorderWidth: 2,
                             pointRadius: 4.5,
@@ -1241,14 +1241,14 @@
                             y: {
                                 grid: { color: 'rgba(255, 255, 255, 0.3)' },
                                 ticks: {
-                                    color: '#1F3A60',
+                                    color: '#1E355E',
                                     font: { size: 9, weight: '600' }
                                 }
                             },
                             x: {
                                 grid: { display: false },
                                 ticks: {
-                                    color: '#1F3A60',
+                                    color: '#1E355E',
                                     font: { size: 9, weight: '600' }
                                 }
                             }
@@ -1988,6 +1988,7 @@
             }
         };
 
+        /* 【究極の縦積み・2行折り返しエディター】スマホで完全に崩れない、絶対にはみ出さない設計 */
         function renderIngredientsInEditor() {
             const container = document.getElementById('ingredients-editor-container');
             container.innerHTML = "";
@@ -2000,32 +2001,32 @@
             
             editingMealObject.ingredients.forEach((ing, i) => {
                 const row = document.createElement('div');
-                row.className = "bg-brand-bg rounded-2xl p-3.5 border border-brand-border flex flex-col gap-2.5 text-xs text-brand-text mb-1 shrink-0 animate-fade-in shadow-softShadow";
+                row.className = "bg-brand-bg rounded-2xl p-4 border border-brand-border/80 flex flex-col gap-3 text-xs text-brand-text mb-2 shrink-0 animate-fade-in shadow-softShadow";
                 row.innerHTML = `
                     <div class="flex items-center gap-2">
                         <input type="text" value="${ing.name}" class="bg-white border border-brand-border rounded-xl px-3 py-2 text-xs font-bold flex-1 min-w-0 focus:outline-none focus:border-brand-primary transition-colors shadow-sm" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
-                        <button onclick="window.estimateIngredientPFC(${i})" class="bg-brand-primary text-white hover:bg-brand-primaryHover px-3 py-2 rounded-xl text-[9px] font-bold tracking-wider shrink-0 transition flex items-center gap-1">
+                        <button onclick="window.estimateIngredientPFC(${i})" class="bg-brand-primary text-white hover:bg-brand-primaryHover px-3 py-2.5 rounded-xl text-[9px] font-bold tracking-wider shrink-0 transition flex items-center gap-1">
                             <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-gold animate-pulse"></i> AI自動推定
                         </button>
                     </div>
                     <div class="grid grid-cols-5 gap-1.5 text-center">
-                        <div class="bg-white p-1 rounded-xl border border-brand-border shadow-sm">
+                        <div class="bg-white p-1.5 rounded-xl border border-brand-border shadow-sm">
                             <label class="text-[8px] text-brand-muted font-bold block mb-0.5">重量(g)</label>
                             <input type="number" step="0.1" value="${Math.round(safeFloat(ing.weight))}" class="w-full bg-transparent text-center font-logo font-bold text-xs text-brand-primary focus:outline-none" onchange="window.changeIngredientWeight(${i}, this.value)">
                         </div>
-                        <div class="bg-white p-1 rounded-xl border border-brand-border shadow-sm">
+                        <div class="bg-white p-1.5 rounded-xl border border-brand-border shadow-sm">
                             <label class="text-[8px] text-brand-secondary font-bold block mb-0.5">P(g)</label>
                             <input type="number" step="0.1" value="${safeFloat(ing.p).toFixed(1)}" class="w-full bg-transparent text-center font-logo font-bold text-xs text-brand-primary focus:outline-none" onchange="window.changeIngredientPFC(${i}, 'p', this.value)">
                         </div>
-                        <div class="bg-white p-1 rounded-xl border border-brand-border shadow-sm">
+                        <div class="bg-white p-1.5 rounded-xl border border-brand-border shadow-sm">
                             <label class="text-[8px] text-brand-gold font-bold block mb-0.5">F(g)</label>
                             <input type="number" step="0.1" value="${safeFloat(ing.f).toFixed(1)}" class="w-full bg-transparent text-center font-logo font-bold text-xs text-brand-primary focus:outline-none" onchange="window.changeIngredientPFC(${i}, 'f', this.value)">
                         </div>
-                        <div class="bg-white p-1 rounded-xl border border-brand-border shadow-sm">
+                        <div class="bg-white p-1.5 rounded-xl border border-brand-border shadow-sm">
                             <label class="text-[8px] text-emerald-500 font-bold block mb-0.5">C(g)</label>
                             <input type="number" step="0.1" value="${safeFloat(ing.c).toFixed(1)}" class="w-full bg-transparent text-center font-logo font-bold text-xs text-brand-primary focus:outline-none" onchange="window.changeIngredientPFC(${i}, 'c', this.value)">
                         </div>
-                        <div class="bg-white p-1 rounded-xl border border-brand-border shadow-sm">
+                        <div class="bg-white p-1.5 rounded-xl border border-brand-border shadow-sm">
                             <label class="text-[8px] text-brand-muted font-bold block mb-0.5">kcal</label>
                             <input type="number" value="${Math.round(safeFloat(ing.kcal))}" class="w-full bg-transparent text-center font-logo font-bold text-xs text-brand-primary focus:outline-none" onchange="window.changeIngredientPFC(${i}, 'kcal', this.value)">
                         </div>
