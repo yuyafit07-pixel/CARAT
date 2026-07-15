@@ -5,20 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="google" content="notranslate">
   <title>CARAT Premium Suite</title>
-  
-  <!-- ログイン永続化のための最速初期判定バイパス処理 -->
-  <script>
-    const appId = 'carat-meal-v3';
-    const savedId = localStorage.getItem("carat_client_connected_id_" + appId);
-    if (savedId) {
-      document.documentElement.classList.add('client-already-logged-in');
-    }
-  </script>
-  <style>
-    /* ログインIDが保持されている場合は、ログイン画面を最速で非表示にしダッシュボードを即座に表示 */
-    .client-already-logged-in #login-screen { display: none !important; }
-    .client-already-logged-in #main-dashboard { display: block !important; }
-  </style>
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -63,6 +49,7 @@
   </script>
 
   <style>
+    /* チラつき、生文字露出、スタイル崩れを防ぐための核心インラインCSS */
     body {
       font-family: 'Noto Sans JP', 'Montserrat', sans-serif;
       background-color: #F4F7FA;
@@ -74,6 +61,11 @@
       color: #1E2C44;
       letter-spacing: 0.02em;
       -webkit-tap-highlight-color: transparent;
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+    }
+    body.ready {
+      opacity: 1;
     }
 
     .font-logo {
@@ -117,7 +109,22 @@
 </head>
 <body class="min-h-screen pb-12 select-none">
 
-  <!-- ログイン画面 -->
+  <!-- CARAT Premium スプラッシュ・ロード画面 (FOUCと混在崩れを100%防止) -->
+  <div id="splash-loader" class="fixed inset-0 z-[100] flex flex-col justify-center items-center bg-gradient-to-br from-[#1A335E] via-[#102244] to-[#1E2C44] text-white transition-opacity duration-500">
+    <div class="text-center space-y-4">
+      <div class="relative flex items-center justify-center">
+        <!-- プレミアムゴールドスピナー -->
+        <div class="animate-spin h-16 w-16 border-4 border-brand-gold border-t-transparent rounded-full shadow-glow"></div>
+        <i data-lucide="shield-check" class="w-6 h-6 text-brand-gold absolute animate-pulse"></i>
+      </div>
+      <div>
+        <h1 class="font-logo text-2xl font-black tracking-widest text-white leading-none">CARAT</h1>
+        <p class="text-[9.5px] text-brand-gold font-bold tracking-widest uppercase mt-2">Premium Suite Connecting...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ログイン画面 (体験モード完全廃止、連携コード必須) -->
   <div id="login-screen" class="fixed inset-0 z-50 flex flex-col justify-center items-center p-6 bg-gradient-to-br from-[#1A335E]/10 via-[#F4F7FA] to-[#C5A059]/10">
     <div class="glass-container rounded-[32px] p-8 w-full max-w-md text-center flex flex-col gap-6 animate-fade-in shadow-premium border border-white">
       <div class="space-y-2">
@@ -154,8 +161,8 @@
     </div>
   </div>
 
-  <!-- メインダッシュボード -->
-  <div id="main-dashboard" class="hidden max-w-md mx-auto px-4 pt-4 pb-24 space-y-5 animate-fade-in">
+  <!-- メインダッシュボード (初期状態はhiddenで、データロード完了時にフェードイン) -->
+  <div id="main-dashboard" class="hidden max-w-md mx-auto px-4 pt-4 pb-24 space-y-5">
     
     <!-- ヘッダープロフィール / 同期解除 -->
     <div class="glass-container rounded-3xl p-4 flex items-center justify-between border border-white">
@@ -163,7 +170,7 @@
         <div class="bg-brand-goldLight w-9 h-9 rounded-xl flex items-center justify-center border border-brand-gold/15">
           <span id="active-user-avatar" class="font-logo font-black text-brand-gold text-xs uppercase">C</span>
         </div>
-        <div>
+        <div class="text-left">
           <div class="flex items-center gap-1.5">
             <span id="active-user-name" class="font-bold text-[11.5px] text-brand-primary">ロード中...</span>
             <span class="bg-emerald-50 text-emerald-600 border border-emerald-100 text-[8px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-sm">
@@ -363,7 +370,7 @@
       <!-- 本日の食事ログ一覧 -->
       <div class="space-y-2.5 font-bold">
         <span class="text-[10px] text-brand-secondary font-bold uppercase tracking-wider block text-left font-logo">TODAY'S FOOD LOG (本日の食事ログ)</span>
-        <div id="meal-timeline-container" class="space-y-3.5 animate-fade-in">
+        <div id="meal-timeline-container" class="space-y-3.5 animate-fade-in text-left">
           <!-- JSで動的に追加 -->
         </div>
       </div>
@@ -682,9 +689,9 @@
         </div>
 
         <!-- 調整後合計栄養価 -->
-        <div class="bg-brand-primary/5 rounded-2xl p-4 border border-brand-primary/10 text-center space-y-2 font-bold">
+        <div class="bg-brand-primary/5 rounded-2xl p-4 border border-brand-primary/10 text-center space-y-2">
           <span class="text-[9px] text-brand-muted font-bold tracking-wider uppercase block text-center font-logo">調整後の合計栄養価</span>
-          <div class="grid grid-cols-4 gap-2">
+          <div class="grid grid-cols-4 gap-2 font-logo">
             <div class="bg-white rounded-xl py-2 border border-brand-border/50 shadow-sm">
               <span class="text-[7.5px] text-brand-muted block font-bold font-logo">P</span>
               <span id="preview-total-p" class="font-logo text-xs font-bold text-brand-secondary">0g</span>
@@ -725,7 +732,7 @@
       </div>
       <div>
         <h4 class="font-bold text-sm text-brand-primary">AI食事解析が実行できませんでした</h4>
-        <p id="ai-error-desc" class="text-[10px] text-brand-muted mt-1.5 leading-relaxed">
+        <p id="ai-error-desc" class="text-[10px] text-brand-muted mt-1.5 leading-relaxed font-bold">
           Gemini APIキーが未設定、またはAPI同期前です。トレーナー管理ポータルの「店舗Gemini APIキーの自動配信」欄にキーを登録し、全ユーザーへ配信してから再度実行してください。
         </p>
       </div>
@@ -744,8 +751,8 @@
       </svg>
       <i data-lucide="sparkles" class="w-5 h-5 text-brand-gold absolute animate-pulse"></i>
     </div>
-    <div class="text-center text-white font-bold">
-      <h3 id="loading-main-text" class="text-xs font-bold tracking-widest uppercase font-logo">AI meal analyzer is working...</h3>
+    <div class="text-center text-white font-bold font-logo">
+      <h3 id="loading-main-text" class="text-xs font-bold tracking-widest uppercase">AI meal analyzer is working...</h3>
       <p id="loading-sub-text" class="text-[9px] text-brand-accent/60 block mt-1">栄養バランス、総カロリー、構成食材を高速で計算しています。</p>
     </div>
   </div>
@@ -959,8 +966,13 @@
             document.getElementById('client-id-input').value = savedId;
             startClientRealtimeSync(savedId);
           } else {
-            // クラス消去してログイン画面を見せる
-            document.documentElement.classList.remove('client-already-logged-in');
+            // ローカルIDがない場合はスプラッシュを消してログイン画面を露出
+            document.getElementById('splash-loader').style.opacity = '0';
+            setTimeout(() => {
+              document.getElementById('splash-loader').style.display = 'none';
+              document.body.classList.add('ready');
+            }, 500);
+
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('main-dashboard').classList.add('hidden');
           }
@@ -977,8 +989,7 @@
         if (docSnap.exists()) {
           clientState = { ...clientState, ...docSnap.data() };
 
-          // 同期が成功したら永続表示クラスを付与
-          document.documentElement.classList.add('client-already-logged-in');
+          // 同期データが格納されたらスプラッシュをフェードアウトしてメインダッシュボードを完璧な形で露出する
           document.getElementById('login-screen').classList.add('hidden');
           document.getElementById('main-dashboard').classList.remove('hidden');
 
@@ -988,12 +999,24 @@
 
           syncMealTimingUI();
           renderClientApp();
+
+          // スプラッシュ画面を優雅にフェードアウト
+          document.getElementById('splash-loader').style.opacity = '0';
+          setTimeout(() => {
+            document.getElementById('splash-loader').style.display = 'none';
+            document.body.classList.add('ready');
+          }, 500);
         } else {
-          alert("連携IDが見つかりませんでした。正しいIDを入力し直してください。");
+          // IDが無効な場合はスプラッシュを消して警告
+          document.getElementById('splash-loader').style.display = 'none';
+          document.body.classList.add('ready');
+          alert("連携ID(CRTコード)が見つかりませんでした。正しいIDを入力してください。");
           window.disconnectClientId();
         }
       }, (err) => {
         console.error("Cloud Sync Connection Error:", err);
+        document.getElementById('splash-loader').style.display = 'none';
+        document.body.classList.add('ready');
       });
     }
 
@@ -1016,6 +1039,10 @@
       }
       currentClientId = inputId;
       localStorage.setItem("carat_client_connected_id_" + appId, inputId);
+
+      // スプラッシュ表示を再度出してからロード
+      document.getElementById('splash-loader').style.display = 'flex';
+      document.getElementById('splash-loader').style.opacity = '1';
       startClientRealtimeSync(inputId);
     };
 
@@ -1678,6 +1705,43 @@
       return currentLogs;
     }
 
+    // 柔軟かつ強固なJSONパースクレンジングエンジン
+    function parseFlexibleJSON(text) {
+      if (!text) throw new Error("AIからの応答が空でした。");
+      let cleaned = text.trim();
+      
+      // マークダウンブロックの除去
+      cleaned = cleaned.replace(/^```json\s*/i, "").replace(/```$/, "").trim();
+      
+      // 最初と最後の {} または [] を抽出する
+      const firstBrace = cleaned.indexOf('{');
+      const lastBrace = cleaned.lastIndexOf('}');
+      const firstBracket = cleaned.indexOf('[');
+      const lastBracket = cleaned.lastIndexOf(']');
+      
+      let start = -1;
+      let end = -1;
+      
+      if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
+        start = firstBrace;
+        end = lastBrace;
+      } else if (firstBracket !== -1) {
+        start = firstBracket;
+        end = lastBracket;
+      }
+      
+      if (start !== -1 && end !== -1) {
+        cleaned = cleaned.slice(start, end + 1);
+      }
+      
+      try {
+        return JSON.parse(cleaned);
+      } catch (e) {
+        console.error("Failed to parse JSON even after cleaning:", cleaned, e);
+        throw new Error("AIが作成したメニューデータの構造解読に失敗しました。");
+      }
+    }
+
     // 404エラーを防ぎ、指数バックオフで再試行する頑強なGemini APIクライアント (モデルフォールバック対応)
     async function fetchGeminiWithBackoff(payload) {
       const apiKey = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
@@ -1743,48 +1807,6 @@
       throw new Error(`【AIスキャン接続失敗】\n全サポートモデルの通信試行が失敗しました。\n(詳細: ${lastError})`);
     }
 
-    function parseGeminiJSON(text) {
-      try {
-        let cleaned = text.trim();
-        if (cleaned.startsWith("```")) {
-          cleaned = cleaned.replace(/^json?/i, "").replace(/^`+$/, "").trim();
-        }
-        const start = cleaned.indexOf('{');
-        const end = cleaned.lastIndexOf('}');
-        if (start === -1 || end === -1) throw new Error("JSON_FORMAT_INVALID");
-        const jsonStr = cleaned.slice(start, end + 1);
-        const parsed = JSON.parse(jsonStr);
-
-        const normalized = {
-          name: parsed.name || parsed.menuName || parsed.title || "料理名不明",
-          kcal: safeFloat(parsed.kcal || parsed.calories || parsed.energy),
-          p: safeFloat(parsed.p || parsed.protein || parsed.proteins),
-          f: safeFloat(parsed.f || parsed.fat || parsed.fats),
-          c: safeFloat(parsed.c || parsed.carbo || parsed.carbohydrate || parsed.carbohydrates),
-          ingredients: []
-        };
-
-        let rawIngredients = parsed.ingredients || parsed.ingredientsList || parsed.components || parsed.items || [];
-        if (!Array.isArray(rawIngredients) || rawIngredients.length === 0) {
-          rawIngredients = [{ name: normalized.name, weight: 100, kcal: normalized.kcal, p: normalized.p, f: normalized.f, c: normalized.c }];
-        }
-
-        normalized.ingredients = rawIngredients.map(ing => ({
-          name: ing.name || ing.material || ing.ingredient || "追加食材",
-          weight: safeFloat(ing.weight || ing.amount || ing.quantity || 100),
-          kcal: safeFloat(ing.kcal || ing.calories || ing.energy),
-          p: safeFloat(ing.p || ing.protein),
-          f: safeFloat(ing.f || ing.fat),
-          c: safeFloat(ing.c || ing.carbo || ing.carbohydrate)
-        }));
-
-        return normalized;
-      } catch (err) {
-        console.error("JSON Parse Error:", text, err);
-        throw new Error("AIデータの構造解読に失敗しました。");
-      }
-    }
-
     window.analyzeMealText = async function() {
       const textInput = document.getElementById('text-analyze-input').value.trim();
       if (!textInput) { alert("食べた内容を入力してください。"); return; }
@@ -1809,10 +1831,14 @@
   ]
 }`;
 
-        const payload = { contents: [{ parts: [{ text: userPrompt }] }] };
+        // payloadに generationConfig を付与して完璧にJSON構造に制限
+        const payload = { 
+          contents: [{ parts: [{ text: userPrompt }] }],
+          generationConfig: { responseMimeType: "application/json" }
+        };
         const res = await fetchGeminiWithBackoff(payload);
         const rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
-        const parsed = parseGeminiJSON(rawText);
+        const parsed = parseFlexibleJSON(rawText);
 
         if (parsed && parsed.name) {
           const now = new Date();
@@ -1871,18 +1897,20 @@
   ]
 }`;
 
+        // payloadに generationConfig を付与して完璧にJSON構造に制限
         const payload = {
           contents: [{
             parts: [
               { text: userPrompt },
               { inlineData: { mimeType: dynamicMimeType, data: base64Data } }
             ]
-          }]
+          }],
+          generationConfig: { responseMimeType: "application/json" }
         };
 
         const res = await fetchGeminiWithBackoff(payload);
         const rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
-        const parsed = parseGeminiJSON(rawText);
+        const parsed = parseFlexibleJSON(rawText);
 
         if (parsed && parsed.name) {
           const now = new Date();
@@ -2412,15 +2440,15 @@
   ]
 }`;
 
-        const payload = { contents: [{ parts: [{ text: userPrompt }] }] };
+        // payloadに generationConfig を付与して完璧にJSON構造に制限
+        const payload = { 
+          contents: [{ parts: [{ text: userPrompt }] }],
+          generationConfig: { responseMimeType: "application/json" }
+        };
         const res = await fetchGeminiWithBackoff(payload);
         let jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text.trim();
+        const parsed = parseFlexibleJSON(jsonText);
 
-        if (jsonText.startsWith("```")) {
-          jsonText = jsonText.replace(/^json?/i, "").replace(/^`+$/, "").trim();
-        }
-
-        const parsed = JSON.parse(jsonText);
         if (parsed && parsed.menus && parsed.menus.length > 0) {
           suggestedMenusCache = parsed.menus;
           renderSuggestedMenus(targetKcalPerMeal);
@@ -2546,6 +2574,108 @@
         alert("一括登録に失敗しました。");
       }
     };
+
+    // 柔軟かつ強固なJSONパースクレンジングエンジン
+    function parseFlexibleJSON(text) {
+      if (!text) throw new Error("AIからの応答が空でした。");
+      let cleaned = text.trim();
+      
+      // マークダウンブロックの除去
+      cleaned = cleaned.replace(/^```json\s*/i, "").replace(/```$/, "").trim();
+      
+      // 最初と最後の {} または [] を抽出する
+      const firstBrace = cleaned.indexOf('{');
+      const lastBrace = cleaned.lastIndexOf('}');
+      const firstBracket = cleaned.indexOf('[');
+      const lastBracket = cleaned.lastIndexOf(']');
+      
+      let start = -1;
+      let end = -1;
+      
+      if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
+        start = firstBrace;
+        end = lastBrace;
+      } else if (firstBracket !== -1) {
+        start = firstBracket;
+        end = lastBracket;
+      }
+      
+      if (start !== -1 && end !== -1) {
+        cleaned = cleaned.slice(start, end + 1);
+      }
+      
+      try {
+        return JSON.parse(cleaned);
+      } catch (e) {
+        console.error("Failed to parse JSON even after cleaning:", cleaned, e);
+        throw new Error("AIが作成したメニューデータの構造解読に失敗しました。");
+      }
+    }
+
+    // 404エラーを防ぎ、指数バックオフで再試行する頑強なGemini APIクライアント (モデルフォールバック対応)
+    async function fetchGeminiWithBackoff(payload) {
+      const apiKey = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
+      if (!apiKey) {
+        throw new Error("API_KEY_MISSING");
+      }
+
+      // Canvasプレビュー環境と実本番サーバー環境の差異を完全吸収するフォールバックモデル配列
+      const models = [
+        "gemini-2.5-flash-preview-09-2025",
+        "gemini-2.5-flash",
+        "gemini-1.5-flash"
+      ];
+      
+      let lastError = null;
+      let lastStatus = null;
+
+      for (const modelName of models) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+        
+        let delay = 1000;
+        // 各モデルにつき最大2回リトライ
+        for (let attempt = 0; attempt < 2; attempt++) {
+          try {
+            const response = await fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload)
+            });
+            
+            lastStatus = response.status;
+            if (response.ok) {
+              return await response.json();
+            }
+
+            const errJson = await response.json().catch(() => ({}));
+            const errMsg = errJson?.error?.message || "エラー詳細なし";
+
+            if (response.status === 400) {
+              throw new Error(`【APIパラメータ構造エラー (400)】\n${errMsg}`);
+            }
+            if (response.status === 403 || response.status === 401) {
+              throw new Error(`【APIキー制限・無効エラー (403/401)】\nGemini APIキーが有効でないか、Googleのセキュリティ自動検知によって凍結されています。トレーナーアプリで新しいキーを再設定・配信してください。\n(詳細: ${errMsg})`);
+            }
+            if (response.status === 429) {
+              throw new Error(`【リクエスト制限超過エラー (429)】\n短時間に大量のリクエストが送られました。数秒待ってから再試行してください。`);
+            }
+            
+            lastError = `Model ${modelName} status ${response.status}: ${errMsg}`;
+          } catch (e) {
+            if (e.message.startsWith("【")) {
+              throw e; // 特有のエラーメッセージはそのまま上位に引き渡す
+            }
+            lastError = e.message || e;
+          }
+          
+          if (attempt < 1) {
+            await new Promise(resolve => setTimeout(resolve, delay));
+            delay *= 2; // 指数バックオフ
+          }
+        }
+      }
+      throw new Error(`【AIスキャン接続失敗】\n全サポートモデルの通信試行が失敗しました。\n(詳細: ${lastError})`);
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
       initClientApp();
