@@ -31,6 +31,7 @@
                         cardShadow: '0 16px 40px rgba(81, 117, 158, 0.12)',
                         softShadow: '0 12px 30px rgba(32, 49, 76, 0.04)',
                         glow: '0 0 25px rgba(197, 160, 89, 0.45)',
+                        blueGlow: '0 0 25px rgba(26, 51, 94, 0.3)',
                         innerGlow: 'inset 0 2px 6px rgba(255, 255, 255, 0.9)'
                     }
                 }
@@ -48,7 +49,6 @@
     <style>
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            /* 美しいクラシックサックスアッシュブルー背景 */
             background-color: #AEC1D4;
             background-image: radial-gradient(at 0% 0%, hsla(215, 45%, 82%, 1) 0, transparent 55%),
                               radial-gradient(at 100% 0%, hsla(212, 42%, 72%, 1) 0, transparent 65%),
@@ -113,7 +113,7 @@
                     <span class="text-[10px] text-brand-primary font-bold">Cloud Synced</span>
                 </div>
                 <button onclick="window.openSettingsModal()" class="bg-brand-primary hover:bg-brand-primaryHover text-white p-2.5 rounded-full transition shadow-md flex items-center justify-center active:scale-95">
-                    <i data-lucide="key" class="w-4 h-4 text-brand-gold"></i>
+                    <i data-lucide="key" class="w-4 h-4 text-brand-gold animate-pulse"></i>
                 </button>
             </div>
         </header>
@@ -146,7 +146,7 @@
                 <div id="clients-list-container" class="flex-1 overflow-y-auto no-scrollbar p-3 space-y-2 max-h-[50vh] lg:max-h-[65vh]">
                     <div class="text-center py-10 text-xs text-brand-muted font-bold space-y-2">
                         <i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto text-brand-secondary"></i>
-                        <p>クライアントデータを読み込み中...</p>
+                        <p>認証＆クライアントデータ読み込み中...</p>
                     </div>
                 </div>
             </div>
@@ -162,7 +162,7 @@
                 </p>
             </div>
 
-            <div id="client-detail-panel" class="lg:col-span-8 flex flex-col hidden divide-y divide-brand-secondary/30 bg-white/10 animate-fade-in">
+            <div id="client-detail-panel" class="lg:col-span-8 flex flex-col hidden divide-y divide-brand-border/30 bg-white/10 animate-fade-in">
                 
                 <!-- クライアントヘッダー -->
                 <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/30">
@@ -207,7 +207,7 @@
                 </div>
 
                 <!-- リアルタイムデータビュー（食事履歴 ＆ 体重記録） -->
-                <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-brand-secondary/30">
+                <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-brand-border/30">
                     
                     <!-- 食事履歴ビュー（左半分） -->
                     <div class="p-6 space-y-4">
@@ -301,7 +301,7 @@
             </div>
             <div class="space-y-4 text-xs font-bold text-brand-text text-left">
                 <p class="text-[11px] text-brand-muted leading-relaxed">
-                    設定した「Gemini APIキー」は、CARATに所属するすべてのクライアントの食事管理アプリに自動で同期されます。体験モードではなく、実際のGeminiがお客様のデータを詳細に読み解きます。
+                    設定した「Gemini APIキー」は、CARATに所属するすべてのクライアントの食事管理アプリに自動で同期されます。実際のGeminiがお客様のデータを詳細に読み解きます。
                 </p>
                 <div class="space-y-1.5">
                     <label class="text-[9.5px] text-brand-muted block">Gemini API Key</label>
@@ -387,7 +387,7 @@
                         <input type="number" id="edit-client-f" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center focus:outline-none shadow-inner">
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[8.5px] text-emerald-600 block text-center">目標C (g)</label>
+                        <label class="text-[8.5px] text-[#10B981] block text-center">目標C (g)</label>
                         <input type="number" id="edit-client-c" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center focus:outline-none shadow-inner">
                     </div>
                 </div>
@@ -404,7 +404,21 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const appId = 'carat-meal-v3';
+        // RULE 1: プラットフォーム指定の環境変数を最優先で使用
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'carat-meal-v3';
+        
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : {
+                apiKey: "AlzaSyAydTTXVCpENC3uj3114vcA90WAg8Oj75U",
+                authDomain: "carat-d3b01.firebaseapp.com",
+                projectId: "carat-d3b01",
+                storageBucket: "carat-d3b01.firebasestorage.app",
+                messagingSenderId: "273330568464",
+                appId: "1:273330568464:web:5b4ea4ae2a5429914cf995",
+                measurementId: "G-27VPZ9TQDW"
+              };
+
         let db, auth;
         let trainerUserId = null;
         let systemSettings = { geminiApiKey: "" };
@@ -412,16 +426,6 @@
         let currentTargetClientId = null;
         let currentSelectedDate = getTodayDateString();
         let portalChartInstance = null;
-
-        const firebaseConfig = {
-            apiKey: "AlzaSyAydTTXVCpENC3uj3114vcA90WAg8Oj75U",
-            authDomain: "carat-d3b01.firebaseapp.com",
-            projectId: "carat-d3b01",
-            storageBucket: "carat-d3b01.firebasestorage.app",
-            messagingSenderId: "273330568464",
-            appId: "1:273330568464:web:5b4ea4ae2a5429914cf995",
-            measurementId: "G-27VPZ9TQDW"
-        };
 
         const app = initializeApp(firebaseConfig);
         auth = getAuth(app);
@@ -455,8 +459,8 @@
             return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
         }
 
+        // RULE 3: ログインを確実に完了・監視
         async function initTrainerPortal() {
-            // RULE 3: Auth First & getCustomToken
             const initAuth = async () => {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
@@ -464,10 +468,12 @@
                     await signInAnonymously(auth);
                 }
             };
+
             try {
                 await initAuth();
             } catch (e) {
-                console.error("Firebase auth error", e);
+                console.error("Firebase auth error:", e);
+                showToast("認証に失敗しました。接続環境をご確認ください。");
             }
 
             onAuthStateChanged(auth, async (user) => {
@@ -475,13 +481,15 @@
                     trainerUserId = user.uid;
                     loadSystemSettings();
                     loadRealtimeClients();
+                } else {
+                    console.warn("User is not signed in.");
                 }
             });
             
             document.getElementById('target-view-date').value = currentSelectedDate;
         }
 
-        // RULE 1: Global Settings sync (CRT-SETTINGS)
+        // RULE 1: 厳格な公開パス構造の指定
         function loadSystemSettings() {
             const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
             onSnapshot(settingsRef, (snap) => {
@@ -499,15 +507,15 @@
             const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
             try {
                 await setDoc(settingsRef, { geminiApiKey: key }, { merge: true });
-                showToast("CARAT APIキーを保存し、すべてのクライアントに配信しました。");
+                showToast("CARAT APIキーを保存 ＆ 担当クライアントへ一括同期しました！");
                 window.toggleModal('settings-modal', false);
             } catch (err) {
                 console.error("Save Settings Error:", err);
-                alert("APIキーの同期に失敗しました。認証状態を確認してください。");
+                alert("APIキーの同期に失敗しました。認証状態をご確認ください。");
             }
         };
 
-        // RULE 1 & 2: Simple snapshot for CRT ClientStates
+        // RULE 1 & 2: 公開パスからのクライアント一覧のロード
         function loadRealtimeClients() {
             const collectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'clientStates');
             onSnapshot(collectionRef, (snapshot) => {
@@ -518,7 +526,13 @@
                     }
                 });
                 
-                allClients = list.sort((a, b) => b.nickname ? b.nickname.localeCompare(a.nickname) : 1);
+                // 安全なソート処理（未定義エラーを完全に排除）
+                allClients = list.sort((a, b) => {
+                    const nameA = a.nickname || "";
+                    const nameB = b.nickname || "";
+                    return nameA.localeCompare(nameB);
+                });
+                
                 renderClientsList();
                 
                 if (currentTargetClientId) {
@@ -528,7 +542,8 @@
                     }
                 }
             }, (err) => {
-                console.warn("Client sync error:", err);
+                console.error("Client sync error:", err);
+                showToast("データベース同期エラーが発生しました。");
             });
         }
 
@@ -537,7 +552,7 @@
             if (allClients.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-10 bg-white/30 rounded-2xl border border-dashed border-brand-border text-xs text-brand-muted font-bold p-4">
-                        登録されたクライアントがありません。「新規作成」からお食事管理IDを発行しましょう。
+                        登録されたクライアントがありません。<br>「新規作成」からお食事管理IDを発行しましょう。
                     </div>
                 `;
                 return;
