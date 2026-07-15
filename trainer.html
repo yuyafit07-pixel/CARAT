@@ -15,7 +15,7 @@
                             primary: '#1A335E',       /* ロイヤルサックスブルー（深みと気品のある紺青） */
                             primaryHover: '#112242',  /* ミッドナイトナイト */
                             secondary: '#51749E',     /* ミスティサックス（上品なくすみブルー） */
-                            accent: '#EAF1F9',        /* シフォンアクア（透明感のあるペールブルー） */
+                            accent: '#EBF2FA',        /* シフォンアクア（透明感のあるペールブルー） */
                             gold: '#C5A059',          /* シャンパンゴールド（美しく煌めくゴールド） */
                             goldLight: '#FAF4E3',     /* プレシャスベージュ */
                             bg: '#FFFFFF',            /* ピュアホワイト */
@@ -43,10 +43,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,800;1,300&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <!-- Icons (Lucide) -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background-color: #B2C5D6;
+            /* 美しいクラシックサックスアッシュブルー背景 */
+            background-color: #AEC1D4;
             background-image: radial-gradient(at 0% 0%, hsla(215, 45%, 82%, 1) 0, transparent 55%),
                               radial-gradient(at 100% 0%, hsla(212, 42%, 72%, 1) 0, transparent 65%),
                               radial-gradient(at 50% 100%, hsla(220, 38%, 68%, 1) 0, transparent 60%);
@@ -66,7 +69,7 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        /* 美しい一体型グラスモルフィズムコンテナ */
+        /* コスメパレットを想起させる、シームレスな一体型グラスモルフィズムコンテナ */
         .glass-container {
             background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(28px);
@@ -103,7 +106,7 @@
                 <span class="font-logo text-3xl font-black tracking-widest text-brand-primary">CARAT</span>
                 <span class="text-[10px] text-brand-secondary font-bold tracking-widest uppercase">TRAINER INTERACTIVE PORTAL</span>
             </div>
-            <!-- API管理 ＆ 設定バッジ -->
+            
             <div class="flex items-center gap-3">
                 <div class="bg-white/80 border border-brand-border rounded-full py-1.5 px-4 shadow-softShadow flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -141,26 +144,25 @@
 
                 <!-- クライアントリスト -->
                 <div id="clients-list-container" class="flex-1 overflow-y-auto no-scrollbar p-3 space-y-2 max-h-[50vh] lg:max-h-[65vh]">
-                    <!-- JSでリアルタイムに挿入されます -->
                     <div class="text-center py-10 text-xs text-brand-muted font-bold space-y-2">
                         <i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto text-brand-secondary"></i>
-                        <p>クライアント一覧を読み込み中...</p>
+                        <p>クライアントデータを読み込み中...</p>
                     </div>
                 </div>
             </div>
 
             <!-- 🔍 右側：詳細チェック ＆ カウンセリングフィードバックカラム (8 cols) -->
             <div id="client-detail-empty" class="lg:col-span-8 flex flex-col justify-center items-center text-center p-12 space-y-3 bg-white/10">
-                <div class="w-16 h-16 rounded-full bg-white/60 border border-brand-border flex items-center justify-center text-brand-secondary shadow-softShadow animate-pulse">
+                <div class="w-16 h-16 rounded-full bg-white/60 border border-brand-border flex items-center justify-center text-brand-secondary shadow-softShadow">
                     <i data-lucide="user-check" class="w-7 h-7 text-brand-gold"></i>
                 </div>
                 <h3 class="text-sm font-bold text-brand-primary">クライアントを選択してください</h3>
                 <p class="text-[11px] text-brand-muted max-w-sm leading-relaxed">
-                    左側のリストから、本日の食事ログの監視、PFC目標設定の変更、または1週間フィードバックを生成する対象のクライアントを選択してください。
+                    左側のリストから、本日の食事ログの監視、PFC目標設定の変更、または実際の記録に基づいた本格AIによる1週間総括アドバイスの生成を行うクライアントを選択してください。
                 </p>
             </div>
 
-            <div id="client-detail-panel" class="lg:col-span-8 flex flex-col hidden divide-y divide-brand-border/30 bg-white/10 animate-fade-in">
+            <div id="client-detail-panel" class="lg:col-span-8 flex flex-col hidden divide-y divide-brand-secondary/30 bg-white/10 animate-fade-in">
                 
                 <!-- クライアントヘッダー -->
                 <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/30">
@@ -186,13 +188,13 @@
                         </div>
                         <button onclick="window.generateAiFeedback()" id="btn-generate-ai" 
                                 class="bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-brand-primaryHover hover:to-brand-primary text-white px-4 py-2.5 rounded-xl text-[10px] font-bold tracking-wider transition-all shadow-md active:scale-95 flex items-center gap-1.5">
-                            <i data-lucide="zap" class="w-3.5 h-3.5 text-brand-gold"></i> AIで1週間総括アドバイスを生成
+                            <i data-lucide="zap" class="w-3.5 h-3.5 text-brand-gold animate-pulse"></i> AIで1週間総括アドバイスを生成
                         </button>
                     </div>
 
                     <div class="space-y-3">
                         <textarea id="feedback-textarea" class="w-full bg-white border border-brand-border rounded-2xl p-4 text-xs font-medium text-brand-text leading-relaxed focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner" rows="5" 
-                                  placeholder="食事記録に基づいてAIが総括指導を作成します。またはこちらに直接自由記述アドバイスを入力し送信してください。"></textarea>
+                                  placeholder="食事記録に基づいてGemini APIが総括指導を作成します。またはこちらに直接自由記述アドバイスを入力し送信してください。"></textarea>
                         
                         <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                             <p id="feedback-status-text" class="text-[9px] text-brand-muted font-semibold"></p>
@@ -205,7 +207,7 @@
                 </div>
 
                 <!-- リアルタイムデータビュー（食事履歴 ＆ 体重記録） -->
-                <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-brand-border/30">
+                <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-brand-secondary/30">
                     
                     <!-- 食事履歴ビュー（左半分） -->
                     <div class="p-6 space-y-4">
@@ -260,7 +262,7 @@
                             </div>
                         </div>
 
-                        <!-- 週間貯金実績 -->
+                        <!-- 週間実績 -->
                         <div class="space-y-2">
                             <span class="text-[9px] text-brand-secondary font-bold uppercase tracking-wider block">今週の累計進捗ログ(Mon起点)</span>
                             <div class="grid grid-cols-2 gap-2 text-center text-[10px] font-bold">
@@ -299,11 +301,11 @@
             </div>
             <div class="space-y-4 text-xs font-bold text-brand-text text-left">
                 <p class="text-[11px] text-brand-muted leading-relaxed">
-                    ここに設定した「Gemini APIキー」は、CARATに所属するすべてのクライアントの食事管理アプリ（AIカメラ・テキスト解析）に共通で使用できるようにクラウド配信されます。
+                    設定した「Gemini APIキー」は、CARATに所属するすべてのクライアントの食事管理アプリに自動で同期されます。体験モードではなく、実際のGeminiがお客様のデータを詳細に読み解きます。
                 </p>
                 <div class="space-y-1.5">
                     <label class="text-[9.5px] text-brand-muted block">Gemini API Key</label>
-                    <input type="password" id="input-api-key" placeholder="AI-zaSy..." class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-brand-gold/30 shadow-inner">
+                    <input type="password" id="input-api-key" placeholder="AIzaSy..." class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-brand-gold/30 shadow-inner">
                 </div>
                 <button onclick="window.saveSystemSettings()" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-4 rounded-2xl font-bold shadow-md transition active:scale-95 tracking-wider">
                     システム設定を保存して配信
@@ -348,7 +350,7 @@
                         <input type="number" id="new-client-f" required value="40" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center focus:outline-none shadow-inner">
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[8px] text-emerald-600 block text-center">目標C (g)</label>
+                        <label class="text-[8px] text-[#10B981] block text-center">目標C (g)</label>
                         <input type="number" id="new-client-c" required value="210" class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center focus:outline-none shadow-inner">
                     </div>
                 </div>
@@ -453,8 +455,8 @@
             return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
         }
 
-        // RULE 3: Auth First & onAuthStateChanged
         async function initTrainerPortal() {
+            // RULE 3: Auth First & getCustomToken
             const initAuth = async () => {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
@@ -465,7 +467,7 @@
             try {
                 await initAuth();
             } catch (e) {
-                console.warn("Firebase Auth Fail. Fallback simulation on GUEST Giga-Mode", e);
+                console.error("Firebase auth error", e);
             }
 
             onAuthStateChanged(auth, async (user) => {
@@ -488,7 +490,7 @@
                     document.getElementById('input-api-key').value = systemSettings.geminiApiKey || "";
                 }
             }, (err) => {
-                console.error("System settings loading error:", err);
+                console.warn("Global settings fetch error:", err);
             });
         }
 
@@ -497,11 +499,11 @@
             const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
             try {
                 await setDoc(settingsRef, { geminiApiKey: key }, { merge: true });
-                showToast("CARAT APIキーを保存 ＆ 全クライアントに一括配信しました！");
+                showToast("CARAT APIキーを保存し、すべてのクライアントに配信しました。");
                 window.toggleModal('settings-modal', false);
             } catch (err) {
-                console.error(err);
-                alert("APIキーの保存に失敗しました。管理者権限があるか確認してください。");
+                console.error("Save Settings Error:", err);
+                alert("APIキーの同期に失敗しました。認証状態を確認してください。");
             }
         };
 
@@ -515,11 +517,10 @@
                         list.push({ id: doc.id, ...doc.data() });
                     }
                 });
-                // メモリ上でソート
+                
                 allClients = list.sort((a, b) => b.nickname ? b.nickname.localeCompare(a.nickname) : 1);
                 renderClientsList();
                 
-                // 選択中のクライアントがいれば詳細を再描画
                 if (currentTargetClientId) {
                     const matched = allClients.find(c => c.id === currentTargetClientId);
                     if (matched) {
@@ -527,7 +528,7 @@
                     }
                 }
             }, (err) => {
-                console.error("Client logs real-time sync failure", err);
+                console.warn("Client sync error:", err);
             });
         }
 
@@ -573,7 +574,7 @@
         window.filterClients = function() {
             const q = document.getElementById('client-search').value.toLowerCase().trim();
             if (!q) {
-                loadRealtimeClients();
+                renderClientsList();
                 return;
             }
             const filtered = allClients.filter(c => 
@@ -593,7 +594,7 @@
             list.forEach(cli => {
                 const isSelected = cli.id === currentTargetClientId;
                 const item = document.createElement('div');
-                item.className = `p-4 rounded-2xl border transition-all cursor-pointer flex justify-between items-center ${isSelected ? 'bg-brand-primary text-white' : 'bg-white hover:bg-brand-accent/40 border-brand-border/60 text-brand-text'} active:scale-99`;
+                item.className = `p-4 rounded-2xl border transition-all cursor-pointer flex justify-between items-center ${isSelected ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white hover:bg-brand-accent/40 border-brand-border/60 text-brand-text'} active:scale-99`;
                 item.onclick = () => window.selectClient(cli.id);
                 item.innerHTML = `
                     <div class="text-left space-y-1">
@@ -620,7 +621,6 @@
                 renderClientDetails(matched);
             }
             
-            // クライアント一覧の選択状態を更新
             const items = document.getElementById('clients-list-container').children;
             allClients.forEach((cli, idx) => {
                 const el = items[idx];
@@ -639,7 +639,6 @@
             document.getElementById('detail-id').innerText = cli.id;
             document.getElementById('detail-current-weight').innerText = `現体重: ${cli.weight ? cli.weight.toFixed(1) : '--'} kg`;
             
-            // 1週間フィードバックの復元
             document.getElementById('feedback-textarea').value = cli.trainerFeedback || "";
             if (cli.trainerFeedbackAt) {
                 const d = new Date(cli.trainerFeedbackAt);
@@ -648,11 +647,8 @@
                 document.getElementById('feedback-status-text').innerText = "未送信";
             }
 
-            // 指定日付の食事記録レンダリング
             renderClientTimeline(cli, currentSelectedDate);
             renderClientWeightChart(cli);
-            
-            // 1週間の集計スタッツ
             calculateWeeklyAggregations(cli);
         }
 
@@ -701,7 +697,6 @@
                 const item = document.createElement('div');
                 item.className = "bg-white border border-brand-border/60 p-3.5 rounded-2xl text-[10.5px] shadow-sm text-left relative overflow-hidden";
                 
-                // 構成食材の内訳表示
                 let ingBadges = "";
                 if (m.ingredients && m.ingredients.length > 0) {
                     ingBadges = `
@@ -739,7 +734,7 @@
         }
 
         function calculateWeeklyAggregations(cli) {
-            const today = new Date(selectedDateString);
+            const today = new Date();
             const dayIdx = today.getDay();
             const mondayOffset = dayIdx === 0 ? -6 : 1 - dayIdx;
             const monday = new Date(today);
@@ -839,10 +834,17 @@
             });
         }
 
-        // AI カウンセリングフィードバック生成機能
+        // Gemini APIを使ったリアルタイム1週間カルテアドバイス自動生成
         window.generateAiFeedback = async function() {
             if (!currentTargetClientId) {
-                alert("クライアントを選択してください。");
+                alert("アドバイス生成対象のクライアントを選択してください。");
+                return;
+            }
+            
+            const key = systemSettings.geminiApiKey || document.getElementById('input-api-key').value.trim();
+            if (!key) {
+                alert("店舗共有APIキーが設定されていません。右上の「鍵」アイコンからGemini APIキーを登録してください。");
+                window.openSettingsModal();
                 return;
             }
             
@@ -851,11 +853,11 @@
 
             const btn = document.getElementById('btn-generate-ai');
             const originalHtml = btn.innerHTML;
-            btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> 生成中...`;
+            btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> 解析中...`;
             btn.disabled = true;
             lucide.createIcons();
 
-            // 1週間分のお食事ログのストック＆要約化
+            // 直近1週間（7日間）の実食事データ収集
             const today = new Date();
             const daysDataText = [];
             for (let i = 0; i < 7; i++) {
@@ -864,25 +866,25 @@
                 const loopStr = loopD.getFullYear() + "-" + String(loopD.getMonth() + 1).padStart(2, '0') + "-" + String(loopD.getDate()).padStart(2, '0');
                 const meals = cli.mealsByDate?.[loopStr] || [];
                 if (meals.length > 0) {
-                    const mealsStr = meals.map(m => `${m.name}(${m.kcal}kcal)`).join(', ');
+                    const mealsStr = meals.map(m => `${m.name}(${m.kcal}kcal, P:${safeFloat(m.p)}g, F:${safeFloat(m.f)}g, C:${safeFloat(m.c)}g)`).join(', ');
                     daysDataText.push(`- ${loopStr}: ${mealsStr}`);
                 }
             }
 
-            const mealsDataInput = daysDataText.length > 0 ? daysDataText.join('\n') : "特になし";
-            const targetPFC = `カロリー:${cli.targetCalories || 1650}kcal, P:${cli.targetP || 110}g, F:${cli.targetF || 40}g, C:${cli.targetC || 210}g`;
-            const currentWeight = cli.weight ? cli.weight.toFixed(1) + "kg" : "未測定";
+            const mealsDataInput = daysDataText.length > 0 ? daysDataText.join('\n') : "1週間のお食事記録はまだ登録されていません。";
+            const targetPFC = `カロリー目標:${cli.targetCalories || 1650}kcal, P:${cli.targetP || 110}g, F:${cli.targetF || 40}g, C:${cli.targetC || 210}g`;
+            const currentWeight = cli.weight ? cli.weight.toFixed(1) + "kg" : "未登録";
 
             try {
                 const userPrompt = `
                     クライアント名: ${cli.nickname || "クライアント"}
                     目標PFC基準: ${targetPFC}
-                    現在の体重: ${currentWeight}
-                    直近1週間の食事ログ:
+                    現在の最新体重: ${currentWeight}
+                    直近1週間の全食事ログ実績:
                     ${mealsDataInput}
                     
-                    上記の1週間データに基づき、パーソナルジム「CARAT」のチーフパーソナルトレーナーとして、丁寧かつ親身に寄り添う総括フィードバック・アドバイス文章を250〜400文字程度で作成してください。
-                    女性クライアントが嬉しくなり、モチベーションが最大化されるように温かい励ましの言葉、体重やPFCへのロジカルかつ優しいコメントを含めてください。解説や注釈は一切含めず、メッセージ本文のみを返却してください。
+                    上記の「実際のログデータ」をロジカルに分析し、パーソナルトレーニングジム「CARAT」のチーフ栄養アドバイザーとして、丁寧かつ親身に寄り添う1週間総括フィードバック・アドバイス文章を250〜400文字程度で作成してください。
+                    女性のお客様のボディメイクへのモチベーションが最高に高まるよう、体重推移やPFCバランスの良かった点を見つけて褒め、無理のないアドバイスを提案してください。プロフェッショナルでありつつ、温かく励ますトーンにしてください。解説や注釈は一切含めず、メッセージ本文のみを返却してください。
                 `;
                 
                 const payload = { contents: [{ parts: [{ text: userPrompt }] }] };
@@ -890,10 +892,10 @@
                 const feedbackGenerated = res.candidates?.[0]?.content?.parts?.[0]?.text || "";
                 
                 document.getElementById('feedback-textarea').value = feedbackGenerated.trim();
-                showToast("1週間のAI指導フィードバックを自動作成しました！修正して送信可能です。");
+                showToast("1週間の食事・体重データをGeminiで解析し、アドバイスを自動生成しました！");
             } catch (err) {
-                console.error(err);
-                alert("AIの自動生成に失敗しました。共通APIキーの設定が完了しているか、またはネットワーク状態を確認してください。");
+                console.error("Gemini Advisor Generation Fail:", err);
+                alert("Gemini APIでの自動アドバイス生成に失敗しました。APIキーが無効、または利用制限の可能性があります。");
             } finally {
                 btn.innerHTML = originalHtml;
                 btn.disabled = false;
@@ -901,25 +903,34 @@
             }
         };
 
-        window.sendFeedbackToCloud = async function() {
-            // Firebaseとの同期処理
-            if (!currentTargetClientId) return;
+        window.sendFeedbackToClient = async function() {
+            if (!currentTargetClientId) {
+                alert("クライアントが選択されていません。");
+                return;
+            }
             const text = document.getElementById('feedback-textarea').value.trim();
+            if (!text) {
+                alert("アドバイス文を入力、またはAI自動生成してから送信してください。");
+                return;
+            }
+            
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
                 await updateDoc(docRef, {
                     trainerFeedback: text,
                     trainerFeedbackAt: new Date().toISOString()
                 });
-                showToast("指導アドバイスを会員様のアプリにリアルタイム同期しました！");
+                showToast("指導フィードバックが会員様のアプリ画面へリアルタイム同期されました！");
+                
+                const d = new Date();
+                document.getElementById('feedback-status-text').innerText = `最終送信日時: ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
             } catch (err) {
-                console.error(err);
-                alert("クラウド同期に失敗しました。");
+                console.error("Save Feedback Error:", err);
+                alert("クラウド同期に失敗しました。インターネット接続を確認してください。");
             }
         };
-        window.sendFeedbackToClient = window.sendFeedbackToCloud;
 
-        // 新規クライアントアカウント作成
+        // 新規クライアントアカウント作成＆連携ID発行
         window.handleCreateClient = async function(e) {
             e.preventDefault();
             const name = document.getElementById('new-client-nickname').value.trim();
@@ -929,7 +940,6 @@
             const f = parseInt(document.getElementById('new-client-f').value) || 40;
             const c = parseInt(document.getElementById('new-client-c').value) || 210;
 
-            // 6桁の連携ID生成
             const randId = 'CRT-' + Math.floor(100000 + Math.random() * 900000);
 
             const initialData = {
@@ -951,34 +961,20 @@
                     Sat: { kcal: 0, p: 0, f: 0, c: 0 },
                     Sun: { kcal: 0, p: 0, f: 0, c: 0 }
                 },
-                trainerFeedback: "カルテアカウントの同期おめでとうございます！今日から一緒に楽しい食事管理＆プレミアムボディメイクを始めていきましょう！",
+                trainerFeedback: "カルテ連携おめでとうございます！今日から一緒に楽しい食事管理＆プレミアムボディメイクを始めていきましょう！",
                 trainerFeedbackAt: new Date().toISOString()
             };
 
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', randId);
                 await setDoc(docRef, initialData);
-                showToast(`麗しい${name}様の同期アカウント [${randId}] を発行・作成しました！`);
+                showToast(`連携ID: ${randId} を新規作成しました。お客様のアプリに入力させて同期してください！`);
                 window.toggleModal('new-client-modal', false);
-                // フォームをクリア
                 document.getElementById('new-client-nickname').value = "";
             } catch (err) {
-                console.error(err);
-                alert("作成に失敗しました。");
+                console.error("Create Client Error:", err);
+                alert("新規アカウント作成に失敗しました。");
             }
-        };
-
-        window.openTargetAdjustmentModal = function() {
-            if (!currentTargetClientId) return;
-            const cli = allClients.find(c => c.id === currentTargetClientId);
-            if (!cli) return;
-
-            document.getElementById('edit-client-kcal').value = cli.targetCalories || 1800;
-            document.getElementById('edit-client-p').value = cli.targetP || 120;
-            document.getElementById('edit-client-f').value = cli.targetF || 45;
-            document.getElementById('edit-client-c').value = cli.targetC || 230;
-
-            window.toggleModal('target-adjust-modal', true);
         };
 
         window.handleUpdateTarget = async function(e) {
@@ -998,11 +994,11 @@
                     targetF: f,
                     targetC: c
                 });
-                showToast("目標PFC設定を更新・同期保存しました！");
+                showToast("PFC目標の修正値をクラウド同期しました！");
                 window.toggleModal('target-adjust-modal', false);
             } catch (err) {
-                console.error(err);
-                alert("目標変更の更新に失敗しました。");
+                console.error("Update Target Error:", err);
+                alert("同期更新に失敗しました。");
             }
         };
 
