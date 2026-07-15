@@ -96,7 +96,7 @@
       </div>
       
       <div id="sync-status" class="text-[9.5px] px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-500 border border-slate-200 flex items-center gap-1.5 font-bold shadow-sm transition-all">
-        <span class="w-2 h-2 rounded-full bg-slate-400"></span>接続中...
+        <span class="w-2 h-2 rounded-full bg-slate-400 animate-ping"></span>接続中...
       </div>
     </div>
   </header>
@@ -118,11 +118,11 @@
           <span class="block">GitHub上のソースコード内にAPIキーを「直接」書き込んでコミットすると、Googleの監視AIが検知して数秒でキーを無効化（凍結）してしまいます。必ず、以下の入力欄から手動で貼り付けて「全ユーザーへ配信」を行ってください。コード内直書きは厳禁です。</span>
         </div>
         <p class="text-[10px] text-brand-muted leading-relaxed">
-          Google AI Studioで新しく作ったAPIキー（AIzaSy...）を入力して保存すると、Firestore中央金庫（SETTINGS）へマッピングされ、会員のスマホアプリへ自動適用されます。
+          Google AI Studioで作った有効なAPIキー（AIzaSy...）を入力して保存すると、Firestore中央金庫（SETTINGS）へマッピングされ、会員のスマホアプリへ自動適用されます。
         </p>
         <div class="flex gap-2">
           <input type="password" id="trainer-gemini-key" class="flex-1 bg-white border border-brand-border rounded-xl px-4 py-2.5 text-xs font-mono text-brand-text focus:outline-none focus:ring-1 focus:ring-brand-gold transition-all shadow-inner" placeholder="AIzaSy...">
-          <button onclick="window.saveTrainerGeminiKey()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-5 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1 shrink-0">
+          <button onclick="window.saveTrainerGeminiKey()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-5 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-1 shrink-0 animate-pulse">
             保存・全ユーザーへ配信
           </button>
         </div>
@@ -171,7 +171,7 @@
                 <input type="number" id="new-client-c" class="w-full bg-white border border-brand-border rounded-lg p-1.5 text-xs font-mono text-center focus:outline-none focus:ring-1 focus:ring-brand-gold font-bold shadow-inner" value="210">
               </div>
             </div>
-            <button onclick="window.createNewClientAndId()" class="w-full bg-gradient-to-r from-brand-primary to-brand-secondary hover:opacity-95 text-white py-3.5 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-1.5 active:scale-98">
+            <button onclick="window.createNewClientAndId()" class="w-full bg-gradient-to-r from-brand-primary to-brand-secondary hover:opacity-95 text-white py-3.5 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-1.5">
               <i data-lucide="sparkles" class="w-4 h-4 text-brand-gold animate-pulse"></i>
               専用クライアントIDを発行する
             </button>
@@ -279,17 +279,17 @@
                 参照日のPFC摂取バランス (目標値)
               </span>
               <div class="grid grid-cols-3 gap-2.5 text-center text-xs">
-                <div class="bg-slate-50 border border-brand-border/40 p-3 rounded-2xl shadow-sm font-bold">
+                <div class="bg-slate-50 border border-brand-border/40 p-3 rounded-2xl shadow-sm font-bold font-sans">
                   <div class="text-[8px] text-brand-secondary font-black tracking-wider">P (たんぱく質)</div>
                   <div class="font-black text-brand-text mt-0.5 text-sm"><span id="client-cur-p" class="text-brand-secondary text-base">0</span>g</div>
                   <div class="text-[9px] text-brand-muted font-bold mt-1">目標: <span id="client-tar-p">0</span>g</div>
                 </div>
-                <div class="bg-slate-50 border border-brand-border/40 p-3 rounded-2xl shadow-sm font-bold">
+                <div class="bg-slate-50 border border-brand-border/40 p-3 rounded-2xl shadow-sm font-bold font-sans">
                   <div class="text-[8px] text-brand-gold font-black tracking-wider">F (脂質)</div>
                   <div class="font-black text-brand-text mt-0.5 text-sm"><span id="client-cur-f" class="text-brand-gold text-base">0</span>g</div>
                   <div class="text-[9px] text-brand-muted font-bold mt-1">目標: <span id="client-tar-f">0</span>g</div>
                 </div>
-                <div class="bg-slate-50 border border-brand-border/40 p-3 rounded-2xl shadow-sm font-bold">
+                <div class="bg-slate-50 border border-brand-border/40 p-3 rounded-2xl shadow-sm font-bold font-sans">
                   <div class="text-[8px] text-emerald-600 font-black tracking-wider">C (炭水化物)</div>
                   <div class="font-black text-brand-text mt-0.5 text-sm"><span id="client-cur-c" class="text-emerald-700 text-base">0</span>g</div>
                   <div class="text-[9px] text-brand-muted font-bold mt-1">目標: <span id="client-tar-c">0</span>g</div>
@@ -341,7 +341,7 @@
             <!-- 体重測定詳細値リスト（直近10件） -->
             <div class="space-y-2 pt-1.5">
               <span class="text-[9px] text-brand-muted font-bold block uppercase tracking-wider">最新の測定体重履歴 (直近10日間)</span>
-              <div id="client-weight-history-list" class="grid grid-cols-2 gap-2 max-h-[140px] overflow-y-auto no-scrollbar pr-1">
+              <div id="client-weight-history-list" class="grid grid-cols-2 gap-2 max-h-[140px] overflow-y-auto no-scrollbar pr-1 font-bold">
                 <!-- 体重リストがJSでマウントされます -->
               </div>
             </div>
@@ -358,34 +358,34 @@
                   <i data-lucide="scale" class="w-4.5 h-4.5 text-brand-gold animate-bounce"></i>
                   直近1週間 (過去7日間) 帳じり合わせ合計過不足
                 </h4>
-                <p class="text-[9px] text-white/80 mt-0.5">選択日を含む過去7日間の目標総計と実績総計の過不足を完璧に足し引き計算した最新貯金値です。</p>
+                <p class="text-[9px] text-white/80 mt-0.5">選択日を含む過去7日間の目標総計と実績総計의過不足を計算した最新貯金値です。</p>
               </div>
               <span class="text-[8px] bg-white/20 text-white font-bold px-2 py-0.5 rounded-lg border border-white/10 font-sans">PFC合計</span>
             </div>
 
-            <div class="grid grid-cols-4 gap-2.5 relative z-10 text-center">
+            <div class="grid grid-cols-4 gap-2.5 relative z-10 text-center font-bold font-sans">
               <div class="bg-white/10 p-2.5 rounded-2xl border border-white/10">
                 <span class="text-[8px] text-white/80 font-bold block mb-0.5">総計カロリー</span>
-                <span id="balance-total-kcal" class="font-sans font-black text-xs block tracking-tight text-white">-</span>
+                <span id="balance-total-kcal" class="text-xs block tracking-tight text-white">-</span>
               </div>
               <div class="bg-white/10 p-2.5 rounded-2xl border border-white/10">
                 <span class="text-[8px] text-white/80 font-bold block mb-0.5">総計 P (たんぱく)</span>
-                <span id="balance-total-p" class="font-sans font-black text-xs block tracking-tight text-white">-</span>
+                <span id="balance-total-p" class="text-xs block tracking-tight text-white">-</span>
               </div>
               <div class="bg-white/10 p-2.5 rounded-2xl border border-white/10">
                 <span class="text-[8px] text-white/80 font-bold block mb-0.5">総計 F (脂質)</span>
-                <span id="balance-total-f" class="font-sans font-black text-xs block tracking-tight text-white">-</span>
+                <span id="balance-total-f" class="text-xs block tracking-tight text-white">-</span>
               </div>
               <div class="bg-white/10 p-2.5 rounded-2xl border border-white/10">
                 <span class="text-[8px] text-white/80 font-bold block mb-0.5">総計 C (炭水化物)</span>
-                <span id="balance-total-c" class="font-sans font-black text-xs block tracking-tight text-white">-</span>
+                <span id="balance-total-c" class="text-xs block tracking-tight text-white">-</span>
               </div>
             </div>
           </div>
 
           <!-- 日別の摂取カロリー実績サマリー -->
           <div class="bg-white/80 rounded-2xl p-4 border border-brand-border/60 shadow-sm text-left space-y-2.5">
-            <h4 class="text-xs font-bold text-brand-text flex items-center gap-1.5">
+            <h4 class="text-xs font-bold text-brand-text flex items-center gap-1.5 font-bold">
               <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-primary"></i>
               日別の摂取カロリー実績サマリー
             </h4>
@@ -425,19 +425,19 @@
           <div class="bg-white/80 rounded-3xl p-5 border border-brand-border/60 shadow-cardShadow text-left space-y-3.5 border-2 border-brand-gold/30">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 border-b border-brand-border pb-3">
               <div>
-                <h4 class="text-xs font-extrabold text-brand-primary flex items-center gap-1.5">
+                <h4 class="text-xs font-extrabold text-brand-primary flex items-center gap-1.5 font-bold">
                   <span class="relative flex h-2 w-2">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </span>
-                  来店時専用：直近1週間の食事・PFC自動AI総括 (エラー修復版)
+                  来店時専用：直近1週間の食事・PFC自動AI総括 (最新GA安定版)
                 </h4>
-                <p class="text-[9px] text-brand-muted mt-1 leading-normal">
+                <p class="text-[9px] text-brand-muted mt-1 leading-normal font-bold">
                   セッション来店時などにこの1週間の食事・体重データをAIが一括スキャン。女性特有の体質リズム・スポーツ栄養学に基づき、優しい1週間の総評レポートを瞬時に作成します。
                 </p>
               </div>
               <button onclick="window.generateWeeklyReportAI()" id="btn-generate-weekly" class="bg-gradient-to-r from-brand-primary to-brand-secondary hover:opacity-95 text-white font-bold text-[10px] py-2.5 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-1 shrink-0 active:scale-95">
-                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-gold"></i>
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-gold animate-bounce"></i>
                 1週間の食事をまとめてAI分析
               </button>
             </div>
@@ -447,7 +447,7 @@
               <!-- クイックテンプレート -->
               <div class="space-y-1">
                 <span class="text-[8px] text-brand-muted font-bold uppercase tracking-wider block">💬 クイック下書き定型文テンプレート (1タップでセット)</span>
-                <div class="flex flex-wrap gap-1.5 font-bold">
+                <div class="flex flex-wrap gap-1.5">
                   <button onclick="window.applyCommentTemplate('p-short')" class="bg-slate-50 hover:bg-brand-accent/50 text-brand-text border border-brand-border px-2.5 py-1.5 rounded-lg text-[9px] font-bold transition shadow-sm">🍗 たんぱく質不足</button>
                   <button onclick="window.applyCommentTemplate('f-over')" class="bg-slate-50 hover:bg-brand-accent/50 text-brand-text border border-brand-border px-2.5 py-1.5 rounded-lg text-[9px] font-bold transition shadow-sm">🍟 脂質オーバー</button>
                   <button onclick="window.applyCommentTemplate('perfect')" class="bg-slate-50 hover:bg-brand-accent/50 text-brand-text border border-brand-border px-2.5 py-1.5 rounded-lg text-[9px] font-bold transition shadow-sm">🌟 完璧キープ！</button>
@@ -480,7 +480,7 @@
             <i data-lucide="user-check" class="w-6 h-6"></i>
           </div>
           <p class="text-xs font-bold text-brand-primary">クライアントが選択されていません</p>
-          <p class="text-[10px] text-brand-muted max-w-sm leading-relaxed">
+          <p class="text-[10px] text-brand-muted max-w-sm leading-relaxed font-bold">
             左側の『担当クライアントの選択』からクライアントを選択するか、新規クライアントIDを発行すると、ここにリアルタイム食事カルテが表示されます。
           </p>
         </div>
@@ -524,7 +524,7 @@
     function showToast(message) {
       const toast = document.createElement('div');
       toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-5 py-3 rounded-full text-xs font-bold shadow-premium z-[200] transition-opacity duration-300 flex items-center gap-1.5 border border-white/20";
-      toast.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-brand-gold animate-bounce"></i> ${message}`;
+      toast.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-brand-gold"></i> ${message}`;
       document.body.appendChild(toast);
       lucide.createIcons();
       setTimeout(() => {
@@ -650,7 +650,7 @@
       window.loadClientData();
     };
 
-    // クライアント作成・ID発行（型キャスト不具合を完全解決）
+    // クライアント作成・ID発行
     window.createNewClientAndId = async function() {
       const nickname = document.getElementById('new-client-name').value.trim();
       const cal = parseInt(document.getElementById('new-client-kcal').value) || 1600;
@@ -709,7 +709,7 @@
 
         addBookmark(newId, nickname);
 
-        // 自動コピー
+        // クリップボードコピー
         const dummy = document.createElement("textarea");
         document.body.appendChild(dummy);
         dummy.value = newId;
@@ -777,7 +777,7 @@
       return { cal: Math.round(cal), p, f, c, meals };
     }
 
-    // 帳じり合わせ過不足集計
+    // 累積カロリー「帳じり合わせ」貯金計算
     function calculateWeeklySummaryAndDiff(data) {
       const baseDate = new Date(selectedDateString);
       let cumulativeKcalDiff = 0;
@@ -907,7 +907,7 @@
       const now = new Date();
       document.getElementById('last-update-time').innerText = `最終同期: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
 
-      // 体重
+      // 体重推移
       const history = data.weightHistory || {};
       const dates = Object.keys(history).sort();
       const initialWeight = safeFloat(data.initialWeight) || (dates.length > 0 ? history[dates[0]] : safeFloat(data.weight)) || 55.0;
@@ -923,7 +923,7 @@
       const diffInitEl = document.getElementById('client-stats-diff-initial-min');
       if (diffInitEl) {
         diffInitEl.innerText = diffInitText;
-        diffInitEl.className = initialVsMinDiff < 0 ? "text-lg font-black block pt-1 text-emerald-600 font-mono" : "text-lg font-black block pt-1 text-brand-primary font-mono";
+        diffInitEl.className = initialVsMinDiff < 0 ? "text-lg font-black block pt-1 text-emerald-600 font-mono shadow-inner" : "text-lg font-black block pt-1 text-brand-primary font-mono";
       }
 
       // 今週最低vs先週最低
@@ -950,14 +950,14 @@
         if (thisWeekMin !== null && lastWeekMin !== null) {
           const weeklyDiff = thisWeekMin - lastWeekMin;
           diffWeeklyEl.innerText = `${weeklyDiff > 0 ? '+' : ''}${weeklyDiff.toFixed(1)} kg`;
-          diffWeeklyEl.className = weeklyDiff < 0 ? "text-lg font-black block pt-1 text-emerald-600 font-mono" : "text-lg font-black block pt-1 text-brand-primary font-mono";
+          diffWeeklyEl.className = weeklyDiff < 0 ? "text-lg font-black block pt-1 text-emerald-600 font-mono shadow-inner" : "text-lg font-black block pt-1 text-brand-primary font-mono";
         } else {
           diffWeeklyEl.innerText = "データ不足";
           diffWeeklyEl.className = "text-sm font-black block pt-1 text-brand-muted font-mono";
         }
       }
 
-      // 履歴
+      // 履歴10件
       const historyListEl = document.getElementById('client-weight-history-list');
       if (historyListEl) {
         historyListEl.innerHTML = "";
@@ -985,7 +985,7 @@
         document.getElementById(`weekly-cal-${day}`).innerText = dayLog && dayLog.kcal > 0 ? dayLog.kcal.toLocaleString() : '-';
       });
 
-      // タイムライン食事ログ
+      // 食事タイムライン
       const timelineEl = document.getElementById('client-meal-timeline');
       timelineEl.innerHTML = "";
       if (dailyTotals.meals && dailyTotals.meals.length > 0) {
@@ -1030,9 +1030,11 @@
       lucide.createIcons();
     }
 
-    // キーをSETTINGSおよびクライアントに一括適用
+    // キーをSETTINGSおよびクライアントに一括適用 (前後の余分な改行・空白をトリムする安全仕様)
     window.saveTrainerGeminiKey = async function() {
-      const key = document.getElementById('trainer-gemini-key').value.trim();
+      const keyInput = document.getElementById('trainer-gemini-key').value;
+      const key = keyInput ? keyInput.trim() : "";
+      
       if (!key) {
         alert("Geminiキーを入力してください。");
         return;
@@ -1053,22 +1055,22 @@
           await updateDoc(clientDocRef, { sharedGeminiKey: key });
         }
 
-        showToast("店舗用Gemini APIキーを保存し、自動同期配信しました！");
+        showToast("店舗用Gemini APIキーを中央金庫に保存し、同期配信しました！");
       } catch (err) {
         console.error("API Key Sync Failed:", err);
         alert("店舗APIキーの同期配信に失敗しました。");
       }
     };
 
-    // APIエラー (404) 根絶のための高信頼性Gemini API接続ファンクション
+    // リトライ隠蔽によるタイムアウト化を防ぎ、真のエラー原因を100%露出するデバッグ対応Gemini API呼出関数
     async function fetchGeminiWithFallback(payload) {
       const key = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
       if (!key) {
-        throw new Error("店舗Gemini API Keyが設定されていません。最上部の設定に入力してください。");
+        throw new Error("店舗Gemini API Keyが設定されていません。最上部の自動配信欄に入力・同期保存してください。");
       }
 
-      // 非サポートの旧モデルを完全に廃止し、2.5-flash-previewに100%固定。
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`;
+      // 世界で一番安定するGA完全版モデル「gemini-2.5-flash」を完全指定し、404を根絶
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
       
       let delay = 1000;
       for (let i = 0; i < 5; i++) {
@@ -1082,21 +1084,37 @@
           if (response.ok) {
             return await response.json();
           }
+
+          // 400（パラメータエラー）や403（無効キー）はリトライせず即時詳細エラーとして処理
+          const errorResponse = await response.json().catch(() => ({}));
+          const errorDetails = errorResponse?.error?.message || `HTTPステータス: ${response.status}`;
           
+          if (response.status === 400) {
+            throw new Error(`【APIパラメータ構造エラー (400)】\n${errorDetails}`);
+          }
           if (response.status === 403 || response.status === 401) {
-            throw new Error("INVALID_API_KEY");
+            throw new Error(`【APIキーエラー (403/401)】\nAPIキーが無効であるか、コピペに誤りがあります。Google AI Studioで作成し直したキーを登録してください。\n(詳細: ${errorDetails})`);
+          }
+          if (response.status === 404) {
+            throw new Error(`【モデル未検出エラー (404)】\n${errorDetails}`);
+          }
+          if (response.status === 429) {
+            throw new Error(`【API利用制限リクエスト上限エラー (429)】\n短時間での大量リクエスト、または無料プラン枠の超過です。少し時間を置いて再試行してください。`);
           }
         } catch (e) {
-          if (e.message === "INVALID_API_KEY") throw e;
-          console.warn(`Weekly Report AI Connection failed. Retrying... (${i + 1}/5)`);
+          // 自作したErrorオブジェクト（INVALID_API_KEYなど）はそのまま上位に引き渡す
+          if (e.message.startsWith("【")) {
+            throw e;
+          }
+          console.warn(`Connection retry ${i + 1}/5 due to network issue...`);
         }
         await new Promise(resolve => setTimeout(resolve, delay));
-        delay *= 2; // 指数バックオフ
+        delay *= 2; 
       }
-      throw new Error("API_CONNECT_TIMEOUT_OR_EXPIRED");
+      throw new Error("【通信エラー】\nネットワーク接続がタイムアウトしたか、オフライン状態です。通信環境をご確認ください。");
     }
 
-    // 来店時食事AI総括分析
+    // AI総括生成
     window.generateWeeklyReportAI = async function() {
       if (!currentTargetClientId || !globalClientData) {
         alert("クライアントデータを先にロードしてください。");
@@ -1149,7 +1167,7 @@
         });
 
         if (recordedDaysCount === 0) {
-          throw new Error("過去1週間(選択日基準)の食事ログが1件も登録されていません。日付を変更してもう一度お試しください。");
+          throw new Error("過去1週間(選択日基準)の食事ログが1件も登録されていません。お手数ですが、日付を「食事が記録されている日」に変更してからもう一度お試しください。");
         }
 
         const avgKcal = Math.round(totalKcalSum / recordedDaysCount);
@@ -1202,11 +1220,7 @@ ${weeklyMealsSummaryText}
         }
       } catch (err) {
         console.error(err);
-        let errorMsg = err.message || "1週間総括アドバイスの自動生成に失敗しました。";
-        if (err.message === "INVALID_API_KEY") {
-          errorMsg = "設定されている店舗Gemini APIキーが無効であるか、利用制限に達しています。キーを再設定してください。";
-        }
-        alert(errorMsg);
+        alert(err.message || "1週間総括アドバイスの自動生成に失敗しました。");
       } finally {
         generateBtn.disabled = false;
         generateBtn.innerHTML = originalText;
@@ -1214,6 +1228,7 @@ ${weeklyMealsSummaryText}
       }
     };
 
+    // コピー
     window.copyToClipboardFeedback = function() {
       const textarea = document.getElementById('weekly-feedback-textarea');
       if (!textarea.value.trim()) {
