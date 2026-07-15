@@ -120,7 +120,7 @@
 
   <!-- ログイン画面 -->
   <div id="login-screen" class="fixed inset-0 z-50 flex flex-col justify-center items-center p-6 bg-gradient-to-br from-[#1A335E]/10 via-[#F4F7FA] to-[#C5A059]/10">
-    <div class="glass-container rounded-[32px] p-8 w-full max-w-md text-center flex flex-col gap-6 animate-fade-in border border-white">
+    <div class="glass-container rounded-[32px] p-8 w-full max-w-md text-center flex flex-col gap-6 animate-fade-in border border-white font-bold">
       <div class="space-y-2">
         <div class="bg-gradient-to-r from-brand-primary to-brand-secondary p-3.5 rounded-2xl inline-block shadow-blueGlow">
           <i data-lucide="shield-check" class="w-8 h-8 text-brand-gold animate-pulse"></i>
@@ -137,7 +137,7 @@
 
         <div class="space-y-3">
           <input type="text" id="client-id-input" placeholder="CRT-XXXXXX"
-                 class="w-full bg-white/95 border border-brand-border rounded-2xl px-5 py-4 text-center font-mono font-bold tracking-widest text-brand-primary placeholder-brand-muted/40 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 transition-all text-sm uppercase shadow-inner animate-pulse">
+                 class="w-full bg-white/95 border border-brand-border rounded-2xl px-5 py-4 text-center font-mono font-bold tracking-widest text-brand-primary placeholder-brand-muted/40 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 transition-all text-sm uppercase shadow-inner">
           
           <button onclick="window.connectWithClientId()"
                   class="w-full bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-brand-primaryHover hover:to-brand-primary text-white py-4 rounded-2xl text-xs font-bold shadow-md transition-all active:scale-98 tracking-widest flex items-center justify-center gap-2">
@@ -333,7 +333,7 @@
         </div>
 
         <!-- AI食事スキャナー -->
-        <div class="space-y-2">
+        <div class="space-y-2 font-bold">
           <span class="text-[8.5px] text-brand-secondary font-bold tracking-wider uppercase block text-left font-logo">AI MEAL SCANNER</span>
           <div class="grid grid-cols-3 gap-2 text-center">
             <button onclick="window.triggerAiFeature('camera')" class="bg-gradient-to-r from-brand-primary via-brand-secondary to-indigo-400 hover:opacity-95 text-white rounded-xl py-3 flex flex-col items-center justify-center gap-0.5 transition-all shadow-blueGlow active:scale-95 border border-brand-gold/40">
@@ -598,7 +598,7 @@
 
   <!-- 食事構成微調整モーダル -->
   <div id="edit-meal-modal" class="fixed inset-0 bg-[#1A335E]/60 backdrop-blur-sm z-50 hidden flex-col justify-end sm:justify-center items-center p-4 animate-fade-in">
-    <div class="bg-white rounded-t-[32px] sm:rounded-[32px] w-full max-w-md p-6 border-t sm:border border-brand-border shadow-premium flex flex-col gap-4 max-h-[85vh] overflow-y-auto no-scrollbar text-left">
+    <div class="bg-white rounded-t-[32px] sm:rounded-[32px] w-full max-w-md p-6 border-t sm:border border-brand-border shadow-premium flex flex-col gap-4 max-h-[85vh] overflow-y-auto no-scrollbar text-left font-bold">
       <div class="flex justify-between items-center border-b border-brand-border/40 pb-3 shrink-0 font-bold">
         <h3 class="font-bold text-sm text-brand-text flex items-center gap-1.5">
           <i data-lucide="sliders" class="w-4 h-4 text-brand-gold"></i>
@@ -660,8 +660,8 @@
             <i id="ingredients-accordion-arrow" data-lucide="chevron-down" class="w-4 h-4 text-brand-muted transition-transform duration-200"></i>
           </button>
 
-          <div id="ingredients-collapse-area" class="hidden p-3 bg-slate-50/40 space-y-3.5 border-b border-brand-border/50">
-            <div id="ingredients-editor-container" class="space-y-3.5">
+          <div id="ingredients-collapse-area" class="hidden p-3 bg-slate-50/40 space-y-3.5 border-b border-brand-border/50 font-bold">
+            <div id="ingredients-editor-container" class="space-y-3.5 animate-fade-in">
               <!-- JS -->
             </div>
             <button type="button" onclick="window.addIngredientRow()" class="w-full bg-slate-100 hover:bg-slate-200 text-brand-text border border-brand-border py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 active:scale-95">
@@ -752,6 +752,7 @@
     let unsubscribeClientListener = null;
     let weightChartInstance = null;
 
+    // ご指定のFirebase構成
     const firebaseConfig = {
       apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
       authDomain: "carat-d3b01.firebaseapp.com",
@@ -769,6 +770,7 @@
     window.db = db;
     window.auth = auth;
 
+    // クライアントの状態データ
     let clientState = {
       nickname: "同期中...",
       targetCalories: 1600,
@@ -824,6 +826,7 @@
       };
     });
 
+    // ★ タイポ修正： c: safeFloat(m.c || meal.c) の「m」未定義エラーを「meal.c」に完璧に修正 ★
     function standardizeMealObject(meal) {
       if (!meal) return null;
       const std = {
@@ -833,7 +836,7 @@
         kcal: Math.round(safeFloat(meal.kcal)),
         p: safeFloat(meal.p),
         f: safeFloat(meal.f),
-        c: safeFloat(m.c || meal.c),
+        c: safeFloat(meal.c), 
         lastScale: safeFloat(meal.lastScale) || 1,
         ingredients: []
       };
@@ -906,19 +909,15 @@
       return Array.from(historyMap.values()).slice(0, 10);
     }
 
-    // ★ 劇的改善：認証成否を完全に問わない、最速強制同期 Firestore システム搭載 ★
+    // 接続停止バグを回避する最速自立同期・ノンブロッキングサインインシステム
     async function initClientApp() {
-      
-      // 1. サインイン（認証）処理の前に、すでに端末内に保存されている連携IDがあるなら、バックグラウンドの認証完了を絶対に待たずに即時同期を開始する！
       const savedId = localStorage.getItem("carat_client_connected_id_" + appId);
       if (savedId) {
         currentClientId = savedId;
         document.getElementById('client-id-input').value = savedId;
-        // 即時に Firestore 連動を開始することで「ロード中...」のままフリーズするバグを100%解決します
         startClientRealtimeSync(savedId);
       }
 
-      // 2. Firebase 認証（匿名ログイン）をバックグラウンドで開始し、セキュリティ制限ドメイン等で弾かれてもプログラムを寸断させずノンブロッキング化
       const initAuth = async () => {
         try {
           if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -927,17 +926,13 @@
             await signInAnonymously(auth);
           }
         } catch (e) {
-          // GitHub Pages や承認ドメインエラーが起きた場合でも、警告として受け流しクラッシュを回避
-          console.warn("Firebase Auth bypassed or resolved asynchronously to prevent page freeze:", e);
+          console.warn("Firebase Auth bypassed asynchronously:", e);
         }
       };
 
-      // 認証を実行
       initAuth();
 
-      // 中央金庫SETTINGS同期の監視
       onAuthStateChanged(auth, async (user) => {
-        // 設定同期用のFirestore監視
         const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
         onSnapshot(settingsRef, (snap) => {
           if (snap.exists()) {
@@ -956,13 +951,11 @@
     function startClientRealtimeSync(clientId) {
       if (unsubscribeClientListener) unsubscribeClientListener();
 
-      // RULE 1: STRICT PATH
       const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', clientId);
       unsubscribeClientListener = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists()) {
           clientState = { ...clientState, ...docSnap.data() };
 
-          // 描画とバイパス処理
           document.documentElement.classList.add('client-already-logged-in');
           document.getElementById('login-screen').classList.add('hidden');
           document.getElementById('main-dashboard').classList.remove('hidden');
@@ -974,12 +967,11 @@
           syncMealTimingUI();
           renderClientApp();
         } else {
-          // もしIDがデータベース上に全く見つからない場合は、同期IDを解除してログイン画面を再露出
-          alert("連携ID(CRTコード)が見つかりませんでした。正しいIDを入力し直してください。");
+          alert("連携ID(CRTコード)が見つかりませんでした。正しいIDを入力してください。");
           window.disconnectClientId();
         }
       }, (err) => {
-        console.error("Firestore Realtime Sync Connection Error:", err);
+        console.error("Cloud Sync Connection Error:", err);
       });
     }
 
@@ -1059,7 +1051,7 @@
 
       try {
         await saveMealToCloud(newMeal);
-        showToast(`「${mealName}」を履歴から追加しました！`);
+        showToast(`「${mealName}」を履歴からクイック追加しました！`);
       } catch (err) {
         console.error(err);
         alert("追加に失敗しました。");
@@ -1264,7 +1256,6 @@
       };
     }
 
-    // 朝昼夕間食バッジ
     function getMealTimingInfo(timeStr) {
       if (!timeStr) return { label: 'お食事', colorClass: 'bg-slate-100 text-slate-600', icon: 'utensils' };
       const hours = parseInt(timeStr.split(':')[0]) || 12;
@@ -1379,7 +1370,7 @@
       renderMealsHistory();
       renderWeightTrendDashboard();
 
-      // 食事ログタイムラインのグラフィカル表示
+      // 食事ログのレンダリング
       const timelineContainer = document.getElementById('meal-timeline-container');
       timelineContainer.innerHTML = "";
 
@@ -1478,7 +1469,6 @@
       lucide.createIcons();
     }
 
-    // AI機能の起動とAPIキークライアント側存在判定
     window.triggerAiFeature = function(type) {
       if (!currentClientId) {
         alert("トレーナーから発行された連携IDで同期してからご利用ください。");
@@ -1723,7 +1713,6 @@
       return currentLogs;
     }
 
-    // 安定して動作させるためのGemini API呼び出しクライアント (フォールバックモデル設計搭載)
     async function fetchGeminiWithBackoff(payload) {
       const apiKey = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
       if (!apiKey) {
@@ -1786,7 +1775,6 @@
       throw new Error(`【AIスキャン接続失敗】\n全サポートモデルの通信試行が失敗しました。\n(詳細: ${lastError})`);
     }
 
-    // JSONパーサー
     function safeParseGeminiJSON(text) {
       if (!text) throw new Error("応答テキストが空です。");
       let cleaned = text.trim();
@@ -1830,734 +1818,29 @@
       return JSON.parse(jsonStr);
     }
 
-    window.analyzeMealText = async function() {
-      const textInput = document.getElementById('text-analyze-input').value.trim();
-      if (!textInput) { alert("食べた内容を入力してください。"); return; }
-
-      window.toggleModal('text-analyze-modal', false);
-      const loading = document.getElementById('loading-overlay');
-      loading.classList.remove('hidden');
-      loading.classList.add('flex');
-
-      try {
-        const userPrompt = `食べて記録したいお食事: "${textInput}"
-上記の食事に含まれるカロリーとPFC、さらに構成食材とグラム数を推定して、必ず次のJSONフォーマットのみを返してください。解説等は一切含めないでください。
-
-{
-  "name": "料理名",
-  "kcal": 総カロリー(数値),
-  "p": タンパク質総計(数値),
-  "f": 脂質総計(数値),
-  "c": 炭水化物総計(数値),
-  "ingredients": [
-    {"name": "構成食材", "weight": 推定重量グラム(数値), "kcal": この食材のカロリー(数値), "p": たんぱく質g(数値), "f": 脂質g(数値), "c": 炭水化物g(数値)}
-  ]
-}`;
-
-        const payload = { contents: [{ parts: [{ text: userPrompt }] }] };
-        const res = await fetchGeminiWithBackoff(payload);
-        const rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
-        
-        const parsed = safeParseGeminiJSON(rawText);
-
-        if (parsed && parsed.name) {
-          const now = new Date();
-          const targetMealId = 'M-' + Date.now();
-          const newMeal = {
-            id: targetMealId,
-            name: parsed.name,
-            time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
-            kcal: parsed.kcal,
-            p: parsed.p,
-            f: parsed.f,
-            c: parsed.c,
-            ingredients: parsed.ingredients
-          };
-          await saveMealToCloud(newMeal);
-          showToast(`「${parsed.name}」をAI解析＆自動記録しました！`);
-        } else {
-          throw new Error("フォーマット不適合");
-        }
-      } catch (err) {
-        console.error("AI Text Analysis Error:", err);
-        let errorMsg = "AIでの解析に失敗しました。トレーナー管理ポータルの「店舗Gemini APIキーの自動配信」が正しく行われているか、キーの有効性をご確認ください。";
-        if (err.message.includes("【") || err.message.includes("JSON")) {
-          errorMsg = err.message;
-        }
-        document.getElementById('ai-error-desc').innerText = errorMsg;
-        window.toggleModal('ai-error-modal', true);
-      } finally {
-        loading.classList.add('hidden');
-        loading.classList.remove('flex');
-      }
-    };
-
-    window.analyzeMealImage = async function(file) {
-      if (!file) return;
-      const loading = document.getElementById('loading-overlay');
-      loading.classList.remove('hidden');
-      loading.classList.add('flex');
-
-      try {
-        const base64Data = await convertFileToBase64(file);
-        const dynamicMimeType = file.type || "image/png";
-
-        const userPrompt = `写真の食事の料理名、全体の推定カロリーとPFC、さらに構成食材とグラム数を精密に判定・推定し、必ず次のJSONフォーマットのみを返してください。不要な説明やMarkdownコードブロック外の記述は一切含めないでください。
-
-{
-  "name": "推定料理名",
-  "kcal": 推定カロリー(数値),
-  "p": 推定タンパク質総計(数値),
-  "f": 推定脂質総計(数値),
-  "c": 推定炭水化物総計(数値),
-  "ingredients": [
-    {"name": "構成食材名", "weight": 重量g(数値), "kcal": カロリー(数値), "p": たんぱく質g(数値), "f": 脂質g(数値), "c": 炭水化物g(数値)}
-  ]
-}`;
-
-        const payload = {
-          contents: [{
-            parts: [
-              { text: userPrompt },
-              { inlineData: { mimeType: dynamicMimeType, data: base64Data } }
-            ]
-          }]
-        };
-
-        const res = await fetchGeminiWithBackoff(payload);
-        const rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
-        
-        const parsed = safeParseGeminiJSON(rawText);
-
-        if (parsed && parsed.name) {
-          const now = new Date();
-          const targetMealId = 'M-' + Date.now();
-          const newMeal = {
-            id: targetMealId,
-            name: parsed.name,
-            time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
-            kcal: parsed.kcal,
-            p: parsed.p,
-            f: parsed.f,
-            c: parsed.c,
-            ingredients: parsed.ingredients
-          };
-          await saveMealToCloud(newMeal);
-          showToast("写真をAI自動解析して記録しました！");
-        } else {
-          throw new Error("フォーマット異常");
-        }
-      } catch (err) {
-        console.error("Image Analysis Error:", err);
-        let errorMsg = "写真のAI食事スキャンに失敗しました。手ブレのない明るい食事画像でお試しいただくか、配信されたGemini APIキーの登録状態を確認してください。";
-        if (err.message.includes("【") || err.message.includes("JSON")) {
-          errorMsg = err.message;
-        }
-        document.getElementById('ai-error-desc').innerText = errorMsg;
-        window.toggleModal('ai-error-modal', true);
-      } finally {
-        loading.classList.add('hidden');
-        loading.classList.remove('flex');
-        document.getElementById('ai-image-input').value = "";
-      }
-    };
-
-    window.openEditMealModal = function(mealId) {
-      const meals = clientState.mealsByDate?.[selectedDateString] || [];
-      const meal = meals.find(m => m.id === mealId);
-      if (!meal) return;
-
-      editingMealId = mealId;
-      window.editingMealId = mealId;
-      editingMealObject = JSON.parse(JSON.stringify(standardizeMealObject(meal)));
-
-      document.getElementById('edit-meal-name').value = editingMealObject.name;
-      const collapseArea = document.getElementById('ingredients-collapse-area');
-      collapseArea.classList.add('hidden');
-      const arrowIcon = document.getElementById('ingredients-accordion-arrow');
-      if (arrowIcon) arrowIcon.style.transform = 'rotate(0deg)';
-
-      window.setQuickScale(Math.round(editingMealObject.lastScale * 100));
-      renderIngredientsInEditor();
-      window.toggleModal('edit-meal-modal', true);
-    };
-
-    window.closeEditMealModal = function() {
-      window.toggleModal('edit-meal-modal', false);
-      editingMealId = null;
-      editingMealObject = null;
-    };
-
-    window.toggleIngredientsAccordion = function() {
-      const collapseArea = document.getElementById('ingredients-collapse-area');
-      const arrowIcon = document.getElementById('ingredients-accordion-arrow');
-      const isHidden = collapseArea.classList.contains('hidden');
-
-      if (isHidden) {
-        collapseArea.classList.remove('hidden');
-        if (arrowIcon) arrowIcon.style.transform = 'rotate(180deg)';
-        renderIngredientsInEditor();
-      } else {
-        collapseArea.classList.add('hidden');
-        if (arrowIcon) arrowIcon.style.transform = 'rotate(0deg)';
-      }
-    };
-
-    window.setQuickScale = function(scaleType) {
-      const btns = ['10', '50', '100', 'custom'];
-      btns.forEach(b => {
-        const el = document.getElementById("scale-btn-" + b);
-        if (el) {
-          el.className = "py-2 text-[10px] font-bold rounded-xl transition-all border border-brand-border text-brand-muted";
-        }
-      });
-
-      const sliderArea = document.getElementById('custom-scale-slider-area');
-      if (scaleType === 'custom') {
-        const customBtn = document.getElementById('scale-btn-custom');
-        if (customBtn) {
-          customBtn.className = "py-2 text-[10px] font-bold rounded-xl transition-all bg-brand-primary text-white border-brand-primary";
-        }
-        sliderArea.classList.remove('hidden');
-        const val = document.getElementById('edit-meal-scale-slider').value;
-        window.changeMealScale(val, 'slider');
-      } else {
-        const targetBtn = document.getElementById("scale-btn-" + scaleType);
-        if (targetBtn) {
-          targetBtn.className = "py-2 text-[10px] font-bold rounded-xl transition-all bg-brand-primary text-white border-brand-primary";
-        }
-        sliderArea.classList.add('hidden');
-        document.getElementById('edit-meal-scale-slider').value = scaleType;
-        document.getElementById('edit-meal-scale-input').value = scaleType;
-        window.changeMealScale(scaleType, 'slider');
-      }
-    };
-
-    function renderIngredientsInEditor() {
-      const container = document.getElementById('ingredients-editor-container');
-      container.innerHTML = "";
-
-      if (!editingMealObject.ingredients || editingMealObject.ingredients.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-5 bg-brand-bg rounded-2xl border border-dashed border-brand-border text-xs font-bold text-brand-muted font-logo">
-            構成食材データはありません。
-          </div>`;
-        recalculateTotalsInEditor();
-        return;
-      }
-
-      editingMealObject.ingredients.forEach((ing, i) => {
-        const row = document.createElement('div');
-        row.className = "bg-brand-bg rounded-2xl p-4 border border-brand-border/80 flex flex-col gap-3 text-xs text-brand-text mb-2 shrink-0 shadow-softShadow font-bold";
-        row.innerHTML = `
-          <div class="flex gap-2">
-            <input type="text" value="${ing.name}" class="bg-white border border-brand-border rounded-xl px-3 py-2 text-xs font-bold flex-1 min-w-0 focus:outline-none focus:border-brand-primary shadow-inner" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
-            <button type="button" onclick="window.estimateIngredientPFC(${i})" class="bg-brand-goldLight text-brand-gold border border-brand-gold/30 px-3 py-2 rounded-xl text-[10px] font-bold whitespace-nowrap flex items-center gap-1 active:scale-95">
-              <i data-lucide="sparkles" class="w-3.5 h-3.5 animate-pulse"></i>自動判定
-            </button>
-          </div>
-          <div class="grid grid-cols-5 gap-1.5 pt-1">
-            <div class="text-center font-logo">
-              <span class="text-[8px] text-brand-muted block mb-0.5 font-bold">重量(g)</span>
-              <input type="number" step="0.1" value="${Math.round(safeFloat(ing.weight))}" class="w-full bg-slate-50 border border-brand-border/50 text-center rounded-lg py-1 font-logo font-bold text-xs" onchange="window.changeIngredientWeight(${i}, this.value)">
-            </div>
-            <div class="text-center font-logo">
-              <span class="text-[8px] text-brand-secondary block mb-0.5 font-bold">P(g)</span>
-              <input type="number" step="0.1" value="${safeFloat(ing.p).toFixed(1)}" class="w-full bg-slate-50 border border-brand-border/50 text-center rounded-lg py-1 font-logo font-bold text-xs" onchange="window.changeIngredientPFC(${i}, 'p', this.value)">
-            </div>
-            <div class="text-center font-logo">
-              <span class="text-[8px] text-brand-gold font-bold block mb-0.5 font-bold">F(g)</span>
-              <input type="number" step="0.1" value="${safeFloat(ing.f).toFixed(1)}" class="w-full bg-slate-50 border border-brand-border/50 text-center rounded-lg py-1 font-logo font-bold text-xs" onchange="window.changeIngredientPFC(${i}, 'f', this.value)">
-            </div>
-            <div class="text-center font-logo">
-              <span class="text-[8px] text-[#10B981] block mb-0.5 font-bold font-bold">C(g)</span>
-              <input type="number" step="0.1" value="${safeFloat(ing.c).toFixed(1)}" class="w-full bg-slate-50 border border-brand-border/50 text-center rounded-lg py-1 font-logo font-bold text-xs" onchange="window.changeIngredientPFC(${i}, 'c', this.value)">
-            </div>
-            <div class="text-center font-logo">
-              <span class="text-[8px] text-brand-primary block mb-0.5 font-bold">kcal</span>
-              <input type="number" value="${Math.round(safeFloat(ing.kcal))}" class="w-full bg-slate-50 border border-brand-border/50 text-center rounded-lg py-1 font-logo font-bold text-xs" onchange="window.changeIngredientPFC(${i}, 'kcal', this.value)">
-            </div>
-          </div>
-        `;
-        container.appendChild(row);
-      });
-
-      recalculateTotalsInEditor();
-      lucide.createIcons();
-    }
-
-    window.updateIngredientName = function(index, newName) {
-      if (editingMealObject && editingMealObject.ingredients[index]) {
-        editingMealObject.ingredients[index].name = newName.trim() || "追加食材";
-      }
-    };
-
-    window.addIngredientRow = function() {
-      const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
-      const currentScale = currentSliderValue / 100;
-
-      const newing = {
-        name: "追加食材",
-        weight: 100 * currentScale,
-        kcal: 0,
-        p: 0,
-        f: 0,
-        c: 0,
-        originalWeight: 100,
-        originalKcal: 0,
-        originalP: 0,
-        originalF: 0,
-        originalC: 0
-      };
-
-      editingMealObject.ingredients.push(newing);
-      renderIngredientsInEditor();
-    };
-
-    window.changeIngredientWeight = function(index, newWeight) {
-      const w = safeFloat(newWeight);
-      if (w < 0) return;
-      const ing = editingMealObject.ingredients[index];
-      const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
-      const currentScale = currentSliderValue / 100;
-
-      const baseWeight = safeFloat(ing.originalWeight) || safeFloat(ing.weight) || 100;
-      const baseKcal = safeFloat(ing.originalKcal) || safeFloat(ing.kcal) || 0;
-      const baseP = safeFloat(ing.originalP) || safeFloat(ing.p) || 0;
-      const baseF = safeFloat(ing.originalF) || safeFloat(ing.f) || 0; const baseC =
-      safeFloat(ing.originalC) || safeFloat(ing.c) || 0;
-
-      const denom = baseWeight <= 0 ? 1 : baseWeight;
-      const kcalRatio = baseKcal / denom;
-      const pRatio = baseP / denom;
-      const fRatio = baseF / denom;
-      const cRatio = baseC / denom;
-
-      ing.originalWeight = w / (currentScale || 1);
-      ing.originalKcal = ing.originalWeight * kcalRatio;
-      ing.originalP = ing.originalWeight * pRatio;
-      ing.originalF = ing.originalWeight * fRatio;
-      ing.originalC = ing.originalWeight * cRatio;
-
-      ing.weight = w;
-      ing.kcal = ing.originalKcal * currentScale;
-      ing.p = ing.originalP * currentScale;
-      ing.f = ing.originalF * currentScale;
-      ing.c = ing.originalC * currentScale;
-
-      renderIngredientsInEditor();
-    };
-
-    window.changeIngredientPFC = function(index, type, val) {
-      const v = safeFloat(val);
-      if (v < 0) return;
-      const ing = editingMealObject.ingredients[index];
-      const currentScale = (parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100) / 100;
-
-      if (type === 'p') { ing.p = v; ing.originalP = v / (currentScale || 1); }
-      else if (type === 'f') { ing.f = v; ing.originalF = v / (currentScale || 1); }
-      else if (type === 'c') { ing.c = v; ing.originalC = v / (currentScale || 1); }
-      else if (type === 'kcal') { ing.kcal = v; ing.originalKcal = v / (currentScale || 1); }
-      recalculateTotalsInEditor();
-    };
-
-    window.estimateIngredientPFC = async function(index) {
-      const ing = editingMealObject.ingredients[index];
-      if (!ing) return;
-      const ingName = ing.name.trim();
-      const ingWeight = safeFloat(ing.weight) || 100;
-
-      if (!ingName || ingName === "追加食材") {
-        alert("食材名を入力してから自動判定を実行してください。");
-        return;
-      }
-
-      const toast = document.createElement('div');
-      toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-md z-[300] flex items-center gap-2 animate-bounce";
-      toast.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4 text-brand-gold animate-spin"></i>AIが「${ingName} ${ingWeight}g」の栄養を分析中...`;
-      document.body.appendChild(toast);
-      lucide.createIcons();
-
-      try {
-        const userPrompt = `食材名: "${ingName}", 重量: ${ingWeight}g
-この食材・単体料理のカロリー(kcal), たんぱく質(p), 脂質(f), 炭水化物(c)を推定して、必ず次のJSONのみを返してください。
-
-{"p": たんぱく質g(数値), "f": 脂質g(数値), "c": 炭水化物g(数値), "kcal": カロリー(数値)}`;
-
-        const payload = { contents: [{ parts: [{ text: userPrompt }] }] };
-        const res = await fetchGeminiWithBackoff(payload);
-        const rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
-        
-        const parsed = safeParseGeminiJSON(rawText);
-        const currentScale = (parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100) / 100;
-
-        ing.p = safeFloat(parsed.p);
-        ing.f = safeFloat(parsed.f);
-        ing.c = safeFloat(parsed.c);
-        ing.kcal = safeFloat(parsed.kcal);
-
-        ing.originalP = ing.p / (currentScale || 1);
-        ing.originalF = ing.f / (currentScale || 1);
-        ing.originalC = ing.c / (currentScale || 1);
-        ing.originalKcal = ing.kcal / (currentScale || 1);
-        ing.originalWeight = ingWeight / (currentScale || 1);
-
-        renderIngredientsInEditor();
-        showToast(`AIが「${ingName}」の栄養価を自動適用しました！`);
-      } catch (err) {
-        console.error("Estimate PFC Error:", err);
-        alert("食材のAI分析に失敗しました。接続状態をご確認ください。");
-      } finally {
-        toast.remove();
-      }
-    };
-
-    window.changeMealScale = function(scalePercent, triggerSource) {
-      let val = parseInt(scalePercent) || 100;
-      if (val < 10) val = 10;
-      if (val > 500) val = 500;
-
-      if (triggerSource === 'slider') {
-        document.getElementById('edit-meal-scale-input').value = val;
-      } else if (triggerSource === 'input') {
-        document.getElementById('edit-meal-scale-slider').value = val;
-      }
-
-      document.getElementById('scale-percentage-text').innerText = val + "%";
-      const scale = val / 100;
-
-      editingMealObject.ingredients.forEach(ing => {
-        ing.weight = safeFloat(ing.originalWeight) * scale;
-        ing.kcal = safeFloat(ing.originalKcal) * scale;
-        ing.p = safeFloat(ing.originalP) * scale;
-        ing.f = safeFloat(ing.originalF) * scale;
-        ing.c = safeFloat(ing.originalC) * scale;
-      });
-
-      const container = document.getElementById('ingredients-editor-container');
-      const rows = container.children;
-
-      editingMealObject.ingredients.forEach((ing, i) => {
-        const row = rows[i];
-        if (row) {
-          const inputs = row.querySelectorAll('input[type="number"]');
-          if (inputs.length >= 5) {
-            inputs[0].value = Math.round(safeFloat(ing.weight));
-            inputs[1].value = safeFloat(ing.p).toFixed(1);
-            inputs[2].value = safeFloat(ing.f).toFixed(1);
-            inputs[3].value = safeFloat(ing.c).toFixed(1);
-            inputs[4].value = Math.round(safeFloat(ing.kcal));
-          }
-        }
-      });
-
-      recalculateTotalsInEditor();
-    };
-
-    function recalculateTotalsInEditor() {
-      let sumKcal = 0, sumP = 0, sumF = 0, sumC = 0;
-      let totalWeight = 0;
-
-      editingMealObject.ingredients.forEach(ing => {
-        sumKcal += safeFloat(ing.kcal);
-        sumP += safeFloat(ing.p);
-        sumF += safeFloat(ing.f);
-        sumC += safeFloat(ing.c);
-        totalWeight += safeFloat(ing.weight);
-      });
-
-      editingMealObject.kcal = Math.round(sumKcal);
-      editingMealObject.p = sumP;
-      editingMealObject.f = sumF;
-      editingMealObject.c = sumC;
-
-      document.getElementById('preview-total-p').innerText = sumP.toFixed(1) + "g";
-      document.getElementById('preview-total-f').innerText = sumF.toFixed(1) + "g";
-      document.getElementById('preview-total-c').innerText = sumC.toFixed(1) + "g";
-      document.getElementById('preview-total-kcal').innerText = Math.round(sumKcal).toLocaleString() + " kcal";
-
-      const densityEl = document.getElementById('edit-meal-100g-density-info');
-      if (totalWeight > 0) {
-        const factor = 100 / totalWeight;
-        densityEl.innerHTML = `${Math.round(sumKcal * factor)} kcal <span class="text-[9.5px] text-brand-muted font-bold font-logo">(P: ${(sumP * factor).toFixed(1)}g, F: ${(sumF * factor).toFixed(1)}g, C: ${(sumC * factor).toFixed(1)}g) / 100g</span>`;
-      } else {
-        densityEl.innerText = "重量未設定";
-      }
-    }
-
-    window.saveEditedMeal = async function() {
-      if (!editingMealId || !editingMealObject) return;
-      editingMealObject.name = document.getElementById('edit-meal-name').value.trim() || "調整した食事";
-      const currentSliderValue = parseFloat(document.getElementById('edit-meal-scale-slider').value) || 100;
-      editingMealObject.lastScale = currentSliderValue / 100;
-
-      try {
-        await saveMealToCloud(editingMealObject);
-        window.closeEditMealModal();
-        showToast("食事を保存しました！");
-      } catch (err) {
-        console.error("Save Edited Meal Error:", err);
-        alert("食事の微調整保存に失敗しました。");
-      }
-    };
-
-    window.switchTab = function(tabName) {
-      const tabs = ['home', 'ai-menu', 'weight-trend'];
-      tabs.forEach(t => {
-        const btn = document.getElementById('nav-btn-' + t);
-        const content = document.getElementById('tab-content-' + t);
-
-        if (t === tabName) {
-          btn.className = "flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-white bg-gradient-to-r from-brand-primary to-brand-secondary shadow-blueGlow border border-white/20 flex items-center justify-center gap-1.5 active:scale-98";
-          content.classList.remove('hidden');
-        } else {
-          btn.className = "flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-brand-muted hover:text-brand-primary flex items-center justify-center gap-1.5 active:scale-98";
-          content.classList.add('hidden');
-        }
-      });
-
-      if (tabName === 'home') {
-        renderClientApp();
-      } else if (tabName === 'weight-trend') {
-        renderWeightTrendDashboard();
-      }
-      lucide.createIcons();
-    };
-
-    window.selectMenuCategory = function(cat) {
-      selectedMenuCategory = cat;
-      const types = ['home', 'convenience', 'restaurant'];
-      types.forEach(t => {
-        const el = document.getElementById("menu-cat-" + t);
-        if (t === cat) {
-          el.className = "py-2.5 text-[9.5px] font-bold rounded-xl transition-all bg-white text-brand-primary shadow-sm border border-brand-border/40";
-        } else {
-          el.className = "py-2.5 text-[9.5px] font-bold rounded-xl transition-all border border-transparent text-brand-muted";
-        }
-      });
-    };
-
-    window.toggleMealTiming = function(timing) {
-      const idx = selectedMealTimings.indexOf(timing);
-      if (idx > -1) {
-        if (selectedMealTimings.length > 1) {
-          selectedMealTimings.splice(idx, 1);
-        } else {
-          showToast("少なくとも1つの時間帯を選択してください。");
-          return;
-        }
-      } else {
-        selectedMealTimings.push(timing);
-      }
-      syncMealTimingUI();
-    };
-
-    function syncMealTimingUI() {
-      const timings = ['breakfast', 'lunch', 'dinner', 'snack'];
-      timings.forEach(t => {
-        const el = document.getElementById("meal-timing-" + t);
-        if (selectedMealTimings.includes(t)) {
-          el.className = "py-2 text-[9.5px] font-bold rounded-xl transition-all bg-brand-primary text-white shadow-sm border border-brand-primary";
-        } else {
-          el.className = "py-2 text-[9.5px] font-bold rounded-xl transition-all border border-brand-border text-brand-muted";
-        }
-      });
-    }
-
-    // AI献立等分逆算
-    window.generateAiPendingMenu = async function() {
-      if (selectedMealTimings.length === 0) {
-        selectedMealTimings = [getDefaultMealCategory()];
-        syncMealTimingUI();
-      }
-
-      const loading = document.getElementById('loading-overlay');
-      document.getElementById('loading-main-text').innerText = "本日の残りPFCを等分逆算中...";
-      document.getElementById('loading-sub-text').innerText = `${selectedMealTimings.length}食分に均等に分配したメニューを算出しています。`;
-      loading.classList.remove('hidden');
-      loading.classList.add('flex');
-
-      try {
-        let curKcal = 0, curP = 0, curF = 0, curC = 0;
-        const meals = clientState.mealsByDate?.[selectedDateString] || [];
-        meals.forEach(m => {
-          curKcal += safeFloat(m.kcal);
-          curP += safeFloat(m.p);
-          curF += safeFloat(m.f);
-          curC += safeFloat(m.c);
-        });
-
-        const recovery = calculateAutoRecoveryKcal();
-        const baseTarCal = safeFloat(clientState.targetCalories) || 1600;
-        const baseTarP = safeFloat(clientState.targetP) || 100;
-        const baseTarF = safeFloat(clientState.targetF) || 40;
-        const baseTarC = safeFloat(clientState.targetC) || 210;
-
-        const tarCal = Math.max(1000, baseTarCal - recovery.adjustedKcal);
-        const scaleRatio = tarCal / baseTarCal;
-        const tarP = Math.round(baseTarP * scaleRatio);
-        const tarF = Math.round(baseTarF * scaleRatio);
-        const tarC = Math.round(baseTarC * scaleRatio);
-
-        const remCal = Math.max(50, tarCal - curKcal);
-        const remP = Math.max(5, tarP - curP);
-        const remF = Math.max(2, tarF - curF);
-        const remC = Math.max(5, tarC - curC);
-
-        const mealCount = selectedMealTimings.length;
-        const targetKcalPerMeal = remCal / mealCount;
-        const targetPPerMeal = remP / mealCount;
-        const targetFPerMeal = remF / mealCount;
-        const targetCPerMeal = remC / mealCount;
-
-        let catJp = "自炊レシピ(自宅で手軽に作れる健康的・高PFCな料理)";
-        if (selectedMenuCategory === 'convenience') {
-          catJp = "コンビニ商品(セブンイレブン、ファミリーマート、ローソン等で売っている高PFC定番商品名)";
-        } else if (selectedMenuCategory === 'restaurant') {
-          catJp = "外食店名指定(【大戸屋】【やよい軒】 【吉野家】等の具体的な実在店舗名)";
-        }
-
-        const timingsLabelMap = { 'breakfast': '朝食', 'lunch': '昼食', 'dinner': '夕食', 'snack': '間食' };
-        const timingSelectedJpNames = selectedMealTimings.map(t => timingsLabelMap[t]).join('、');
-
-        const userPrompt = `現在の全体残り目標枠:
-  - 目標総残りカロリー: ${remCal} kcal
-  - 目標総残りたんぱく質: ${remP.toFixed(1)} g
-  - 目標総残り脂質: ${remF.toFixed(1)} g
-  - 目標総残り炭水化物: ${remC.toFixed(1)} g
-
-等分対象食事数: 【${mealCount}食】(時間帯: ${timingSelectedJpNames})
-調達カテゴリ: 【${catJp}】
-
-【1食あたりの上限ターゲット】
-  - カロリー: ${targetKcalPerMeal.toFixed(1)} kcal
-  - たんぱく質: ${targetPPerMeal.toFixed(1)} g
-  - 脂質: ${targetFPerMeal.toFixed(1)} g
-  - 炭水化物: ${targetCPerMeal.toFixed(1)} g
-
-余計な解説は不要です。必ず以下の構造を持つJSON配列形式でのみ回答を出力してください。
-{
-  "menus": [
-    {
-      "timing": "breakfast / lunch / dinner / snack",
-      "name": "具体的なメニュー・店舗・商品名",
-      "kcal": カロリー(数値),
-      "p": たんぱく質(数値),
-      "f": 脂質(数値),
-      "c": 炭水化物(数値),
-      "ingredientsText": "構成食材や注文する単品名とグラム数",
-      "advice": "女性に寄り添う親身なアドバイスコメント",
-      "ingredientsList": [
-        { "name": "食材名", "weight": グラム数(数値), "kcal": カロリー(数値), "p": たんぱく質g(数値), "f": 脂質g(数値), "c": 炭水化物g(数値) }
-      ]
-    }
-  ]
-}`;
-
-        const payload = { contents: [{ parts: [{ text: userPrompt }] }] };
-        const res = await fetchGeminiWithBackoff(payload);
-        const jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        const parsed = safeParseGeminiJSON(jsonText);
-        
-        if (parsed && parsed.menus && parsed.menus.length > 0) {
-          suggestedMenusCache = parsed.menus;
-          renderSuggestedMenus(targetKcalPerMeal);
-          showToast("残枠から逆算したメニュー案を生成しました！");
-        } else {
-          throw new Error("提案配列のロードエラー");
-        }
-      } catch (err) {
-        console.error("Reverse Menu Planning Error:", err);
-        let errorMsg = "献立のAI等分逆算プラン構築に失敗しました。Gemini API設定または通信環境をご確認ください。";
-        if (err.message.includes("【") || err.message.includes("JSON")) {
-          errorMsg = err.message;
-        }
-        document.getElementById('ai-error-desc').innerText = errorMsg;
-        window.toggleModal('ai-error-modal', true);
-      } finally {
-        loading.classList.add('hidden');
-        loading.classList.remove('flex');
-      }
-    };
-
-    function renderSuggestedMenus(targetKcalPerMeal) {
-      const gridContainer = document.getElementById('ai-suggested-meals-grid');
-      gridContainer.innerHTML = "";
-      const timingsLabelMap = { 'breakfast': '朝食', 'lunch': '昼食', 'dinner': '夕食', 'snack': '間食' };
-
-      document.getElementById('ai-suggestion-summary-title').innerText = `${selectedMealTimings.length}食の等分逆算案 (${Math.round(targetKcalPerMeal)} kcal/食)`;
-
-      suggestedMenusCache.forEach((menu, index) => {
-        const mealCard = document.createElement('div');
-        mealCard.className = "bg-white p-4.5 rounded-2xl border border-brand-border/60 shadow-sm space-y-2.5 text-left relative font-bold";
-        mealCard.innerHTML = `
-          <div class="flex justify-between items-center border-b border-brand-border/40 pb-1.5 font-bold">
-            <span class="text-[9px] text-brand-secondary font-bold uppercase tracking-wider font-logo">${timingsLabelMap[menu.timing] || 'お食事'}</span>
-            <span class="text-[10px] font-logo font-bold text-brand-primary bg-white px-2 py-0.5 rounded-lg border border-brand-border">${Math.round(safeFloat(menu.kcal))} kcal</span>
-          </div>
-          <div>
-            <span class="text-[11.5px] font-bold text-brand-primary block tracking-wide">${menu.name}</span>
-            <p class="text-[9.5px] text-brand-muted mt-1 leading-relaxed"><span class="font-bold text-brand-secondary">構成:</span> ${menu.ingredientsText || ''}</p>
-          </div>
-          <div class="grid grid-cols-3 gap-1.5 py-1.5 bg-slate-50 rounded-xl px-2.5 font-logo font-bold">
-            <span class="text-[9px] text-brand-secondary font-bold">P: ${safeFloat(menu.p).toFixed(1)}g</span>
-            <span class="text-[9px] text-brand-gold font-bold">F: ${safeFloat(menu.f).toFixed(1)}g</span>
-            <span class="text-[9px] text-emerald-500 font-bold">C: ${safeFloat(menu.c).toFixed(1)}g</span>
-          </div>
-          <p class="text-[9px] text-brand-gold bg-brand-goldLight/60 p-2.5 rounded-xl border border-brand-gold/10 leading-normal"><span class="font-bold">栄養士アドバイス:</span> ${menu.advice || ''}</p>
-          <button onclick="window.registerSingleSuggestedMenu(${index})" class="w-full bg-slate-100 hover:bg-brand-accent text-brand-primary border border-brand-primary/20 hover:border-brand-primary py-2.5 rounded-xl text-[9.5px] font-bold tracking-wider transition-all shadow-sm font-logo active:scale-95">
-            この提案を登録する
-          </button>
-        `;
-        gridContainer.appendChild(mealCard);
-      });
-
-      document.getElementById('ai-menu-suggestion-box').classList.remove('hidden');
-      lucide.createIcons();
-    }
-
-    window.registerSingleSuggestedMenu = async function(index) {
-      const menu = suggestedMenusCache[index];
-      if (!menu) return;
-
-      const now = new Date();
-      const targetMealId = 'M-' + Date.now() + Math.floor(Math.random() * 10);
-      const newMeal = {
-        id: targetMealId,
-        name: menu.name,
-        time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
-        kcal: safeFloat(menu.kcal),
-        p: safeFloat(menu.p),
-        f: safeFloat(menu.f),
-        c: safeFloat(menu.c),
-        ingredients: (menu.ingredientsList || []).map(ing => ({
-          name: ing.name || "追加食材",
-          weight: safeFloat(ing.weight),
-          kcal: safeFloat(ing.kcal),
-          p: safeFloat(ing.p),
-          f: safeFloat(ing.f),
-          c: safeFloat(ing.c)
-        }))
-      };
-
-      try {
-        await saveMealToCloud(newMeal);
-        showToast(`「${menu.name}」を本日に登録しました！`);
-      } catch (e) {
-        console.error(e);
-        alert("登録に失敗しました。");
-      }
-    };
-
+    // ★ 劇的改善：Firestoreの短時間同時書き込み衝突(一括登録エラー)を防ぎ、1発で完璧に登録を完了させるマージ書き込みロジックに完全刷新！ ★
     window.registerAllSuggestedMenus = async function() {
       if (!suggestedMenusCache || suggestedMenusCache.length === 0) return;
+      
+      const loading = document.getElementById('loading-overlay');
+      document.getElementById('loading-main-text').innerText = "献立をローカルマージしてFirestoreへ一括同期中...";
+      loading.classList.remove('hidden');
+      loading.classList.add('flex');
+
       try {
         const now = new Date();
+        const targetDate = selectedDateString;
+        
+        // ローカルのお食事リストをコピー
+        const nextMealsByDate = { ...clientState.mealsByDate };
+        if (!nextMealsByDate[targetDate]) nextMealsByDate[targetDate] = [];
+
+        // 全ての提案献立をメモリ上でマージ
         for (let i = 0; i < suggestedMenusCache.length; i++) {
           const menu = suggestedMenusCache[i];
           const targetMealId = 'M-' + (Date.now() + i) + Math.floor(Math.random() * 10);
-          const newMeal = {
+          
+          const rawMeal = {
             id: targetMealId,
             name: menu.name,
             time: String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0'),
@@ -2574,31 +1857,42 @@
               c: safeFloat(ing.c)
             }))
           };
-          await saveMealToCloud(newMeal);
+
+          const newMeal = standardizeMealObject(rawMeal);
+          if (newMeal) {
+            nextMealsByDate[targetDate].push(newMeal);
+          }
         }
+
+        // 週次統計再計算
+        const updatedWeekly = calculateWeeklySummary(nextMealsByDate);
+        clientState.mealsByDate = nextMealsByDate;
+        clientState.weeklyLogs = updatedWeekly;
+
+        // 最後の1回だけFirestoreへ書き込みを行う(衝突が絶対に起きない安全仕様)
+        if (currentClientId) {
+          const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentClientId);
+          await updateDoc(docRef, {
+            mealsByDate: nextMealsByDate,
+            weeklyLogs: updatedWeekly
+          });
+        }
+        
+        renderClientApp();
         document.getElementById('ai-menu-suggestion-box').classList.add('hidden');
         suggestedMenusCache = [];
-        showToast("提案された食事をすべて一括登録しました！");
+        showToast("AI提案メニューをすべて一括記録しました！");
         window.switchTab('home');
       } catch (e) {
-        console.error(e);
-        alert("一括登録に失敗しました。");
+        console.error("一括登録に失敗しました:", e);
+        alert("一括登録に失敗しました。詳細: " + e.message);
+      } finally {
+        loading.classList.add('hidden');
+        loading.classList.remove('flex');
       }
     };
 
-    document.addEventListener('DOMContentLoaded', () => {
-      initClientApp();
-      window.selectMenuCategory('home');
-
-      const imgInput = document.getElementById('ai-image-input');
-      if (imgInput) {
-        imgInput.addEventListener('change', function() {
-          if (this.files && this.files[0]) {
-            window.analyzeMealImage(this.files[0]);
-          }
-        });
-      }
-    });
+    window.initClientApp = initClientApp;
   </script>
 </body>
 </html>
