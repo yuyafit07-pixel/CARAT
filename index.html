@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" class="notranslate" translate="no">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="google" content="notranslate">
   <title>CARAT Premium Suite</title>
+  
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts (Montserrat & Noto Sans JP) -->
@@ -101,7 +103,7 @@
 </head>
 <body class="min-h-screen pb-12 select-none">
 
-  <!-- ログイン画面 -->
+  <!-- ログイン画面 (体験モード完全廃止、連携コード必須) -->
   <div id="login-screen" class="fixed inset-0 z-50 flex flex-col justify-center items-center p-6 bg-gradient-to-br from-[#1A335E]/10 via-[#F4F7FA] to-[#C5A059]/10">
     <div class="glass-container rounded-[32px] p-8 w-full max-w-md text-center flex flex-col gap-6 animate-fade-in shadow-premium border border-white">
       <div class="space-y-2">
@@ -115,7 +117,7 @@
       <div class="space-y-4">
         <div class="text-left space-y-1">
           <label class="text-[10px] text-brand-primary font-bold block">連携同期IDを入力</label>
-          <p class="text-[9px] text-brand-muted leading-relaxed">CARATトレーナーから発行された「連携ID」を入力して、お客様専用に最適化された食事管理プログラムを開始します。</p>
+          <p class="text-[9px] text-brand-muted leading-relaxed">CARATトレーナーから発行された「連携ID（CRT-XXXXXX）」を入力して、お客様専用に最適化された食事管理プログラムを開始します。</p>
         </div>
 
         <div class="space-y-3">
@@ -124,7 +126,7 @@
           
           <button onclick="window.connectWithClientId()"
                   class="w-full bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-brand-primaryHover hover:to-brand-primary text-white py-4 rounded-2xl text-xs font-bold shadow-md transition-all active:scale-98 tracking-widest flex items-center justify-center gap-2">
-            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-spin-slow"></i>
             同期を開始する
           </button>
         </div>
@@ -151,7 +153,7 @@
           <div class="flex items-center gap-1.5">
             <span id="active-user-name" class="font-bold text-[11.5px] text-brand-primary">ロード中...</span>
             <span class="bg-emerald-50 text-emerald-600 border border-emerald-100 text-[8px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-sm">
-              <span class="w-1 h-1 rounded-full bg-emerald-500"></span>同期中
+              <span class="w-1 h-1 rounded-full bg-emerald-500 animate-ping"></span>同期中
             </span>
           </div>
           <div id="id-active-panel" class="flex items-center gap-1.5 mt-0.5">
@@ -220,7 +222,7 @@
             </svg>
             <div class="absolute flex flex-col justify-center items-center">
               <span id="summary-cur-cal" class="font-logo font-black text-xl text-brand-primary leading-none">0</span>
-              <span class="text-[7.5px] text-brand-muted font-bold tracking-widest uppercase mt-1">/ <span id="summary-tar-cal">1800</span> kcal</span>
+              <span class="text-[7.5px] text-brand-muted font-bold tracking-widest uppercase mt-1">/ <span id="summary-tar-cal">1600</span> kcal</span>
             </div>
           </div>
         </div>
@@ -255,7 +257,7 @@
             <span class="text-[8.5px] text-brand-secondary font-bold">P たんぱく質</span>
             <div class="flex items-baseline justify-between">
               <span id="summary-cur-p" class="font-logo font-black text-xs text-brand-text">0.0</span>
-              <span class="text-[7.5px] text-brand-muted font-bold">/ <span id="summary-tar-p">120</span>g</span>
+              <span class="text-[7.5px] text-brand-muted font-bold">/ <span id="summary-tar-p">100</span>g</span>
             </div>
             <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1">
               <div id="bar-p" class="bg-brand-secondary h-full transition-all duration-500" style="width: 0%"></div>
@@ -266,7 +268,7 @@
             <span class="text-[8.5px] text-brand-gold font-bold">F 脂質</span>
             <div class="flex items-baseline justify-between">
               <span id="summary-cur-f" class="font-logo font-black text-xs text-brand-text">0.0</span>
-              <span class="text-[7.5px] text-brand-muted font-bold">/ <span id="summary-tar-f">45</span>g</span>
+              <span class="text-[7.5px] text-brand-muted font-bold">/ <span id="summary-tar-f">40</span>g</span>
             </div>
             <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1">
               <div id="bar-f" class="bg-brand-gold h-full transition-all duration-500" style="width: 0%"></div>
@@ -277,7 +279,7 @@
             <span class="text-[8.5px] text-emerald-500 font-bold">C 炭水化物</span>
             <div class="flex items-baseline justify-between">
               <span id="summary-cur-c" class="font-logo font-black text-xs text-brand-text">0.0</span>
-              <span class="text-[7.5px] text-brand-muted font-bold">/ <span id="summary-tar-c">230</span>g</span>
+              <span class="text-[7.5px] text-brand-muted font-bold">/ <span id="summary-tar-c">210</span>g</span>
             </div>
             <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1">
               <div id="bar-c" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
@@ -490,21 +492,21 @@
       <form id="target-form" onsubmit="window.handleTargetSubmit(event)" class="space-y-4">
         <div class="space-y-1">
           <label class="text-[10px] text-brand-primary font-bold">目標摂取カロリー (kcal)</label>
-          <input type="number" id="target-input-kcal" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 font-logo font-bold text-sm text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner" value="1800">
+          <input type="number" id="target-input-kcal" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 font-logo font-bold text-sm text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner" value="1600">
         </div>
 
         <div class="grid grid-cols-3 gap-2">
           <div class="space-y-1">
             <label class="text-[8.5px] text-brand-secondary font-bold block text-center">目標P (g)</label>
-            <input type="number" id="target-input-p" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-logo font-bold text-center text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner" value="120">
+            <input type="number" id="target-input-p" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-logo font-bold text-center text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner" value="100">
           </div>
           <div class="space-y-1">
             <label class="text-[8.5px] text-brand-gold font-bold block text-center">目標F (g)</label>
-            <input type="number" id="target-input-f" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-logo font-bold text-center text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner" value="45">
+            <input type="number" id="target-input-f" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-logo font-bold text-center text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner" value="40">
           </div>
           <div class="space-y-1">
             <label class="text-[8.5px] text-emerald-500 font-bold block text-center">目標C (g)</label>
-            <input type="number" id="target-input-c" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-logo font-bold text-center text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner" value="230">
+            <input type="number" id="target-input-c" required class="w-full bg-brand-bg border border-brand-border rounded-xl px-2 py-3 text-xs font-logo font-bold text-center text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner" value="210">
           </div>
         </div>
 
@@ -580,7 +582,7 @@
 
       <div class="space-y-4">
         <p class="text-[10px] text-brand-muted leading-relaxed">食べたメニューや分量を自由に入力してください。AIが自動的にカロリー・PFCバランスを計算して記録します。</p>
-        <textarea id="text-analyze-input" rows="4" placeholder="例: お昼ご飯にサラダチキンとアボカド、玄米おにぎり1個を食べました。" class="w-full bg-brand-bg border border-brand-border rounded-xl p-4 text-xs text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner leading-relaxed"></textarea>
+        <textarea id="text-analyze-input" rows="4" placeholder="例: お昼ご飯にサラダチキンとアボカド、玄米おにぎり1個を食べました。" class="w-full bg-brand-bg border border-brand-border rounded-xl p-4 text-xs text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-gold/20 shadow-inner leading-relaxed font-bold"></textarea>
         
         <button onclick="window.analyzeMealText()" id="btn-text-submit" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-4 rounded-2xl text-xs font-bold transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95 tracking-wider">
           <i data-lucide="sparkles" class="w-4 h-4 text-brand-gold animate-pulse"></i>
@@ -704,12 +706,14 @@
   <!-- システムエラー用カスタムダイアログ -->
   <div id="ai-error-modal" class="fixed inset-0 bg-[#1A335E]/60 backdrop-blur-sm z-50 hidden flex-col justify-center items-center p-4">
     <div class="bg-white rounded-3xl w-full max-w-sm p-6 border border-brand-border shadow-premium text-center flex flex-col gap-4 animate-fade-in">
-      <div class="w-12 h-12 bg-brand-roseLight rounded-full flex items-center justify-center mx-auto border border-brand-rose/30">
+      <div class="w-12 h-12 bg-brand-roseLight rounded-full flex items-center justify-center mx-auto border border-brand-rose/30 animate-pulse">
         <i data-lucide="alert-triangle" class="w-6 h-6 text-brand-rose"></i>
       </div>
       <div>
         <h4 class="font-bold text-sm text-brand-primary">AI食事解析が実行できませんでした</h4>
-        <p id="ai-error-desc" class="text-[10px] text-brand-muted mt-1.5 leading-relaxed">Gemini APIキーが設定されていないか、不適切な状態です。専属トレーナーに連絡し、トレーナー管理ポータルの「Gemini設定」から有効なAPIキーを設定するよう依頼してください。</p>
+        <p id="ai-error-desc" class="text-[10px] text-brand-muted mt-1.5 leading-relaxed font-bold">
+          Gemini APIキーが未設定、またはAPI同期前です。トレーナー管理ポータルの「店舗Gemini APIキーの自動配信」欄にキーを登録し、全ユーザーへ配信してから再度実行してください。
+        </p>
       </div>
       <button onclick="window.toggleModal('ai-error-modal', false)" class="w-full bg-slate-100 hover:bg-slate-200 text-brand-text py-3 rounded-xl text-xs font-bold transition">
         閉じる
@@ -738,10 +742,9 @@
     import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // エル(l)とアイ(I)のスペルミス不一致を解決、全て「appId」に統一
+    // 綴りミスによる同期不具合を防止するため、すべて「appId」に100%統一
     const appId = 'carat-meal-v3';
     let db, auth;
-    let currentUser = null;
     let currentClientId = null;
     let unsubscribeClientListener = null;
     let weightChartInstance = null;
@@ -767,10 +770,10 @@
     // クライアントの状態データ
     let clientState = {
       nickname: "同期中...",
-      targetCalories: 1800,
-      targetP: 120,
-      targetF: 45,
-      targetC: 230,
+      targetCalories: 1600,
+      targetP: 100,
+      targetF: 40,
+      targetC: 210,
       weight: 55.0,
       initialWeight: 55.0,
       weightHistory: {},
@@ -902,7 +905,7 @@
       return Array.from(historyMap.values()).slice(0, 10);
     }
 
-    // アプリ初期化
+    // クライアント初期化
     async function initClientApp() {
       const initAuth = async () => {
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -922,7 +925,7 @@
         if (user) {
           currentUser = user;
           
-          // RULE 1: Global Settings sync (Gemini APIキー等共有情報)
+          // RULE 1: Global Settings sync (中央金庫APIキーの同期)
           const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
           onSnapshot(settingsRef, (snap) => {
             if (snap.exists()) {
@@ -936,7 +939,7 @@
             console.warn("Global settings sync error:", err);
           });
 
-          // 自動同期の復帰
+          // 自動ログイン復帰
           const savedId = localStorage.getItem("carat_client_connected_id_" + appId);
           if (savedId) {
             currentClientId = savedId;
@@ -969,11 +972,11 @@
           syncMealTimingUI();
           renderClientApp();
         } else {
-          alert("連携IDが見つかりませんでした。正しいIDを入力し直してください。");
+          alert("連携ID(CRTコード)が見つかりませんでした。正しいIDを入力してください。");
           window.disconnectClientId();
         }
       }, (err) => {
-        console.error("Cloud Sync Connection Failed:", err);
+        console.error("Cloud Sync Connection Error:", err);
       });
     }
 
@@ -984,7 +987,7 @@
       document.getElementById('login-screen').classList.remove('hidden');
       document.getElementById('main-dashboard').classList.add('hidden');
       document.getElementById('client-id-input').value = "";
-      showToast("データ連携を解除しました。");
+      showToast("同期データ連携を解除しました。");
     };
 
     window.connectWithClientId = function() {
@@ -1189,7 +1192,7 @@
       yesterday.setDate(yesterday.getDate() - 1);
       const yStr = yesterday.getFullYear() + "-" + String(yesterday.getMonth() + 1).padStart(2, '0') + "-" + String(yesterday.getDate()).padStart(2, '0');
 
-      const targetCal = safeFloat(clientState.targetCalories) || 1800;
+      const targetCal = safeFloat(clientState.targetCalories) || 1600;
       const yMeals = clientState.mealsByDate?.[yStr] || [];
       let yCal = 0;
       yMeals.forEach(m => { yCal += safeFloat(m.kcal); });
@@ -1210,10 +1213,10 @@
       let totalKcal = 0, totalP = 0, totalF = 0, totalC = 0;
       let targetKcalSum = 0, targetPSum = 0, targetFSum = 0, targetCSum = 0;
 
-      const baseTarCal = safeFloat(clientState.targetCalories) || 1800;
-      const baseTarP = safeFloat(clientState.targetP) || 120;
-      const baseTarF = safeFloat(clientState.targetF) || 45;
-      const baseTarC = safeFloat(clientState.targetC) || 230;
+      const baseTarCal = safeFloat(clientState.targetCalories) || 1600;
+      const baseTarP = safeFloat(clientState.targetP) || 100;
+      const baseTarF = safeFloat(clientState.targetF) || 40;
+      const baseTarC = safeFloat(clientState.targetC) || 210;
 
       const daysLimit = Math.min(7, Math.floor((baseDate - monday) / (24 * 60 * 60 * 1000)) + 1);
 
@@ -1278,10 +1281,10 @@
       });
 
       const recovery = calculateAutoRecoveryKcal();
-      const baseTarCal = safeFloat(clientState.targetCalories) || 1800;
-      const baseTarP = safeFloat(clientState.targetP) || 120;
-      const baseTarF = safeFloat(clientState.targetF) || 45;
-      const baseTarC = safeFloat(clientState.targetC) || 230;
+      const baseTarCal = safeFloat(clientState.targetCalories) || 1600;
+      const baseTarP = safeFloat(clientState.targetP) || 100;
+      const baseTarF = safeFloat(clientState.targetF) || 40;
+      const baseTarC = safeFloat(clientState.targetC) || 210;
 
       const tarCal = Math.max(1000, baseTarCal - recovery.adjustedKcal);
       const scaleRatio = tarCal / baseTarCal;
@@ -1412,7 +1415,7 @@
       lucide.createIcons();
     }
 
-    // AI機能の安全なハンドリング
+    // AI機能の起動とAPIキークライアント側存在判定
     window.triggerAiFeature = function(type) {
       if (!currentClientId) {
         alert("トレーナーから発行された連携IDで同期してからご利用ください。");
@@ -1421,8 +1424,7 @@
       
       const key = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
       if (!key) {
-        // APIキーが無い場合はカスタムダイアログを親切に表示
-        document.getElementById('ai-error-desc').innerText = "Gemini APIキーが設定されていません。トレーナー管理ポータルの「設定(歯車ボタン)」から有効なAPIキーを登録して同期させるよう、トレーナーにお伝えください。";
+        document.getElementById('ai-error-desc').innerText = "店舗用Gemini APIキーがまだ中央金庫(SETTINGS)に設定・同期されていません。トレーナーの管理アプリからAPIキーを「保存・全ユーザーへ配信」するようトレーナーにお伝えください。";
         window.toggleModal('ai-error-modal', true);
         return;
       }
@@ -1466,19 +1468,19 @@
     };
 
     window.openTargetAdjustmentModal = function() {
-      document.getElementById('target-input-kcal').value = clientState.targetCalories || 1800;
-      document.getElementById('target-input-p').value = clientState.targetP || 120;
-      document.getElementById('target-input-f').value = clientState.targetF || 45;
-      document.getElementById('target-input-c').value = clientState.targetC || 230;
+      document.getElementById('target-input-kcal').value = clientState.targetCalories || 1600;
+      document.getElementById('target-input-p').value = clientState.targetP || 100;
+      document.getElementById('target-input-f').value = clientState.targetF || 40;
+      document.getElementById('target-input-c').value = clientState.targetC || 210;
       window.toggleModal('target-modal', true);
     };
 
     window.handleTargetSubmit = async function(e) {
       e.preventDefault();
-      const kcal = parseInt(document.getElementById('target-input-kcal').value) || 1800;
-      const p = parseInt(document.getElementById('target-input-p').value) || 120;
-      const f = parseInt(document.getElementById('target-input-f').value) || 45;
-      const c = parseInt(document.getElementById('target-input-c').value) || 230;
+      const kcal = parseInt(document.getElementById('target-input-kcal').value) || 1600;
+      const p = parseInt(document.getElementById('target-input-p').value) || 100;
+      const f = parseInt(document.getElementById('target-input-f').value) || 40;
+      const c = parseInt(document.getElementById('target-input-c').value) || 210;
 
       clientState.targetCalories = kcal;
       clientState.targetP = p;
@@ -1658,13 +1660,14 @@
       return currentLogs;
     }
 
-    // 指数バックオフ対応の高信頼性Gemini API呼び出しロジック
+    // 404エラーを防ぎ、指数バックオフで再試行する頑強なGemini APIクライアント
     async function fetchGeminiWithBackoff(payload) {
       const apiKey = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
       if (!apiKey) {
         throw new Error("API_KEY_MISSING");
       }
 
+      // エラーを引き起こしていたgemini-1.5-proやflashを廃止し、2.5-flash-previewに100%固定化
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
       
       let delay = 1000;
@@ -1682,21 +1685,21 @@
           
           if (response.status === 400) {
             const errDetails = await response.json();
-            throw new Error(`BAD_REQUEST: ${errDetails?.error?.message || "リクエストパラメータ不適合"}`);
+            throw new Error(`BAD_REQUEST: ${errDetails?.error?.message || "パラメータエラー"}`);
           }
-          if (response.status === 403) {
+          if (response.status === 403 || response.status === 401) {
             throw new Error("INVALID_API_KEY");
           }
         } catch (e) {
           if (e.message === "INVALID_API_KEY" || e.message.startsWith("BAD_REQUEST")) {
             throw e;
           }
-          console.warn(`Gemini API connection retry ${i+1}/5...`);
+          console.warn(`Gemini API Connection failed. Retrying... (${i + 1}/5)`);
         }
         await new Promise(resolve => setTimeout(resolve, delay));
-        delay *= 2; // 指数バックオフ (1s, 2s, 4s, 8s, 16s)
+        delay *= 2; // 指数バックオフ再試行
       }
-      throw new Error("SERVER_TIMEOUT_OR_NETWORK_ERROR");
+      throw new Error("API_CONNECT_TIMEOUT");
     }
 
     function parseGeminiJSON(text) {
@@ -1707,7 +1710,7 @@
         }
         const start = cleaned.indexOf('{');
         const end = cleaned.lastIndexOf('}');
-        if (start === -1 || end === -1) throw new Error("JSON_BRACKETS_NOT_FOUND");
+        if (start === -1 || end === -1) throw new Error("JSON_FORMAT_INVALID");
         const jsonStr = cleaned.slice(start, end + 1);
         const parsed = JSON.parse(jsonStr);
 
@@ -1736,8 +1739,8 @@
 
         return normalized;
       } catch (err) {
-        console.error("JSON Parse Fail:", text, err);
-        throw new Error("AIデータの解読に失敗しました。");
+        console.error("JSON Parse Error:", text, err);
+        throw new Error("AIデータの構造解読に失敗しました。");
       }
     }
 
@@ -1786,13 +1789,13 @@
           await saveMealToCloud(newMeal);
           showToast(`「${parsed.name}」をAI解析＆自動記録しました！`);
         } else {
-          throw new Error("フォーマット異常");
+          throw new Error("フォーマット不適合");
         }
       } catch (err) {
         console.error("AI Text Analysis Error:", err);
-        let errorMsg = "AIでの解析に失敗しました。トレーナー管理アプリでGemini APIキーを設定・同期して、通信環境をご確認ください。";
+        let errorMsg = "AIでの解析に失敗しました。トレーナー管理ポータルの「店舗Gemini APIキーの自動配信」が正しく行われているか、キーの有効性をご確認ください。";
         if (err.message === "INVALID_API_KEY") {
-          errorMsg = "登録されたGemini APIキーが無効であるか、有効期限切れです。専属トレーナーに確認してキーを再設定してください。";
+          errorMsg = "配信されたGemini APIキーが有効でないか、制限に達しています。トレーナーにお問い合わせください。";
         }
         document.getElementById('ai-error-desc').innerText = errorMsg;
         window.toggleModal('ai-error-modal', true);
@@ -1811,7 +1814,7 @@
       try {
         const base64Data = await convertFileToBase64(file);
         
-        // JPEG/PNG の不一致400エラーを防ぐため file.type を動的に適用
+        // JPEG/PNGの不一致による400エラーを解消するため動的にMimeTypeを反映
         const dynamicMimeType = file.type || "image/png";
 
         const userPrompt = `写真の食事の料理名、全体の推定カロリーとPFC、さらに構成食材とグラム数を精密に判定・推定し、必ず次のJSONフォーマットのみを返してください。不要な説明やMarkdownコードブロック外の記述は一切含めないでください。
@@ -1860,11 +1863,11 @@
         }
       } catch (err) {
         console.error("Image Analysis Error:", err);
-        let errorMsg = "写真のAI解析に失敗しました。ブレのない鮮明な画像で再度お試しいただくか、トレーナーアプリで設定したGemini APIキーをご確認ください。";
+        let errorMsg = "写真のAI食事スキャンに失敗しました。手ブレのない明るい食事画像でお試しいただくか、配信されたGemini APIキーの登録状態を確認してください。";
         if (err.message === "INVALID_API_KEY") {
-          errorMsg = "Gemini APIキーが有効でないか、登録されていません。専属トレーナーに確認してください。";
+          errorMsg = "同期中のGemini APIキーが無効であるか、上限に達しています。";
         } else if (err.message.includes("BAD_REQUEST")) {
-          errorMsg = "画像の送信データサイズ、またはMimeType構造に問題が発生しました。他の画像素材でお試しください。";
+          errorMsg = "画像の送信データの形式、またはサイズ(MimeType不一致など)に問題があります。別の画像で再度お試しください。";
         }
         document.getElementById('ai-error-desc').innerText = errorMsg;
         window.toggleModal('ai-error-modal', true);
@@ -1966,7 +1969,7 @@
           <div class="flex gap-2">
             <input type="text" value="${ing.name}" class="bg-white border border-brand-border rounded-xl px-3 py-2 text-xs font-bold flex-1 min-w-0 focus:outline-none focus:border-brand-primary shadow-inner" onchange="window.updateIngredientName(${i}, this.value)" placeholder="食材名">
             <button type="button" onclick="window.estimateIngredientPFC(${i})" class="bg-brand-goldLight text-brand-gold border border-brand-gold/30 px-3 py-2 rounded-xl text-[10px] font-bold whitespace-nowrap flex items-center gap-1 active:scale-95">
-              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>自動判定
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 animate-pulse"></i>自動判定
             </button>
           </div>
           <div class="grid grid-cols-5 gap-1.5 pt-1">
@@ -2280,7 +2283,7 @@
       });
     }
 
-    // AI献立逆算生成
+    // AI献立等分逆算
     window.generateAiPendingMenu = async function() {
       if (selectedMealTimings.length === 0) {
         selectedMealTimings = [getDefaultMealCategory()];
@@ -2304,10 +2307,10 @@
         });
 
         const recovery = calculateAutoRecoveryKcal();
-        const baseTarCal = safeFloat(clientState.targetCalories) || 1800;
-        const baseTarP = safeFloat(clientState.targetP) || 120;
-        const baseTarF = safeFloat(clientState.targetF) || 45;
-        const baseTarC = safeFloat(clientState.targetC) || 230;
+        const baseTarCal = safeFloat(clientState.targetCalories) || 1600;
+        const baseTarP = safeFloat(clientState.targetP) || 100;
+        const baseTarF = safeFloat(clientState.targetF) || 40;
+        const baseTarC = safeFloat(clientState.targetC) || 210;
 
         const tarCal = Math.max(1000, baseTarCal - recovery.adjustedKcal);
         const scaleRatio = tarCal / baseTarCal;
@@ -2336,6 +2339,7 @@
         const timingsLabelMap = { 'breakfast': '朝食', 'lunch': '昼食', 'dinner': '夕食', 'snack': '間食' };
         const timingSelectedJpNames = selectedMealTimings.map(t => timingsLabelMap[t]).join('、');
 
+        // 対応モデルはgemini-2.5-flash-preview-09-2025のみに一本化
         const userPrompt = `現在の全体残り目標枠:
   - 目標総残りカロリー: ${remCal} kcal
   - 目標総残りたんぱく質: ${remP.toFixed(1)} g
@@ -2384,11 +2388,11 @@
           renderSuggestedMenus(targetKcalPerMeal);
           showToast("AIが残り枠を等分逆算してメニュー案を構築しました！");
         } else {
-          throw new Error("配列データが不足しています。");
+          throw new Error("配列構造が無効です。");
         }
       } catch (err) {
         console.error("Reverse Menu Planning Error:", err);
-        let errorMsg = "献立のAI等分逆算に失敗しました。Gemini API設定または通信環境をご確認ください。";
+        let errorMsg = "献立のAI等分逆算プラン構築に失敗しました。Gemini API設定または通信環境をご確認ください。";
         if (err.message === "INVALID_API_KEY") {
           errorMsg = "APIキーが無効です。設定を見直してください。";
         }
