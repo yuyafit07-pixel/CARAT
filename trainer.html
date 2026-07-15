@@ -13,7 +13,7 @@
                     colors: {
                         brand: {
                             primary: '#1A335E',       /* ロイヤルサックスブルー（深みと気品のある紺青） */
-                            primaryHover: '#112242',  /* ミッドナイトナイト */
+                            primaryHover: '#112242',  /* ミッドナイトサックス */
                             secondary: '#51749E',     /* ミスティサックス（上品なくすみブルー） */
                             accent: '#EBF2FA',        /* シフォンアクア（透明感のあるペールブルー） */
                             gold: '#C5A059',          /* シャンパンゴールド（美しく煌めくゴールド） */
@@ -30,7 +30,7 @@
                         premium: '0 24px 50px -12px rgba(26, 51, 94, 0.16), 0 8px 24px -4px rgba(26, 51, 94, 0.06)',
                         cardShadow: '0 16px 40px rgba(81, 117, 158, 0.12)',
                         softShadow: '0 12px 30px rgba(32, 49, 76, 0.04)',
-                        glow: '0 0 25px rgba(197, 160, 89, 0.45)',
+                        glow: '0 0 25px rgba(197, 160, 89, 0.4)',
                         blueGlow: '0 0 25px rgba(26, 51, 94, 0.3)',
                         innerGlow: 'inset 0 2px 6px rgba(255, 255, 255, 0.9)'
                     }
@@ -107,11 +107,16 @@
                 <span class="text-[10px] text-brand-secondary font-bold tracking-widest uppercase">TRAINER INTERACTIVE PORTAL</span>
             </div>
             
-            <div class="flex items-center gap-3">
-                <div class="bg-white/80 border border-brand-border rounded-full py-1.5 px-4 shadow-softShadow flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-[10px] text-brand-primary font-bold">Cloud Synced</span>
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <!-- 接続状態バッジ（ローカルセーフモード時は警告を表示） -->
+                <div id="connection-status-badge" class="bg-white/80 border border-brand-border rounded-full py-1.5 px-4 shadow-softShadow flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" id="status-dot"></span>
+                    <span class="text-[10px] text-brand-primary font-bold" id="status-text">Cloud Synced</span>
                 </div>
+                <!-- 匿名認証有効化ガイドボタン（警告時に自動で点滅表示） -->
+                <button id="btn-auth-guide" onclick="window.toggleModal('auth-guide-modal', true)" class="hidden bg-brand-roseLight border border-brand-rose text-brand-rose text-[9px] font-extrabold px-3 py-1.5 rounded-full shadow-sm animate-pulse tracking-wide flex items-center gap-1">
+                    <i data-lucide="help-circle" class="w-3.5 h-3.5"></i> 認証設定の手順
+                </button>
                 <button onclick="window.openSettingsModal()" class="bg-brand-primary hover:bg-brand-primaryHover text-white p-2.5 rounded-full transition shadow-md flex items-center justify-center active:scale-95">
                     <i data-lucide="key" class="w-4 h-4 text-brand-gold animate-pulse"></i>
                 </button>
@@ -146,7 +151,7 @@
                 <div id="clients-list-container" class="flex-1 overflow-y-auto no-scrollbar p-3 space-y-2 max-h-[50vh] lg:max-h-[65vh]">
                     <div class="text-center py-10 text-xs text-brand-muted font-bold space-y-2">
                         <i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto text-brand-secondary"></i>
-                        <p>認証＆クライアントデータ読み込み中...</p>
+                        <p>クライアントデータを読み込み中...</p>
                     </div>
                 </div>
             </div>
@@ -162,7 +167,7 @@
                 </p>
             </div>
 
-            <div id="client-detail-panel" class="lg:col-span-8 flex flex-col hidden divide-y divide-brand-border/30 bg-white/10 animate-fade-in">
+            <div id="client-detail-panel" class="lg:col-span-8 flex flex-col hidden divide-y divide-brand-secondary/30 bg-white/10 animate-fade-in">
                 
                 <!-- クライアントヘッダー -->
                 <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/30">
@@ -207,7 +212,7 @@
                 </div>
 
                 <!-- リアルタイムデータビュー（食事履歴 ＆ 体重記録） -->
-                <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-brand-border/30">
+                <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-brand-secondary/30">
                     
                     <!-- 食事履歴ビュー（左半分） -->
                     <div class="p-6 space-y-4">
@@ -288,12 +293,51 @@
 
     <!-- モーダル各種 -->
 
+    <!-- 🌟 重要：Firebase匿名認証有効化ガイドモーダル -->
+    <div id="auth-guide-modal" class="fixed inset-0 bg-brand-primary/45 backdrop-blur-sm z-[110] hidden flex-col justify-center items-center p-4 animate-fade-in">
+        <div class="bg-white w-full max-w-md rounded-[2.5rem] p-6 space-y-5 shadow-premium border border-brand-border text-left">
+            <div class="flex justify-between items-center pb-3 border-b border-brand-border">
+                <span class="text-xs font-bold text-brand-primary flex items-center gap-1.5">
+                    <i data-lucide="help-circle" class="w-4.5 h-4.5 text-brand-rose"></i> Firebase 匿名認証 有効化の手順
+                </span>
+                <button onclick="window.toggleModal('auth-guide-modal', false)" class="text-brand-muted hover:text-brand-primary p-1.5 hover:bg-brand-bg rounded-full transition-all">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="space-y-4 text-xs leading-relaxed text-brand-text">
+                <p class="font-bold text-brand-rose">
+                    現在、お使いのFirebaseプロジェクトで「匿名サインイン」が有効になっていないため、クラウドデータベースへの読み書きが制限されています。
+                </p>
+                <div class="space-y-3 bg-brand-accent/50 p-4 rounded-2xl border border-brand-border">
+                    <div class="flex gap-2">
+                        <span class="bg-brand-primary text-white w-5 h-5 rounded-full flex items-center justify-center shrink-0 font-mono text-[10px]">1</span>
+                        <p><strong><a href="https://console.firebase.google.com/" target="_blank" class="text-brand-primary underline hover:text-brand-secondary">Firebase Console</a></strong> にログインし、該当プロジェクトを開きます。</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="bg-brand-primary text-white w-5 h-5 rounded-full flex items-center justify-center shrink-0 font-mono text-[10px]">2</span>
+                        <p>左メニューの <strong>Build (構築)</strong> ＞ <strong>Authentication</strong> を開きます。</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="bg-brand-primary text-white w-5 h-5 rounded-full flex items-center justify-center shrink-0 font-mono text-[10px]">3</span>
+                        <p><strong>Sign-in method</strong> タブをクリックし、一覧から <strong>匿名 (Anonymous)</strong> を有効 (Enabled) に切り替えて保存します。</p>
+                    </div>
+                </div>
+                <p class="text-[10px] text-brand-muted">
+                    ※手順完了後、ブラウザをリロード（再読み込み）すると、自動的に「Cloud Synced」に変わり、本番同期が開始されます。有効化するまでは、安全のため一時的に「ローカルセーフモード」でデータが安全に記録・検証されます。
+                </p>
+                <button onclick="window.toggleModal('auth-guide-modal', false)" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white py-3.5 rounded-2xl font-bold transition">
+                    手順を理解しました
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- 1. 全クライアント共有APIキー設定モーダル -->
     <div id="settings-modal" class="fixed inset-0 bg-brand-primary/30 backdrop-blur-sm z-[100] hidden flex-col justify-center items-center p-4 animate-fade-in">
         <div class="bg-white w-full max-w-md rounded-[2.5rem] p-6 space-y-5 shadow-premium border border-brand-border">
             <div class="flex justify-between items-center pb-3 border-b border-brand-border">
                 <span class="text-xs font-bold text-brand-primary flex items-center gap-1.5">
-                    <i data-lucide="key" class="w-4.5 h-4.5 text-brand-gold animate-pulse"></i> CARAT店舗用共通AIキー設定
+                    <i data-lucide="key" class="w-4.5 h-4.5 text-brand-gold"></i> CARAT店舗用共通AIキー設定
                 </span>
                 <button onclick="window.toggleModal('settings-modal', false)" class="text-brand-muted hover:text-brand-primary p-1.5 hover:bg-brand-bg rounded-full transition-all">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -387,7 +431,7 @@
                         <input type="number" id="edit-client-f" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center focus:outline-none shadow-inner">
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[8.5px] text-[#10B981] block text-center">目標C (g)</label>
+                        <label class="text-[8.5px] text-emerald-600 block text-center">目標C (g)</label>
                         <input type="number" id="edit-client-c" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-center focus:outline-none shadow-inner">
                     </div>
                 </div>
@@ -427,6 +471,9 @@
         let currentSelectedDate = getTodayDateString();
         let portalChartInstance = null;
 
+        // 【新搭載】認証エラー時に即座にローカルセーブモードに移行するリカバリースイッチ
+        let isLocalSafeMode = false; 
+
         const app = initializeApp(firebaseConfig);
         auth = getAuth(app);
         db = getFirestore(app);
@@ -459,7 +506,7 @@
             return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
         }
 
-        // RULE 3: ログインを確実に完了・監視
+        // RULE 3: ログインを確実に完了・監視（かつ、匿名認証未設定時のリカバリー）
         async function initTrainerPortal() {
             const initAuth = async () => {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -471,26 +518,63 @@
 
             try {
                 await initAuth();
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        trainerUserId = user.uid;
+                        isLocalSafeMode = false;
+                        updateStatusUI(true);
+                        loadSystemSettings();
+                        loadRealtimeClients();
+                    }
+                });
             } catch (e) {
-                console.error("Firebase auth error:", e);
-                showToast("認証に失敗しました。接続環境をご確認ください。");
+                console.warn("Firebase Auth failed (Operation not allowed / Anonymous disabled). Falling back to Local Safe Mode", e);
+                switchToLocalSafeMode();
             }
-
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    trainerUserId = user.uid;
-                    loadSystemSettings();
-                    loadRealtimeClients();
-                } else {
-                    console.warn("User is not signed in.");
-                }
-            });
             
             document.getElementById('target-view-date').value = currentSelectedDate;
         }
 
+        // 匿名認証未設定時にクラッシュを完全に防いで動作させるリカバリー処理
+        function switchToLocalSafeMode() {
+            isLocalSafeMode = true;
+            updateStatusUI(false);
+            
+            // ローカルストレージからクライアントを吸い出し
+            loadLocalClients();
+            
+            // モーダルを開かせて手順を指南
+            setTimeout(() => {
+                window.toggleModal('auth-guide-modal', true);
+            }, 1000);
+        }
+
+        function updateStatusUI(isSynced) {
+            const dot = document.getElementById('status-dot');
+            const text = document.getElementById('status-text');
+            const guideBtn = document.getElementById('btn-auth-guide');
+            
+            if (isSynced) {
+                dot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+                text.innerText = "Cloud Synced";
+                text.className = "text-[10px] text-brand-primary font-bold";
+                guideBtn.classList.add('hidden');
+            } else {
+                dot.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
+                text.innerText = "Local Safe Mode";
+                text.className = "text-[10px] text-amber-600 font-bold";
+                guideBtn.classList.remove('hidden');
+            }
+        }
+
         // RULE 1: 厳格な公開パス構造の指定
         function loadSystemSettings() {
+            if (isLocalSafeMode) {
+                const localKey = localStorage.getItem("carat_trainer_gemini_key_" + appId) || "";
+                systemSettings.geminiApiKey = localKey;
+                document.getElementById('input-api-key').value = localKey;
+                return;
+            }
             const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
             onSnapshot(settingsRef, (snap) => {
                 if (snap.exists()) {
@@ -498,12 +582,21 @@
                     document.getElementById('input-api-key').value = systemSettings.geminiApiKey || "";
                 }
             }, (err) => {
-                console.warn("Global settings fetch error:", err);
+                console.warn("Global settings fetch error (falling back locally):", err);
             });
         }
 
         window.saveSystemSettings = async function() {
             const key = document.getElementById('input-api-key').value.trim();
+            systemSettings.geminiApiKey = key;
+            localStorage.setItem("carat_trainer_gemini_key_" + appId, key);
+
+            if (isLocalSafeMode) {
+                showToast("ローカルセーフモードとしてAPIキーを設定しました！");
+                window.toggleModal('settings-modal', false);
+                return;
+            }
+
             const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
             try {
                 await setDoc(settingsRef, { geminiApiKey: key }, { merge: true });
@@ -515,8 +608,12 @@
             }
         };
 
-        // RULE 1 & 2: 公開パスからのクライアント一覧のロード
+        // RULE 1 & 2: 公開パスからのクライアント一覧のロード（セーフモード切り替え完備）
         function loadRealtimeClients() {
+            if (isLocalSafeMode) {
+                loadLocalClients();
+                return;
+            }
             const collectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'clientStates');
             onSnapshot(collectionRef, (snapshot) => {
                 const list = [];
@@ -526,7 +623,6 @@
                     }
                 });
                 
-                // 安全なソート処理（未定義エラーを完全に排除）
                 allClients = list.sort((a, b) => {
                     const nameA = a.nickname || "";
                     const nameB = b.nickname || "";
@@ -542,9 +638,36 @@
                     }
                 }
             }, (err) => {
-                console.error("Client sync error:", err);
-                showToast("データベース同期エラーが発生しました。");
+                console.warn("Client sync error, auto switching to Local Save Mode.", err);
+                switchToLocalSafeMode();
             });
+        }
+
+        function loadLocalClients() {
+            const localRaw = localStorage.getItem("carat_local_clients_" + appId);
+            let list = [];
+            if (localRaw) {
+                try {
+                    list = JSON.parse(localRaw);
+                } catch(e) {
+                    list = [];
+                }
+            }
+            
+            allClients = list.sort((a, b) => {
+                const nameA = a.nickname || "";
+                const nameB = b.nickname || "";
+                return nameA.localeCompare(nameB);
+            });
+            
+            renderClientsList();
+            
+            if (currentTargetClientId) {
+                const matched = allClients.find(c => c.id === currentTargetClientId);
+                if (matched) {
+                    renderClientDetails(matched);
+                }
+            }
         }
 
         function renderClientsList() {
@@ -849,7 +972,7 @@
             });
         }
 
-        // Gemini APIを使ったリアルタイム1週間カルテアドバイス自動生成
+        // Gemini APIを使ったアドバイス自動生成
         window.generateAiFeedback = async function() {
             if (!currentTargetClientId) {
                 alert("アドバイス生成対象のクライアントを選択してください。");
@@ -858,7 +981,7 @@
             
             const key = systemSettings.geminiApiKey || document.getElementById('input-api-key').value.trim();
             if (!key) {
-                alert("店舗共有APIキーが設定されていません。右上の「鍵」アイコンからGemini APIキーを登録してください。");
+                alert("AIキーが設定されていません。右上の「鍵」アイコンからキーを設定してください。");
                 window.openSettingsModal();
                 return;
             }
@@ -872,7 +995,6 @@
             btn.disabled = true;
             lucide.createIcons();
 
-            // 直近1週間（7日間）の実食事データ収集
             const today = new Date();
             const daysDataText = [];
             for (let i = 0; i < 7; i++) {
@@ -886,7 +1008,7 @@
                 }
             }
 
-            const mealsDataInput = daysDataText.length > 0 ? daysDataText.join('\n') : "1週間のお食事記録はまだ登録されていません。";
+            const mealsDataInput = daysDataText.length > 0 ? daysDataText.join('\n') : "お食事記録はまだ登録されていません。";
             const targetPFC = `カロリー目標:${cli.targetCalories || 1650}kcal, P:${cli.targetP || 110}g, F:${cli.targetF || 40}g, C:${cli.targetC || 210}g`;
             const currentWeight = cli.weight ? cli.weight.toFixed(1) + "kg" : "未登録";
 
@@ -929,6 +1051,19 @@
                 return;
             }
             
+            if (isLocalSafeMode) {
+                const idx = allClients.findIndex(c => c.id === currentTargetClientId);
+                if (idx > -1) {
+                    allClients[idx].trainerFeedback = text;
+                    allClients[idx].trainerFeedbackAt = new Date().toISOString();
+                    localStorage.setItem("carat_local_clients_" + appId, JSON.stringify(allClients));
+                }
+                showToast("ローカルセーフモードとしてアドバイスを保存しました！");
+                const d = new Date();
+                document.getElementById('feedback-status-text').innerText = `最終送信日時: ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
+                return;
+            }
+
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
                 await updateDoc(docRef, {
@@ -941,7 +1076,7 @@
                 document.getElementById('feedback-status-text').innerText = `最終送信日時: ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
             } catch (err) {
                 console.error("Save Feedback Error:", err);
-                alert("クラウド同期に失敗しました。インターネット接続を確認してください。");
+                alert("クラウド同期に失敗しました。");
             }
         };
 
@@ -958,6 +1093,7 @@
             const randId = 'CRT-' + Math.floor(100000 + Math.random() * 900000);
 
             const initialData = {
+                id: randId,
                 nickname: name,
                 targetCalories: kcal,
                 targetP: p,
@@ -980,6 +1116,16 @@
                 trainerFeedbackAt: new Date().toISOString()
             };
 
+            if (isLocalSafeMode) {
+                allClients.push(initialData);
+                localStorage.setItem("carat_local_clients_" + appId, JSON.stringify(allClients));
+                showToast(`ローカルセーフモードでID [${randId}] を仮発行しました！`);
+                loadLocalClients();
+                window.toggleModal('new-client-modal', false);
+                document.getElementById('new-client-nickname').value = "";
+                return;
+            }
+
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', randId);
                 await setDoc(docRef, initialData);
@@ -1000,6 +1146,21 @@
             const p = parseInt(document.getElementById('edit-client-p').value) || 110;
             const f = parseInt(document.getElementById('edit-client-f').value) || 40;
             const c = parseInt(document.getElementById('edit-client-c').value) || 210;
+
+            if (isLocalSafeMode) {
+                const idx = allClients.findIndex(c => c.id === currentTargetClientId);
+                if (idx > -1) {
+                    allClients[idx].targetCalories = kcal;
+                    allClients[idx].targetP = p;
+                    allClients[idx].targetF = f;
+                    allClients[idx].targetC = c;
+                    localStorage.setItem("carat_local_clients_" + appId, JSON.stringify(allClients));
+                }
+                showToast("ローカル上のPFC目標を変更しました。");
+                loadLocalClients();
+                window.toggleModal('target-adjust-modal', false);
+                return;
+            }
 
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', currentTargetClientId);
