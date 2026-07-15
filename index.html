@@ -101,7 +101,7 @@
 </head>
 <body class="min-h-screen pb-12 select-none">
 
-  <!-- ログイン画面 (体験モード完全廃止、連携コードのみ) -->
+  <!-- ログイン画面 -->
   <div id="login-screen" class="fixed inset-0 z-50 flex flex-col justify-center items-center p-6 bg-gradient-to-br from-[#1A335E]/10 via-[#F4F7FA] to-[#C5A059]/10">
     <div class="glass-container rounded-[32px] p-8 w-full max-w-md text-center flex flex-col gap-6 animate-fade-in shadow-premium border border-white">
       <div class="space-y-2">
@@ -165,7 +165,7 @@
       </button>
     </div>
 
-    <!-- メインタブセクション (食事記録 / AI逆算 / 体重推移) -->
+    <!-- メインタブセクション -->
     <div class="flex gap-1.5 bg-brand-border/20 p-1 rounded-2xl border border-brand-border/40">
       <button id="nav-btn-home" onclick="window.switchTab('home')" class="flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold flex items-center justify-center gap-1.5">
         <i data-lucide="utensils" class="w-3.5 h-3.5"></i>食事記録
@@ -549,7 +549,7 @@
             <input type="number" step="0.1" id="manual-f" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-logo font-bold text-center text-brand-primary focus:outline-none shadow-inner" value="0">
           </div>
           <div class="space-y-1">
-            <label class="text-[8.5px] text-[#10B981] font-bold block text-center mb-1">C (g)</label>
+            <label class="text-[8.5px] text-brand-muted font-bold block text-center mb-1">C (g)</label>
             <input type="number" step="0.1" id="manual-c" required class="w-full bg-brand-bg border border-brand-border rounded-xl p-2.5 text-xs font-logo font-bold text-center text-brand-primary focus:outline-none shadow-inner" value="0">
           </div>
           <div class="space-y-1">
@@ -701,6 +701,22 @@
     </div>
   </div>
 
+  <!-- システムエラー用カスタムダイアログ -->
+  <div id="ai-error-modal" class="fixed inset-0 bg-[#1A335E]/60 backdrop-blur-sm z-50 hidden flex-col justify-center items-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-sm p-6 border border-brand-border shadow-premium text-center flex flex-col gap-4 animate-fade-in">
+      <div class="w-12 h-12 bg-brand-roseLight rounded-full flex items-center justify-center mx-auto border border-brand-rose/30">
+        <i data-lucide="alert-triangle" class="w-6 h-6 text-brand-rose"></i>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm text-brand-primary">AI食事解析が実行できませんでした</h4>
+        <p id="ai-error-desc" class="text-[10px] text-brand-muted mt-1.5 leading-relaxed">Gemini APIキーが設定されていないか、不適切な状態です。専属トレーナーに連絡し、トレーナー管理ポータルの「Gemini設定」から有効なAPIキーを設定するよう依頼してください。</p>
+      </div>
+      <button onclick="window.toggleModal('ai-error-modal', false)" class="w-full bg-slate-100 hover:bg-slate-200 text-brand-text py-3 rounded-xl text-xs font-bold transition">
+        閉じる
+      </button>
+    </div>
+  </div>
+
   <!-- フルスクリーンローディングオーバレイ -->
   <div id="loading-overlay" class="fixed inset-0 bg-[#1A335E]/80 backdrop-blur-md z-[100] hidden flex-col justify-center items-center gap-4">
     <div class="relative flex items-center justify-center">
@@ -722,6 +738,7 @@
     import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+    // エル(l)とアイ(I)のスペルミス不一致を解決、全て「appId」に統一
     const appId = 'carat-meal-v3';
     let db, auth;
     let currentUser = null;
@@ -885,7 +902,7 @@
       return Array.from(historyMap.values()).slice(0, 10);
     }
 
-    // クライアントアプリケーション初期化
+    // アプリ初期化
     async function initClientApp() {
       const initAuth = async () => {
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -905,7 +922,7 @@
         if (user) {
           currentUser = user;
           
-          // RULE 1: Global Settings sync (Gemini APIキー等の共有設定)
+          // RULE 1: Global Settings sync (Gemini APIキー等共有情報)
           const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
           onSnapshot(settingsRef, (snap) => {
             if (snap.exists()) {
@@ -919,14 +936,13 @@
             console.warn("Global settings sync error:", err);
           });
 
-          // 自動同期のチェック
+          // 自動同期の復帰
           const savedId = localStorage.getItem("carat_client_connected_id_" + appId);
           if (savedId) {
             currentClientId = savedId;
             document.getElementById('client-id-input').value = savedId;
             startClientRealtimeSync(savedId);
           } else {
-            // 体験バイパスを排除したため、同期IDがない限りログイン画面を表示
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('main-dashboard').classList.add('hidden');
           }
@@ -953,12 +969,11 @@
           syncMealTimingUI();
           renderClientApp();
         } else {
-          alert("連携ID（CRTコード）が見つかりませんでした。正しいIDを入力してください。");
+          alert("連携IDが見つかりませんでした。正しいIDを入力し直してください。");
           window.disconnectClientId();
         }
       }, (err) => {
-        console.error("Cloud Sync Error:", err);
-        alert("データベース接続中にエラーが発生しました。");
+        console.error("Cloud Sync Connection Failed:", err);
       });
     }
 
@@ -969,7 +984,7 @@
       document.getElementById('login-screen').classList.remove('hidden');
       document.getElementById('main-dashboard').classList.add('hidden');
       document.getElementById('client-id-input').value = "";
-      showToast("連携を解除しました。");
+      showToast("データ連携を解除しました。");
     };
 
     window.connectWithClientId = function() {
@@ -1120,7 +1135,6 @@
         document.getElementById('val-curr-lowest').innerText = currLowest !== null ? currLowest.toFixed(1) : "--";
       }
 
-      // Chart.js 描画
       if (canvas) {
         const ctx = canvas.getContext('2d');
         if (weightChartInstance) {
@@ -1181,7 +1195,7 @@
       yMeals.forEach(m => { yCal += safeFloat(m.kcal); });
 
       const overKcal = Math.max(0, Math.round(yCal - targetCal));
-      const adjustedKcal = Math.min(200, overKcal); // 最高補正200kcal
+      const adjustedKcal = Math.min(200, overKcal);
 
       return { overKcal, adjustedKcal };
     }
@@ -1398,12 +1412,21 @@
       lucide.createIcons();
     }
 
-    // 体験制限が完全廃止されたため、本番機能のみを実行
+    // AI機能の安全なハンドリング
     window.triggerAiFeature = function(type) {
       if (!currentClientId) {
-        alert("トレーナーから発行された連携IDでログイン・同期してください。");
+        alert("トレーナーから発行された連携IDで同期してからご利用ください。");
         return;
       }
+      
+      const key = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
+      if (!key) {
+        // APIキーが無い場合はカスタムダイアログを親切に表示
+        document.getElementById('ai-error-desc').innerText = "Gemini APIキーが設定されていません。トレーナー管理ポータルの「設定(歯車ボタン)」から有効なAPIキーを登録して同期させるよう、トレーナーにお伝えください。";
+        window.toggleModal('ai-error-modal', true);
+        return;
+      }
+
       if (type === 'camera') {
         document.getElementById('ai-image-input').click();
       } else if (type === 'text') {
@@ -1635,28 +1658,45 @@
       return currentLogs;
     }
 
-    // 指数バックオフ対応のGeminiAPI呼び出し
-    async function fetchGeminiForClient(payload, retries = 5, delay = 1000) {
-      const key = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
-      if (!key) throw new Error("API_KEY_MISSING");
+    // 指数バックオフ対応の高信頼性Gemini API呼び出しロジック
+    async function fetchGeminiWithBackoff(payload) {
+      const apiKey = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
+      if (!apiKey) {
+        throw new Error("API_KEY_MISSING");
+      }
 
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`;
-
-      for (let i = 0; i < retries; i++) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+      
+      let delay = 1000;
+      for (let i = 0; i < 5; i++) {
         try {
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           });
-          if (response.ok) return await response.json();
+          
+          if (response.ok) {
+            return await response.json();
+          }
+          
+          if (response.status === 400) {
+            const errDetails = await response.json();
+            throw new Error(`BAD_REQUEST: ${errDetails?.error?.message || "リクエストパラメータ不適合"}`);
+          }
+          if (response.status === 403) {
+            throw new Error("INVALID_API_KEY");
+          }
         } catch (e) {
-          // Retry
+          if (e.message === "INVALID_API_KEY" || e.message.startsWith("BAD_REQUEST")) {
+            throw e;
+          }
+          console.warn(`Gemini API connection retry ${i+1}/5...`);
         }
         await new Promise(resolve => setTimeout(resolve, delay));
-        delay *= 2;
+        delay *= 2; // 指数バックオフ (1s, 2s, 4s, 8s, 16s)
       }
-      throw new Error("Exponential backoff failed.");
+      throw new Error("SERVER_TIMEOUT_OR_NETWORK_ERROR");
     }
 
     function parseGeminiJSON(text) {
@@ -1726,7 +1766,7 @@
 }`;
 
         const payload = { contents: [{ parts: [{ text: userPrompt }] }] };
-        const res = await fetchGeminiForClient(payload);
+        const res = await fetchGeminiWithBackoff(payload);
         const rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
         const parsed = parseGeminiJSON(rawText);
 
@@ -1750,7 +1790,12 @@
         }
       } catch (err) {
         console.error("AI Text Analysis Error:", err);
-        alert("AIでの解析に失敗しました。Gemini API設定または通信環境をご確認ください。");
+        let errorMsg = "AIでの解析に失敗しました。トレーナー管理アプリでGemini APIキーを設定・同期して、通信環境をご確認ください。";
+        if (err.message === "INVALID_API_KEY") {
+          errorMsg = "登録されたGemini APIキーが無効であるか、有効期限切れです。専属トレーナーに確認してキーを再設定してください。";
+        }
+        document.getElementById('ai-error-desc').innerText = errorMsg;
+        window.toggleModal('ai-error-modal', true);
       } finally {
         loading.classList.add('hidden');
         loading.classList.remove('flex');
@@ -1765,6 +1810,10 @@
 
       try {
         const base64Data = await convertFileToBase64(file);
+        
+        // JPEG/PNG の不一致400エラーを防ぐため file.type を動的に適用
+        const dynamicMimeType = file.type || "image/png";
+
         const userPrompt = `写真の食事の料理名、全体の推定カロリーとPFC、さらに構成食材とグラム数を精密に判定・推定し、必ず次のJSONフォーマットのみを返してください。不要な説明やMarkdownコードブロック外の記述は一切含めないでください。
 
 {
@@ -1782,12 +1831,12 @@
           contents: [{
             parts: [
               { text: userPrompt },
-              { inlineData: { mimeType: "image/png", data: base64Data } }
+              { inlineData: { mimeType: dynamicMimeType, data: base64Data } }
             ]
           }]
         };
 
-        const res = await fetchGeminiForClient(payload);
+        const res = await fetchGeminiWithBackoff(payload);
         const rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
         const parsed = parseGeminiJSON(rawText);
 
@@ -1811,7 +1860,14 @@
         }
       } catch (err) {
         console.error("Image Analysis Error:", err);
-        alert("写真の解析に失敗しました。画像が不鮮明であるか、Gemini APIキーの制限に達している可能性があります。");
+        let errorMsg = "写真のAI解析に失敗しました。ブレのない鮮明な画像で再度お試しいただくか、トレーナーアプリで設定したGemini APIキーをご確認ください。";
+        if (err.message === "INVALID_API_KEY") {
+          errorMsg = "Gemini APIキーが有効でないか、登録されていません。専属トレーナーに確認してください。";
+        } else if (err.message.includes("BAD_REQUEST")) {
+          errorMsg = "画像の送信データサイズ、またはMimeType構造に問題が発生しました。他の画像素材でお試しください。";
+        }
+        document.getElementById('ai-error-desc').innerText = errorMsg;
+        window.toggleModal('ai-error-modal', true);
       } finally {
         loading.classList.add('hidden');
         loading.classList.remove('flex');
@@ -1915,11 +1971,11 @@
           </div>
           <div class="grid grid-cols-5 gap-1.5 pt-1">
             <div class="text-center">
-              <span class="text-[8px] text-brand-muted font-bold block mb-0.5">重量(g)</span>
+              <span class="text-[8px] text-brand-muted block mb-0.5">重量(g)</span>
               <input type="number" step="0.1" value="${Math.round(safeFloat(ing.weight))}" class="w-full bg-slate-50 border border-brand-border/50 text-center rounded-lg py-1 font-logo font-bold text-xs" onchange="window.changeIngredientWeight(${i}, this.value)">
             </div>
             <div class="text-center">
-              <span class="text-[8px] text-brand-secondary font-bold block mb-0.5">P(g)</span>
+              <span class="text-[8px] text-brand-secondary block mb-0.5">P(g)</span>
               <input type="number" step="0.1" value="${safeFloat(ing.p).toFixed(1)}" class="w-full bg-slate-50 border border-brand-border/50 text-center rounded-lg py-1 font-logo font-bold text-xs" onchange="window.changeIngredientPFC(${i}, 'p', this.value)">
             </div>
             <div class="text-center">
@@ -1927,7 +1983,7 @@
               <input type="number" step="0.1" value="${safeFloat(ing.f).toFixed(1)}" class="w-full bg-slate-50 border border-brand-border/50 text-center rounded-lg py-1 font-logo font-bold text-xs" onchange="window.changeIngredientPFC(${i}, 'f', this.value)">
             </div>
             <div class="text-center">
-              <span class="text-[8px] text-emerald-500 font-bold block mb-0.5">C(g)</span>
+              <span class="text-[8px] text-[#10B981] block mb-0.5">C(g)</span>
               <input type="number" step="0.1" value="${safeFloat(ing.c).toFixed(1)}" class="w-full bg-slate-50 border border-brand-border/50 text-center rounded-lg py-1 font-logo font-bold text-xs" onchange="window.changeIngredientPFC(${i}, 'c', this.value)">
             </div>
             <div class="text-center">
@@ -2037,12 +2093,12 @@
 
       try {
         const userPrompt = `食材名: "${ingName}", 重量: ${ingWeight}g
-この食材・単体料理のカロリー(kcal)、タンパク質(p)、脂質(f)、炭水化物(c)を推定して、必ず次のJSONのみを返却してください。
+この食材・単体料理のカロリー(kcal), たんぱく質(p), 脂質(f), 炭水化物(c)を推定して、必ず次のJSONのみを返却してください。
 
 {"p": たんぱく質g(数値), "f": 脂質g(数値), "c": 炭水化物g(数値), "kcal": カロリー(数値)}`;
 
         const payload = { contents: [{ parts: [{ text: userPrompt }] }] };
-        const res = await fetchGeminiForClient(payload);
+        const res = await fetchGeminiWithBackoff(payload);
         const rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
         const start = rawText.indexOf('{');
         const end = rawText.lastIndexOf('}');
@@ -2224,7 +2280,7 @@
       });
     }
 
-    // AI献立逆引き機能の本体
+    // AI献立逆算生成
     window.generateAiPendingMenu = async function() {
       if (selectedMealTimings.length === 0) {
         selectedMealTimings = [getDefaultMealCategory()];
@@ -2280,8 +2336,6 @@
         const timingsLabelMap = { 'breakfast': '朝食', 'lunch': '昼食', 'dinner': '夕食', 'snack': '間食' };
         const timingSelectedJpNames = selectedMealTimings.map(t => timingsLabelMap[t]).join('、');
 
-        const systemPrompt = "あなたはCARATのチーフ管理栄養士です。指示された複数のおすすめメニュー枠に対して、指定のPFC制限に収まる具体的な実在名付きレシピ・商品を逆引きで構築してJSONで返答します。";
-
         const userPrompt = `現在の全体残り目標枠:
   - 目標総残りカロリー: ${remCal} kcal
   - 目標総残りたんぱく質: ${remP.toFixed(1)} g
@@ -2317,7 +2371,7 @@
 }`;
 
         const payload = { contents: [{ parts: [{ text: userPrompt }] }] };
-        const res = await fetchGeminiForClient(payload);
+        const res = await fetchGeminiWithBackoff(payload);
         let jsonText = res.candidates?.[0]?.content?.parts?.[0]?.text.trim();
 
         if (jsonText.startsWith("```")) {
@@ -2334,7 +2388,12 @@
         }
       } catch (err) {
         console.error("Reverse Menu Planning Error:", err);
-        alert("献立の逆算生成に失敗しました。Gemini API設定または通信環境をご確認ください。");
+        let errorMsg = "献立のAI等分逆算に失敗しました。Gemini API設定または通信環境をご確認ください。";
+        if (err.message === "INVALID_API_KEY") {
+          errorMsg = "APIキーが無効です。設定を見直してください。";
+        }
+        document.getElementById('ai-error-desc').innerText = errorMsg;
+        window.toggleModal('ai-error-modal', true);
       } finally {
         loading.classList.add('hidden');
         loading.classList.remove('flex');
