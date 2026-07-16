@@ -439,7 +439,7 @@
             <div class="space-y-1.5">
               <label class="text-[10px] text-brand-primary font-black uppercase block ml-1">お食事の調達カテゴリー</label>
               <div class="grid grid-cols-3 gap-2 text-center">
-                <button id="menu-cat-home" onclick="window.selectMenuCategory('home')" class="py-2.5 text-[9.5px] font-bold rounded-xl transition-all bg-white text-brand-primary shadow-sm border border-brand-border/40">自炊レシピ</button>
+                <button id="menu-cat-home" onclick="window.selectMenuCategory('home')" class="py-2.5 text-[9.5px] font-bold rounded-xl transition-all bg-brand-primary text-white shadow-sm border border-brand-border/40">自炊レシピ</button>
                 <button id="menu-cat-convenience" onclick="window.selectMenuCategory('convenience')" class="py-2.5 text-[9.5px] font-bold rounded-xl transition-all border border-transparent text-brand-muted">コンビニ</button>
                 <button id="menu-cat-restaurant" onclick="window.selectMenuCategory('restaurant')" class="py-2.5 text-[9.5px] font-bold rounded-xl transition-all border border-transparent text-brand-muted">外食店舗指定</button>
               </div>
@@ -1420,7 +1420,7 @@
       renderMealsHistory();
       renderWeightTrendDashboard();
 
-      // ================= 📝 食事明細の可視化(大改善) =================
+      // ================= 📝 食事明細の可視化 =================
       const timelineContainer = document.getElementById('meal-timeline-container');
       timelineContainer.innerHTML = "";
       
@@ -1702,17 +1702,16 @@
       return currentLogs;
     }
 
-    // 指数バックオフ付きAPI呼び出しロジック (完全に保全)
+    // 指数バックオフ付きAPI呼び出しロジック (公式サポートモデル限定版)
     async function fetchGeminiWithBackoff(payload) {
       const apiKey = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
       if (!apiKey) {
         throw new Error("API_KEY_MISSING");
       }
       
+      // このプレビュー環境で唯一サポートされているテキスト生成モデルに最適化
       const models = [
-        "gemini-2.5-flash-preview-09-2025",
-        "gemini-2.5-flash",
-        "gemini-1.5-flash"
+        "gemini-2.5-flash-preview-09-2025"
       ];
       let lastError = null;
       let lastStatus = null;
@@ -1721,7 +1720,8 @@
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
         let delay = 1000;
         
-        for (let attempt = 0; attempt < 2; attempt++) {
+        // 最大5回リトライ（指数バックオフ）
+        for (let attempt = 0; attempt < 5; attempt++) {
           try {
             const response = await fetch(url, {
               method: "POST",
@@ -1740,25 +1740,27 @@
               throw new Error(`【APIパラメータ構造エラー (400)】\n${errMsg}`);
             }
             if (response.status === 403 || response.status === 401) {
-              throw new Error(`【APIキー制限・無効エラー (403/401)】\nGemini APIキーが有効でないか、Google側で制限されています。トレーナーアプリで新しいキーを再設定・同期配信してください。\n(詳細: ${errMsg}`);
+              throw new Error(`【APIキー制限・無効エラー (403/401)】\nGemini APIキーが有効でないか、Google側で制限されています。トレーナーアプリで新しいキーを再設定・同期配信してください。\n(詳細: ${errMsg})`);
             }
             if (response.status === 429) {
-              throw new Error(`【リクエスト制限超過エラー (429)】\n短時間に大量のリクエストが送られました。数秒待ってから再試行してください。`);
+              lastError = `API利用リクエスト上限超過 (429): ${errMsg}`;
+            } else {
+              lastError = `HTTP ${response.status}: ${errMsg}`;
             }
-            lastError = `Model ${modelName} status ${response.status}: ${errMsg}`;
           } catch (e) {
             if (e.message.startsWith("【")) {
               throw e;
             }
             lastError = e.message || e;
           }
-          if (attempt < 1) {
+          
+          if (attempt < 4) {
             await new Promise(resolve => setTimeout(resolve, delay));
             delay *= 2;
           }
         }
       }
-      throw new Error(`【AIスキャン接続失敗】\n全サポートモデルの通信試行が失敗しました。\n(詳細: ${lastError}`);
+      throw new Error(`【AIスキャン接続失敗】\n公式サポートモデル (${models[0]}) での通信試行がすべて失敗しました。\n(詳細: ${lastError})`);
     }
 
     function parseGeminiJSON(text) {
@@ -2343,7 +2345,7 @@
       });
     }
 
-    // AI献立等分逆算 (保全 & デザイン統合)
+    // AI献立等分逆算
     window.generateAiPendingMenu = async function() {
       if (selectedMealTimings.length === 0) {
         selectedMealTimings = [getDefaultMealCategory()];
