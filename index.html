@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CARAT - プレミアム女性専用食事管理 & 生理周期ボディメイク</title>
+  <title>CARAT - プレミアム女性専用食事管理 & 女性ホルモンサイクル</title>
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js -->
@@ -23,27 +23,27 @@
           },
           colors: {
             brand: {
-              primary: '#1A335E',       /* プレミアムディープブルー */
-              primaryHover: '#132647',
-              secondary: '#51749E',     /* クラシックアッシュブルー */
-              accent: '#EBF2FA',        /* シフォンアクア */
+              primary: '#0B2545',       /* 深邃なサファイアブルー */
+              primaryHover: '#05142B',
+              secondary: '#1F4068',     /* クリアインディゴ */
+              accent: '#EEF4FA',        /* アイスプラチナシルバー */
               gold: '#C5A059',          /* シャンパンゴールド */
               goldLight: '#FAF4E3',     /* プレシャスベージュ */
-              bg: '#FFFFFF',            /* ピュアホワイト */
-              text: '#1E2C44',          /* リッチスレートアッシュ */
-              muted: '#7A8FA5',         /* フレンチアッシュグレー */
-              border: '#D0DFEC',        /* ジュエリーサックス境界線 */
-              rose: '#E28E82',          /* ピーチローズ */
-              roseLight: '#FDF3F1'      /* 超薄ピーチローズ */
+              bg: '#FFFFFF',
+              text: '#16243A',          /* ディープスレートアッシュ */
+              muted: '#687E96',         /* クールアッシュグレー */
+              border: '#D9E6F2',        /* クリスタルサックス境界線 */
+              rose: '#D27C7C',          /* パステルオパールローズ */
+              roseLight: '#FCF3F3'
             }
           },
           boxShadow: {
-            premium: '0 24px 50px -12px rgba(26, 51, 94, 0.15), 0 8px 24px -4px rgba(26, 51, 94, 0.04)',
-            cardShadow: '0 16px 40px rgba(81, 116, 158, 0.08)',
-            softShadow: '0 12px 30px rgba(32, 49, 76, 0.03)',
+            premium: '0 24px 60px -12px rgba(11, 37, 69, 0.12), 0 8px 24px -4px rgba(197, 160, 89, 0.05)',
+            cardShadow: '0 16px 40px rgba(31, 64, 104, 0.05)',
+            softShadow: '0 12px 30px rgba(11, 37, 69, 0.03)',
             glow: '0 0 25px rgba(197, 160, 89, 0.25)',
-            blueGlow: '0 0 25px rgba(26, 51, 94, 0.15)',
-            innerGlow: 'inset 0 2px 6px rgba(255, 255, 255, 0.9)'
+            blueGlow: '0 0 25px rgba(11, 37, 69, 0.1)',
+            innerGlow: 'inset 0 2px 8px rgba(255, 255, 255, 0.95)'
           }
         }
       }
@@ -55,13 +55,16 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     
-    /* 1枚統合パネル用の背景・すりガラスデザイン */
+    /* ダイヤモンドのようなプレミアム透明感：Glassmorphism */
     .glass-base-panel {
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1.5px solid rgba(208, 223, 236, 0.6);
-      box-shadow: 0 20px 45px -10px rgba(26, 51, 94, 0.08);
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1.5px solid rgba(255, 255, 255, 0.85); /* クリスタルの極細カットエッジ */
+      box-shadow: 
+        0 24px 50px -12px rgba(11, 37, 69, 0.06), 
+        0 8px 24px -4px rgba(197, 160, 89, 0.03),
+        inset 0 0 12px rgba(255, 255, 255, 0.6);
     }
 
     input[type="number"]::-webkit-outer-spin-button,
@@ -72,47 +75,58 @@
     input[type="number"] { -moz-appearance: textfield; }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .animate-fade-in {
-      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* タイムラインの連結縦線 */
+    /* ジュエルタイムラインの極細連結線 */
     .timeline-line::before {
       content: '';
       position: absolute;
       top: 24px;
       bottom: -24px;
       left: 19px;
-      width: 2px;
-      background: #D0DFEC;
+      width: 1.5px;
+      background: linear-gradient(180deg, rgba(197, 160, 89, 0.4) 0%, rgba(217, 230, 242, 0.6) 100%);
     }
     .timeline-item:last-child .timeline-line::before {
       display: none;
     }
+
+    /* 氷のように澄んだクリスタルサファイア背景グラデーション */
+    .bg-jewel-gradient {
+      background: linear-gradient(135deg, #F0F5FA 0%, #E3EDF7 40%, #F5F1E6 100%);
+      background-attachment: fixed;
+    }
   </style>
 </head>
-<body class="bg-[#F4F8FC] text-brand-text min-h-screen font-sans selection:bg-brand-accent selection:text-brand-primary">
+<body class="bg-jewel-gradient text-brand-text min-h-screen font-sans selection:bg-brand-accent selection:text-brand-primary">
 
   <!-- ================= ログイン画面 ================= -->
-  <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-tr from-[#EBF2FA] via-[#FAF4E3] to-[#FDF3F1]">
-    <!-- 幾何学グラデーションバックグラウンド -->
-    <div class="absolute w-[400px] h-[400px] rounded-full bg-brand-accent/40 blur-3xl -top-20 -left-20"></div>
-    <div class="absolute w-[400px] h-[400px] rounded-full bg-brand-roseLight/50 blur-3xl -bottom-20 -right-20"></div>
+  <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-tr from-[#E6EFF7] via-[#FFFFFF] to-[#FAF5E6]">
+    <!-- プリズム光彩エフェクト -->
+    <div class="absolute w-[450px] h-[450px] rounded-full bg-brand-accent/50 blur-3xl -top-20 -left-20"></div>
+    <div class="absolute w-[450px] h-[450px] rounded-full bg-brand-goldLight/50 blur-3xl -bottom-20 -right-20"></div>
 
-    <div class="w-full max-w-md glass-base-panel rounded-[32px] p-8 md:p-10 relative z-10 animate-fade-in">
+    <div class="w-full max-w-md glass-base-panel rounded-[36px] p-8 md:p-10 relative z-10 animate-fade-in">
       <div class="text-center mb-8">
-        <span class="font-logo text-brand-gold text-[11px] font-black tracking-[0.25em] block mb-2">PERSONAL BEAUTY COMPASS</span>
-        <h1 class="font-logo text-3xl font-black text-brand-primary tracking-widest flex items-center justify-center gap-1">
+        <div class="flex justify-center mb-3">
+          <span class="p-3 bg-brand-primary text-brand-gold rounded-full shadow-glow">
+            <i data-lucide="gem" class="w-8 h-8 animate-pulse"></i>
+          </span>
+        </div>
+        <span class="font-logo text-brand-gold text-[10px] font-black tracking-[0.3em] block mb-1">PERSONAL BEAUTY COMPASS</span>
+        <h1 class="font-logo text-3xl font-black text-brand-primary tracking-widest">
           CARAT
         </h1>
-        <p class="text-[11px] text-brand-muted font-bold mt-2">ボディメイク・食事同期システム</p>
+        <p class="text-[11px] text-brand-muted font-bold mt-2">食事・生理女性ホルモン管理ポータル</p>
       </div>
 
       <div class="space-y-5">
-        <div class="bg-brand-accent/30 rounded-2xl p-4 border border-brand-border/40 text-center">
+        <div class="bg-brand-goldLight/40 rounded-2xl p-4 border border-brand-gold/15 text-center">
           <p class="text-[11px] text-brand-primary font-bold leading-relaxed">
             担当トレーナーから発行された<br>【専用クライアントID】を入力して連携してください。
           </p>
@@ -122,8 +136,8 @@
           <label class="text-[10px] text-brand-primary font-black uppercase tracking-wider block ml-1">Client ID / 連携ID</label>
           <div class="relative">
             <input type="text" id="client-id-input" placeholder="CRT-XXXXXX" 
-              class="w-full bg-white border-2 border-brand-border/60 rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary focus:outline-none focus:border-brand-primary transition-all shadow-inner tracking-wider placeholder:text-brand-muted/50 uppercase">
-            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-brand-muted/30">
+              class="w-full bg-white/90 border-2 border-brand-border/60 rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary focus:outline-none focus:border-brand-gold transition-all shadow-inner tracking-wider placeholder:text-brand-muted/50 uppercase">
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-brand-gold/60">
               <i data-lucide="key" class="w-4 h-4"></i>
             </span>
           </div>
@@ -137,35 +151,59 @@
       </div>
 
       <div class="text-center mt-8 pt-6 border-t border-brand-border/30">
-        <p class="text-[10px] text-brand-muted font-bold">© CARAT Beauty & Healthcare Inc.</p>
+        <p class="text-[10px] text-brand-muted font-bold">© CARAT Beauty & Healthcare</p>
       </div>
     </div>
   </div>
 
 
   <!-- ================= メインダッシュボード ================= -->
-  <div id="main-dashboard" class="hidden min-h-screen flex flex-col pb-28">
+  <div id="main-dashboard" class="hidden min-h-screen flex flex-col pb-12">
     
-    <!-- プレミアムヘッダー -->
-    <header class="bg-white/80 backdrop-blur-md border-b border-brand-border/40 sticky top-0 z-50">
-      <div class="max-w-2xl mx-auto px-4 py-3 flex justify-between items-center">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-xs shadow-inner" id="active-user-avatar">
-            C
-          </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-xs font-black text-brand-primary" id="active-user-name">読み込み中...</span>
-              <span class="text-[8px] bg-brand-goldLight text-brand-gold border border-brand-gold/20 px-1.5 py-0.5 rounded font-black tracking-wider" id="active-id-text">ID: --</span>
+    <!-- 💎 プレミアムインラインヘッダー -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-brand-border/40 sticky top-0 z-50 shadow-sm">
+      <div class="max-w-2xl mx-auto px-4 py-3 space-y-3">
+        
+        <!-- クライアントステータス & 連携解除 -->
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-brand-primary text-brand-gold flex items-center justify-center font-bold text-xs shadow-glow" id="active-user-avatar">
+              C
             </div>
-            <p class="text-[9px] text-brand-muted font-bold">CARAT クライアント同期中</p>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-black text-brand-primary" id="active-user-name">読み込み中...</span>
+                <span class="text-[8px] bg-brand-goldLight text-brand-gold border border-brand-gold/20 px-1.5 py-0.5 rounded font-black tracking-wider" id="active-id-text">ID: --</span>
+              </div>
+              <p class="text-[9px] text-brand-muted font-bold flex items-center gap-1">
+                <i data-lucide="gem" class="w-3 h-3 text-brand-gold animate-pulse"></i>
+                <span>CARAT 同期システム連携中</span>
+              </p>
+            </div>
           </div>
+
+          <button onclick="window.disconnectClientId()" class="text-[10px] font-bold text-brand-rose bg-brand-roseLight border border-brand-rose/15 px-3.5 py-1.5 rounded-full transition-all hover:bg-brand-rose/10 flex items-center gap-1">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>連携解除</span>
+          </button>
         </div>
 
-        <button onclick="window.disconnectClientId()" class="text-[10px] font-bold text-brand-rose bg-brand-roseLight border border-brand-rose/20 px-3 py-1.5 rounded-full transition-all hover:bg-brand-rose/10 flex items-center gap-1">
-          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-          <span>連携解除</span>
-        </button>
+        <!-- 👑 ヘッダーインライン・ジュエルタブ -->
+        <div class="bg-brand-accent/50 p-1 rounded-2xl border border-brand-border flex gap-1">
+          <button id="nav-btn-home" onclick="window.switchTab('home')" class="flex-1 py-3 px-1.5 rounded-xl transition-all text-xs font-black text-white bg-gradient-to-r from-brand-primary to-brand-secondary border border-white/10 shadow-blueGlow flex items-center justify-center gap-1.5 active:scale-95">
+            <i data-lucide="home" class="w-4 h-4"></i>
+            <span>ダッシュボード</span>
+          </button>
+          <button id="nav-btn-cycle-menu" onclick="window.switchTab('cycle-menu')" class="flex-1 py-3 px-1.5 rounded-xl transition-all text-xs font-black text-brand-muted hover:text-brand-primary flex items-center justify-center gap-1.5 active:scale-95">
+            <i data-lucide="droplet" class="w-4 h-4 text-brand-rose animate-pulse"></i>
+            <span>生理日・周期</span>
+          </button>
+          <button id="nav-btn-weight-trend" onclick="window.switchTab('weight-trend')" class="flex-1 py-3 px-1.5 rounded-xl transition-all text-xs font-black text-brand-muted hover:text-brand-primary flex items-center justify-center gap-1.5 active:scale-95">
+            <i data-lucide="line-chart" class="w-4 h-4"></i>
+            <span>美ボディ推移</span>
+          </button>
+        </div>
+
       </div>
     </header>
 
@@ -175,7 +213,7 @@
       <div id="tab-content-home" class="space-y-4 animate-fade-in">
         
         <!-- 日付コントロールバー & 生理周期フェーズ簡易インジケーター -->
-        <div class="flex flex-col gap-2 bg-white rounded-2xl p-2.5 border border-brand-border/50 shadow-softShadow">
+        <div class="flex flex-col gap-2 bg-white/90 rounded-2xl p-2.5 border border-brand-border/50 shadow-softShadow">
           <div class="flex items-center justify-between">
             <button onclick="window.changeDay('prev')" class="w-9 h-9 flex items-center justify-center text-brand-primary hover:bg-brand-accent/40 rounded-xl transition-all">
               <i data-lucide="chevron-left" class="w-5 h-5"></i>
@@ -192,7 +230,7 @@
           </div>
 
           <!-- ヘッダー生理周期ミニバッジ -->
-          <div id="header-cycle-mini-badge-container" class="hidden border-t border-brand-border/30 pt-2 flex justify-between items-center px-2">
+          <div id="header-cycle-mini-badge-container" class="hidden border-t border-brand-border/40 pt-2 flex justify-between items-center px-2">
             <span class="text-[9px] text-brand-muted font-bold">本日のホルモンサイクル:</span>
             <div id="header-cycle-badge" class="px-2.5 py-0.5 rounded-full text-[9px] font-black border flex items-center gap-1">
               <!-- 動的生成 -->
@@ -207,7 +245,7 @@
           <div>
             <div class="flex justify-between items-center mb-3">
               <h2 class="text-xs font-black text-brand-primary tracking-wider flex items-center gap-1.5">
-                <span class="w-1 h-3.5 bg-brand-primary rounded-full"></span>
+                <span class="w-1.5 h-3.5 bg-brand-gold rounded-full"></span>
                 <span>エネルギーコンパス</span>
               </h2>
               <span id="auto-recovery-status-badge" class="hidden items-center gap-1 text-[8px] bg-teal-50 text-teal-600 px-2.5 py-1 rounded-full font-bold border border-teal-100 animate-pulse">
@@ -221,14 +259,14 @@
               <div class="md:col-span-5 flex justify-center py-2">
                 <div class="relative w-36 h-36">
                   <svg class="w-full h-full transform -rotate-90">
-                    <circle cx="72" cy="72" r="62" stroke="#EBF2FA" stroke-width="10" fill="transparent" />
-                    <circle id="calorie-progress-bar" cx="72" cy="72" r="62" stroke="#1A335E" stroke-width="11" fill="transparent"
+                    <circle cx="72" cy="72" r="62" stroke="#EEF4FA" stroke-width="10" fill="transparent" />
+                    <circle id="calorie-progress-bar" cx="72" cy="72" r="62" stroke="#C5A059" stroke-width="11" fill="transparent"
                       stroke-dasharray="389" stroke-dashoffset="389" stroke-linecap="round" class="transition-all duration-700 ease-out" />
                   </svg>
                   <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
                     <span class="text-[9px] text-brand-muted font-bold">摂取カロリー</span>
                     <span class="text-2xl font-black font-logo tracking-tight text-brand-primary mt-0.5" id="summary-cur-cal">0</span>
-                    <div class="w-8 border-b border-brand-border/50 my-1"></div>
+                    <div class="w-8 border-b border-brand-gold/30 my-1"></div>
                     <p class="text-[9px] text-brand-muted font-bold"><span id="summary-tar-cal">1,600</span> kcal</p>
                   </div>
                 </div>
@@ -245,7 +283,7 @@
                     昨日は目標を <span id="yesterday-over-kcal" class="font-bold text-teal-900 font-logo">-- kcal</span> 超過したため、本日目標から <span id="today-adjusted-kcal" class="font-bold text-teal-900 font-logo">-- kcal</span> 安全調整カットしています。
                   </p>
                 </div>
-                <div id="home-cycle-guidance-box" class="bg-brand-accent/20 p-3 rounded-2xl border border-brand-border/30 flex flex-col gap-1.5">
+                <div id="home-cycle-guidance-box" class="bg-brand-goldLight/40 p-3.5 rounded-2xl border border-brand-gold/15 flex flex-col gap-1.5">
                   <div class="flex items-center gap-1">
                     <span id="home-cycle-status-emoji">📅</span>
                     <span class="text-[10px] text-brand-primary font-black" id="home-cycle-status-text">生理周期を設定すると身体作り補正が表示されます。</span>
@@ -264,7 +302,7 @@
           <div class="space-y-4">
             <div class="flex justify-between items-center">
               <h2 class="text-xs font-black text-brand-primary tracking-wider flex items-center gap-1.5">
-                <span class="w-1 h-3.5 bg-brand-primary rounded-full"></span>
+                <span class="w-1.5 h-3.5 bg-brand-gold rounded-full"></span>
                 <span>美ボディ栄養3大バランス (PFC)</span>
               </h2>
               <span id="pfc-adjusted-badge" class="hidden text-[8px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded font-black border border-emerald-100">生理期によるPFC補正適用中</span>
@@ -272,38 +310,38 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <!-- P -->
-              <div class="bg-slate-50/50 p-3.5 rounded-2xl border border-brand-border/30 flex flex-col justify-between">
+              <div class="bg-brand-accent/40 p-3.5 rounded-2xl border border-brand-border/60 flex flex-col justify-between">
                 <div class="flex justify-between items-center mb-1.5">
                   <span class="text-[11px] font-black text-brand-primary flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-brand-secondary"></span>たんぱく質 (P)
                   </span>
                   <span class="text-[10px] font-logo font-bold text-brand-muted"><span id="summary-cur-p" class="text-brand-primary font-black text-xs">0.0</span> / <span id="summary-tar-p">100</span>g</span>
                 </div>
-                <div class="w-full bg-brand-accent/40 rounded-full h-2.5 overflow-hidden border border-brand-border/30">
+                <div class="w-full bg-white rounded-full h-2.5 overflow-hidden border border-brand-border/40">
                   <div id="bar-p" class="bg-gradient-to-r from-brand-secondary to-[#87A8D0] h-full rounded-full transition-all duration-500" style="width: 0%"></div>
                 </div>
               </div>
               <!-- F -->
-              <div class="bg-slate-50/50 p-3.5 rounded-2xl border border-brand-border/30 flex flex-col justify-between">
+              <div class="bg-brand-accent/40 p-3.5 rounded-2xl border border-brand-border/60 flex flex-col justify-between">
                 <div class="flex justify-between items-center mb-1.5">
                   <span class="text-[11px] font-black text-brand-primary flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-brand-rose"></span>脂質 (F)
                   </span>
                   <span class="text-[10px] font-logo font-bold text-brand-muted"><span id="summary-cur-f" class="text-brand-primary font-black text-xs">0.0</span> / <span id="summary-tar-f">40</span>g</span>
                 </div>
-                <div class="w-full bg-brand-accent/40 rounded-full h-2.5 overflow-hidden border border-brand-border/30">
+                <div class="w-full bg-white rounded-full h-2.5 overflow-hidden border border-brand-border/40">
                   <div id="bar-f" class="bg-gradient-to-r from-brand-rose to-[#F3B1A5] h-full rounded-full transition-all duration-500" style="width: 0%"></div>
                 </div>
               </div>
               <!-- C -->
-              <div class="bg-slate-50/50 p-3.5 rounded-2xl border border-brand-border/30 flex flex-col justify-between">
+              <div class="bg-brand-accent/40 p-3.5 rounded-2xl border border-brand-border/60 flex flex-col justify-between">
                 <div class="flex justify-between items-center mb-1.5">
                   <span class="text-[11px] font-black text-brand-primary flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-brand-gold"></span>炭水化物 (C)
                   </span>
                   <span class="text-[10px] font-logo font-bold text-brand-muted"><span id="summary-cur-c" class="text-brand-primary font-black text-xs">0.0</span> / <span id="summary-tar-c">210</span>g</span>
                 </div>
-                <div class="w-full bg-brand-accent/40 rounded-full h-2.5 overflow-hidden border border-brand-border/30">
+                <div class="w-full bg-white rounded-full h-2.5 overflow-hidden border border-brand-border/40">
                   <div id="bar-c" class="bg-gradient-to-r from-brand-gold to-[#DEC293] h-full rounded-full transition-all duration-500" style="width: 0%"></div>
                 </div>
               </div>
@@ -313,7 +351,7 @@
           <hr class="border-brand-border/40">
 
           <!-- セクション3: 累積「帳じり合わせ」貯金バランス -->
-          <div class="bg-brand-accent/10 p-4 rounded-2xl border border-brand-border/40 relative overflow-hidden">
+          <div class="bg-brand-accent/40 p-4 rounded-2xl border border-brand-border/60 relative overflow-hidden">
             <div id="balance-bar-color" class="absolute top-0 left-0 w-1.5 h-full bg-emerald-400"></div>
             <div class="pl-2">
               <div class="flex items-center justify-between mb-2.5">
@@ -321,22 +359,22 @@
                   <i data-lucide="pie-chart" class="w-4 h-4 text-brand-secondary"></i>
                   <h3 class="text-xs font-black text-brand-primary">今週のボディメイク貯金 (月曜からの累積差分)</h3>
                 </div>
-                <span class="text-[8px] bg-slate-100 text-brand-muted px-2 py-0.5 rounded font-bold">自動計算</span>
+                <span class="text-[8px] bg-white border border-brand-border/40 text-brand-muted px-2 py-0.5 rounded font-bold">自動計算</span>
               </div>
               <div class="grid grid-cols-4 gap-2 text-center">
-                <div class="bg-white/60 py-2 rounded-xl border border-brand-border/30 shadow-sm">
+                <div class="bg-white py-2 rounded-xl border border-brand-border/40 shadow-sm">
                   <p class="text-[8px] text-brand-muted font-bold">エネルギー</p>
                   <p class="text-[10px] font-logo font-black mt-0.5" id="balance-kcal">±0 kcal</p>
                 </div>
-                <div class="bg-white/60 py-2 rounded-xl border border-brand-border/30 shadow-sm">
+                <div class="bg-white py-2 rounded-xl border border-brand-border/40 shadow-sm">
                   <p class="text-[8px] text-brand-muted font-bold">たんぱく質</p>
                   <p class="text-[10px] font-logo font-black mt-0.5" id="balance-p">±0.0g</p>
                 </div>
-                <div class="bg-white/60 py-2 rounded-xl border border-brand-border/30 shadow-sm">
+                <div class="bg-white py-2 rounded-xl border border-brand-border/40 shadow-sm">
                   <p class="text-[8px] text-brand-muted font-bold">脂質</p>
                   <p class="text-[10px] font-logo font-black mt-0.5" id="balance-f">±0.0g</p>
                 </div>
-                <div class="bg-white/60 py-2 rounded-xl border border-brand-border/30 shadow-sm">
+                <div class="bg-white py-2 rounded-xl border border-brand-border/40 shadow-sm">
                   <p class="text-[8px] text-brand-muted font-bold">炭水化物</p>
                   <p class="text-[10px] font-logo font-black mt-0.5" id="balance-c">±0.0g</p>
                 </div>
@@ -347,8 +385,8 @@
         </div> <!-- 👑 統合パネル 終了 -->
 
 
-        <!-- 📸 AI解析 ＆ 食事登録ショートカット -->
-        <div class="bg-white rounded-3xl p-5 border border-brand-border/50 shadow-softShadow space-y-4">
+        <!-- 📸 食事登録ショートカット -->
+        <div class="bg-white/90 rounded-3xl p-5 border border-brand-border/60 shadow-softShadow space-y-4">
           <div class="flex justify-between items-center">
             <h3 class="text-xs font-black text-brand-primary tracking-wider flex items-center gap-1.5">
               <i data-lucide="plus-circle" class="w-4.5 h-4.5 text-brand-gold"></i>
@@ -359,7 +397,7 @@
 
           <div class="grid grid-cols-3 gap-2.5">
             <!-- 写真解析 -->
-            <button onclick="window.triggerAiFeature('camera')" class="bg-brand-roseLight/30 hover:bg-brand-roseLight/60 border border-brand-rose/20 p-3 rounded-2xl flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 group">
+            <button onclick="window.triggerAiFeature('camera')" class="bg-brand-roseLight hover:bg-brand-rose/10 border border-brand-rose/15 p-3 rounded-2xl flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 group">
               <span class="w-9 h-9 rounded-full bg-brand-rose text-white flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
                 <i data-lucide="camera" class="w-4.5 h-4.5"></i>
               </span>
@@ -367,12 +405,12 @@
             </button>
             <input type="file" id="ai-image-input" accept="image/*" class="hidden">
 
-            <!-- AIテキスト解析 -->
-            <button onclick="window.triggerAiFeature('text')" class="bg-brand-accent/40 hover:bg-brand-accent/70 border border-brand-primary/10 p-3 rounded-2xl flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 group">
-              <span class="w-9 h-9 rounded-full bg-brand-primary text-white flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
-                <i data-lucide="sparkles" class="w-4.5 h-4.5 text-brand-gold animate-bounce"></i>
+            <!-- テキスト解析 -->
+            <button onclick="window.triggerAiFeature('text')" class="bg-brand-accent hover:bg-brand-accent/80 border border-brand-primary/15 p-3 rounded-2xl flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 group">
+              <span class="w-9 h-9 rounded-full bg-brand-primary text-brand-gold flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
+                <i data-lucide="sparkles" class="w-4.5 h-4.5 animate-bounce"></i>
               </span>
-              <span class="text-[10px] font-bold text-brand-primary">AI食事解析</span>
+              <span class="text-[10px] font-bold text-brand-primary">テキスト解析</span>
             </button>
 
             <!-- 手動登録 -->
@@ -398,7 +436,7 @@
 
 
         <!-- 📝 本日の食事明細タイムライン -->
-        <div class="bg-white rounded-3xl p-5 border border-brand-border/50 shadow-softShadow space-y-4">
+        <div class="bg-white/90 rounded-3xl p-5 border border-brand-border/60 shadow-softShadow space-y-4">
           <div class="flex justify-between items-center">
             <h3 class="text-xs font-black text-brand-primary tracking-wider flex items-center gap-1.5">
               <i data-lucide="utensils" class="w-4.5 h-4.5 text-brand-gold"></i>
@@ -422,7 +460,7 @@
           <div class="relative z-10 space-y-3.5">
             <div class="flex justify-between items-center">
               <div class="flex items-center gap-2">
-                <span class="w-7 h-7 rounded-full bg-brand-gold flex items-center justify-center font-bold text-xs shadow-inner">🏆</span>
+                <span class="w-7 h-7 rounded-full bg-brand-gold text-brand-primary flex items-center justify-center font-bold text-xs shadow-inner">🏆</span>
                 <div>
                   <h4 class="text-xs font-black tracking-wide">CARAT チーフアドバイス</h4>
                   <p class="text-[8px] text-brand-accent/80 font-bold" id="trainer-feedback-time">アドバイス未更新</p>
@@ -442,17 +480,17 @@
       </div> <!-- ホームタブ終了 -->
 
 
-      <!-- ================= タブ2: 生理日・女性ホルモン管理 (完全新規追加) ================= -->
+      <!-- ================= タブ2: 生理日・女性ホルモン管理 ================= -->
       <div id="tab-content-cycle-menu" class="hidden space-y-4 animate-fade-in">
         
         <!-- 生理日設定パネル -->
-        <div class="bg-white rounded-3xl p-5 border border-brand-border/50 shadow-softShadow space-y-4">
-          <div class="flex justify-between items-center pb-2 border-b border-brand-border/30">
+        <div class="bg-white/90 rounded-3xl p-5 border border-brand-border/60 shadow-softShadow space-y-4">
+          <div class="flex justify-between items-center pb-2 border-b border-brand-border/40">
             <h3 class="text-xs font-black text-brand-primary tracking-wider flex items-center gap-1.5">
               <i data-lucide="calendar" class="w-4 h-4 text-brand-rose"></i>
               <span>ホルモンサイクル設定</span>
             </h3>
-            <span class="text-[9px] bg-brand-roseLight text-brand-rose border border-brand-rose/20 px-2.5 py-0.5 rounded-full font-black">AI不使用・ローカル精密計算</span>
+            <span class="text-[9px] bg-brand-roseLight text-brand-rose border border-brand-rose/20 px-2.5 py-0.5 rounded-full font-black">エビデンス・ローカル精密計算</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -460,7 +498,7 @@
               <label class="text-[10px] text-brand-muted font-black uppercase tracking-wider block ml-1">前回の生理開始日</label>
               <div class="flex gap-1.5">
                 <input type="date" id="cycle-start-date-input" 
-                  class="flex-1 bg-slate-50 border-2 border-brand-border/60 rounded-xl px-3 py-2.5 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-primary shadow-inner">
+                  class="flex-1 bg-slate-50 border-2 border-brand-border/60 rounded-xl px-3 py-2.5 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-gold transition-all shadow-inner">
                 <button onclick="window.setCycleStartDateToday()" 
                   class="bg-brand-rose text-white text-[10px] font-black px-3 rounded-xl hover:bg-brand-rose/90 transition-all active:scale-95 shadow-sm">
                   今日に設定
@@ -472,7 +510,7 @@
               <label class="text-[10px] text-brand-muted font-black uppercase tracking-wider block ml-1">平均の生理周期</label>
               <div class="relative">
                 <input type="number" id="cycle-length-input" min="20" max="45" placeholder="28" 
-                  class="w-full bg-slate-50 border-2 border-brand-border/60 rounded-xl px-3 py-2.5 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-primary shadow-inner pr-10">
+                  class="w-full bg-slate-50 border-2 border-brand-border/60 rounded-xl px-3 py-2.5 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-gold transition-all shadow-inner pr-10">
                 <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-brand-muted">日</span>
               </div>
             </div>
@@ -504,7 +542,7 @@
 
           <!-- 水分貯留（むくみ）メーター / 筋肥大感受性インジケーター -->
           <div class="grid grid-cols-2 gap-3">
-            <div class="bg-white/70 p-3.5 rounded-2xl border border-brand-border/40 text-xs shadow-sm">
+            <div class="bg-white p-3.5 rounded-2xl border border-brand-border/60 text-xs shadow-sm">
               <span class="text-[9px] text-brand-muted font-bold block mb-1">筋肥大感受性 (エストロゲン濃度)</span>
               <div class="flex items-center gap-2">
                 <div class="flex-1 bg-brand-accent h-2.5 rounded-full overflow-hidden">
@@ -513,7 +551,7 @@
                 <span id="indicator-estrogen-val" class="font-logo font-black text-[10px] text-brand-primary">0%</span>
               </div>
             </div>
-            <div class="bg-white/70 p-3.5 rounded-2xl border border-brand-border/40 text-xs shadow-sm">
+            <div class="bg-white p-3.5 rounded-2xl border border-brand-border/60 text-xs shadow-sm">
               <span class="text-[9px] text-brand-muted font-bold block mb-1">水分貯留度 (プロゲステロン濃度)</span>
               <div class="flex items-center gap-2">
                 <div class="flex-1 bg-brand-accent h-2.5 rounded-full overflow-hidden">
@@ -524,23 +562,23 @@
             </div>
           </div>
 
-          <hr class="border-brand-border/40">
+          <hr class="border-brand-border/60">
 
-          <!-- 🔬 エビデンスに基づく分析セクション -->
+          <!-- エビデンス分析セクション -->
           <div class="space-y-4">
             
             <!-- ① 身体作り向け：トレーニング強度目標 -->
-            <div class="flex gap-3 items-start bg-white/60 p-4 rounded-2xl border border-brand-border/30">
+            <div class="flex gap-3 items-start bg-white p-4 rounded-2xl border border-brand-border/60 shadow-sm">
               <span class="p-2 rounded-xl bg-brand-accent text-brand-primary text-sm flex-shrink-0">💪</span>
               <div class="space-y-1">
-                <h4 class="text-[11px] font-black text-brand-primary uppercase tracking-wide">エビデンス有酸素・トレーニング強度アドバイス</h4>
+                <h4 class="text-[11px] font-black text-brand-primary uppercase tracking-wide">有酸素・トレーニング強度アドバイス</h4>
                 <p id="cycle-training-adv" class="text-[10px] text-brand-text leading-relaxed font-bold">生理データが不足しているか、設定がされていません。</p>
               </div>
             </div>
 
             <!-- ② 水分貯留と体重増への捉え方 -->
-            <div class="flex gap-3 items-start bg-brand-roseLight/30 p-4 rounded-2xl border border-brand-rose/10">
-              <span class="p-2 rounded-xl bg-brand-roseLight text-brand-rose text-sm flex-shrink-0">⚖️</span>
+            <div class="flex gap-3 items-start bg-brand-roseLight border border-brand-rose/20 p-4 rounded-2xl shadow-sm">
+              <span class="p-2 rounded-xl bg-white text-brand-rose text-sm flex-shrink-0">⚖️</span>
               <div class="space-y-1">
                 <h4 class="text-[11px] font-black text-brand-rose uppercase tracking-wide">体重推移への科学的捉え方</h4>
                 <p id="cycle-weight-note" class="text-[10px] text-brand-muted leading-relaxed font-bold">生理周期に応じて体重の増減への捉え方を提案します。</p>
@@ -548,15 +586,15 @@
             </div>
 
             <!-- ③ 自動PFC補正指標（非AI） -->
-            <div class="bg-brand-primary/5 p-4 rounded-2xl border border-brand-border/60 relative overflow-hidden">
+            <div class="bg-brand-primary/5 p-4 rounded-2xl border border-brand-border/85 relative overflow-hidden">
               <div class="flex items-center gap-2 mb-2">
-                <span class="p-1 rounded-lg bg-brand-primary text-white text-[10px]">🍎</span>
+                <span class="p-1 rounded-lg bg-brand-primary text-brand-gold text-[10px]">🍎</span>
                 <h4 class="text-xs font-black text-brand-primary">生理フェーズによる本日のPFC自動調整提案</h4>
               </div>
-              <p id="cycle-pfc-adjust" class="text-[10.5px] text-brand-text leading-relaxed font-bold pl-1.5 border-l-2 border-brand-secondary">
+              <p id="cycle-pfc-adjust" class="text-[10.5px] text-brand-text leading-relaxed font-bold pl-1.5 border-l-2 border-brand-gold">
                 フェーズに合わせてPFC調整値をここに提案します。
               </p>
-              <div class="mt-3 bg-white/80 p-3 rounded-xl border border-brand-border/30">
+              <div class="mt-3 bg-white p-3 rounded-xl border border-brand-border/50">
                 <p class="text-[9px] text-brand-muted font-bold leading-relaxed">
                   ※ エストロゲン分泌が高まる「卵胞期」はインスリン感受性が高いため炭水化物の代謝がスムーズです。逆に「黄体期」はインスリン感受性が低下するため血糖値の急上昇に留意した複合炭水化物（玄米・オーツ麦等）への置き換えを推奨します。
                 </p>
@@ -572,7 +610,7 @@
       <!-- ================= タブ3: 体重推移グラフ ================= -->
       <div id="tab-content-weight-trend" class="hidden space-y-4 animate-fade-in">
         <!-- 当日の体重入力 -->
-        <div class="bg-white rounded-3xl p-5 border border-[#D0DFEC] shadow-softShadow">
+        <div class="bg-white/90 rounded-3xl p-5 border border-brand-border/60 shadow-softShadow">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div class="flex items-center gap-2">
               <span class="w-8 h-8 rounded-full bg-brand-accent text-brand-secondary flex items-center justify-center">⚖️</span>
@@ -585,7 +623,7 @@
             <div class="flex items-center gap-2">
               <div class="relative w-36">
                 <input type="number" step="0.1" id="input-weight" placeholder="55.0"
-                  class="w-full bg-slate-50 border-2 border-brand-border/60 rounded-xl px-3 py-2.5 text-right font-logo text-sm font-black text-brand-primary focus:outline-none focus:border-brand-primary pr-9">
+                  class="w-full bg-slate-50 border-2 border-brand-border/60 rounded-xl px-3 py-2.5 text-right font-logo text-sm font-black text-brand-primary focus:outline-none focus:border-brand-gold transition-all pr-9">
                 <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-brand-muted font-logo">kg</span>
               </div>
               <button onclick="window.saveBodyData()" class="bg-brand-primary hover:bg-brand-primaryHover text-white px-4 py-2.5 rounded-xl text-xs font-black transition-all active:scale-95 shadow-sm">
@@ -596,10 +634,10 @@
         </div>
 
         <!-- 📈 グラフ & 分析数値 -->
-        <div class="bg-white rounded-3xl p-5 border border-brand-border/50 shadow-softShadow space-y-4">
+        <div class="bg-white/90 rounded-3xl p-5 border border-brand-border/60 shadow-softShadow space-y-4">
           <div class="flex justify-between items-center">
-            <h3 class="text-xs font-black text-brand-primary tracking-wider">体重減少マイルストーン (直近30日間)</h3>
-            <span class="text-[9px] text-brand-muted font-bold font-logo">CARAT WEIGHT WATCH</span>
+            <h3 class="text-xs font-black text-brand-primary tracking-wider font-logo">CARAT WEIGHT WATCH</h3>
+            <span class="text-[9px] text-brand-muted font-bold font-logo">直近30日間</span>
           </div>
 
           <!-- 分析チップス -->
@@ -630,24 +668,6 @@
 
     </main>
 
-    <!-- 🌐 プレミアム固定ボトムナビゲーション (中央を生理サイクル管理に変更) -->
-    <nav class="bg-white/94 backdrop-blur-lg border-t border-brand-border/60 fixed bottom-0 left-0 right-0 py-3.5 px-4 z-[90]">
-      <div class="max-w-md mx-auto flex gap-3">
-        <button id="nav-btn-home" onclick="window.switchTab('home')" class="flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-white bg-gradient-to-r from-brand-primary to-brand-secondary shadow-blueGlow border border-white/20 flex items-center justify-center gap-1.5 active:scale-98">
-          <i data-lucide="home" class="w-4 h-4"></i>
-          <span>ダッシュボード</span>
-        </button>
-        <button id="nav-btn-cycle-menu" onclick="window.switchTab('cycle-menu')" class="flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-brand-muted hover:text-brand-primary flex items-center justify-center gap-1.5 active:scale-98">
-          <i data-lucide="droplet" class="w-4 h-4 text-brand-rose animate-pulse"></i>
-          <span>生理日・周期</span>
-        </button>
-        <button id="nav-btn-weight-trend" onclick="window.switchTab('weight-trend')" class="flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-brand-muted hover:text-brand-primary flex items-center justify-center gap-1.5 active:scale-98">
-          <i data-lucide="line-chart" class="w-4 h-4"></i>
-          <span>美ボディ推移</span>
-        </button>
-      </div>
-    </nav>
-
 
     <!-- ================= モーダル：手動食事登録 ================= -->
     <div id="manual-meal-modal" class="hidden fixed inset-0 bg-brand-primary/60 backdrop-blur-sm items-center justify-center p-4 z-[150] animate-fade-in">
@@ -663,33 +683,33 @@
           <div class="space-y-1">
             <label class="text-[10px] font-bold text-brand-muted">お食事名</label>
             <input type="text" id="manual-name" required placeholder="例: 鮭の塩焼き、玄米ご飯" 
-              class="w-full bg-slate-50 border border-brand-border rounded-xl px-3 py-2 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-primary shadow-inner">
+              class="w-full bg-slate-50 border border-brand-border rounded-xl px-3 py-2 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-gold shadow-inner">
           </div>
           <div class="space-y-1">
             <label class="text-[10px] font-bold text-brand-muted">登録時間</label>
             <input type="time" id="manual-time" required 
-              class="w-full bg-slate-50 border border-brand-border rounded-xl px-3 py-2 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-primary shadow-inner">
+              class="w-full bg-slate-50 border border-brand-border rounded-xl px-3 py-2 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-gold shadow-inner">
           </div>
           <div class="grid grid-cols-4 gap-2">
             <div class="space-y-1">
               <label class="text-[9px] font-bold text-brand-muted block text-center">P(g)</label>
               <input type="number" step="0.1" id="manual-p" required 
-                class="w-full bg-slate-50 border border-brand-border rounded-xl px-2 py-2 text-center text-xs font-logo font-black text-brand-primary focus:outline-none focus:border-brand-primary">
+                class="w-full bg-slate-50 border border-brand-border rounded-xl px-2 py-2 text-center text-xs font-logo font-black text-brand-primary focus:outline-none focus:border-brand-gold">
             </div>
             <div class="space-y-1">
               <label class="text-[9px] font-bold text-brand-muted block text-center">F(g)</label>
               <input type="number" step="0.1" id="manual-f" required 
-                class="w-full bg-slate-50 border border-brand-border rounded-xl px-2 py-2 text-center text-xs font-logo font-black text-brand-primary focus:outline-none focus:border-brand-primary">
+                class="w-full bg-slate-50 border border-brand-border rounded-xl px-2 py-2 text-center text-xs font-logo font-black text-brand-primary focus:outline-none focus:border-brand-gold">
             </div>
             <div class="space-y-1">
               <label class="text-[9px] font-bold text-brand-muted block text-center">C(g)</label>
               <input type="number" step="0.1" id="manual-c" required 
-                class="w-full bg-slate-50 border border-brand-border rounded-xl px-2 py-2 text-center text-xs font-logo font-black text-brand-primary focus:outline-none focus:border-brand-primary">
+                class="w-full bg-slate-50 border border-brand-border rounded-xl px-2 py-2 text-center text-xs font-logo font-black text-brand-primary focus:outline-none focus:border-brand-gold">
             </div>
             <div class="space-y-1">
               <label class="text-[9px] font-bold text-brand-muted block text-center">Energy(kcal)</label>
               <input type="number" id="manual-kcal" required 
-                class="w-full bg-slate-50 border border-brand-border rounded-xl px-2 py-2 text-center text-xs font-logo font-black text-brand-primary focus:outline-none focus:border-brand-primary">
+                class="w-full bg-slate-50 border border-brand-border rounded-xl px-2 py-2 text-center text-xs font-logo font-black text-brand-primary focus:outline-none focus:border-brand-gold">
             </div>
           </div>
           <button type="submit" class="w-full bg-brand-primary hover:bg-brand-primaryHover text-white font-bold py-3 px-4 rounded-xl text-xs transition-all active:scale-95 shadow-md">
@@ -700,11 +720,11 @@
     </div>
 
 
-    <!-- ================= モーダル：テキストAI食事解析 ================= -->
+    <!-- ================= モーダル：テキスト食事解析 ================= -->
     <div id="text-analyze-modal" class="hidden fixed inset-0 bg-brand-primary/60 backdrop-blur-sm items-center justify-center p-4 z-[150] animate-fade-in">
       <div class="w-full max-w-sm bg-white rounded-[28px] border border-brand-border p-6 shadow-premium space-y-4">
         <div class="flex justify-between items-center pb-2 border-b border-brand-border/40">
-          <h3 class="text-xs font-black text-brand-primary">AI食事テキスト解析</h3>
+          <h3 class="text-xs font-black text-brand-primary">テキスト食事解析</h3>
           <button onclick="window.toggleModal('text-analyze-modal', false)" class="text-brand-muted hover:text-brand-primary">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
@@ -715,7 +735,7 @@
             食べたお食事や、コンビニの商品名、調理方法を入力するだけで、AIが栄養価値と構成食材を自動計算して登録します。
           </p>
           <textarea id="text-analyze-input" rows="4" placeholder="例: セブンイレブンのサラダチキンと、もち麦おにぎり梅、あさりのお味噌汁を食べました。"
-            class="w-full bg-slate-50 border-2 border-brand-border/60 rounded-2xl p-4 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-primary shadow-inner resize-none"></textarea>
+            class="w-full bg-slate-50 border-2 border-brand-border/60 rounded-2xl p-4 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-gold shadow-inner resize-none"></textarea>
           
           <button onclick="window.analyzeMealText()" class="w-full bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-bold py-3 px-4 rounded-xl text-xs transition-all active:scale-95 shadow-md flex items-center justify-center gap-1.5">
             <i data-lucide="sparkles" class="w-4 h-4 text-brand-gold animate-bounce"></i>
@@ -743,7 +763,7 @@
           <!-- 料理名 -->
           <div class="space-y-1">
             <label class="text-[10px] font-black text-brand-muted uppercase block ml-1">お食事タイトル</label>
-            <input type="text" id="edit-meal-name" class="w-full bg-slate-50 border border-brand-border rounded-xl px-3 py-2 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-primary shadow-inner">
+            <input type="text" id="edit-meal-name" class="w-full bg-slate-50 border border-brand-border rounded-xl px-3 py-2 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-gold shadow-inner">
           </div>
 
           <!-- スケール調整 -->
@@ -842,7 +862,7 @@
         <div class="flex justify-between items-center pb-2 border-b border-brand-border/40">
           <h3 class="text-xs font-black text-brand-rose flex items-center gap-1.5">
             <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-            <span>AI通信スキャンエラー</span>
+            <span>通信スキャンエラー</span>
           </h3>
           <button onclick="window.toggleModal('ai-error-modal', false)" class="text-brand-muted hover:text-brand-primary">
             <i data-lucide="x" class="w-5 h-5"></i>
@@ -871,8 +891,8 @@
         <div class="absolute inset-0 rounded-full border-4 border-brand-gold border-t-transparent animate-spin"></div>
       </div>
       <div class="text-center space-y-1 animate-pulse">
-        <p class="text-xs font-black text-white" id="loading-main-text">AIが画像からお食事を精査中...</p>
-        <p class="text-[10px] text-brand-accent font-bold" id="loading-sub-text">数十種類以上の栄養成分の推定値を割り出しています。</p>
+        <p class="text-xs font-black text-white" id="loading-main-text">解析データを精査中...</p>
+        <p class="text-[10px] text-brand-accent font-bold" id="loading-sub-text">栄養成分の推定値を割り出しています。</p>
       </div>
     </div>
 
@@ -918,7 +938,7 @@
     window.db = db;
     window.auth = auth;
 
-    // クライアントの状態データ構造 (女性周期設定のデフォルト値を追加)
+    // クライアントの状態データ構造
     let clientState = {
       nickname: "同期中...",
       targetCalories: 1600,
@@ -941,7 +961,6 @@
       trainerFeedback: "",
       trainerFeedbackAt: "",
       sharedGeminiKey: "",
-      // 女性ホルモンサイクル用データ
       cycleStartDate: "",
       cycleLength: 28
     };
@@ -1011,8 +1030,8 @@
 
     function showToast(message) {
       const toast = document.createElement('div');
-      toast.className = "fixed bottom-28 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-premium z-[300] transition-opacity duration-300 flex items-center gap-2 border border-white/20";
-      toast.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-brand-gold animate-bounce"></i>` + message;
+      toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-premium z-[300] transition-opacity duration-300 flex items-center gap-2 border border-brand-gold/30";
+      toast.innerHTML = `<i data-lucide="gem" class="w-4 h-4 text-brand-gold animate-bounce"></i>` + message;
       document.body.appendChild(toast);
       lucide.createIcons();
       setTimeout(() => {
@@ -1027,20 +1046,19 @@
       return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
     }
 
-    // タイムジャーナルのバッジ作成ヘルパー
     function estimateMealCategoryByTime(timeStr) {
       if (!timeStr) return { label: "一般食", emoji: "🍱", class: "bg-slate-100 text-brand-text border-slate-200" };
       const [hourStr] = timeStr.split(":");
       const hour = parseInt(hourStr) || 12;
       
       if (hour >= 5 && hour < 11) {
-        return { label: "朝食", emoji: "🌅", class: "bg-brand-accent/60 text-brand-primary border-brand-primary/10" };
+        return { label: "朝食", emoji: "🌅", class: "bg-brand-accent text-brand-primary border-brand-primary/10" };
       } else if (hour >= 11 && hour < 17) {
-        return { label: "昼食", emoji: "☀️", class: "bg-brand-goldLight text-brand-gold border-brand-gold/15" };
+        return { label: "昼食", emoji: "☀️", class: "bg-brand-goldLight text-brand-gold border-brand-gold/20" };
       } else if (hour >= 17 && hour < 24) {
-        return { label: "夕食", emoji: "🌙", class: "bg-slate-100 text-brand-text border-slate-200" };
+        return { label: "夕食", emoji: "🌙", class: "bg-slate-50 text-brand-text border-slate-200" };
       } else {
-        return { label: "間食", emoji: "🍰", class: "bg-brand-roseLight text-brand-rose border-brand-rose/15" };
+        return { label: "間食", emoji: "🍰", class: "bg-brand-roseLight text-brand-rose border-brand-rose/20" };
       }
     }
 
@@ -1064,7 +1082,6 @@
       return Array.from(historyMap.values()).slice(0, 10);
     }
 
-    // クライアント初期化
     async function initClientApp() {
       const initAuth = async () => {
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -1082,7 +1099,7 @@
 
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          // 中央SETTINGSとの自動同期
+          // SETTINGS同期
           const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
           onSnapshot(settingsRef, (snap) => {
             if (snap.exists()) {
@@ -1096,7 +1113,6 @@
             console.warn("Global settings sync error:", err);
           });
 
-          // 連携持続セッションの確認
           const savedId = localStorage.getItem("carat_client_connected_id_" + appId);
           if (savedId) {
             currentClientId = savedId;
@@ -1124,10 +1140,9 @@
           document.getElementById('main-dashboard').classList.remove('hidden');
           
           document.getElementById('active-user-name').innerText = clientState.nickname || "クライアント様";
-          document.getElementById('active-user-avatar').innerText = (clientState.nickname || "C").charAt(0);
+          document.getElementById('active-user-avatar').innerText = "C";
           document.getElementById('active-id-text').innerText = clientId;
           
-          // 生理期フォームの初期値ロード
           if (clientState.cycleStartDate) {
             document.getElementById('cycle-start-date-input').value = clientState.cycleStartDate;
           }
@@ -1179,7 +1194,7 @@
       history.forEach((h) => {
         const card = document.createElement('button');
         card.type = 'button';
-        card.className = "bg-white hover:bg-brand-accent/50 border border-brand-border px-4 py-3.5 rounded-2xl shrink-0 w-[145px] text-left flex flex-col justify-between transition-all shadow-softShadow group active:scale-95";
+        card.className = "bg-white hover:bg-brand-accent border border-brand-border px-4 py-3.5 rounded-2xl shrink-0 w-[145px] text-left flex flex-col justify-between transition-all shadow-softShadow group active:scale-95";
         card.onclick = () => window.quickAddMealFromHistory(h.name);
         card.innerHTML = `
           <span class="text-[10px] font-black text-brand-primary truncate block w-full group-hover:text-brand-gold transition-colors">${h.name}</span>
@@ -1308,10 +1323,10 @@
             datasets: [{
               label: '体重(kg)',
               data: weights,
-              borderColor: '#51749E',
-              backgroundColor: 'rgba(81, 117, 158, 0.05)',
+              borderColor: '#4A6984',
+              backgroundColor: 'rgba(74, 105, 132, 0.05)',
               borderWidth: 2.5,
-              pointBackgroundColor: '#1A335E',
+              pointBackgroundColor: '#0B2545',
               pointBorderColor: '#FFFFFF',
               pointBorderWidth: 2,
               pointRadius: 4,
@@ -1325,12 +1340,12 @@
             plugins: { legend: { display: false } },
             scales: {
               y: {
-                grid: { color: 'rgba(208, 223, 236, 0.3)' },
-                ticks: { color: '#1A335E', font: { size: 9, weight: '600' } }
+                grid: { color: 'rgba(225, 235, 245, 0.4)' },
+                ticks: { color: '#0B2545', font: { size: 9, weight: '600' } }
               },
               x: {
                 grid: { display: false },
-                ticks: { color: '#1A335E', font: { size: 9, weight: '600' } }
+                ticks: { color: '#0B2545', font: { size: 9, weight: '600' } }
               }
             }
           }
@@ -1404,7 +1419,7 @@
       };
     }
 
-    // ================= 🧪 ホルモン周期精密判定アルゴリズム (エビデンスベース) =================
+    // ================= ホルモン周期精密判定アルゴリズム =================
     window.calculateCyclePhase = function(targetDateStr) {
       if (!clientState.cycleStartDate) {
         return null;
@@ -1414,29 +1429,27 @@
       const start = new Date(clientState.cycleStartDate);
       const len = parseInt(clientState.cycleLength) || 28;
 
-      // 日付の純粋な差分計算
       const diffTime = target.getTime() - start.getTime();
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
       
-      // 周期の何日目か (1〜len 日)
       let dayInCycle = (diffDays % len) + 1;
       if (dayInCycle <= 0) {
         dayInCycle += len;
       }
 
-      let phase = "luteal"; // 黄体期
+      let phase = "luteal";
       let phaseName = "黄体期 (Luteal Phase)";
       let phaseEmoji = "🧘‍♀️";
       let badgeClass = "text-amber-600 bg-amber-50 border-amber-200/60";
-      let estrogenConc = 20; // ％値
+      let estrogenConc = 20;
       let progesteroneConc = 85; 
 
-      let trainingAdv = "中〜低強度の有酸素、自重筋トレ、またはリラックス系のストレッチを主軸に。黄体期は『現状キープ』がベストな成功法則です。";
-      let weightNote = "プロゲステロンの水分貯留作用（むくみ）により、1.0〜2.0kg程度の体重増加は臨床的によくある正常値です。体脂肪の増加ではありません。";
-      let pfcAdjustText = "【水分・繊維強化調整】炭水化物をわずかに減らし、代わりに消化と糖代謝をなだらかにする食物繊維（キノコ、海藻、根菜類）を強化。水分をたっぷり（2L目標）摂取しましょう。";
+      let trainingAdv = "中〜低強度の有酸素、自重トレーニング、またはリラックスストレッチを主軸に。黄体期は『現状キープ』がベストな成功法則です。";
+      let weightNote = "プロゲステロンの水分貯留作用（むくみ）により、1.0〜2.0kg程度の体重増加は正常値です。体脂肪の増加ではありません。";
+      let pfcAdjustText = "【水分・繊維強化調整】炭水化物をわずかに減らし、代わりに消化と糖代謝をなだらかにする食物繊維（きのこ、海藻、野菜類）を強化。水分をたっぷり（2L目標）摂取しましょう。";
       let pScale = 1.0;
-      let fScale = 0.9; // 脂質をやや落とす
-      let cScale = 0.95; // 炭水化物をやや抑える
+      let fScale = 0.9;
+      let cScale = 0.95;
 
       if (dayInCycle >= 1 && dayInCycle <= 5) {
         phase = "menstrual";
@@ -1445,9 +1458,9 @@
         badgeClass = "text-brand-rose bg-brand-roseLight border-brand-rose/20";
         estrogenConc = 5;
         progesteroneConc = 5;
-        trainingAdv = "低強度メンテナンス期。骨盤周りの血流を促す軽いヨガやストレッチを優先し、強度の高いトレーニングは一切無理をせず回復に充ててください。";
-        weightNote = "生理の開始に伴い水分が少しずつ抜けていきますが、血流障害や冷えが起きやすいデリケートな時期です。";
-        pfcAdjustText = "【鉄分補給＆保温期】PFCは基本目標を維持。貧血・鉄損失を防ぐヘム鉄（赤身肉や貝類）と、吸収を助けるビタミンCを合わせて温かいスープで摂取しましょう。";
+        trainingAdv = "低強度メンテナンス期。骨盤周りの血流を促す軽いヨガやストレッチを優先し、強度の高いトレーニングは無理せず回復に充ててください。";
+        weightNote = "生理の開始に伴い水分が少しずつ抜けていきますが、冷えが起きやすいデリケートな時期です。温かく過ごしましょう。";
+        pfcAdjustText = "【鉄分補給＆保温期】PFCは基本目標を維持。貧血を防ぐヘム鉄（赤身肉や貝類）と、吸収を助けるビタミンCを合わせて温かいスープで摂取しましょう。";
         pScale = 1.0;
         fScale = 1.0;
         cScale = 1.0;
@@ -1455,25 +1468,25 @@
         phase = "follicular";
         phaseName = "卵胞期 (Follicular Phase)";
         phaseEmoji = "✨";
-        badgeClass = "text-emerald-600 bg-emerald-50 border-emerald-200/60";
+        badgeClass = "text-teal-600 bg-teal-50 border-teal-200/60";
         estrogenConc = 90;
         progesteroneConc = 10;
-        trainingAdv = "高強度ボディメイク黄金期！インスリン感受性が高まり、グリコーゲン貯蔵＆筋肥大効率が最大化します。スクワットやウエイトスタックなどアクティブな筋トレに挑戦を。";
-        weightNote = "エストロゲン効果で代謝がピークアップ。むくみがサッと解消し、体重が最も減少しやすい最高のボーナスステージです。";
-        pfcAdjustText = "【筋肥大＆代謝促進調整】炭水化物(C)とタンパク質(P)の代謝効率が非常に高い時期。高強度トレーニングの燃料としてCをしっかり摂り、筋合成を活性化させます。";
-        pScale = 1.05; // 筋肥大促進
-        cScale = 1.1;  // 炭水化物ローディング
+        trainingAdv = "高強度ボディメイク黄金期！インスリン感受性が高まり、筋合成効率が最大化します。少し負荷を高めたアクティブなトレーニングが特におすすめです。";
+        weightNote = "エストロゲン効果で代謝が活発に。むくみが解消し、体重が最も減少しやすい最高のボディメイク期間です。";
+        pfcAdjustText = "【代謝促進調整】炭水化物(C)とタンパク質(P)の代謝効率が非常に高い時期。アクティブな運動の燃料としてCを程よく摂り、筋合成を活性化させます。";
+        pScale = 1.05;
+        cScale = 1.1;
         fScale = 0.95;
       } else if (dayInCycle >= 13 && dayInCycle <= 15) {
         phase = "ovulatory";
         phaseName = "排卵期 (Ovulatory Phase)";
         phaseEmoji = "🥚";
-        badgeClass = "text-brand-gold bg-brand-goldLight border-brand-gold/20";
-        estrogenConc = 100; // ピーク
+        badgeClass = "text-brand-gold bg-brand-goldLight border-brand-gold/30";
+        estrogenConc = 100;
         progesteroneConc = 30;
-        trainingAdv = "怪我に注意しつつ強度維持。エストロゲン濃度が最大となるこの時期は、関節や腱の靭帯が緩みやすくなるエビデンスがあります。フォームを丁寧に行いましょう。";
-        weightNote = "排卵時の卵胞破裂による一時的な腹部膨満感や、軽微な水分変動が起きる場合があります。";
-        pfcAdjustText = "【PFC標準キープ】筋肉の維持に十分なタンパク質を確保。怪我の予防としてコラーゲンの修復を促すビタミン類や良質なアミノ酸をキープ。";
+        trainingAdv = "関節のコンディションに留意しつつ強度維持。エストロゲンがピークになる時期は靭帯が緩みやすくなるため、丁寧なストレッチと正しいフォームを意識しましょう。";
+        weightNote = "排卵に伴い一時的に腹部膨満感を感じたり、軽微な水分変動が起こる場合があります。";
+        pfcAdjustText = "【PFC標準キープ】筋肉の維持に十分なタンパク質を確保。怪我の予防としてビタミン豊富な緑黄色野菜の摂取もおすすめ。";
         pScale = 1.0;
         fScale = 1.0;
         cScale = 1.0;
@@ -1517,17 +1530,14 @@
       let cycleCAdjust = 1.0;
 
       if (cycleInfo) {
-        // ヘッダー周期ミニバッジの更新
         headerBadgeContainer.classList.remove('hidden');
         headerBadge.className = `px-2.5 py-0.5 rounded-full text-[9px] font-black border flex items-center gap-1 ${cycleInfo.badgeClass}`;
-        headerBadge.innerHTML = `<span>${cycleInfo.phaseEmoji}</span><span>${cycleInfo.phaseName.split(" ")[0]} (D${cycleInfo.dayInCycle})</span>`;
+        headerBadge.innerHTML = `<span>${cycleInfo.phaseEmoji}</span><span>${cycleInfo.phaseName.split(" ")[0]} (Day ${cycleInfo.dayInCycle})</span>`;
 
-        // ホーム画面のステータスボードも同期
         document.getElementById('home-cycle-status-emoji').innerText = cycleInfo.phaseEmoji;
-        document.getElementById('home-cycle-status-text').innerText = `本日は ${cycleInfo.phaseName} (D${cycleInfo.dayInCycle})`;
+        document.getElementById('home-cycle-status-text').innerText = `本日は ${cycleInfo.phaseName} (Day ${cycleInfo.dayInCycle})`;
         document.getElementById('home-cycle-status-desc').innerText = cycleInfo.pfcAdjustText;
 
-        // PFCバー用のスケーラーを適用
         cyclePAdjust = cycleInfo.pScale;
         cycleFAdjust = cycleInfo.fScale;
         cycleCAdjust = cycleInfo.cScale;
@@ -1538,7 +1548,6 @@
           document.getElementById('pfc-adjusted-badge').classList.add('hidden');
         }
 
-        // 生理期専用ダッシュボード側のUI描画も実行
         renderCycleDashboardUI(cycleInfo);
       } else {
         headerBadgeContainer.classList.add('hidden');
@@ -1563,11 +1572,9 @@
       const baseTarF = safeFloat(clientState.targetF) || 40;
       const baseTarC = safeFloat(clientState.targetC) || 210;
 
-      // カロリー自動スライド
       const tarCal = Math.max(1000, baseTarCal - recovery.adjustedKcal);
       const scaleRatio = tarCal / baseTarCal;
 
-      // 生理期の補正係数も安全に乗算する
       const tarP = Math.round(baseTarP * scaleRatio * cyclePAdjust);
       const tarF = Math.round(baseTarF * scaleRatio * cycleFAdjust);
       const tarC = Math.round(baseTarC * scaleRatio * cycleCAdjust);
@@ -1587,7 +1594,6 @@
         card?.classList.add('hidden');
       }
 
-      // 進捗サークル
       const pct = Math.min(100, (curKcal / tarCal) * 100);
       const strokeOffset = 389 - (389 * pct) / 100;
       document.getElementById('calorie-progress-bar').style.strokeDashoffset = strokeOffset;
@@ -1595,7 +1601,6 @@
       document.getElementById('summary-cur-cal').innerText = Math.round(curKcal).toLocaleString();
       document.getElementById('summary-tar-cal').innerText = tarCal.toLocaleString();
 
-      // PFC進捗
       document.getElementById('summary-cur-p').innerText = curP.toFixed(1);
       document.getElementById('summary-tar-p').innerText = tarP;
       document.getElementById('bar-p').style.width = Math.min(100, (curP / tarP) * 100) + "%";
@@ -1608,7 +1613,6 @@
       document.getElementById('summary-tar-c').innerText = tarC;
       document.getElementById('bar-c').style.width = Math.min(100, (curC / tarC) * 100) + "%";
 
-      // 累積バランス
       const weeklyDiff = getWeeklyDiffSummary();
       const formatDiffNum = (num, unit) => {
         if (num > 0) return `<span class="text-brand-rose font-bold">+${num.toFixed(1)} ${unit}</span>`;
@@ -1635,7 +1639,6 @@
         balanceBar.className = "absolute top-0 left-0 w-1.5 h-full bg-emerald-400";
       }
 
-      // 体重
       const todayWeight = clientState.weightHistory?.[selectedDateString] || clientState.weight || 55.0;
       document.getElementById('input-weight').placeholder = todayWeight ? todayWeight.toFixed(1) : "55.0";
       document.getElementById('input-weight').value = clientState.weightHistory?.[selectedDateString] ? clientState.weightHistory[selectedDateString].toFixed(1) : "";
@@ -1643,7 +1646,6 @@
       renderMealsHistory();
       renderWeightTrendDashboard();
 
-      // ================= 食事明細ジャーナル描画 =================
       const timelineContainer = document.getElementById('meal-timeline-container');
       timelineContainer.innerHTML = "";
       
@@ -1668,7 +1670,7 @@
 
           let chipHTML = "";
           if (pVal >= 20) {
-            chipHTML += `<span class="bg-brand-accent/50 text-brand-primary text-[8px] font-black px-1.5 py-0.5 rounded border border-brand-primary/10">高タンパク P:${pVal.toFixed(1)}g</span>`;
+            chipHTML += `<span class="bg-brand-accent text-brand-primary text-[8px] font-black px-1.5 py-0.5 rounded border border-brand-primary/10">高タンパク P:${pVal.toFixed(1)}g</span>`;
           }
           if (fVal >= 15) {
             chipHTML += `<span class="bg-brand-roseLight text-brand-rose text-[8px] font-black px-1.5 py-0.5 rounded border border-brand-rose/10">脂質多め F:${fVal.toFixed(1)}g</span>`;
@@ -1676,7 +1678,7 @@
 
           item.innerHTML = `
             <div class="timeline-line flex flex-col items-center z-10">
-              <div class="w-9 h-9 rounded-full bg-white border-2 border-brand-border flex items-center justify-center text-xs shadow-sm font-logo font-black text-brand-primary group-hover:border-brand-primary transition-all">
+              <div class="w-9 h-9 rounded-full bg-white border-2 border-brand-border flex items-center justify-center text-xs shadow-sm font-logo font-black text-brand-primary group-hover:border-brand-gold transition-all">
                 ${category.emoji}
               </div>
             </div>
@@ -1708,7 +1710,6 @@
         });
       }
 
-      // 1週間総評
       if (clientState.trainerFeedback) {
         document.getElementById('trainer-feedback-text').innerText = clientState.trainerFeedback;
         document.getElementById('trainer-feedback-time').innerText = clientState.trainerFeedbackAt ? "指導アドバイス更新: " + new Date(clientState.trainerFeedbackAt).toLocaleDateString() : "";
@@ -1720,7 +1721,6 @@
       lucide.createIcons();
     }
 
-    // 生理日ダッシュボードUI描画
     function renderCycleDashboardUI(info) {
       document.getElementById('cycle-days-status').innerText = `サイクル経過 ${info.dayInCycle} 日目`;
       document.getElementById('cycle-phase-name').innerText = info.phaseName;
@@ -1730,19 +1730,16 @@
       badge.className = `text-[9.5px] font-black px-3 py-1 rounded-full border ${info.badgeClass}`;
       badge.innerText = `周期 Day ${info.dayInCycle}`;
 
-      // バーアニメーション
       document.getElementById('indicator-estrogen-bar').style.width = info.estrogenConc + "%";
       document.getElementById('indicator-estrogen-val').innerText = info.estrogenConc + "%";
       document.getElementById('indicator-progesterone-bar').style.width = info.progesteroneConc + "%";
       document.getElementById('indicator-progesterone-val').innerText = info.progesteroneConc + "%";
 
-      // 身体作りテキスト
       document.getElementById('cycle-training-adv').innerText = info.trainingAdv;
       document.getElementById('cycle-weight-note').innerText = info.weightNote;
       document.getElementById('cycle-pfc-adjust').innerText = info.pfcAdjustText;
     }
 
-    // 生理日設定の更新
     window.updateCycleSettings = async function() {
       if (!currentClientId) return;
       const dateVal = document.getElementById('cycle-start-date-input').value;
@@ -1780,15 +1777,14 @@
       window.updateCycleSettings();
     };
 
-    // AI機能のトリガー
     window.triggerAiFeature = function(type) {
       if (!currentClientId) {
-        alert("トレーナーから発行された連携IDで同期してからご利用ください。");
+        alert("トレーナーから同期してからご利用ください。");
         return;
       }
       const key = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
       if (!key) {
-        document.getElementById('ai-error-desc').innerText = "店舗用Gemini APIキーがまだ中央金庫に設定・同期されていません。トレーナーの管理アプリからAPIキーを「保存して配信」するようトレーナーにお伝えください。";
+        document.getElementById('ai-error-desc').innerText = "店舗用Gemini APIキーがまだ同期されていません。トレーナーの管理アプリからAPIキーを「保存して配信」するようトレーナーにお伝えください。";
         window.toggleModal('ai-error-modal', true);
         return;
       }
@@ -1979,7 +1975,6 @@
       return currentLogs;
     }
 
-    // 指数バックオフ付きAPI呼び出し
     async function fetchGeminiWithBackoff(payload) {
       const apiKey = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
       if (!apiKey) {
@@ -2129,13 +2124,13 @@
             ingredients: parsed.ingredients
           };
           await saveMealToCloud(newMeal);
-          showToast(`「${parsed.name}」をAI解析＆記録しました！`);
+          showToast(`「${parsed.name}」をテキスト解析＆自動記録しました！`);
         } else {
           throw new Error("フォーマット不適合");
         }
       } catch (err) {
         console.error("AI Text Analysis Error:", err);
-        let errorMsg = "AIでの解析に失敗しました。トレーナー管理ポータルの「Gemini APIキーの自動配信」が正しく行われているか、キーの有効性をご確認ください。";
+        let errorMsg = "解析に失敗しました。キーの登録状態をご確認ください。";
         if (err.message.includes("【")) {
           errorMsg = err.message;
         }
@@ -2192,13 +2187,13 @@
             ingredients: parsed.ingredients
           };
           await saveMealToCloud(newMeal);
-          showToast("写真をAI自動解析して記録しました！");
+          showToast("写真を自動解析して記録しました！");
         } else {
           throw new Error("フォーマット異常");
         }
       } catch (err) {
         console.error("Image Analysis Error:", err);
-        let errorMsg = "写真のAI食事スキャンに失敗しました。手ブレのない明るい食事画像でお試しいただくか、配信されたGemini APIキーの登録状態を確認してください。";
+        let errorMsg = "写真のスキャンに失敗しました。手ブレのない明るい食事画像でお試しいただくか、配信されたGemini APIキーの登録状態を確認してください。";
         if (err.message.includes("【")) {
           errorMsg = err.message;
         }
@@ -2437,7 +2432,7 @@
       try {
         const userPrompt = `食材名: "${ingName}", 重量: ${ingWeight}g
           この食材・単体料理のカロリー(kcal), たんぱく質(p), 脂質(f), 炭水化物(c)を推定して、必ず次のJSONのみを返してください。
-          {"p": たんぱく質g(数値), "f": 脂質g(数値), "c": 炭水化物g(数値), "kcal": カロリー(数値)}`;
+          {"p": たんパク質g(数値), "f": 脂質g(数値), "c": 炭水化物g(数値), "kcal": カロリー(数値)}`;
         const payload = { contents: [{ parts: [{ text: userPrompt }] }] };
         const res = await fetchGeminiWithBackoff(payload);
         const rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -2463,7 +2458,7 @@
         showToast(`AIが「${ingName}」の栄養価を反映しました！`);
       } catch (err) {
         console.error("Estimate PFC Error:", err);
-        alert("食材のAI分析に失敗しました。キーの登録や接続状態をご確認ください。");
+        alert("食材の分析に失敗しました。接続状態をご確認ください。");
       } finally {
         toast.remove();
       }
@@ -2564,10 +2559,10 @@
         const content = document.getElementById('tab-content-' + t);
 
         if (t === tabName) {
-          btn.className = "flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-white bg-gradient-to-r from-brand-primary to-brand-secondary shadow-blueGlow border border-white/20 flex items-center justify-center gap-1.5 active:scale-98";
+          btn.className = "flex-1 py-3 px-1.5 rounded-xl transition-all text-xs font-black text-white bg-gradient-to-r from-brand-primary to-brand-secondary border border-white/10 shadow-blueGlow flex items-center justify-center gap-1.5 active:scale-95";
           content.classList.remove('hidden');
         } else {
-          btn.className = "flex-1 py-3 px-2 rounded-2xl transition-all text-xs font-bold text-brand-muted hover:text-brand-primary flex items-center justify-center gap-1.5 active:scale-98";
+          btn.className = "flex-1 py-3 px-1.5 rounded-xl transition-all text-xs font-black text-brand-muted hover:text-brand-primary flex items-center justify-center gap-1.5 active:scale-95";
           content.classList.add('hidden');
         }
       });
@@ -2576,7 +2571,6 @@
       lucide.createIcons();
     };
 
-    // DOM Ready Initialization
     document.addEventListener('DOMContentLoaded', () => {
       initClientApp();
       const imgInput = document.getElementById('ai-image-input');
