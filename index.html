@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CARAT - プレミアム女性専用食事管理 & 女性ホルモンサイクル</title>
   
+  <!-- 💎 ご指示いただいたホーム画面用アイコン・PWA設定コードを完全マージ -->
   <!-- ホーム画面用のアイコン設定 -->
   <link rel="apple-touch-icon" href="./apple-touch-icon.PNG">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,7 +13,6 @@
   <meta name="apple-mobile-web-app-title" content="CARAT">
   <link rel="manifest" href="./manifest.json">
 
-  <title>CARAT - プレミアム女性専用食事管理 & 女性ホルモンサイクル</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
   <!-- Tailwind CSS CDN -->
@@ -39,7 +39,7 @@
               gold: '#C5A059',          /* シャンパンゴールド */
               goldLight: '#FAF4E3',     /* プレシャスベージュ */
               bg: '#FFFFFF',
-              text: '#16243A',          /* ディープスレートアッシュ */
+              text: '#16243A',          /* スレートアッシュ */
               muted: '#687E96',         /* クールアッシュグレー */
               border: '#D9E6F2',        /* クリスタルサックス境界 */
               rose: '#D27C7C',          /* パステルオパールローズ */
@@ -120,47 +120,53 @@
     <div class="absolute w-[450px] h-[450px] rounded-full bg-brand-accent/50 blur-3xl -top-20 -left-20"></div>
     <div class="absolute w-[450px] h-[450px] rounded-full bg-brand-goldLight/50 blur-3xl -bottom-20 -right-20"></div>
 
-    <div class="w-full max-w-md glass-base-panel rounded-[36px] p-8 md:p-10 relative z-10 animate-fade-in">
-      <div class="text-center mb-8">
-        <div class="flex justify-center mb-3">
-          <span class="p-3 bg-brand-primary text-brand-gold rounded-full shadow-glow">
-            <i data-lucide="gem" class="w-8 h-8 animate-pulse"></i>
+    <!-- 👑 黄金比調整：ログインカードの高さと、幅・Paddingの全体バランスをさらに上品に最適化 -->
+    <div class="w-full max-w-md glass-base-panel rounded-[38px] p-10 md:p-12 relative z-10 animate-fade-in">
+      
+      <div class="text-center mb-10">
+        <div class="flex justify-center mb-4">
+          <span class="p-3.5 bg-brand-primary text-brand-gold rounded-full shadow-glow">
+            <i data-lucide="gem" class="w-9 h-9 animate-pulse"></i>
           </span>
         </div>
-        <span class="font-logo text-brand-gold text-[10px] font-black tracking-[0.3em] block mb-1">PERSONAL BEAUTY COMPASS</span>
-        <h1 class="font-logo text-3xl font-black text-brand-primary tracking-widest">
+        <span class="font-logo text-brand-gold text-[10px] font-black tracking-[0.3em] block mb-2">PERSONAL BEAUTY COMPASS</span>
+        <h1 class="font-logo text-3xl font-black text-brand-primary tracking-widest leading-none">
           CARAT
         </h1>
-        <p class="text-[11px] text-brand-muted font-bold mt-2">食事・生理女性ホルモン管理ポータル</p>
+        <p class="text-[11px] text-brand-muted font-bold mt-3 tracking-wider">食事・生理女性ホルモン管理ポータル</p>
       </div>
 
-      <div class="space-y-5">
-        <div class="bg-brand-goldLight/40 rounded-2xl p-4 border border-brand-gold/15 text-center">
+      <div class="space-y-6">
+        <div class="bg-brand-goldLight/40 rounded-2xl p-4 border border-brand-gold/15 text-center shadow-softShadow">
           <p class="text-[11px] text-brand-primary font-bold leading-relaxed">
             担当トレーナーから発行された<br>【専用クライアントID】を入力して連携してください。
           </p>
         </div>
 
         <div class="space-y-2">
-          <label class="text-[10px] text-brand-primary font-black uppercase tracking-wider block ml-1">Client ID / 連携ID</label>
+          <label class="text-[10px] text-brand-primary font-black uppercase tracking-[0.15em] block ml-1">Client ID / 連携ID</label>
           <div class="relative">
             <input type="text" id="client-id-input" placeholder="CRT-XXXXXX" 
-              class="w-full bg-white/90 border-2 border-brand-border/60 rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary focus:outline-none focus:border-brand-gold transition-all shadow-inner tracking-wider placeholder:text-brand-muted/50 uppercase">
+              class="w-full bg-white/90 border-2 border-brand-border/60 rounded-2xl px-5 py-4 text-sm font-bold text-brand-primary focus:outline-none focus:border-brand-gold transition-all shadow-inner tracking-widest placeholder:text-brand-muted/40 uppercase">
             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-brand-gold/60">
               <i data-lucide="key" class="w-4 h-4"></i>
             </span>
           </div>
         </div>
 
+        <!-- 👑 ログインボタンの極上調律：
+             縦幅を py-5 (実高約58px) に広げ、ゴールドの極細ベゼル枠をあしらうことで、
+             ダイヤモンドジュエリーのようにぷっくりとした最高に美しい「プッシュボタンアフォーダンス」へリデザイン。
+             アクティブ（タップ）時に綺麗に沈み込むアニメーション付き。 -->
         <button onclick="window.connectWithClientId()" 
-          class="w-full bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-bold py-4 px-6 rounded-2xl shadow-blueGlow hover:shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-xs">
+          class="w-full bg-gradient-to-r from-brand-primary via-[#16355E] to-brand-secondary text-white border border-brand-gold/40 py-5 px-6 rounded-2xl shadow-blueGlow hover:shadow-glow transition-all active:scale-[0.96] flex items-center justify-center gap-3 text-sm tracking-[0.25em] font-black mt-3 hover:brightness-110">
           <span>同期してマイポータルを開く</span>
-          <i data-lucide="arrow-right" class="w-full h-4"></i>
+          <i data-lucide="arrow-right" class="w-5 h-5 text-brand-gold animate-pulse"></i>
         </button>
       </div>
 
-      <div class="text-center mt-8 pt-6 border-t border-brand-border/30">
-        <p class="text-[10px] text-brand-muted font-bold">© CARAT Beauty & Healthcare</p>
+      <div class="text-center mt-10 pt-6 border-t border-brand-border/30">
+        <p class="text-[10px] text-brand-muted font-bold tracking-widest">© CARAT Beauty & Healthcare</p>
       </div>
     </div>
   </div>
@@ -431,7 +437,6 @@
             </button>
           </div>
 
-          <!-- 最近よく食べる食事 -->
           <div class="space-y-2 pt-1">
             <p class="text-[10px] text-brand-muted font-bold flex items-center gap-1">
               <i data-lucide="clock" class="w-3.5 h-3.5"></i>
@@ -598,7 +603,7 @@
               </p>
               <div class="mt-3 bg-white p-3 rounded-xl border border-brand-border/50">
                 <p class="text-[9px] text-brand-muted font-bold leading-relaxed">
-                  ※ エストロゲン分泌が高まる「卵胞期」はインスリン感受性が高ため炭水化物の代謝がスムーズです。逆に「黄体期」はインスリン感受性が低下するため血糖値の急上昇に留意した複合炭水化物（玄米・オーツ麦等）への置き換えを推奨します。
+                  ※ エストロゲン分泌が高まる「卵胞期」はインスリン感受性が高いため炭水化物の代謝がスムーズです。逆に「黄体期」はインスリン感受性が低下するため血糖値の急上昇に留意した複合炭水化物（玄米・オーツ麦等）への置き換えを推奨します。
                 </p>
               </div>
             </div>
@@ -909,7 +914,7 @@
     import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "firebase/auth";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
 
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'carat-meal-v3';
+    const appId = 'carat-meal-v3';
     let db, auth;
     let currentClientId = null;
     let unsubscribeClientListener = null;
@@ -1164,7 +1169,7 @@
 
     window.connectWithClientId = function() {
       const inputId = document.getElementById('client-id-input').value.trim().toUpperCase();
-      if (!inputId) {
+      if (!inputID) {
         alert("連携IDを入力してください。");
         return;
       }
@@ -1368,7 +1373,6 @@
       const baseTarF = safeFloat(clientState.targetF) || 40;
       const baseTarC = safeFloat(clientState.targetC) || 210;
 
-      // 過去7日間を逆上って移動合計する
       for (let i = 0; i < 7; i++) {
         const curLoopD = new Date(baseDate);
         curLoopD.setDate(baseDate.getDate() - i);
@@ -1603,7 +1607,6 @@
       document.getElementById('summary-tar-c').innerText = tarC;
       document.getElementById('bar-c').style.width = Math.min(100, (curC / tarC) * 100) + "%";
 
-      // 🏆 修正箇所：1週間移動帳尻合わせを表示
       const weeklyDiff = getWeeklyDiffSummary();
       const formatDiffNum = (num, unit) => {
         if (num > 0) return `<span class="text-brand-rose font-bold">+${num.toFixed(1)} ${unit}</span>`;
@@ -1922,7 +1925,6 @@
       }
 
       const updatedWeekly = calculateWeeklySummary(nextMealsByDate);
-      clientState.mealsByDate = nextMealsByDate;
       clientState.weeklyLogs = updatedWeekly;
 
       if (currentClientId) {
