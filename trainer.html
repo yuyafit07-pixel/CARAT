@@ -287,7 +287,7 @@
           </div>
 
 
-          <!-- ================= 👑 ラグジュアリー対面カウンセリング専用：ジュエル食事監査ボード (1週間ポジネガ一覧) ================= -->
+          <!-- ================= 👑 ラグジュアリー対面カウンセリング専用：食事監査ボード ================= -->
           <div class="glass-base-panel rounded-[32px] p-5 md:p-6 space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-brand-border/50 pb-3">
               <div>
@@ -516,7 +516,7 @@
         <div class="bg-brand-accent/30 p-3 rounded-xl border border-brand-border/40 text-[9.5px] text-brand-primary font-bold leading-relaxed space-y-1">
           <p><strong>💡 解決のヒント:</strong></p>
           <p>① 1分ほど時間をおいてもう一度「アドバイス作成」を送信してみてください。自動的に復活します。</p>
-          <p>② Google AI Studioから新しい無料キーを再発行して設定するか、従量課金プランに切り替えることで制限が完全撤廃されます。</p>
+          <p>② Google AI Studioから新しい無料キーを再発行して設定するか、従量課金プラン（Pay-as-you-go）に切り替えることで制限が完全撤廃されます。</p>
         </div>
         <button onclick="window.toggleModal('ai-error-modal', false)" class="w-full bg-brand-primary text-white py-2.5 px-4 rounded-xl text-xs font-black transition-all active:scale-95 shadow-sm">
           確認しました
@@ -532,8 +532,8 @@
       <div class="absolute inset-0 rounded-full border-4 border-brand-gold border-t-transparent animate-spin"></div>
     </div>
     <div class="text-center space-y-1 animate-pulse">
-      <p class="text-xs font-black text-white" id="loading-main-text">データを精査中...</p>
-      <p class="text-[10px] text-brand-accent font-bold" id="loading-sub-text">進捗とアドバイスの組み立てを行っています。</p>
+      <p class="text-xs font-black text-white">データを精査中...</p>
+      <p class="text-[10px] text-brand-accent font-bold">進捗とアドバイスの組み立てを行っています。</p>
     </div>
   </div>
 
@@ -601,7 +601,6 @@
       if (!el) return;
       el.innerText = text;
       
-      // クラスに応じたカラー調整
       el.className = "font-logo font-bold text-[10px] tracking-wide transition-colors duration-300";
       if (colorClass === "emerald") {
         el.classList.add("text-emerald-400");
@@ -721,7 +720,6 @@
         isFirebaseReady = true;
         logStatus(`認証完了 (UID: ${user.uid.substring(0, 8)}...)`, "emerald");
 
-        // 認証成功後に初めてボタンの操作ガードを解除する
         document.getElementById('btn-create-carte').disabled = false;
         document.getElementById('btn-create-carte').className = "w-full bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-bold py-2.5 rounded-xl text-[10px] flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer";
         document.getElementById('btn-create-carte').innerHTML = `<i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-gold animate-pulse"></i><span>カルテ作成・同期ID発行</span>`;
@@ -733,10 +731,8 @@
         document.getElementById('sync-status').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span><span>Online / DB Synced</span>`;
         document.getElementById('sync-status').className = "text-[10px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-black animate-fade-in";
 
-        // ブックマークリストを描画
         window.renderBookmarks();
         
-        // 最後に選択していたクライアントがあれば自動回復ロード
         const lastActiveId = localStorage.getItem(`carat_last_active_client_${appId}`);
         if (lastActiveId) {
           document.getElementById('client-id-input').value = lastActiveId;
@@ -784,7 +780,7 @@
       if (list.length === 0) return;
       const filtered = list.filter(b => b.nickname.toLowerCase().includes(kw) || b.id.toLowerCase().includes(kw));
       if (filtered.length === 0) {
-        container.innerHTML = `<span class="text-[10px] text-brand-muted text-center block py-4 bg-white rounded-2xl border border-dashed border-brand-border">カルテが見つかりません</span>`;
+        container.innerHTML = `<span class="text-[10px] text-brand-muted text-center block py-4 bg-white rounded-2xl border border-dashed border-brand-border font-bold">カルテが見つかりません</span>`;
         return;
       }
       renderBookmarksDOM(filtered);
@@ -889,7 +885,6 @@
         await setDoc(docRef, initialClientState);
         addBookmark(newId, nickname);
         
-        // Copy to clipboard safely
         const dummy = document.createElement("textarea");
         document.body.appendChild(dummy);
         dummy.value = newId;
@@ -949,68 +944,73 @@
       let cal = 0, p = 0, f = 0, c = 0;
       const meals = data.mealsByDate && data.mealsByDate[dateStr] ? data.mealsByDate[dateStr] : [];
       meals.forEach(m => {
+        if (!m) return; // 🛡️ 空要素ヌルポ防御ガード
         cal += safeFloat(m.kcal);
         p += safeFloat(m.p);
         f += safeFloat(m.f);
         c += safeFloat(m.c);
       });
-      return { cal: Math.round(cal), p, f, c, meals };
+      return { cal: Math.round(cal), p, f, c, meals: meals.filter(Boolean) };
     }
 
     function calculateWeeklySummaryAndDiff(data) {
-      const baseDate = new Date(selectedDateString);
-      let cumulativeKcalDiff = 0;
-      let cumulativePDiff = 0;
-      let cumulativeFDiff = 0;
-      let cumulativeCDiff = 0;
+      try {
+        const baseDate = new Date(selectedDateString);
+        let cumulativeKcalDiff = 0;
+        let cumulativePDiff = 0;
+        let cumulativeFDiff = 0;
+        let cumulativeCDiff = 0;
 
-      const targetCal = safeFloat(data.targetCalories) || 1600;
-      const targetP = safeFloat(data.targetP) || 100;
-      const targetF = safeFloat(data.targetF) || 40;
-      const targetC = safeFloat(data.targetC) || 210;
+        const targetCal = safeFloat(data.targetCalories) || 1600;
+        const targetP = safeFloat(data.targetP) || 100;
+        const targetF = safeFloat(data.targetF) || 40;
+        const targetC = safeFloat(data.targetC) || 210;
 
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(baseDate);
-        d.setDate(baseDate.getDate() - i);
-        const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-        const dayTotals = calculateTotalsForDate(data, dStr);
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(baseDate);
+          d.setDate(baseDate.getDate() - i);
+          const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+          const dayTotals = calculateTotalsForDate(data, dStr);
 
-        const yesterdayDate = new Date(d);
-        yesterdayDate.setDate(d.getDate() - 1);
-        const yesterdayStr = `${yesterdayDate.getFullYear()}-${String(yesterdayDate.getMonth() + 1).padStart(2, '0')}-${String(yesterdayDate.getDate()).padStart(2, '0')}`;
-        const yesterdayTotals = calculateTotalsForDate(data, yesterdayStr);
-        const yesterdayOverKcal = Math.max(0, yesterdayTotals.cal - targetCal);
-        const dailyRecoveryKcal = Math.min(200, yesterdayOverKcal);
+          const yesterdayDate = new Date(d);
+          yesterdayDate.setDate(d.getDate() - 1);
+          const yesterdayStr = `${yesterdayDate.getFullYear()}-${String(yesterdayDate.getMonth() + 1).padStart(2, '0')}-${String(yesterdayDate.getDate()).padStart(2, '0')}`;
+          const yesterdayTotals = calculateTotalsForDate(data, yesterdayStr);
+          const yesterdayOverKcal = Math.max(0, yesterdayTotals.cal - targetCal);
+          const dailyRecoveryKcal = Math.min(200, yesterdayOverKcal);
 
-        const adjustedTargetCal = Math.max(1000, targetCal - dailyRecoveryKcal);
-        const scaleRatio = adjustedTargetCal / targetCal;
-        const adjustedTargetP = targetP * scaleRatio;
-        const adjustedTargetF = targetF * scaleRatio;
-        const adjustedTargetC = targetC * scaleRatio;
+          const adjustedTargetCal = Math.max(1000, targetCal - dailyRecoveryKcal);
+          const scaleRatio = adjustedTargetCal / targetCal;
+          const adjustedTargetP = targetP * scaleRatio;
+          const adjustedTargetF = targetF * scaleRatio;
+          const adjustedTargetC = targetC * scaleRatio;
 
-        cumulativeKcalDiff += (dayTotals.cal - adjustedTargetCal);
-        cumulativePDiff += (dayTotals.p - adjustedTargetP);
-        cumulativeFDiff += (dayTotals.f - adjustedTargetF);
-        cumulativeCDiff += (dayTotals.c - adjustedTargetC);
+          cumulativeKcalDiff += (dayTotals.cal - adjustedTargetCal);
+          cumulativePDiff += (dayTotals.p - adjustedTargetP);
+          cumulativeFDiff += (dayTotals.f - adjustedTargetF);
+          cumulativeCDiff += (dayTotals.c - adjustedTargetC);
+        }
+
+        const formatDiffKcal = (num) => {
+          const rounded = Math.round(num);
+          if (rounded > 0) return `+${rounded.toLocaleString()} kcal`;
+          if (rounded === 0) return `±0 kcal`;
+          return `${rounded.toLocaleString()} kcal`;
+        };
+
+        const formatDiffPFC = (num) => {
+          if (num > 0) return `+${num.toFixed(1)}g`;
+          if (num === 0) return `±0.0g`;
+          return `${num.toFixed(1)}g`;
+        };
+
+        document.getElementById('balance-total-kcal').innerText = formatDiffKcal(cumulativeKcalDiff);
+        document.getElementById('balance-total-p').innerText = formatDiffPFC(cumulativePDiff);
+        document.getElementById('balance-total-f').innerText = formatDiffPFC(cumulativeFDiff);
+        document.getElementById('balance-total-c').innerText = formatDiffPFC(cumulativeCDiff);
+      } catch (err) {
+        console.error("Weekly balance calculate error:", err);
       }
-
-      const formatDiffKcal = (num) => {
-        const rounded = Math.round(num);
-        if (rounded > 0) return `+${rounded.toLocaleString()} kcal`;
-        if (rounded === 0) return `±0 kcal`;
-        return `${rounded.toLocaleString()} kcal`;
-      };
-
-      const formatDiffPFC = (num) => {
-        if (num > 0) return `+${num.toFixed(1)}g`;
-        if (num === 0) return `±0.0g`;
-        return `${num.toFixed(1)}g`;
-      };
-
-      document.getElementById('balance-total-kcal').innerText = formatDiffKcal(cumulativeKcalDiff);
-      document.getElementById('balance-total-p').innerText = formatDiffPFC(cumulativePDiff);
-      document.getElementById('balance-total-f').innerText = formatDiffPFC(cumulativeFDiff);
-      document.getElementById('balance-total-c').innerText = formatDiffPFC(cumulativeCDiff);
     }
 
     function getCyclePhaseName(lastDateStr, cycleLength, targetDateStr) {
@@ -1069,11 +1069,16 @@
             const data = docSnap.data();
             globalClientData = data;
             
-            // 同期成功ログ
             logStatus(`同期成功: ${data.nickname || 'クライアント'} 様`, "emerald");
             
-            renderClientDashboard(data);
-            window.renderBookmarks();
+            // 🛡️ 例外安全フェールガード: レンダリング中にエラーが生じても強制可視化する
+            try {
+              renderClientDashboard(data);
+            } catch (renderError) {
+              console.error("Dashboard render error catch-shield:", renderError);
+              logStatus(`部分描画エラー回復適用`, "amber");
+            }
+            
             document.getElementById('client-placeholder').classList.add('hidden');
             document.getElementById('client-data-container').classList.remove('hidden');
             if (data.nickname) {
@@ -1093,38 +1098,82 @@
       }
     };
 
+    // 🛡️ 徹底的な安全ガードを張り巡らせたダッシュボードレンダラ
     function renderClientDashboard(data) {
-      document.getElementById('display-client-name').innerText = `${data.nickname || "ゲスト"} 様`;
-      document.getElementById('client-avatar-text').innerText = (data.nickname || "C").substring(0, 1);
-      document.getElementById('display-client-id-badge').innerText = currentTargetClientId;
+      if (!data) return;
+      
+      // ① 基本ヘッダー
+      const clientNameEl = document.getElementById('display-client-name');
+      if (clientNameEl) clientNameEl.innerText = `${data.nickname || "ゲスト"} 様`;
+      
+      const avatarEl = document.getElementById('client-avatar-text');
+      if (avatarEl) avatarEl.innerText = (data.nickname || "C").substring(0, 1);
+      
+      const idBadgeEl = document.getElementById('display-client-id-badge');
+      if (idBadgeEl) idBadgeEl.innerText = currentTargetClientId || "CRT-XXXXXX";
 
       const dailyTotals = calculateTotalsForDate(data, selectedDateString);
-      document.getElementById('client-cur-cal').innerText = dailyTotals.cal.toLocaleString();
-      document.getElementById('client-tar-cal').innerText = (data.targetCalories || 1600).toLocaleString();
-      document.getElementById('client-weight').innerText = data.weight ? data.weight.toFixed(1) : '--.-';
+      
+      // ② カロリー ＆ 体重
+      const curCalEl = document.getElementById('client-cur-cal');
+      if (curCalEl) curCalEl.innerText = dailyTotals.cal.toLocaleString();
+      
+      const tarCalEl = document.getElementById('client-tar-cal');
+      if (tarCalEl) tarCalEl.innerText = (data.targetCalories || 1600).toLocaleString();
+      
+      const weightEl = document.getElementById('client-weight');
+      if (weightEl) weightEl.innerText = data.weight ? safeFloat(data.weight).toFixed(1) : '--.-';
 
-      document.getElementById('client-cur-p').innerText = dailyTotals.p.toFixed(1);
-      document.getElementById('client-tar-p').innerText = data.targetP || '100';
-      document.getElementById('client-cur-f').innerText = dailyTotals.f.toFixed(1);
-      document.getElementById('client-tar-f').innerText = data.targetF || '40';
-      document.getElementById('client-cur-c').innerText = dailyTotals.c.toFixed(1);
-      document.getElementById('client-tar-c').innerText = data.targetC || '210';
+      // ③ PFC目標・実績
+      const curPEl = document.getElementById('client-cur-p');
+      if (curPEl) curPEl.innerText = dailyTotals.p.toFixed(1);
+      const tarPEl = document.getElementById('client-tar-p');
+      if (tarPEl) tarPEl.innerText = data.targetP || '100';
 
-      document.getElementById('energy-section-title').innerText = `${selectedDateString.substring(5)} の総摂取エネルギー`;
-      document.getElementById('timeline-section-title').innerHTML = `<i data-lucide="utensils" class="w-4.5 h-4.5 text-brand-gold"></i><span>${selectedDateString.substring(5)} の食事タイムライン (${dailyTotals.meals.length}件)</span>`;
+      const curFEl = document.getElementById('client-cur-f');
+      if (curFEl) curFEl.innerText = dailyTotals.f.toFixed(1);
+      const tarFEl = document.getElementById('client-tar-f');
+      if (tarFEl) tarFEl.innerText = data.targetF || '40';
 
-      const now = new Date();
-      document.getElementById('last-update-time').innerText = `最終同期: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      const curCEl = document.getElementById('client-cur-c');
+      if (curCEl) curCEl.innerText = dailyTotals.c.toFixed(1);
+      const tarCEl = document.getElementById('client-tar-c');
+      if (tarCEl) tarCEl.innerText = data.targetC || '210';
 
-      const cycleInfo = getCyclePhaseName(data.cycleStartDate, data.cycleLength, selectedDateString);
-      if (cycleInfo) {
-        document.getElementById('client-cycle-status-emoji').innerText = cycleInfo.emoji;
-        document.getElementById('client-cycle-status-text').innerText = `${cycleInfo.name} (Day ${cycleInfo.day})`;
-      } else {
-        document.getElementById('client-cycle-status-emoji').innerText = "📅";
-        document.getElementById('client-cycle-status-text').innerText = `生理周期：未設定`;
+      // ④ タイムライン・ヘッダー文字
+      const energySecEl = document.getElementById('energy-section-title');
+      if (energySecEl) energySecEl.innerText = `${selectedDateString.substring(5)} の総摂取エネルギー`;
+      
+      const timelineSecEl = document.getElementById('timeline-section-title');
+      if (timelineSecEl) {
+        timelineSecEl.innerHTML = `<i data-lucide="utensils" class="w-4.5 h-4.5 text-brand-gold"></i><span>${selectedDateString.substring(5)} の食事タイムライン (${dailyTotals.meals.length}件)</span>`;
       }
 
+      const now = new Date();
+      const lastUpdateEl = document.getElementById('last-update-time');
+      if (lastUpdateEl) {
+        lastUpdateEl.innerText = `最終同期: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      }
+
+      // ⑤ 生理サイクル表示の同期
+      try {
+        const cycleInfo = getCyclePhaseName(data.cycleStartDate, data.cycleLength, selectedDateString);
+        const cycleEmojiEl = document.getElementById('client-cycle-status-emoji');
+        const cycleTextEl = document.getElementById('client-cycle-status-text');
+        if (cycleEmojiEl && cycleTextEl) {
+          if (cycleInfo) {
+            cycleEmojiEl.innerText = cycleInfo.emoji;
+            cycleTextEl.innerText = `${cycleInfo.name} (Day ${cycleInfo.day})`;
+          } else {
+            cycleEmojiEl.innerText = "📅";
+            cycleTextEl.innerText = `生理周期：未設定`;
+          }
+        }
+      } catch (err) {
+        console.error("Cycle display render error:", err);
+      }
+
+      // ⑥ 体重変化の計算
       const history = data.weightHistory || {};
       const dates = Object.keys(history).sort();
       const initialWeight = safeFloat(data.initialWeight) || (dates.length > 0 ? history[dates[0]] : safeFloat(data.weight)) || 55.0;
@@ -1141,35 +1190,41 @@
         diffInitEl.className = initialVsMinDiff < 0 ? "text-[11px] font-black text-emerald-600 font-mono" : "text-[11px] font-black text-brand-primary font-mono";
       }
 
-      const refDate = new Date(selectedDateString);
-      const getMinInDateRange = (daysStartOffset, daysEndOffset) => {
-        let minW = null;
-        for (let i = daysStartOffset; i <= daysEndOffset; i++) {
-          const tempD = new Date(refDate);
-          tempD.setDate(refDate.getDate() - i);
-          const tempStr = `${tempD.getFullYear()}-${String(tempD.getMonth() + 1).padStart(2, '0')}-${String(tempD.getDate()).padStart(2, '0')}`;
-          if (history[tempStr] && history[tempStr] > 0) {
-            if (minW === null || history[tempStr] < minW) {
-              minW = history[tempStr];
+      // ⑦ 今週最低 vs 先週最低
+      try {
+        const refDate = new Date(selectedDateString);
+        const getMinInDateRange = (daysStartOffset, daysEndOffset) => {
+          let minW = null;
+          for (let i = daysStartOffset; i <= daysEndOffset; i++) {
+            const tempD = new Date(refDate);
+            tempD.setDate(refDate.getDate() - i);
+            const tempStr = `${tempD.getFullYear()}-${String(tempD.getMonth() + 1).padStart(2, '0')}-${String(tempD.getDate()).padStart(2, '0')}`;
+            if (history[tempStr] && history[tempStr] > 0) {
+              if (minW === null || history[tempStr] < minW) {
+                minW = history[tempStr];
+              }
             }
           }
+          return minW;
+        };
+        const thisWeekMin = getMinInDateRange(0, 6);
+        const lastWeekMin = getMinInDateRange(7, 13);
+        const diffWeeklyEl = document.getElementById('client-stats-diff-weekly-min');
+        if (diffWeeklyEl) {
+          if (thisWeekMin !== null && lastWeekMin !== null) {
+            const weeklyDiff = thisWeekMin - lastWeekMin;
+            diffWeeklyEl.innerText = `${weeklyDiff > 0 ? '+' : ''}${weeklyDiff.toFixed(1)} kg`;
+            diffWeeklyEl.className = weeklyDiff < 0 ? "text-[11px] font-black text-emerald-600 font-mono" : "text-[11px] font-black text-brand-primary font-mono";
+          } else {
+            diffWeeklyEl.innerText = "データ蓄積中";
+            diffWeeklyEl.className = "text-[9px] font-bold text-brand-muted font-mono";
+          }
         }
-        return minW;
-      };
-      const thisWeekMin = getMinInDateRange(0, 6);
-      const lastWeekMin = getMinInDateRange(7, 13);
-      const diffWeeklyEl = document.getElementById('client-stats-diff-weekly-min');
-      if (diffWeeklyEl) {
-        if (thisWeekMin !== null && lastWeekMin !== null) {
-          const weeklyDiff = thisWeekMin - lastWeekMin;
-          diffWeeklyEl.innerText = `${weeklyDiff > 0 ? '+' : ''}${weeklyDiff.toFixed(1)} kg`;
-          diffWeeklyEl.className = weeklyDiff < 0 ? "text-[11px] font-black text-emerald-600 font-mono" : "text-[11px] font-black text-brand-primary font-mono";
-        } else {
-          diffWeeklyEl.innerText = "データ蓄積中";
-          diffWeeklyEl.className = "text-[9px] font-bold text-brand-muted font-mono";
-        }
+      } catch (err) {
+        console.error("Weekly weight min calculate error:", err);
       }
 
+      // ⑧ 体重履歴
       const historyListEl = document.getElementById('client-weight-history-list');
       if (historyListEl) {
         historyListEl.innerHTML = "";
@@ -1186,59 +1241,80 @@
         }
       }
 
+      // ⑨ 週次帳じり合わせ
       calculateWeeklySummaryAndDiff(data);
 
+      // ⑩ 曜日別ログ
       const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
       days.forEach(day => {
         const dayLog = data.weeklyLogs ? data.weeklyLogs[day] : null;
-        document.getElementById(`weekly-cal-${day}`).innerText = dayLog && dayLog.kcal > 0 ? dayLog.kcal.toLocaleString() : '-';
+        const targetEl = document.getElementById(`weekly-cal-${day}`);
+        if (targetEl) {
+          targetEl.innerText = dayLog && dayLog.kcal > 0 ? dayLog.kcal.toLocaleString() : '-';
+        }
       });
 
+      // ⑪ ポジネガ監査ボード
       renderJewelAuditGrid(data);
 
+      // ⑫ 食事明細ジャーナル
       const timelineEl = document.getElementById('client-meal-timeline');
-      timelineEl.innerHTML = "";
-      if (dailyTotals.meals && dailyTotals.meals.length > 0) {
-        dailyTotals.meals.forEach(m => {
-          const category = estimateMealCategoryByTime(m.time);
-          const row = document.createElement('div');
-          row.className = "bg-white rounded-2xl p-3 text-[10.5px] border border-brand-border/70 flex justify-between items-center hover:border-brand-primary/20 hover:bg-brand-accent/20 transition-all shadow-sm mb-1.5";
-          
-          let tagHtml = "";
-          if (safeFloat(m.p) >= 20) {
-            tagHtml += `<span class="bg-brand-accent text-brand-primary text-[8px] font-black px-1.5 py-0.5 rounded border border-brand-primary/10">高P</span>`;
-          }
-          if (safeFloat(m.f) >= 15) {
-            tagHtml += `<span class="bg-brand-roseLight text-brand-rose text-[8px] font-black px-1.5 py-0.5 rounded border border-brand-rose/10">脂質⚠️</span>`;
-          }
+      if (timelineEl) {
+        timelineEl.innerHTML = "";
+        if (dailyTotals.meals && dailyTotals.meals.length > 0) {
+          dailyTotals.meals.forEach(m => {
+            if (!m) return; // 🛡️ 安全ヌルポガード
+            const category = estimateMealCategoryByTime(m.time);
+            const row = document.createElement('div');
+            row.className = "bg-white rounded-2xl p-3 text-[10.5px] border border-brand-border/70 flex justify-between items-center hover:border-brand-primary/20 hover:bg-brand-accent/20 transition-all shadow-sm mb-1.5";
+            
+            let tagHtml = "";
+            if (safeFloat(m.p) >= 20) {
+              tagHtml += `<span class="bg-brand-accent text-brand-primary text-[8px] font-black px-1.5 py-0.5 rounded border border-brand-primary/10">高P</span>`;
+            }
+            if (safeFloat(m.f) >= 15) {
+              tagHtml += `<span class="bg-brand-roseLight text-brand-rose text-[8px] font-black px-1.5 py-0.5 rounded border border-brand-rose/10">脂質⚠️</span>`;
+            }
 
-          row.innerHTML = `
-            <div class="space-y-0.5">
-              <div class="flex items-center gap-1.5">
-                <span class="text-[9px] font-mono text-brand-muted">${m.time || '--:--'}</span>
-                <span class="text-[8px] px-1.5 py-0.5 rounded font-black border ${category.class}">${category.label}</span>
-                ${tagHtml}
+            row.innerHTML = `
+              <div class="space-y-0.5">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[9px] font-mono text-brand-muted">${m.time || '--:--'}</span>
+                  <span class="text-[8px] px-1.5 py-0.5 rounded font-black border ${category.class}">${category.label}</span>
+                  ${tagHtml}
+                </div>
+                <h5 class="font-black text-brand-text text-[11px]">${m.name}</h5>
+                <p class="text-[8px] text-brand-muted font-logo">P:${safeFloat(m.p).toFixed(1)}g F:${safeFloat(m.f).toFixed(1)}g C:${safeFloat(m.c).toFixed(1)}g</p>
               </div>
-              <h5 class="font-black text-brand-text text-[11px]">${m.name}</h5>
-              <p class="text-[8px] text-brand-muted font-logo">P:${safeFloat(m.p).toFixed(1)}g F:${safeFloat(m.f).toFixed(1)}g C:${safeFloat(m.c).toFixed(1)}g</p>
-            </div>
-            <div class="text-right">
-              <span class="text-xs font-logo font-black text-brand-primary block">${Math.round(m.kcal)}</span>
-              <span class="text-[7.5px] text-brand-muted block font-logo">kcal</span>
-            </div>
-          `;
-          timelineEl.appendChild(row);
-        });
-      } else {
-        timelineEl.innerHTML = `<div class="text-center py-6 text-[10px] text-brand-muted font-bold">食事登録はありません。</div>`;
+              <div class="text-right">
+                <span class="text-xs font-logo font-black text-brand-primary block">${Math.round(m.kcal)}</span>
+                <span class="text-[7.5px] text-brand-muted block font-logo">kcal</span>
+              </div>
+            `;
+            timelineEl.appendChild(row);
+          });
+        } else {
+          timelineEl.innerHTML = `<div class="text-center py-6 text-[10px] text-brand-muted font-bold">食事登録はありません。</div>`;
+        }
       }
 
+      // ⑬ フィードバックアドバイス欄
+      renderWeeklyReportSection(data);
+
       lucide.createIcons();
+    }
+
+    function renderWeeklyReportSection(data) {
+      const fbTextEl = document.getElementById('weekly-feedback-textarea');
+      if (fbTextEl && data.trainerFeedback) {
+        fbTextEl.placeholder = data.trainerFeedback;
+      }
     }
 
     // 口頭指導用の「良かった食事🌟」と「改善すべき食事⚠️」自動精査
     function renderJewelAuditGrid(data) {
       const auditGrid = document.getElementById('cycle-audit-grid');
+      if (!auditGrid) return;
       auditGrid.innerHTML = "";
 
       const baseDate = new Date(selectedDateString);
@@ -1254,6 +1330,7 @@
         let cautionMeals = [];
 
         dayTotals.meals.forEach(m => {
+          if (!m) return; // 🛡️ 空食事の完全回避ガード
           const p = safeFloat(m.p);
           const f = safeFloat(m.f);
           const kcal = safeFloat(m.kcal);
@@ -1345,7 +1422,6 @@
       }
     };
 
-    // リトライとお休み案内モーダルを完全に連動させたAPI呼出
     async function fetchGeminiWithFallback(payload) {
       const key = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
       if (!key) {
@@ -1423,7 +1499,7 @@
             totalPSum += totals.p;
             totalFSum += totals.f;
             totalCSum += totals.c;
-            const mealNames = totals.meals.map(m => m.name).join(', ');
+            const mealNames = totals.meals.map(m => m ? m.name : "不明食").join(', ');
             weeklyMealsSummaryText += `・[${dateStr}] カロリー:${totals.cal}kcal (P:${totals.p.toFixed(1)}g, F:${totals.f.toFixed(1)}g, C:${totals.c.toFixed(1)}g) 主な食事: ${mealNames}\n`;
           }
         });
