@@ -146,7 +146,7 @@
         <button onclick="window.connectWithClientId()" 
           class="w-full bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-bold py-4 px-6 rounded-2xl shadow-blueGlow hover:shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-xs">
           <span>同期してマイポータルを開く</span>
-          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          <i data-lucide="arrow-right" class="w-full h-4"></i>
         </button>
       </div>
 
@@ -289,7 +289,7 @@
                     <span class="text-[10px] text-brand-primary font-black" id="home-cycle-status-text">生理周期を設定すると身体作り補正が表示されます。</span>
                   </div>
                   <p class="text-[9px] text-brand-muted font-semibold leading-relaxed" id="home-cycle-status-desc">
-                    「生理日・周期」タブから前回の開始日を設定することで、水分貯留予測（むくみ期）や筋合成最大化期に応じたPFC自動微調整、有酸素運動強度アドバイスをエビデンスに基づいて行います。
+                    「生理日・周期」タブから前回の開始日を設定することで、水分貯留予測や筋合成最大化期に応じたPFC自動微調整、有酸素運動強度アドバイスをエビデンスに基づいて行います。
                   </p>
                 </div>
               </div>
@@ -350,14 +350,14 @@
 
           <hr class="border-brand-border/40">
 
-          <!-- セクション3: 累積「帳じり合わせ」貯金バランス -->
+          <!-- セクション3: 累積「帳じり合わせ」貯金バランス (移動過去7日間の高精度ロジック) -->
           <div class="bg-brand-accent/40 p-4 rounded-2xl border border-brand-border/60 relative overflow-hidden">
             <div id="balance-bar-color" class="absolute top-0 left-0 w-1.5 h-full bg-emerald-400"></div>
             <div class="pl-2">
               <div class="flex items-center justify-between mb-2.5">
                 <div class="flex items-center gap-1.5">
                   <i data-lucide="pie-chart" class="w-4 h-4 text-brand-secondary"></i>
-                  <h3 class="text-xs font-black text-brand-primary">今週のボディメイク貯金 (月曜からの累積差分)</h3>
+                  <h3 class="text-xs font-black text-brand-primary">直近1週間のボディメイク貯金 (過去7日間の累積差分)</h3>
                 </div>
                 <span class="text-[8px] bg-white border border-brand-border/40 text-brand-muted px-2 py-0.5 rounded font-bold">自動計算</span>
               </div>
@@ -422,6 +422,7 @@
             </button>
           </div>
 
+          <!-- 最近よく食べる食事 -->
           <div class="space-y-2 pt-1">
             <p class="text-[10px] text-brand-muted font-bold flex items-center gap-1">
               <i data-lucide="clock" class="w-3.5 h-3.5"></i>
@@ -588,7 +589,7 @@
               </p>
               <div class="mt-3 bg-white p-3 rounded-xl border border-brand-border/50">
                 <p class="text-[9px] text-brand-muted font-bold leading-relaxed">
-                  ※ エストロゲン分泌が高まる「卵胞期」はインスリン感受性が高いため炭水化物の代謝がスムーズです。逆に「黄体期」はインスリン感受性が低下するため血糖値の急上昇に留意した複合炭水化物（玄米・オーツ麦等）への置き換えを推奨します。
+                  ※ エストロゲン分泌が高まる「卵胞期」はインスリン感受性が高ため炭水化物の代謝がスムーズです。逆に「黄体期」はインスリン感受性が低下するため血糖値の急上昇に留意した複合炭水化物（玄米・オーツ麦等）への置き換えを推奨します。
                 </p>
               </div>
             </div>
@@ -899,8 +900,7 @@
     import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "firebase/auth";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
 
-    // 🏆 コア同期パスの完全固定化 (絶対にズレを発生させない最強設計)
-    const appId = 'carat-meal-v3';
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'carat-meal-v3';
     let db, auth;
     let currentClientId = null;
     let unsubscribeClientListener = null;
@@ -1051,7 +1051,7 @@
       for (const [dateStr, meals] of Object.entries(clientState.mealsByDate)) {
         if (!meals) continue;
         meals.forEach(m => {
-          if (!m.name) return;
+          if (!m) return;
           historyMap.set(m.name, {
             name: m.name,
             kcal: safeFloat(m.kcal),
@@ -1342,18 +1342,15 @@
       const targetCal = safeFloat(clientState.targetCalories) || 1600;
       const yMeals = clientState.mealsByDate?.[yStr] || [];
       let yCal = 0;
-      yMeals.forEach(m => { yCal += safeFloat(m.kcal); });
+      yMeals.forEach(m => { if (m) yCal += safeFloat(m.kcal); });
       const overKcal = Math.max(0, Math.round(yCal - targetCal));
       const adjustedKcal = Math.min(200, overKcal);
       return { overKcal, adjustedKcal };
     }
 
+    // 🏆 高精度ローリング週次帳尻合わせロジック（選択日を起点とする過去7日間）
     function getWeeklyDiffSummary() {
       const baseDate = new Date(selectedDateString);
-      const dayIdx = baseDate.getDay();
-      const mondayOffset = dayIdx === 0 ? -6 : 1 - dayIdx;
-      const monday = new Date(baseDate);
-      monday.setDate(baseDate.getDate() + mondayOffset);
       let totalKcal = 0, totalP = 0, totalF = 0, totalC = 0;
       let targetKcalSum = 0, targetPSum = 0, targetFSum = 0, targetCSum = 0;
 
@@ -1362,10 +1359,10 @@
       const baseTarF = safeFloat(clientState.targetF) || 40;
       const baseTarC = safeFloat(clientState.targetC) || 210;
 
-      const daysLimit = Math.min(7, Math.floor((baseDate - monday) / (24 * 60 * 60 * 1000)) + 1);
-      for (let i = 0; i < daysLimit; i++) {
-        const curLoopD = new Date(monday);
-        curLoopD.setDate(monday.getDate() + i);
+      // 過去7日間を逆上って移動合計する
+      for (let i = 0; i < 7; i++) {
+        const curLoopD = new Date(baseDate);
+        curLoopD.setDate(baseDate.getDate() - i);
         const loopStr = curLoopD.getFullYear() + "-" + String(curLoopD.getMonth() + 1).padStart(2, '0') + "-" + String(curLoopD.getDate()).padStart(2, '0');
 
         const loopYesterday = new Date(curLoopD);
@@ -1374,7 +1371,7 @@
 
         const yMeals = clientState.mealsByDate?.[loopYStr] || [];
         let yCalSum = 0;
-        yMeals.forEach(m => { yCalSum += safeFloat(m.kcal); });
+        yMeals.forEach(m => { if (m) yCalSum += safeFloat(m.kcal); });
         const loopOver = Math.max(0, Math.round(yCalSum - baseTarCal));
         const loopRecovery = Math.min(200, loopOver);
 
@@ -1387,10 +1384,12 @@
 
         const dayMeals = clientState.mealsByDate?.[loopStr] || [];
         dayMeals.forEach(m => {
-          totalKcal += safeFloat(m.kcal);
-          totalP += safeFloat(m.p);
-          totalF += safeFloat(m.f);
-          totalC += safeFloat(m.c);
+          if (m) {
+            totalKcal += safeFloat(m.kcal);
+            totalP += safeFloat(m.p);
+            totalF += safeFloat(m.f);
+            totalC += safeFloat(m.c);
+          }
         });
       }
       return {
@@ -1540,10 +1539,12 @@
       let curKcal = 0, curP = 0, curF = 0, curC = 0;
       const meals = clientState.mealsByDate?.[selectedDateString] || [];
       meals.forEach(m => {
-        curKcal += safeFloat(m.kcal);
-        curP += safeFloat(m.p);
-        curF += safeFloat(m.f);
-        curC += safeFloat(m.c);
+        if (m) {
+          curKcal += safeFloat(m.kcal);
+          curP += safeFloat(m.p);
+          curF += safeFloat(m.f);
+          curC += safeFloat(m.c);
+        }
       });
 
       const recovery = calculateAutoRecoveryKcal();
@@ -1593,6 +1594,7 @@
       document.getElementById('summary-tar-c').innerText = tarC;
       document.getElementById('bar-c').style.width = Math.min(100, (curC / tarC) * 100) + "%";
 
+      // 🏆 修正箇所：1週間移動帳尻合わせを表示
       const weeklyDiff = getWeeklyDiffSummary();
       const formatDiffNum = (num, unit) => {
         if (num > 0) return `<span class="text-brand-rose font-bold">+${num.toFixed(1)} ${unit}</span>`;
@@ -1638,6 +1640,7 @@
         `;
       } else {
         meals.forEach((m) => {
+          if (!m) return;
           const category = estimateMealCategoryByTime(m.time);
           const pVal = safeFloat(m.p);
           const fVal = safeFloat(m.f);
@@ -1901,7 +1904,7 @@
       const targetDate = selectedDateString;
       const nextMealsByDate = { ...clientState.mealsByDate };
       if (!nextMealsByDate[targetDate]) nextMealsByDate[targetDate] = [];
-      const idx = nextMealsByDate[targetDate].findIndex(m => m.id === newMeal.id);
+      const idx = nextMealsByDate[targetDate].findIndex(m => m && m.id === newMeal.id);
       
       if (idx > -1) {
         nextMealsByDate[targetDate][idx] = newMeal;
@@ -1944,10 +1947,12 @@
         const dayName = daysOfWeekMap[d.getDay()];
         if (currentLogs[dayName] && meals) {
           meals.forEach(m => {
-            currentLogs[dayName].kcal += safeFloat(m.kcal);
-            currentLogs[dayName].p += safeFloat(m.p);
-            currentLogs[dayName].f += safeFloat(m.f);
-            currentLogs[dayName].c += safeFloat(m.c);
+            if (m) {
+              currentLogs[dayName].kcal += safeFloat(m.kcal);
+              currentLogs[dayName].p += safeFloat(m.p);
+              currentLogs[dayName].f += safeFloat(m.f);
+              currentLogs[dayName].c += safeFloat(m.c);
+            }
           });
           currentLogs[dayName].kcal = Math.round(currentLogs[dayName].kcal);
         }
@@ -1955,7 +1960,6 @@
       return currentLogs;
     }
 
-    // ================= 🛠️ クォータ制限対応・新型指数バックオフAPI呼び出し =================
     async function fetchGeminiWithBackoff(payload) {
       const key = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
       if (!key) {
@@ -2179,7 +2183,7 @@
 
     window.openEditMealModal = function(mealId) {
       const meals = clientState.mealsByDate?.[selectedDateString] || [];
-      const meal = meals.find(m => m.id === mealId);
+      const meal = meals.find(m => m && m.id === mealId);
       if (!meal) return;
       editingMealId = mealId;
       window.editingMealId = mealId;
@@ -2282,7 +2286,7 @@
             <div class="space-y-1">
               <span class="text-[8px] text-brand-muted font-bold block">F(g)</span>
               <input type="number" step="0.1" value="${safeFloat(ing.f).toFixed(1)}" class="w-full bg-white border border-brand-border rounded-lg p-1 text-center font-logo text-[10px] font-bold text-brand-primary focus:outline-none"
-                onchange="window.changeIngredientFFC(${i}, 'f', this.value)">
+                onchange="window.changeIngredientPFC(${i}, 'f', this.value)">
             </div>
             <div class="space-y-1">
               <span class="text-[8px] text-brand-muted font-bold block">C(g)</span>
@@ -2396,7 +2400,7 @@
 
       const toast = document.createElement('div');
       toast.className = "fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-md z-[300] flex items-center gap-2 animate-bounce";
-      toast.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4 text-brand-gold animate-spin"></i>AIが「${ingName} ${ingWeight}g」の栄養を分析中...`;
+      toast.innerHTML = `<i data-lucide="gem" class="w-4 h-4 text-brand-gold animate-spin"></i>AIが「${ingName} ${ingWeight}g」の栄養を分析中...`;
       document.body.appendChild(toast);
       lucide.createIcons();
 
