@@ -88,7 +88,7 @@
     }
   </style>
 </head>
-<body class="bg-jewel-gradient text-brand-text min-h-screen font-sans selection:bg-brand-accent selection:text-brand-primary overflow-x-hidden">
+<body class="bg-jewel-gradient text-brand-text min-h-screen font-sans selection:bg-brand-accent selection:text-brand-primary overflow-x-hidden pb-16">
 
   <!-- ================= プレミアム管理ヘッダー ================= -->
   <header class="bg-white/90 backdrop-blur-md border-b border-brand-border/60 sticky top-0 z-50 shadow-sm">
@@ -110,7 +110,7 @@
       <div class="flex items-center gap-2">
         <div id="sync-status" class="text-[10px] px-3 py-1.5 rounded-full bg-slate-100 text-brand-muted border border-brand-border flex items-center gap-1.5 font-black">
           <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-          <span>認証初期化中...</span>
+          <span>認証確立を待機中...</span>
         </div>
         <div class="relative flex items-center bg-brand-goldLight border border-brand-gold/30 rounded-xl px-2.5 py-1">
           <input type="password" id="trainer-gemini-key" placeholder="店舗Gemini APIキーを入力" 
@@ -165,9 +165,9 @@
                 <input type="number" id="new-client-c" value="210" class="w-full bg-white border border-brand-border rounded-lg p-1 text-[10px] font-bold text-center">
               </div>
             </div>
-            <button id="btn-create-carte" onclick="window.createNewClientAndId()" disabled class="w-full bg-slate-300 text-brand-muted cursor-not-allowed font-bold py-2.5 rounded-xl text-[10px] flex items-center justify-center gap-1.5 shadow-sm transition-all">
+            <button id="btn-create-carte" onclick="window.createNewClientAndId()" disabled class="w-full bg-slate-200 text-brand-muted cursor-not-allowed font-bold py-2.5 rounded-xl text-[10px] flex items-center justify-center gap-1.5 shadow-sm transition-all">
               <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-              <span>カルテ作成・同期ID発行 (準備中)</span>
+              <span>カルテ作成・同期ID発行 (認証待機中)</span>
             </button>
           </div>
         </div>
@@ -205,8 +205,8 @@
             <span class="text-[10px] text-brand-primary font-black tracking-wider uppercase block">対象カルテ同期 :</span>
             <div class="flex items-center gap-1.5">
               <input type="text" id="client-id-input" placeholder="CRT-XXXXXX" class="bg-slate-50 border-2 border-brand-border rounded-xl px-3 py-1.5 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-gold uppercase tracking-wider w-36">
-              <button id="btn-sync-data" onclick="window.loadClientData()" disabled class="bg-slate-300 text-brand-muted cursor-not-allowed px-4 py-2 rounded-xl text-xs font-black transition-all shadow-sm">
-                データ同期 (準備中)
+              <button id="btn-sync-data" onclick="window.loadClientData()" disabled class="bg-slate-200 text-brand-muted cursor-not-allowed px-4 py-2 rounded-xl text-xs font-black transition-all shadow-sm">
+                データ同期 (認証待機中)
               </button>
             </div>
           </div>
@@ -395,7 +395,7 @@
                   <button onclick="window.changeSelectedDate('next')" class="w-8 h-8 flex items-center justify-center bg-slate-50 hover:bg-slate-100 rounded-lg text-brand-primary border border-brand-border transition-all">
                     <i data-lucide="chevron-right" class="w-4 h-4"></i>
                   </button>
-                  <span id="display-selected-date-badge" class="text-[8px] px-2 py-0.5 rounded-full font-black border"></span>
+                  <span id="display-selected-date-badge" class="text-[8px] px-2 py-0.5 rounded-full font-black border animate-pulse"></span>
                 </div>
               </div>
 
@@ -464,6 +464,20 @@
     </div>
   </main>
 
+  <!-- ================= 📡 最下部常設：クリスタル通信ログパネル ================= -->
+  <footer class="fixed bottom-0 left-0 right-0 bg-[#0B2545]/90 backdrop-blur-md border-t border-[#D9E6F2]/30 px-4 py-2 z-[100] flex justify-between items-center">
+    <div class="flex items-center gap-2 text-[10px] font-logo font-bold text-[#EEF4FA]">
+      <div class="flex space-x-0.5 items-end h-3" id="db-signal-strength">
+        <span class="w-0.5 h-1 bg-emerald-400 rounded-sm"></span>
+        <span class="w-0.5 h-2 bg-emerald-400 rounded-sm"></span>
+        <span class="w-0.5 h-3 bg-emerald-400 rounded-sm"></span>
+      </div>
+      <span id="terminal-log-text">システム起動・同期初期化中...</span>
+    </div>
+    <div class="text-[9px] text-[#687E96] font-bold font-logo uppercase">
+      Firestore Realtime Engine v3.0.2
+    </div>
+  </footer>
 
   <!-- ================= 💎 カスタムアラート / 確認用モーダル (標準ダイアログ代替) ================= -->
   <div id="custom-dialog-modal" class="hidden fixed inset-0 bg-brand-primary/60 backdrop-blur-sm items-center justify-center p-4 z-[200] animate-fade-in">
@@ -474,14 +488,13 @@
         </span>
         <h4 class="text-xs font-black text-brand-primary" id="dialog-title">通知</h4>
       </div>
-      <p class="text-[11px] text-brand-text font-bold leading-relaxed" id="dialog-message">メッセージ本文</p>
+      <p class="text-[11px] text-brand-text font-bold leading-relaxed whitespace-pre-line" id="dialog-message">メッセージ本文</p>
       
       <div class="flex gap-2 justify-end pt-2" id="dialog-buttons-container">
         <!-- JSで動的にボタン生成 -->
       </div>
     </div>
   </div>
-
 
   <!-- ================= 👑 429・404クォータ制限お休み案内モーダル ================= -->
   <div id="ai-error-modal" class="hidden fixed inset-0 bg-brand-primary/60 backdrop-blur-sm items-center justify-center p-4 z-[150] animate-fade-in">
@@ -503,7 +516,7 @@
         <div class="bg-brand-accent/30 p-3 rounded-xl border border-brand-border/40 text-[9.5px] text-brand-primary font-bold leading-relaxed space-y-1">
           <p><strong>💡 解決のヒント:</strong></p>
           <p>① 1分ほど時間をおいてもう一度「アドバイス作成」を送信してみてください。自動的に復活します。</p>
-          <p>② Google AI Studioから新しい無料キーを再発行して設定するか、従量課金プラン（Pay-as-you-go）に切り替えることで制限が完全撤廃されます。</p>
+          <p>② Google AI Studioから新しい無料キーを再発行して設定するか、従量課金プランに切り替えることで制限が完全撤廃されます。</p>
         </div>
         <button onclick="window.toggleModal('ai-error-modal', false)" class="w-full bg-brand-primary text-white py-2.5 px-4 rounded-xl text-xs font-black transition-all active:scale-95 shadow-sm">
           確認しました
@@ -511,7 +524,6 @@
       </div>
     </div>
   </div>
-
 
   <!-- ================= 処理中ローディング ================= -->
   <div id="loading-overlay" class="hidden fixed inset-0 bg-brand-primary/80 backdrop-blur-md items-center justify-center p-4 z-[300] flex-col space-y-4">
@@ -524,7 +536,6 @@
       <p class="text-[10px] text-brand-accent font-bold" id="loading-sub-text">進捗とアドバイスの組み立てを行っています。</p>
     </div>
   </div>
-
 
   <!-- Firebase CDN Load & Logic Module -->
   <script type="importmap">
@@ -581,6 +592,46 @@
     function getTodayDateString() {
       const d = new Date();
       return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
+    }
+
+    // 📡 画面最下部の自律ログパネルの記述ユーティリティ
+    function logStatus(text, colorClass = "slate") {
+      const el = document.getElementById('terminal-log-text');
+      const sig = document.getElementById('db-signal-strength');
+      if (!el) return;
+      el.innerText = text;
+      
+      // クラスに応じたカラー調整
+      el.className = "font-logo font-bold text-[10px] tracking-wide transition-colors duration-300";
+      if (colorClass === "emerald") {
+        el.classList.add("text-emerald-400");
+        sig.innerHTML = `
+          <span class="w-0.5 h-1 bg-emerald-400 rounded-sm"></span>
+          <span class="w-0.5 h-2 bg-emerald-400 rounded-sm"></span>
+          <span class="w-0.5 h-3 bg-emerald-400 rounded-sm animate-pulse"></span>
+        `;
+      } else if (colorClass === "rose") {
+        el.classList.add("text-rose-400");
+        sig.innerHTML = `
+          <span class="w-0.5 h-1 bg-rose-400 rounded-sm"></span>
+          <span class="w-0.5 h-1 bg-slate-500 rounded-sm"></span>
+          <span class="w-0.5 h-1 bg-slate-500 rounded-sm"></span>
+        `;
+      } else if (colorClass === "amber") {
+        el.classList.add("text-amber-400");
+        sig.innerHTML = `
+          <span class="w-0.5 h-1 bg-amber-400 rounded-sm"></span>
+          <span class="w-0.5 h-2 bg-amber-400 rounded-sm"></span>
+          <span class="w-0.5 h-1 bg-slate-500 rounded-sm"></span>
+        `;
+      } else {
+        el.classList.add("text-[#EEF4FA]");
+        sig.innerHTML = `
+          <span class="w-0.5 h-1 bg-slate-400 rounded-sm animate-pulse"></span>
+          <span class="w-0.5 h-1 bg-slate-500 rounded-sm"></span>
+          <span class="w-0.5 h-1 bg-slate-500 rounded-sm"></span>
+        `;
+      }
     }
 
     // Custom dialog utilities to replace native alert() and confirm()
@@ -644,7 +695,7 @@
 
     function showToast(message) {
       const toast = document.createElement('div');
-      toast.className = "fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-premium z-[300] transition-opacity duration-300 flex items-center gap-2 border border-brand-gold/30";
+      toast.className = "fixed bottom-14 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-5 py-3.5 rounded-full text-xs font-bold shadow-premium z-[300] transition-opacity duration-300 flex items-center gap-2 border border-brand-gold/30";
       toast.innerHTML = `<i data-lucide="gem" class="w-4 h-4 text-brand-gold animate-bounce"></i>` + message;
       document.body.appendChild(toast);
       lucide.createIcons();
@@ -655,24 +706,22 @@
     }
     window.showToast = showToast;
 
-    // ================= 🔐 RULE 3 準拠: ログインが完了してからクエリを走らせる仕組み =================
+    // ================= 🔐 RULE 3 準拠: 起動・認証フローの厳格順序待ち制御 =================
     const initAuthAndStatus = async () => {
+      logStatus("Firebase 認証モジュール初期化中...", "slate");
       try {
+        let credential;
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
+          credential = await signInWithCustomToken(auth, __initial_auth_token);
         } else {
-          await signInAnonymously(auth);
+          credential = await signInAnonymously(auth);
         }
-      } catch (e) {
-        console.warn("Auth initialization retry...", e);
-        await signInAnonymously(auth);
-      }
-    };
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
+        
+        const user = credential.user;
         isFirebaseReady = true;
-        // ボタン類をアクティブにする
+        logStatus(`認証完了 (UID: ${user.uid.substring(0, 8)}...)`, "emerald");
+
+        // 認証成功後に初めてボタンの操作ガードを解除する
         document.getElementById('btn-create-carte').disabled = false;
         document.getElementById('btn-create-carte').className = "w-full bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-bold py-2.5 rounded-xl text-[10px] flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer";
         document.getElementById('btn-create-carte').innerHTML = `<i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-gold animate-pulse"></i><span>カルテ作成・同期ID発行</span>`;
@@ -683,15 +732,24 @@
 
         document.getElementById('sync-status').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span><span>Online / DB Synced</span>`;
         document.getElementById('sync-status').className = "text-[10px] px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1.5 font-black animate-fade-in";
-        
+
+        // ブックマークリストを描画
         window.renderBookmarks();
-        lucide.createIcons();
-      } else {
-        isFirebaseReady = false;
-        document.getElementById('sync-status').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span><span>Offline / 未接続</span>`;
+        
+        // 最後に選択していたクライアントがあれば自動回復ロード
+        const lastActiveId = localStorage.getItem(`carat_last_active_client_${appId}`);
+        if (lastActiveId) {
+          document.getElementById('client-id-input').value = lastActiveId;
+          window.loadClientData();
+        }
+        
+      } catch (e) {
+        console.error("Auth Fail on Boot:", e);
+        logStatus(`認証接続エラー: ${e.message}`, "rose");
+        document.getElementById('sync-status').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span><span>Offline / 未接続</span>`;
         document.getElementById('sync-status').className = "text-[10px] px-3.5 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 flex items-center gap-1.5 font-black";
       }
-    });
+    };
 
     function getBookmarkList() {
       const stored = localStorage.getItem(`carat_trainer_bookmarks_${appId}`);
@@ -773,7 +831,7 @@
 
     window.createNewClientAndId = async function() {
       if (!isFirebaseReady) {
-        window.showCustomAlert("準備中", "データベース接続の初期化中です。1秒ほどお待ちいただき再度作成してください。");
+        window.showCustomAlert("認証確立エラー", "現在サーバーとの接続初期化を行っています。数秒置いてから再実行してください。", "error");
         return;
       }
 
@@ -785,7 +843,7 @@
       const c = parseInt(document.getElementById('new-client-c').value) || 210;
 
       if (!nickname) {
-        window.showCustomAlert("入力エラー", "お名前を入力してください。");
+        window.showCustomAlert("お名前未入力", "新規作成するクライアントの氏名（愛称）を入力してください。");
         return;
       }
 
@@ -826,6 +884,7 @@
       };
 
       try {
+        logStatus(`カルテ作成中: ${newId}...`, "amber");
         const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', newId);
         await setDoc(docRef, initialClientState);
         addBookmark(newId, nickname);
@@ -844,7 +903,8 @@
         window.loadClientData();
       } catch (err) {
         console.error("Failed to create client:", err);
-        window.showCustomAlert("作成エラー", "新規作成・登録に失敗しました。", "error");
+        logStatus(`カルテ作成失敗: ${err.message}`, "rose");
+        window.showCustomAlert("作成エラー", "新規作成・登録に失敗しました。認証許可状態をご確認ください。", "error");
       }
     };
 
@@ -995,9 +1055,12 @@
         return;
       }
 
+      logStatus(`同期中: ${targetId}...`, "amber");
+
       try {
         if (unsubscribeClientListener) unsubscribeClientListener();
         currentTargetClientId = targetId;
+        localStorage.setItem(`carat_last_active_client_${appId}`, targetId);
         
         // RULE 1: Strict paths
         const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', targetId);
@@ -1005,6 +1068,10 @@
           if (docSnap.exists()) {
             const data = docSnap.data();
             globalClientData = data;
+            
+            // 同期成功ログ
+            logStatus(`同期成功: ${data.nickname || 'クライアント'} 様`, "emerald");
+            
             renderClientDashboard(data);
             window.renderBookmarks();
             document.getElementById('client-placeholder').classList.add('hidden');
@@ -1013,10 +1080,12 @@
               addBookmark(targetId, data.nickname);
             }
           } else {
-            window.showCustomAlert("データ未検出", `【ID: ${targetId}】に合致するカルテデータが見つかりません。新規作成フォームから新しく発行してください。`, "error");
+            logStatus(`データ未存在: ${targetId}`, "rose");
+            window.showCustomAlert("同期エラー", `【ID: ${targetId}】に合致するカルテデータが見つかりません。新規作成パネルから新しく作成してください。`, "error");
           }
         }, (error) => {
           console.error("Load Client Fail:", error);
+          logStatus(`接続拒否: Permission Denied`, "rose");
           window.showCustomAlert("接続制限", "データの読み込み権限、またはセキュリティ制限エラーが検出されました。設定されたGemini APIキーや認証状態をご確認ください。", "error");
         });
       } catch (err) {
@@ -1190,11 +1259,9 @@
           const kcal = safeFloat(m.kcal);
           const nameLower = (m.name || "").toLowerCase();
 
-          // 良かったお食事 (高タンパク または 低脂質なヘルシー料理)
           if ((p >= 15 && f <= 8) || nameLower.includes("サラダチキン") || nameLower.includes("プロテイン") || nameLower.includes("玄米") || nameLower.includes("ささみ")) {
             goodMeals.push({ name: m.name, p });
           }
-          // 改善すべきお食事 (高カロリー または 高脂質 または ジャンクフード系)
           if (kcal >= 550 || f >= 16 || nameLower.includes("ラーメン") || nameLower.includes("ポテト") || nameLower.includes("ケーキ") || nameLower.includes("マック") || nameLower.includes("ピザ")) {
             cautionMeals.push({ name: m.name, f, kcal });
           }
@@ -1307,7 +1374,6 @@
             throw new Error(`【APIキーエラー】\nAPIキーが無効であるか、使用制限がかかっています。正しいコピペであるかご確認ください。`);
           }
           if (response.status === 429) {
-            // レート制限の検知時はバックオフしてリトライ
             console.warn("Gemini API Rate Limit hit. Backing off...");
           }
         } catch (e) {
@@ -1501,14 +1567,9 @@ ${weeklyMealsSummaryText}
       lucide.createIcons();
     };
 
-    // 初期化実行 (RULE 3準拠)
+    // 初期化設定（RULE 3準拠）
     document.addEventListener('DOMContentLoaded', () => {
       initAuthAndStatus();
-      updateDateUI();
-      const savedTrainerKey = localStorage.getItem(`carat_trainer_gemini_key_${appId}`);
-      if (savedTrainerKey) {
-        document.getElementById('trainer-gemini-key').value = savedTrainerKey;
-      }
     });
   </script>
 </body>
