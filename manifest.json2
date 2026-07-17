@@ -1,1 +1,16 @@
-
+{
+  "name": "トレーナー管理アプリ",
+  "short_name": "トレーナー管理",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e1b4b",
+  "icons": [
+    {
+      "src": "./icon-5122.PNG",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
