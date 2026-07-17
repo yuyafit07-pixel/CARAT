@@ -23,16 +23,16 @@
           },
           colors: {
             brand: {
-              primary: '#0B2545',       /* 深邃なサファイアブルー */
+              primary: '#0B2545',       /* サファイアブルー */
               primaryHover: '#05142B',
               secondary: '#1F4068',     /* クリアインディゴ */
               accent: '#EEF4FA',        /* アイスプラチナシルバー */
               gold: '#C5A059',          /* シャンパンゴールド */
               goldLight: '#FAF4E3',     /* プレシャスベージュ */
               bg: '#FFFFFF',
-              text: '#16243A',          /* ディープスレートアッシュ */
+              text: '#16243A',          /* スレートアッシュ */
               muted: '#687E96',         /* クールアッシュグレー */
-              border: '#D9E6F2',        /* クリスタルサックス境界線 */
+              border: '#D9E6F2',        /* クリスタルサックス境界 */
               rose: '#D27C7C',          /* パステルオパールローズ */
               roseLight: '#FCF3F3'
             }
@@ -55,12 +55,12 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     
-    /* ダイヤモンドのようなプレミアム透明感：Glassmorphism */
+    /* プレミアム透明感：Glassmorphism */
     .glass-base-panel {
       background: rgba(255, 255, 255, 0.78);
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
-      border: 1.5px solid rgba(255, 255, 255, 0.85); /* クリスタルの極細カットエッジ */
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
       box-shadow: 
         0 24px 50px -12px rgba(11, 37, 69, 0.06), 
         0 8px 24px -4px rgba(197, 160, 89, 0.03),
@@ -96,7 +96,7 @@
       display: none;
     }
 
-    /* 氷のように澄んだクリスタルサファイア背景グラデーション */
+    /* 澄み切ったクリスタルサファイア背景グラデーション */
     .bg-jewel-gradient {
       background: linear-gradient(135deg, #F0F5FA 0%, #E3EDF7 40%, #F5F1E6 100%);
       background-attachment: fixed;
@@ -107,7 +107,6 @@
 
   <!-- ================= ログイン画面 ================= -->
   <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-tr from-[#E6EFF7] via-[#FFFFFF] to-[#FAF5E6]">
-    <!-- プリズム光彩エフェクト -->
     <div class="absolute w-[450px] h-[450px] rounded-full bg-brand-accent/50 blur-3xl -top-20 -left-20"></div>
     <div class="absolute w-[450px] h-[450px] rounded-full bg-brand-goldLight/50 blur-3xl -bottom-20 -right-20"></div>
 
@@ -188,7 +187,7 @@
           </button>
         </div>
 
-        <!-- 👑 ヘッダーインライン・ジュエルタブ -->
+        <!-- ヘッダーインライン・ジュエルタブ -->
         <div class="bg-brand-accent/50 p-1 rounded-2xl border border-brand-border flex gap-1">
           <button id="nav-btn-home" onclick="window.switchTab('home')" class="flex-1 py-3 px-1.5 rounded-xl transition-all text-xs font-black text-white bg-gradient-to-r from-brand-primary to-brand-secondary border border-white/10 shadow-blueGlow flex items-center justify-center gap-1.5 active:scale-95">
             <i data-lucide="home" class="w-4 h-4"></i>
@@ -209,10 +208,10 @@
 
     <main class="max-w-2xl w-full mx-auto px-4 pt-4 flex-1">
       
-      <!-- ================= タブ1: ホーム (美ボディ統合ダッシュボード) ================= -->
+      <!-- ================= タブ1: ホーム ================= -->
       <div id="tab-content-home" class="space-y-4 animate-fade-in">
         
-        <!-- 日付コントロールバー & 生理周期フェーズ簡易インジケーター -->
+        <!-- 日付コントロールバー -->
         <div class="flex flex-col gap-2 bg-white/90 rounded-2xl p-2.5 border border-brand-border/50 shadow-softShadow">
           <div class="flex items-center justify-between">
             <button onclick="window.changeDay('prev')" class="w-9 h-9 flex items-center justify-center text-brand-primary hover:bg-brand-accent/40 rounded-xl transition-all">
@@ -238,7 +237,7 @@
           </div>
         </div>
 
-        <!-- 👑 統合型プレミアムシームレスパネル (Unified Core Board) -->
+        <!-- 👑 統合型プレミアムシームレスパネル -->
         <div class="glass-base-panel rounded-[32px] p-5 md:p-6 space-y-6">
           
           <!-- セクション1: カロリーメーター & オートリカバリー -->
@@ -255,7 +254,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-              <!-- 円形メーター (md:col-span-5) -->
               <div class="md:col-span-5 flex justify-center py-2">
                 <div class="relative w-36 h-36">
                   <svg class="w-full h-full transform -rotate-90">
@@ -272,7 +270,6 @@
                 </div>
               </div>
 
-              <!-- オートリカバリー・周期調整詳細カード (md:col-span-7) -->
               <div class="md:col-span-7 space-y-2.5">
                 <div id="recovery-indicator-card" class="hidden bg-gradient-to-r from-teal-50/70 to-emerald-50/50 p-4 rounded-2xl border border-teal-100/60 text-xs">
                   <p class="font-bold text-teal-800 flex items-center gap-1 mb-1">
@@ -289,7 +286,7 @@
                     <span class="text-[10px] text-brand-primary font-black" id="home-cycle-status-text">生理周期を設定すると身体作り補正が表示されます。</span>
                   </div>
                   <p class="text-[9px] text-brand-muted font-semibold leading-relaxed" id="home-cycle-status-desc">
-                    「生理日・周期」タブから前回の開始日を設定することで、水分貯留予測（むくみ期）や筋合成最大化期に応じたPFC自動微調整、有酸素運動強度アドバイスをエビデンスに基づいて行います。
+                    「生理日・周期」タブから前回の開始日を設定することで、水分貯留予測や筋合成最大化期に応じたPFC自動微調整、有酸素運動強度アドバイスをエビデンスに基づいて行います。
                   </p>
                 </div>
               </div>
@@ -422,7 +419,6 @@
             </button>
           </div>
 
-          <!-- よく使うお食事 -->
           <div class="space-y-2 pt-1">
             <p class="text-[10px] text-brand-muted font-bold flex items-center gap-1">
               <i data-lucide="clock" class="w-3.5 h-3.5"></i>
@@ -526,7 +522,6 @@
         <!-- 現在の身体ステータス & エビデンス判定アドバイス -->
         <div id="cycle-analysis-dashboard" class="glass-base-panel rounded-[32px] p-5 md:p-6 space-y-5">
           
-          <!-- フェーズタイトル -->
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-2">
               <span id="cycle-phase-emoji" class="text-2xl">🧘‍♀️</span>
@@ -540,7 +535,6 @@
             </span>
           </div>
 
-          <!-- 水分貯留（むくみ）メーター / 筋肥大感受性インジケーター -->
           <div class="grid grid-cols-2 gap-3">
             <div class="bg-white p-3.5 rounded-2xl border border-brand-border/60 text-xs shadow-sm">
               <span class="text-[9px] text-brand-muted font-bold block mb-1">筋肥大感受性 (エストロゲン濃度)</span>
@@ -564,10 +558,7 @@
 
           <hr class="border-brand-border/60">
 
-          <!-- エビデンス分析セクション -->
           <div class="space-y-4">
-            
-            <!-- ① 身体作り向け：トレーニング強度目標 -->
             <div class="flex gap-3 items-start bg-white p-4 rounded-2xl border border-brand-border/60 shadow-sm">
               <span class="p-2 rounded-xl bg-brand-accent text-brand-primary text-sm flex-shrink-0">💪</span>
               <div class="space-y-1">
@@ -576,7 +567,6 @@
               </div>
             </div>
 
-            <!-- ② 水分貯留と体重増への捉え方 -->
             <div class="flex gap-3 items-start bg-brand-roseLight border border-brand-rose/20 p-4 rounded-2xl shadow-sm">
               <span class="p-2 rounded-xl bg-white text-brand-rose text-sm flex-shrink-0">⚖️</span>
               <div class="space-y-1">
@@ -585,7 +575,6 @@
               </div>
             </div>
 
-            <!-- ③ 自動PFC補正指標（非AI） -->
             <div class="bg-brand-primary/5 p-4 rounded-2xl border border-brand-border/85 relative overflow-hidden">
               <div class="flex items-center gap-2 mb-2">
                 <span class="p-1 rounded-lg bg-brand-primary text-brand-gold text-[10px]">🍎</span>
@@ -609,7 +598,6 @@
 
       <!-- ================= タブ3: 体重推移グラフ ================= -->
       <div id="tab-content-weight-trend" class="hidden space-y-4 animate-fade-in">
-        <!-- 当日の体重入力 -->
         <div class="bg-white/90 rounded-3xl p-5 border border-brand-border/60 shadow-softShadow">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div class="flex items-center gap-2">
@@ -633,14 +621,12 @@
           </div>
         </div>
 
-        <!-- 📈 グラフ & 分析数値 -->
         <div class="bg-white/90 rounded-3xl p-5 border border-brand-border/60 shadow-softShadow space-y-4">
           <div class="flex justify-between items-center">
             <h3 class="text-xs font-black text-brand-primary tracking-wider font-logo">CARAT WEIGHT WATCH</h3>
             <span class="text-[9px] text-brand-muted font-bold font-logo">直近30日間</span>
           </div>
 
-          <!-- 分析チップス -->
           <div class="grid grid-cols-2 gap-3">
             <div class="bg-slate-50/70 p-3 rounded-2xl border border-brand-border/40">
               <p class="text-[8px] text-brand-muted font-bold">初期比 (最低 vs 開始値)</p>
@@ -654,7 +640,6 @@
             </div>
           </div>
 
-          <!-- グラフ表示エリア -->
           <div class="relative w-full h-56 bg-slate-50/40 rounded-2xl border border-brand-border/30 p-2 overflow-hidden shadow-inner">
             <canvas id="weight-trend-chart"></canvas>
             <div id="chart-empty-placeholder" class="hidden absolute inset-0 flex items-center justify-center text-center bg-white/90 p-4">
@@ -760,13 +745,11 @@
         </div>
 
         <div class="space-y-3.5">
-          <!-- 料理名 -->
           <div class="space-y-1">
             <label class="text-[10px] font-black text-brand-muted uppercase block ml-1">お食事タイトル</label>
             <input type="text" id="edit-meal-name" class="w-full bg-slate-50 border border-brand-border rounded-xl px-3 py-2 text-xs font-bold text-brand-primary focus:outline-none focus:border-brand-gold shadow-inner">
           </div>
 
-          <!-- スケール調整 -->
           <div class="space-y-1.5">
             <label class="text-[10px] font-black text-brand-muted uppercase block ml-1">食事量の一括スライド変更</label>
             <div class="grid grid-cols-4 gap-1.5">
@@ -792,7 +775,6 @@
             </div>
           </div>
 
-          <!-- 構成食材アコーディオン -->
           <div class="border border-brand-border/60 rounded-2xl overflow-hidden">
             <button onclick="window.toggleIngredientsAccordion()" class="w-full bg-slate-50/70 p-3 flex justify-between items-center hover:bg-slate-50 transition-all">
               <span class="text-[10px] font-black text-brand-primary flex items-center gap-1">
@@ -805,7 +787,7 @@
             </button>
             <div id="ingredients-collapse-area" class="hidden p-3 bg-[#F8FAFC] border-t border-brand-border/40 max-h-56 overflow-y-auto space-y-2">
               <div id="ingredients-editor-container" class="space-y-2">
-                <!-- 食材行が動的挿入 -->
+                <!-- 食材行 -->
               </div>
               <button onclick="window.addIngredientRow()" class="w-full py-2 bg-white hover:bg-slate-50 border border-brand-border/80 border-dashed rounded-xl text-[10px] font-bold text-brand-muted flex items-center justify-center gap-1 transition-all">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
@@ -814,7 +796,6 @@
             </div>
           </div>
 
-          <!-- 栄養密度 ＆ プレビュー -->
           <div class="bg-brand-accent/20 p-4 rounded-2xl border border-brand-border/40 space-y-2 text-xs">
             <div class="flex justify-between items-center text-[10px] text-brand-muted font-bold">
               <span>推定の100gあたりエネルギー密度:</span>
@@ -840,7 +821,6 @@
             </div>
           </div>
 
-          <!-- アクション -->
           <div class="flex gap-2 pt-2">
             <button onclick="window.deleteMeal(window.editingMealId)" class="flex-1 py-3 bg-brand-roseLight text-brand-rose hover:bg-brand-rose/10 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
               <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -856,13 +836,13 @@
     </div>
 
 
-    <!-- ================= モーダル：AIエラー詳細 ================= -->
+    <!-- ================= 👑 429・404クォータ制限お休み案内モーダル ================= -->
     <div id="ai-error-modal" class="hidden fixed inset-0 bg-brand-primary/60 backdrop-blur-sm items-center justify-center p-4 z-[150] animate-fade-in">
       <div class="w-full max-w-sm bg-white rounded-[28px] border border-brand-border p-6 shadow-premium space-y-4">
         <div class="flex justify-between items-center pb-2 border-b border-brand-border/40">
           <h3 class="text-xs font-black text-brand-rose flex items-center gap-1.5">
             <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-            <span>通信スキャンエラー</span>
+            <span>AIお休み案内 (Rate Limit)</span>
           </h3>
           <button onclick="window.toggleModal('ai-error-modal', false)" class="text-brand-muted hover:text-brand-primary">
             <i data-lucide="x" class="w-5 h-5"></i>
@@ -870,13 +850,15 @@
         </div>
         
         <div class="space-y-3">
-          <p class="text-[10px] text-brand-muted font-bold leading-relaxed" id="ai-error-desc">
-            APIキーが設定されていないか、通信環境に不具合が生じています。
+          <p class="text-[11px] text-brand-muted font-bold leading-relaxed" id="ai-error-desc">
+            現在、お店のGemini API無料接続枠（1分間に15回上限）が一時的にお休み中（クールダウン）です。
           </p>
-          <div class="bg-brand-accent/20 p-3 rounded-xl border border-brand-border/30 text-[9px] text-brand-muted font-bold leading-relaxed">
-            店舗トレーナーが「管理ポータル」の最上部にあるGemini APIキーの自動配信を実行しているかご確認ください。クライアント様ご自身でのキー設定は不要です。
+          <div class="bg-brand-accent/30 p-3 rounded-xl border border-brand-border/40 text-[9.5px] text-brand-primary font-bold leading-relaxed space-y-1">
+            <p><strong>💡 解決のヒント:</strong></p>
+            <p>① 1分ほど時間をおいてもう一度「テキスト解析」を送信してみてください。自動的に復活します。</p>
+            <p>② トレーナー管理ポータルでGoogle AI Studioから新しい無料キーを再発行して設定するか、従量課金プランに切り替えることで制限が完全撤廃されます。</p>
           </div>
-          <button onclick="window.toggleModal('ai-error-modal', false)" class="w-full bg-brand-primary text-white py-2.5 px-4 rounded-xl text-xs font-black transition-all active:scale-95">
+          <button onclick="window.toggleModal('ai-error-modal', false)" class="w-full bg-brand-primary text-white py-2.5 px-4 rounded-xl text-xs font-black transition-all active:scale-95 shadow-sm">
             確認しました
           </button>
         </div>
@@ -884,7 +866,7 @@
     </div>
 
 
-    <!-- ================= 処理中ローディングオーバーレイ ================= -->
+    <!-- ================= 処理中ローディング ================= -->
     <div id="loading-overlay" class="hidden fixed inset-0 bg-brand-primary/80 backdrop-blur-md items-center justify-center p-4 z-[300] flex-col space-y-4">
       <div class="relative w-16 h-16">
         <div class="absolute inset-0 rounded-full border-4 border-white/20"></div>
@@ -914,14 +896,13 @@
     import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "firebase/auth";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
 
-    const appId = 'carat-meal-v3';
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'carat-meal-v3';
     let db, auth;
     let currentClientId = null;
     let unsubscribeClientListener = null;
     let weightChartInstance = null;
 
-    // クラウドFirebase構成 (絶対に破壊しない設定)
-    const firebaseConfig = {
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
       apiKey: "AIzaSyAydTTXVCpENC3uj31l4vcA90WAg8Oj75U",
       authDomain: "carat-d3b01.firebaseapp.com",
       projectId: "carat-d3b01",
@@ -938,7 +919,6 @@
     window.db = db;
     window.auth = auth;
 
-    // クライアントの状態データ構造
     let clientState = {
       nickname: "同期中...",
       targetCalories: 1600,
@@ -969,7 +949,6 @@
     let editingMealId = null;
     let editingMealObject = null;
 
-    // 安全キャスト
     function safeFloat(val) {
       if (val === null || val === undefined) return 0;
       if (typeof val === 'string') {
@@ -1099,7 +1078,6 @@
 
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          // SETTINGS同期
           const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'clientStates', 'CRT-SETTINGS');
           onSnapshot(settingsRef, (snap) => {
             if (snap.exists()) {
@@ -1419,7 +1397,6 @@
       };
     }
 
-    // ================= ホルモン周期精密判定アルゴリズム =================
     window.calculateCyclePhase = function(targetDateStr) {
       if (!clientState.cycleStartDate) {
         return null;
@@ -1472,7 +1449,7 @@
         estrogenConc = 90;
         progesteroneConc = 10;
         trainingAdv = "高強度ボディメイク黄金期！インスリン感受性が高まり、筋合成効率が最大化します。少し負荷を高めたアクティブなトレーニングが特におすすめです。";
-        weightNote = "エストロゲン効果で代謝が活発に。むくみが解消し、体重が最も減少しやすい最高のボディメイク期間です。";
+        weightNote = "エストロゲン効果で代謝が活バツに。むくみが解消し、体重が最も減少しやすい最高のボディメイク期間です。";
         pfcAdjustText = "【代謝促進調整】炭水化物(C)とタンパク質(P)の代謝効率が非常に高い時期。アクティブな運動の燃料としてCを程よく摂り、筋合成を活性化させます。";
         pScale = 1.05;
         cScale = 1.1;
@@ -1520,7 +1497,6 @@
         document.getElementById('btn-today-badge').classList.remove('hidden');
       }
 
-      // 周期計算の取得
       const cycleInfo = window.calculateCyclePhase(selectedDateString);
       const headerBadgeContainer = document.getElementById('header-cycle-mini-badge-container');
       const headerBadge = document.getElementById('header-cycle-badge');
@@ -1553,7 +1529,7 @@
         headerBadgeContainer.classList.add('hidden');
         document.getElementById('home-cycle-status-emoji').innerText = "📅";
         document.getElementById('home-cycle-status-text').innerText = "生理周期未設定";
-        document.getElementById('home-cycle-status-desc').innerText = "「生理日・周期」タブから前回の開始日を設定することで、水分貯留予測（むくみ期）や筋合成最大化期に応じたPFC自動微調整、有酸素運動強度アドバイスをエビデンスに基づいて行います。";
+        document.getElementById('home-cycle-status-desc').innerText = "「生理日・周期」タブから前回の開始日を設定することで、水分貯留予測や筋合成最大化期に応じたPFC自動微調整、有酸素運動強度アドバイスをエビデンスに基づいて行います。";
         document.getElementById('pfc-adjusted-badge').classList.add('hidden');
       }
 
@@ -1784,7 +1760,7 @@
       }
       const key = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
       if (!key) {
-        document.getElementById('ai-error-desc').innerText = "店舗用Gemini APIキーがまだ同期されていません。トレーナーの管理アプリからAPIキーを「保存して配信」するようトレーナーにお伝えください。";
+        document.getElementById('ai-error-desc').innerText = "店舗用Gemini APIキーがまだ中央設定に保存・同期されていません。トレーナー管理アプリの最上部からキーを入力して「保存・配信」を行うよう、ジム担当者にお伝えください。";
         window.toggleModal('ai-error-modal', true);
         return;
       }
@@ -1975,62 +1951,56 @@
       return currentLogs;
     }
 
+    // ================= 🛠️ クォータ制限対応・新型指数バックオフAPI呼び出し =================
     async function fetchGeminiWithBackoff(payload) {
-      const apiKey = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
-      if (!apiKey) {
+      const key = clientState.sharedGeminiKey || localStorage.getItem("carat_shared_gemini_key_" + appId) || "";
+      if (!key) {
         throw new Error("API_KEY_MISSING");
       }
       
-      const models = [
-        "gemini-2.5-flash-preview-09-2025",
-        "gemini-2.5-flash",
-        "gemini-1.5-flash"
-      ];
+      // プレビュー＆本番エンドポイント双方に配慮した最新安定版モデル
+      const targetModel = "gemini-2.5-flash";
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${key}`;
+      
+      let delay = 1500; // 初回待機時間
       let lastError = null;
-      let lastStatus = null;
 
-      for (const modelName of models) {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-        let delay = 1000;
-        
-        for (let attempt = 0; attempt < 2; attempt++) {
-          try {
-            const response = await fetch(url, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload)
-            });
-            lastStatus = response.status;
-            if (response.ok) {
-              return await response.json();
-            }
+      for (let attempt = 0; attempt < 4; attempt++) {
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
 
-            const errJson = await response.json().catch(() => ({}));
-            const errMsg = errJson?.error?.message || "エラー詳細なし";
-
-            if (response.status === 400) {
-              throw new Error(`【APIパラメータ構造エラー (400)】\n${errMsg}`);
-            }
-            if (response.status === 403 || response.status === 401) {
-              throw new Error(`【APIキー制限・無効エラー (403/401)】\nGemini APIキーが有効でないか、Google側で制限されています。トレーナーアプリで新しいキーを再設定・同期配信してください。\n(詳細: ${errMsg}`);
-            }
-            if (response.status === 429) {
-              throw new Error(`【リクエスト制限超過エラー (429)】\n短時間に大量のリクエストが送られました。数秒待ってから再試行してください。`);
-            }
-            lastError = `Model ${modelName} status ${response.status}: ${errMsg}`;
-          } catch (e) {
-            if (e.message.startsWith("【")) {
-              throw e;
-            }
-            lastError = e.message || e;
+          if (response.ok) {
+            return await response.json();
           }
-          if (attempt < 1) {
-            await new Promise(resolve => setTimeout(resolve, delay));
-            delay *= 2;
+
+          const errJson = await response.json().catch(() => ({}));
+          const errMsg = errJson?.error?.message || "接続の確立に失敗しました";
+
+          if (response.status === 400) {
+            throw new Error(`【API構造エラー(400)】\n${errMsg}`);
           }
+          if (response.status === 403 || response.status === 401) {
+            throw new Error(`【APIキー接続エラー】\nキーが無効か制限されています。トレーナーアプリで新しいキーを再設定・配信してください。`);
+          }
+          if (response.status === 429) {
+            // レート制限エラー時は、バックオフして再試行を試みる
+            lastError = `【API利用制限リクエスト上限エラー(429)】`;
+          } else {
+            lastError = `Model Error ${response.status}: ${errMsg}`;
+          }
+        } catch (e) {
+          lastError = e.message || e;
         }
+
+        // リトライ前の指数待機
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay *= 2.5; 
       }
-      throw new Error(`【AIスキャン接続失敗】\n全サポートモデルの通信試行が失敗しました。\n(詳細: ${lastError}`);
+      throw new Error(lastError);
     }
 
     function parseGeminiJSON(text) {
@@ -2130,7 +2100,7 @@
         }
       } catch (err) {
         console.error("AI Text Analysis Error:", err);
-        let errorMsg = "解析に失敗しました。キーの登録状態をご確認ください。";
+        let errorMsg = "一時的な混雑制限が生じました。1分ほどおいて再送信してください。";
         if (err.message.includes("【")) {
           errorMsg = err.message;
         }
@@ -2193,7 +2163,7 @@
         }
       } catch (err) {
         console.error("Image Analysis Error:", err);
-        let errorMsg = "写真のスキャンに失敗しました。手ブレのない明るい食事画像でお試しいただくか、配信されたGemini APIキーの登録状態を確認してください。";
+        let errorMsg = "写真のスキャンに失敗しました。少しおいてからやり直してください。";
         if (err.message.includes("【")) {
           errorMsg = err.message;
         }
@@ -2432,7 +2402,7 @@
       try {
         const userPrompt = `食材名: "${ingName}", 重量: ${ingWeight}g
           この食材・単体料理のカロリー(kcal), たんぱく質(p), 脂質(f), 炭水化物(c)を推定して、必ず次のJSONのみを返してください。
-          {"p": たんパク質g(数値), "f": 脂質g(数値), "c": 炭水化物g(数値), "kcal": カロリー(数値)}`;
+          {"p": たんぱく質g(数値), "f": 脂質g(数値), "c": 炭水化物g(数値), "kcal": カロリー(数値)}`;
         const payload = { contents: [{ parts: [{ text: userPrompt }] }] };
         const res = await fetchGeminiWithBackoff(payload);
         const rawText = res.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -2458,7 +2428,7 @@
         showToast(`AIが「${ingName}」の栄養価を反映しました！`);
       } catch (err) {
         console.error("Estimate PFC Error:", err);
-        alert("食材の分析に失敗しました。接続状態をご確認ください。");
+        alert("食材のAI分析に失敗しました。少し時間をおいてから実行してください。");
       } finally {
         toast.remove();
       }
