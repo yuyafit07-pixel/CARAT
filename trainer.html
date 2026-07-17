@@ -55,7 +55,7 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     
-    /* ジュエルガラス調デザイン */
+    /* ダイヤモンドのようなプレミアム透明感：Glassmorphism */
     .glass-base-panel {
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(30px);
@@ -81,7 +81,7 @@
       animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* クリスタルサファイア背景グラデーション */
+    /* 澄んだクリスタルサファイア背景グラデーション */
     .bg-jewel-gradient {
       background: linear-gradient(135deg, #F0F5FA 0%, #E3EDF7 40%, #F5F1E6 100%);
       background-attachment: fixed;
@@ -102,11 +102,11 @@
             <h1 class="font-logo text-lg font-black text-brand-primary tracking-widest">CARAT</h1>
             <span class="text-[8px] bg-brand-gold text-white px-2 py-0.5 rounded font-black tracking-wider">PRO PORTAL</span>
           </div>
-          <p class="text-[9px] text-brand-muted font-bold">女性専用生理サイクル対応・パーソナルトレーナー管理コックピット</p>
+          <p class="text-[9px] text-brand-muted font-bold">女性特有生理サイクル対応・パーソナルトレーナー管理コックピット</p>
         </div>
       </div>
 
-      <!-- Gemini APIキー配信状況 -->
+      <!-- 店舗Gemini APIキー配信状況 ＆ DBステータス -->
       <div class="flex items-center gap-2">
         <div id="sync-status" class="text-[10px] px-3 py-1.5 rounded-full bg-slate-100 text-brand-muted border border-brand-border flex items-center gap-1.5 font-black">
           <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
@@ -541,8 +541,8 @@
     import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "firebase/auth";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
 
-    // グローバルパス同期 (RULE 1遵守: お食事アプリ側と100%同じ参照先を動的に決定)
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'carat-meal-v3';
+    // 🏆 コア同期パスの完全固定化 (絶対にズレを発生させない最強設計)
+    const appId = 'carat-meal-v3';
 
     let db, auth;
     let currentTargetClientId = null;
@@ -655,7 +655,7 @@
     }
     window.showToast = showToast;
 
-    // ================= 🔐 RULE 3 準拠: 認証が完了してからクエリを走らせる仕組み =================
+    // ================= 🔐 RULE 3 準拠: ログインが完了してからクエリを走らせる仕組み =================
     const initAuthAndStatus = async () => {
       try {
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -830,7 +830,7 @@
         await setDoc(docRef, initialClientState);
         addBookmark(newId, nickname);
         
-        // Copy to clipboard safely without alert
+        // Copy to clipboard safely
         const dummy = document.createElement("textarea");
         document.body.appendChild(dummy);
         dummy.value = newId;
@@ -868,19 +868,19 @@
       const todayStr = getTodayDateString();
       if (selectedDateString === todayStr) {
         badgeEl.innerText = "今日";
-        badgeEl.className = "inline-block text-[9px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-full mt-1 font-bold border border-brand-border/50";
+        badgeEl.className = "inline-block text-[9px] text-brand-primary bg-brand-accent px-2 py-0.5 rounded-full mt-1 font-bold border border-brand-border/50 shadow-sm";
       } else {
         const diffTime = new Date(selectedDateString) - new Date(todayStr);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         if (diffDays === -1) {
           badgeEl.innerText = "昨日";
-          badgeEl.className = "inline-block text-[9px] text-brand-gold bg-brand-goldLight px-2.5 py-0.5 rounded-full mt-1 font-bold border border-brand-gold/15";
+          badgeEl.className = "inline-block text-[9px] text-brand-gold bg-brand-goldLight px-2.5 py-0.5 rounded-full mt-1 font-bold border border-brand-gold/15 shadow-sm";
         } else if (diffDays === 1) {
           badgeEl.innerText = "明日";
-          badgeEl.className = "inline-block text-[9px] text-teal-600 bg-teal-50 px-2.5 py-0.5 rounded-full mt-1 font-bold border border-teal-100";
+          badgeEl.className = "inline-block text-[9px] text-teal-600 bg-teal-50 px-2.5 py-0.5 rounded-full mt-1 font-bold border border-teal-100 shadow-sm";
         } else {
           badgeEl.innerText = diffDays < 0 ? `${Math.abs(diffDays)}日前` : `${diffDays}日後`;
-          badgeEl.className = "inline-block text-[9px] text-brand-muted bg-brand-accent px-2.5 py-0.5 rounded-full mt-1 font-bold border border-brand-border";
+          badgeEl.className = "inline-block text-[9px] text-brand-muted bg-brand-bg px-2.5 py-0.5 rounded-full mt-1 font-bold border border-brand-border shadow-sm";
         }
       }
     }
@@ -1111,7 +1111,7 @@
           reversedDates.forEach(dStr => {
             const row = document.createElement('div');
             row.className = "bg-slate-50 p-2 rounded-xl border border-brand-border/40 text-[9px] flex justify-between font-bold shadow-sm";
-            row.innerHTML = `<span class="text-brand-muted font-mono">${dStr.substring(5)}</span><span class="text-brand-text font-black font-logo">${history[dStr]}kg</span>`;
+            row.innerHTML = `<span class="text-brand-muted font-mono">${dStr.substring(5)}</span><span class="text-brand-text font-sans font-black">${history[dStr]}kg</span>`;
             historyListEl.appendChild(row);
           });
         }
@@ -1282,7 +1282,7 @@
     async function fetchGeminiWithFallback(payload) {
       const key = localStorage.getItem(`carat_trainer_gemini_key_${appId}`) || "";
       if (!key) {
-        throw new Error("店舗Gemini API Keyが設定されていません。右上の配信欄に入力・同期保存してください。");
+        throw new Error("店舗Gemini API Keyが設定されていません。最上部の自動配信欄に入力・同期保存してください。");
       }
       
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
@@ -1454,7 +1454,7 @@ ${weeklyMealsSummaryText}
       const templates = {
         'p-short': `📢 ${nickname}様、今週もお疲れさまでした！\n\n1週間の食事ログを確認しました。全体的にとても意識していただいていますが、たんぱく質（P）が目標に対して少し不足しがちになっています。🍖\n\n卵胞期（痩せ期）の筋合成効率が高い今のタイミングを活かすためにも、間食にオイコスなどの高タンパクヨーグルトを挟むか、手のひら一枚分の肉・魚をしっかり確保しましょう！来週は「毎朝卵を1個必ず食べる」ことから挑戦しましょう！🔥`,
         'f-over': `📢 ${nickname}様、今週の食事アドバイスです！\n\nお仕事お忙しい中、レポーティングをありがとうございます。今週は脂質（F）が少し高めに推移しており、総カロリー目標をオーバーする傾向にあります。🍟\n\n黄体期（溜め込み期）はインスリン抵抗性により血糖値が急変動し、脂質を溜め込みやすくなるエビデンスがあります。来週は「夜の揚げ物を控え、和食系の蒸し・焼き魚をメインにする」ことを心がけてみましょう！✨`,
-        'perfect': `📢 ${nickname}様、素晴らしい1週間でした！\n\n今週のPFCバランスとカロリー管理は、ほぼ100点の満点状態です！生理周期による体調の波がある中で、栄養バランスを保てているのは素晴らしいがんばりです。🌟\n\n水分貯留（むくみ）も少しずつ抜け、体重推移も順調にマイルストーンをクリアしています。来週もこの素晴らしい食事リズムをベースに、一緒にがんばりましょう！💪😊`,
+        'perfect': `📢 ${nickname}様、素晴らしい1週間でした！\n\n今週のPFCバランスとカロリー管理は、ほぼ100点の満点状態です！生理周期による体調の波がある中で、栄養バランスを保てているのは素晴らしいがんばりです。🌟\n\n水分貯留（むくみ）も少しずつ抜け、体重推移も順調にマイルストーンをクリアしています。来週もこの素晴らしい食事リズムをベースに、一緒にがんばりましょう！💪💪`,
         'auto-recovery': `📢 ${nickname}様、1週間調整お疲れさまでした！\n\nお食事オーバーの翌日に、カロリーオートリカバリー（自動目標スライド削減）がうまく機能して、1週間トータルで見事「貯金」をキープできましたね！🔄\n\n「1日単位で一喜一憂せず、1週間全体の累積バランスで帳じりを合わせる」というボディメイクに最も重要な行動リズムが完成しています。この調子で自分のペースを愛しながら進めていきましょう！🏆`
       };
 
