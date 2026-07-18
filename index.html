@@ -2,7 +2,8 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 💎 画面ズームを完全に固定（user-scalable=no, maximum-scale=1.0, viewport-fit=cover）にする最新のズーム防止メタタグ -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>CARAT - プレミアム女性専用食事管理 & 女性ホルモンサイクル</title>
   
   <!-- 💎 ホーム画面用アイコン・PWA設定コード -->
@@ -63,6 +64,17 @@
     .font-logo { font-family: 'Montserrat', sans-serif; letter-spacing: 0.15em; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* 💎 ズームをブロックするためのグローバル操作制限（touch-action）の追加 */
+    body {
+      touch-action: pan-x pan-y; /* スクロールは許可し、ダブルタップズームやピンチをブラウザ標準で抑制 */
+      -webkit-text-size-adjust: 100%; /* iOSで横向きにした際の自動文字拡大をブロック */
+    }
+
+    /* 入力フォームでのズームを完全に防ぐためのモバイル向け調律 */
+    input, textarea, select {
+      font-size: 16px !important; /* iOSでタップ時に画面が拡大するのを防ぐ最低フォントサイズ */
+    }
     
     /* ダイヤモンドのようなプレミアム透明感：Glassmorphism */
     .glass-base-panel {
@@ -154,7 +166,7 @@
           </div>
         </div>
 
-        <!-- 👑 ログインボタン極上調律版（縦パディング py-5 適用、押し込みアニメーション・極細ベゼルゴールド境界） -->
+        <!-- 👑 ログインボタン極上立体3Dジュエル版（縦幅 py-5 / タップ時沈み込みアニメーション） -->
         <button onclick="window.connectWithClientId()" 
           class="w-full bg-gradient-to-r from-brand-primary via-[#16355E] to-brand-secondary text-white border border-brand-gold/40 py-5 px-6 rounded-2xl shadow-blueGlow hover:shadow-glow transition-all active:scale-[0.96] flex items-center justify-center gap-3 text-sm tracking-[0.25em] font-black mt-3 hover:brightness-110">
           <span>同期してマイポータルを開く</span>
@@ -866,7 +878,7 @@
         
         <div class="space-y-3">
           <p class="text-[11px] text-brand-muted font-bold leading-relaxed" id="ai-error-desc">
-            Currently, the store's Gemini API Free Tier is cooling down (15 RPM Limit reached).
+            現在、お店のGemini API無料接続枠（1分間に15回上限）が一時的にお休み中（クールダウン）です。
           </p>
           <div class="bg-brand-accent/30 p-3 rounded-xl border border-brand-border/40 text-[9.5px] text-brand-primary font-bold leading-relaxed space-y-1">
             <p><strong>💡 解決のヒント:</strong></p>
@@ -889,7 +901,7 @@
       </div>
       <div class="text-center space-y-1 animate-pulse">
         <p class="text-xs font-black text-white" id="loading-main-text">解析データを精査中...</p>
-        <p class="text-[10px] text-[#A3B8CC] font-bold">栄養成分の推定値を割り出しています。</p>
+        <p class="text-[10px] text-brand-accent font-bold">栄養成分の推定値を割り出しています。</p>
       </div>
     </div>
 
@@ -1164,9 +1176,7 @@
       showToast("データ連携を解除しました。");
     };
 
-    // 🏆 徹底解説された 100% 確実に動作するログインボタンの JavaScript 実装
     window.connectWithClientId = function() {
-      // 🛡️ クラッシュを発生させていた Typo (inputID -> inputId) を完璧に修正
       const inputId = document.getElementById('client-id-input').value.trim().toUpperCase();
       if (!inputId) {
         alert("連携IDを入力してください。");
@@ -1924,6 +1934,7 @@
       }
 
       const updatedWeekly = calculateWeeklySummary(nextMealsByDate);
+      clientState.mealsByDate = nextMealsByDate;
       clientState.weeklyLogs = updatedWeekly;
 
       if (currentClientId) {
