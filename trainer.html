@@ -2,16 +2,18 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-   <!-- ホーム画面用のアイコン設定 -->
+  <!-- 💎 画面ズームを完全に固定（user-scalable=no, maximum-scale=1.0, viewport-fit=cover）にする最新のズーム防止メタタグ -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>CARAT - プレミアム・プロトレーナー管理ポータル</title>
+  
+  <!-- 💎 ご指示いただいたトレーナーアプリ用のホーム画面アイコン設定タグ（5行）を完全マージ -->
+  <!-- ホーム画面用のアイコン設定 -->
   <link rel="apple-touch-icon2" href="./apple-touch-icon2.PNG">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="CARAT">
   <link rel="manifest" href="./manifest.json2">
 
-  <title>CARAT - プレミアム・プロトレーナー管理ポータル</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
   <!-- Tailwind CSS CDN -->
@@ -62,6 +64,17 @@
     .font-logo { font-family: 'Montserrat', sans-serif; letter-spacing: 0.15em; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* 💎 ズームをブロックするためのグローバル操作制限（touch-action）の追加 */
+    body {
+      touch-action: pan-x pan-y; /* スクロールは許可し、ダブルタップズームやピンチをブラウザ標準で抑制 */
+      -webkit-text-size-adjust: 100%; /* iOSでの自動文字拡大を制限 */
+    }
+
+    /* 入力フォームでのズームを完全に防ぐためのモバイル向け調律 */
+    input, textarea, select {
+      font-size: 16px !important; /* iOSでタップ時に画面が拡大するのを防ぐ最低フォントサイズ */
+    }
     
     /* ダイヤモンドのようなプレミアム透明感：Glassmorphism */
     .glass-base-panel {
@@ -114,7 +127,7 @@
         </div>
       </div>
 
-      <!-- 店舗Gemini APIキー配信状況 ＆ DBステータス -->
+      <!-- Gemini APIキー配信状況 ＆ DBステータス -->
       <div class="flex items-center gap-2">
         <div id="sync-status" class="text-[10px] px-3 py-1.5 rounded-full bg-slate-100 text-brand-muted border border-brand-border flex items-center gap-1.5 font-black">
           <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
@@ -320,14 +333,14 @@
           </div>
 
 
-          <!-- ================= 👑 新レイアウト：統合お食事コックピット（タイムライン＆栄養素・過去7日間帳尻を1枚に集約！） ================= -->
+          <!-- ================= 👑 新レイアウト：統合お食事コックピット ================= -->
           <div class="bg-white rounded-3xl border border-brand-border/60 shadow-softShadow overflow-hidden">
             <div class="p-4 bg-brand-accent/30 border-b border-brand-border/40 flex justify-between items-center flex-wrap gap-2">
               <h3 class="text-xs font-black text-brand-primary tracking-wider flex items-center gap-1.5">
                 <i data-lucide="sliders" class="w-4 h-4 text-brand-gold animate-spin"></i>
                 <span>選択日お食事コックピット ＆ ローリング貯金分析</span>
               </h3>
-              <!-- 日付変更部をヘッダーへ綺麗に移設 -->
+              <!-- 日付変更部 -->
               <div class="flex items-center gap-2">
                 <button onclick="window.changeSelectedDate('prev')" class="w-7 h-7 flex items-center justify-center bg-white hover:bg-slate-100 rounded-lg text-brand-primary border border-brand-border transition-all">
                   <i data-lucide="chevron-left" class="w-4 h-4"></i>
@@ -963,7 +976,7 @@
       let cal = 0, p = 0, f = 0, c = 0;
       const meals = data.mealsByDate && data.mealsByDate[dateStr] ? data.mealsByDate[dateStr] : [];
       meals.forEach(m => {
-        if (!m) return; // 🛡️ 空要素ヌルポ防御ガード
+        if (!m) return; 
         cal += safeFloat(m.kcal);
         p += safeFloat(m.p);
         f += safeFloat(m.f);
@@ -972,7 +985,6 @@
       return { cal: Math.round(cal), p, f, c, meals: meals.filter(Boolean) };
     }
 
-    // 🏆 完全一致：過去7日間の移動累積（ローリングウィンドウ）帳尻合わせ過不足
     function calculateWeeklySummaryAndDiff(data) {
       try {
         const baseDate = new Date(selectedDateString);
@@ -986,14 +998,12 @@
         const targetF = safeFloat(data.targetF) || 40;
         const targetC = safeFloat(data.targetC) || 210;
 
-        // 本日の日から過去7日間を逆上ってループ計算
         for (let i = 0; i < 7; i++) {
           const d = new Date(baseDate);
           d.setDate(baseDate.getDate() - i);
           const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
           const dayTotals = calculateTotalsForDate(data, dStr);
 
-          // 1日前の実績に基づくオートカロリー目標を動的に評価
           const yesterdayDate = new Date(d);
           yesterdayDate.setDate(d.getDate() - 1);
           const yesterdayStr = `${yesterdayDate.getFullYear()}-${String(yesterdayDate.getMonth() + 1).padStart(2, '0')}-${String(yesterdayDate.getDate()).padStart(2, '0')}`;
@@ -1093,12 +1103,11 @@
             
             logStatus(`同期成功: ${data.nickname || 'クライアント'} 様`, "emerald");
             
-            // 🛡️ 例外安全フェールガード: レンダリング中にエラーが生じても強制可視化する
             try {
               renderClientDashboard(data);
             } catch (renderError) {
               console.error("Dashboard render error catch-shield:", renderError);
-              logStatus(`部分描画エラー回復適用`, "amber");
+              logStatus("部分描画エラー回復適用", "amber");
             }
             
             document.getElementById('client-placeholder').classList.add('hidden');
@@ -1112,7 +1121,7 @@
           }
         }, (error) => {
           console.error("Load Client Fail:", error);
-          logStatus(`接続拒否: Permission Denied`, "rose");
+          logStatus("接続拒否: Permission Denied", "rose");
           window.showCustomAlert("接続制限", "データの読み込み権限、またはセキュリティ制限エラーが検出されました。設定されたGemini APIキーや認証状態をご確認ください。", "error");
         });
       } catch (err) {
@@ -1120,7 +1129,6 @@
       }
     };
 
-    // 🛡️ 徹底的な安全ガードを張り巡らせたダッシュボードレンダラ
     function renderClientDashboard(data) {
       if (!data) return;
       
